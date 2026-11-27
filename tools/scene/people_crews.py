@@ -5,6 +5,7 @@ stand in a loose arc round the fire's south side, facing it. Road clearing and s
 Story spoilers: never shown to the owner."""
 from __future__ import annotations
 
+from daythree_poses import AT_GAP
 from daytwo_poses import Who, person
 from output import Layer
 from people_moments import ARRIVALS, SHEETS, SINGERS
@@ -21,13 +22,16 @@ HEARTH_REAPERS = {"n8", "n10"}
 """The two of the reapers who work in the hearth crew; the others reap with the field crew."""
 FISH = "n14"
 """The one of them whose first job there is the fish (the answer's card); the rest are on the stew."""
-REAP_AT = {n: (628.0 + 30 * i, 418.0) for i, n in enumerate(REAPERS)}
+REAP_AT = {n: (626.0 + 40 * i, 418.0) for i, n in enumerate(REAPERS)}
 COOK_AT: dict[str, tuple[float, float, str]] = {
-    "n14": (146, 346, "right"), "n15": (172, 380, "right"), "n16": (208, 358, "up"), "n17": (236, 398, "up"),
-    "n18": (270, 380, "up"), "n19": (312, 352, "up"), "n20": (346, 358, "left"), "n21": (392, 372, "left"),
-    "n22": (424, 346, "left"),
+    "n16": (106, 298, "right"), "n17": (112, 366, "right"),
+    "n15": (226, 376, "up"), "n18": (270, 424, "up"), "n19": (316, 372, "up"),
+    "n20": (398, 426, "left"), "n21": (442, 376, "left"), "n22": (522, 380, "left"),
 }
-"""A loose arc round the fire's south side, uneven, each turned toward it."""
+"""The stew crew at the three places its work is: the wood on the camp's west side (the stacks), the pot below the fire, the
+fungus on its east (the birch log). Staggered so no two figures share a box, and clear of the idle row at the fire."""
+FISH_AT: tuple[float, float, str] = (AT_GAP[0] + 38, AT_GAP[1] + 3, "up")
+"""The fish crew's one: in the gap's mouth, the way down to the stream (`dig_clay` is posed there too), back to the camp."""
 
 
 def _while(person_id: str, card: str) -> str:
@@ -39,6 +43,8 @@ def crew_layers() -> list[Layer]:
                      when=_while(n, "g_hearth_reap" if n in HEARTH_REAPERS else "g_field_reap"))
                for n, who in REAPERS.items()]
     cooking = [Layer(id=f"figure_{n}_at_the_pot", img=person(who, COOK_AT[n][2], COOK_AT[n][:2]),
-                     when=_while(n, "g_road_fog_fish" if n == FISH else "g_road_fungus_stew"))
-               for n, who in COOKS.items()]
-    return [*reaping, *cooking]
+                     when=_while(n, "g_road_fungus_stew"))
+               for n, who in COOKS.items() if n != FISH]
+    fishing = Layer(id=f"figure_{FISH}_fishing", img=person(COOKS[FISH], FISH_AT[2], FISH_AT[:2]),
+                    when=_while(FISH, "g_road_fog_fish"))
+    return [*reaping, *cooking, fishing]

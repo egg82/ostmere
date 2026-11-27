@@ -109,9 +109,8 @@ def pass_of(entry: Entry) -> str:
     return "front" if entry.get("front") else "ungraded" if entry.get("ungraded") else "base"
 
 
-HELD_MISDRAWN = frozenset({("figure_n2_guarding", "lamps_lit")})
-"""Pairs misdrawn today that no single pass can fix, held so the check stays on for the rest: may only shrink. The
-guard stands before the lit lamps on one night and behind the gap's fires on another; a layer per night would fix it."""
+HELD_MISDRAWN: frozenset[tuple[str, str]] = frozenset()
+"""Pairs misdrawn today that no single pass can fix, held so the check stays on for the rest: may only shrink."""
 
 
 def misdrawn(entries: Sequence[Entry], overlap: Callable[[str, str], bool]) -> list[tuple[str, str]]:
