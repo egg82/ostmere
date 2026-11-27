@@ -14,6 +14,7 @@ from .gates import shown_chips, store_cap, tap_speed
 from .ids import HANDS, CardId, LaneId, LineKey, MixId, StoreId
 from .index import index
 from .installs import installed, queued, without_taps
+from .casts import cast_roles
 from .joins import joined
 from .leaves import left, present_installs
 from .marks import marked
@@ -224,12 +225,13 @@ def _lines(key: LineKey | None) -> tuple[LineKey, ...]:
 
 
 def _apply(save: Save, rules: Rules, o: Outcome, with_stores: bool) -> tuple[Save, tuple[LineKey, ...]]:
-    """The outcome in field order (retire_orders, leaves, orders, joins, marks, queues); with_stores False leaves its stores out (a card's ran as rates)."""
+    """The outcome in field order (retire_orders, leaves, orders, joins, marks, casts, queues); with_stores False leaves its stores out (a card's ran as rates)."""
     if with_stores:
         save = replace(save, stores=tuple(_paid(save, rules, st, o) for st in save.stores))
     save = _raise(_unlock(replace(save, modifiers=save.modifiers + o.modifiers), rules, o.unlocks), o.raises)
     save = left(without_taps(save, o.retire_orders), rules, o.leaves)
     save = marked(joined(installed(save, present_installs(save, rules, o.orders)), rules, o.joins), rules, o.marks)
+    save = cast_roles(save, rules, o.casts)
     save = rebuild(_end_retired_taps(queued(save, rules, o.queues), rules), rules)
     for card in o.starts:
         save = tap(save, rules, TapCard(card), False)

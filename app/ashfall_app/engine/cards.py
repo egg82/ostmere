@@ -5,7 +5,7 @@ are the same card (docs/systems.md, "Cards"). Semantics: design/cards.txt, part 
 """
 from dataclasses import dataclass
 
-from .ids import HANDS, ActionId, CardId, LaneId, LineKey, MixId, SideId, SkillId, StoreId, ThreatId
+from .ids import HANDS, ActionId, CardId, FeatureId, LaneId, LineKey, MixId, SideId, SkillId, StoreId, ThreatId
 from .modifiers import Modifier
 from .orders import Condition
 from .flows import Flow
@@ -118,6 +118,27 @@ class Leave:
 
 
 @dataclass(frozen=True)
+class CastPick:
+    """A lane a role may go to: `feature` is what its cast unlocks, `counted` the card each of the cast's patterns
+    counts on this lane, in pattern order (None: the pattern names no card on this lane, which counts 0)."""
+
+    lane: LaneId
+    feature: FeatureId
+    counted: tuple[CardId | None, ...]
+
+
+@dataclass(frozen=True)
+class Cast:
+    """A role given to one person at the outcome's instant: of the picks whose person is present and holds no role, the
+    lane with the most completions of the first pattern's card, ties and none going to the next pattern, then the
+    earliest pick, is unlocked its feature; a role already cast changes nothing. `picks` are in join order (the order
+    the content declares the lanes in). Semantics: api/contract/casting.txt, "CASTING"."""
+
+    role: str
+    picks: tuple[CastPick, ...]
+
+
+@dataclass(frozen=True)
 class Outcome:
     """What lands at once when a completion, a trigger or an answer applies it, in this order: stores, unlocks,
     modifiers, raises, retire_orders, leaves, orders, joins, queues, starts, then lines (the parts from retire_orders to queues
@@ -147,6 +168,9 @@ class Outcome:
     marks: tuple[Mark, ...] = ()
     """People's marks set or cleared, after joins and before queues (only in a trigger's or an answer's outcome:
     validation; the codec leaves the field out while empty)."""
+    casts: tuple[Cast, ...] = ()
+    """Roles cast, after marks and before queues (only in a trigger's or an answer's outcome: validation; the codec
+    leaves the field out while empty)."""
 
 
 @dataclass(frozen=True)

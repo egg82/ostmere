@@ -30,6 +30,8 @@ class TownCardEntry(CardEntry):
 
     def card(self, lane: str) -> CardEntry:
         fields = self.model_dump(exclude={"lanes", "own"})
+        fields["requires"] = [{**r, "id": r["id"].replace(LANE_TOKEN, lane)} if r["id"] is not None else r
+                              for r in fields["requires"]]
         return CardEntry.model_validate({**fields, "id": self.id.replace(LANE_TOKEN, lane), "lane": lane})
 
 

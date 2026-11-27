@@ -12,6 +12,7 @@ Standard library only: the workflow runs it without installing anything. Subcomm
                `refresh=true|false`, and writes the nightly's verdict file when true.
   held         `release`'s check: exit 1 (hold) unless the last nightly succeeded or left a readouts-only verdict.
   body         the refresh pull request's body from changed paths on stdin.
+  title        its title from the same paths: readouts, the chapter-save cost table (tools/ci_costs.json), or both.
 
 A red job is a drift-only red when every verdict of that job exists (one per matrix leg), each says its tests passed,
 and at least one lists a changed readout. Anything else that is red, including a job with no verdict, is a real failure.
@@ -84,9 +85,23 @@ def report(event: str, run_id: str, readouts: Path, summary: Path | None) -> int
     return 0 if event == "pull_request" else 1
 
 
+COSTS = "app/tools/ci_costs.json"
+
+
 def body(paths: list[str]) -> str:
     ids = sorted(Path(p).stem for p in paths if p.endswith(".txt"))
-    return "Readouts that differ from their committed text, pulled from the nightly's `readouts-new-*` artifacts:\n\n" + "".join(f"- `{i}`\n" for i in ids)
+    text = ""
+    if ids:
+        text = "Readouts that differ from their committed text, pulled from the nightly's `readouts-new-*` artifacts:\n\n" + "".join(f"- `{i}`\n" for i in ids)
+    if COSTS in paths:
+        text += ("\n" if text else "") + ("The chapter-save cost table, refreshed from the last runs' logs (`python -m tools.ci_costs`); "
+                                         "`tests/test_saves_plan.py` fails here when a planned job's predicted time is over its cap.\n")
+    return text
+
+
+def title(paths: list[str], run: str) -> str:
+    what = ["readouts"] * any(p.endswith(".txt") for p in paths) + ["chapter-save costs"] * (COSTS in paths)
+    return f"Refresh {' and '.join(what)} from nightly {run}"
 
 
 def main(argv: list[str]) -> int:
@@ -118,6 +133,8 @@ def main(argv: list[str]) -> int:
     rp.add_argument("--readouts", type=Path, required=True)
     rp.add_argument("--summary", type=Path)
     sub.add_parser("body")
+    t = sub.add_parser("title")
+    t.add_argument("--run", required=True)
     a = ap.parse_args(argv)
     if a.cmd == "verdict":
         write_verdict(a.job, a.index, a.total, a.status, a.readouts, a.out)
@@ -135,6 +152,8 @@ def main(argv: list[str]) -> int:
             return 1
     elif a.cmd == "report":
         return report(a.event, a.run, a.readouts, a.summary)
+    elif a.cmd == "title":
+        print(title(sys.stdin.read().split(), a.run))
     else:
         sys.stdout.write(body(sys.stdin.read().split()))
     return 0
