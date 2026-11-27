@@ -122,6 +122,7 @@ def _unlocks(o: "Opening") -> Iterator[tuple[str, "UnlockEntry"]]:
     for where, out in outcomes(o):
         yield from ((where, u) for u in out.unlocks)
     yield from ((f"order card for {c.store}", c.offered_after) for c in o.order_cards if c.offered_after is not None)
+    yield from ((f"order card for {c.store}", c.offered_until) for c in o.order_cards if c.offered_until is not None)
     yield from ((f"chip {c.id}", c.offered_after) for c in o.chips if c.offered_after is not None)
     yield from ((f"aim {a.id}", a.after) for a in o.aims if a.after is not None)
     yield from ((f"lane {x.id}", lb.after) for x in o.lanes for lb in x.later_labels)
@@ -178,7 +179,7 @@ def _check_modifier(ids: dict[str, list[str]], where: str, m: "ModifierEntry") -
         return
     if m.flow is not None or m.store is not None:
         fail(where, f"a {m.target} modifier takes no flow or store")
-    if m.target == "work":
+    if m.target in ("work", "chain"):
         need(where, "card", m.id, ids["card"])
     elif m.target == "cap":
         need(where, "store", m.id, ids["store"])

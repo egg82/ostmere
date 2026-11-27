@@ -236,7 +236,7 @@ STAGES["69_watch_night"] = _NIGHT.then(_AT_WATCH | {"running:n2_guard"})
 # The crews' work (people_crews.py): the beds reaped, and the pot and fish worked, by everyone who could be there.
 _JOINED = {"joined:" + f"n{n}" for n in (8, 9, 10, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22)}
 STAGES["69_reaping"] = _ALL.then(_JOINED | {"running:g_field_reap", "running:g_hearth_reap"})
-STAGES["69_cooking"] = _ALL.then(_JOINED | {"running:g_road_fungus_stew", "running:g_road_fog_fish"})
+STAGES["69_cooking"] = _ALL.then(_JOINED | {"running:g_road_fungus_stew", "running:g_road_fog_fish", "running:g_hearth_fungus_stew"})
 STAGES["69_crews_idle"] = _DAY.then(_JOINED | {"feature:bedesman_home"})
 # Day twenty-seven's moments (people_layers.py): the bedesman at the board, at the camp stone, and at the fire on night 28.
 _HOME = {"feature:stranger_home", "feature:bedesman_home"}

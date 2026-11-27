@@ -7,7 +7,7 @@ from ashfall_app.engine import (
 )
 from ashfall_app.engine.rates import store_value
 from tests.daythree import content as c3
-from tests.daythree.chapter import Landings, Later, Share
+from tests.daythree.chapter import Landings, Later, Offer, Share
 from tests.dayone.policy import Move
 from tests.dayone.sinks import Chapter, Trip
 from tests.weekone import content as w1
@@ -120,6 +120,11 @@ N2_WATCH, N2_WATCH_ROAD = {F + "watch": BP}, {F + "watch": BP // 2, F + "clear_r
 ROAD_FIELD, ROAD_HEARTH = {F + "clear_road": BP}, {H + "clear_road": BP}
 REAP_FIELD, REAP_HEARTH = {F + "reap": BP}, {H + "reap": BP}
 REAP_FORAGE_FIELD, REAP_FORAGE_HEARTH = {F + "reap": BP // 2, F + "forage": BP // 2}, {H + "reap": BP // 2, H + "forage": BP // 2}
+R = "g_road_"
+FOG, STEW_ROAD, CLEAR_ROAD, STAKES = {R + "fog_fish": BP}, {R + "fungus_stew": BP}, {R + "clear_road": BP}, {R + "stakes": BP}
+STEW_HEARTH = {H + "fungus_stew": BP}
+"""The road crew's and the later arrivals' own shares as each answer joined them: the pair's on the road crew's cards,
+and the seven the smallest-crew rule spreads onto the hearth and road crews, each whole on their join's card."""
 WALK_FORAGE_TYPICAL, WALK_FORAGE_SHARP = ({F + "walk_ashwood": 2500, F + "forage": 7500},
                                           {F + "walk_ashwood": BP // 2, F + "forage": BP // 2})
 """The newcomers' own splits as each answer and the open road left them: whole on the card the answer joined them with,
@@ -158,9 +163,11 @@ TYPICAL = WeekTwoKnobs(
         Split("g_hearth", crew(N4, N6, REAP_FORAGE_HEARTH, REAP_FORAGE_HEARTH), feature("r2_open")),
         Split("g_field", crew(N2_FORAGE_WATCH, N5, N7, WALK_FORAGE_TYPICAL, REAP_FIELD), feature("ashwood")),
         Split("n13", (("n13_walk_ashwood", 5000), ("n13_forage", 5000)), feature("sorrel_named")),
-        Split("g_road", (("g_road_fog_fish", 5000), ("g_road_fungus_stew", 5000)), answer("o_fiddle_food")),
-        Split("g_road", (("g_road_fog_fish", 1667), ("g_road_fungus_stew", 8333)), answer("o_walkers_food")),
-        Split("g_road", (("g_road_fog_fish", 1111), ("g_road_fungus_stew", 5556), ("g_road_stakes", 3333)), answer("o_widowers_build")),
+        Split("g_road", crew(FOG, STEW_ROAD), answer("o_fiddle_food")),
+        Split("g_road", crew(FOG, STEW_ROAD, STEW_ROAD, STEW_ROAD, STEW_ROAD), answer("o_walkers_food")),
+        Split("g_hearth", crew(N4, N6, REAP_FORAGE_HEARTH, REAP_FORAGE_HEARTH, STEW_HEARTH), answer("o_walkers_food")),
+        Split("g_road", crew(FOG, STEW_ROAD, STEW_ROAD, STEW_ROAD, STEW_ROAD, STAKES, STAKES), answer("o_widowers_build")),
+        Split("g_hearth", crew(N4, N6, REAP_FORAGE_HEARTH, REAP_FORAGE_HEARTH, STEW_HEARTH, ROAD_HEARTH), answer("o_widowers_build")),
     ))
 """The town's split, moment by moment (week-two-numbers.md, "The bigger thing in each typical visit"). Her lane stays on
 its rules: she is the town's forager, and the track's roots need her (moving her to stakes starves roots, and the
@@ -187,9 +194,11 @@ SHARP = WeekTwoKnobs(
         Split("g_hearth", crew(N4, N6, REAP_HEARTH, REAP_HEARTH), feature("r2_open")),
         Split("g_field", crew(N2_WATCH, N5, N7, REAP_FIELD, WALK_FORAGE_SHARP), feature("ashwood")),
         Split("n13", (("n13_walk_ashwood", 5000), ("n13_fog_fish", 5000)), feature("sorrel_named")),
-        Split("g_road", (("g_road_clear_road", 5000), ("g_road_stakes", 5000)), answer("o_fiddle_build")),
-        Split("g_road", (("g_road_clear_road", 8333), ("g_road_stakes", 1667)), answer("o_walkers_build")),
-        Split("g_road", (("g_road_clear_road", 5556), ("g_road_stakes", 1111), ("g_road_fungus_stew", 3333)), answer("o_widowers_food")),
+        Split("g_road", crew(CLEAR_ROAD, STAKES), answer("o_fiddle_build")),
+        Split("g_road", crew(CLEAR_ROAD, STAKES, CLEAR_ROAD, CLEAR_ROAD, CLEAR_ROAD), answer("o_walkers_build")),
+        Split("g_hearth", crew(N4, N6, REAP_HEARTH, REAP_HEARTH, ROAD_HEARTH), answer("o_walkers_build")),
+        Split("g_road", crew(CLEAR_ROAD, STAKES, CLEAR_ROAD, CLEAR_ROAD, CLEAR_ROAD, STEW_ROAD, STEW_ROAD), answer("o_widowers_food")),
+        Split("g_hearth", crew(N4, N6, REAP_HEARTH, REAP_HEARTH, ROAD_HEARTH, STEW_HEARTH), answer("o_widowers_food")),
     ))
 """Once the road is over the top (B17) both routes take the lanes they had clearing it to the beds and the roots; once
 the town can walk the Ashwood (B18) one of them walks beside the roots, the beds being over. Crew shares as typical's."""
@@ -199,14 +208,14 @@ HANDS = {"typical": (1500, 0), "sharp": (3000, 0)}
 """The hands' shares of cut_stakes and twist_cord a route adds at G2's visit; a route not named follows typical."""
 
 
-def order_cards(rules_cards: tuple[tuple[Unlock, Order], ...] = (),
-                stores: tuple[str, ...] = ORDER_STORES) -> tuple[tuple[Unlock, Order], ...]:
+def order_cards(rules_cards: tuple[tuple[Unlock, Order] | Offer, ...] = (),
+                stores: tuple[str, ...] = ORDER_STORES) -> tuple[tuple[Unlock, Order] | Offer, ...]:
     """`rules_cards`, and the content's order cards on `stores`, each as the page fills it in, offered after its
     unlock."""
     return (*rules_cards, *c3.order_cards(c3.opening3(), stores))
 
 
-def cordwood_rule() -> tuple[tuple[Unlock, Order], ...]:
+def cordwood_rule() -> tuple[tuple[Unlock, Order] | Offer, ...]:
     """Damp wood's sink's order card (day_fifteen.toml, stack_cordwood), offered once woodcutting's first top opens it.
     Of damp wood's order cards only this one: n1_cut's is her first rule, taught on day two."""
     return tuple(x for x in c3.order_cards(c3.opening3(), ("damp_wood",)) if x[1].then == TapCard(CORDWOOD))

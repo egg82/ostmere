@@ -1,0 +1,48 @@
+Wrong implementations of SPELLS (engine/design/spells.txt, "SPELLS"; api/contract/spells.txt, "SPELLS"), to plant one at a
+time in a scratch copy; a test written blind from those parts alone must go red for each. `@kills(row)` on a test claims
+the row. Run:
+  python -m tools.mutate_suite spells --run
+
+ 1 chain on a single      a chain whose runner's threat has members < 2 (not a group) validates, or resolves.
+ 2 longer than due        a chain is min(reach, room): it runs past the group's due members.
+ 3 due ignores links      due reads only the flow's fought, not the links already resolved: m - (F mod m).
+ 4 due leaves one out     due leaves out the member under way: m - 1 - ((F + C) mod m), or counts it twice.
+ 5 idle runner chains     due is not 0 while the runner is not fighting (capped tally, dry, paused), on the run or the view.
+ 6 view reach is base     ChainView / View.chains shows the base reach (or a rounding of it), not the entries' value.
+ 7 run reach is base      the completion runs the base reach (or one entry short), not the value shown.
+ 8 random length          the length (or which links land) draws on the module's random state or a seed.
+ 9 lines folded           k links emit one line (or the first only), not k.
+10 link key off index     link i reads lines[0] always, or a bag's draw, not lines[min(i, n) - 1].
+11 no firing room         the chain ignores max_firings_per_instant: k = min(due, reach).
+12 room off by one        the completion's own firing is not counted: k <= c - P, not c - P - 1.
+13 links count as fought  a link also raises the runner's fought tally.
+14 links move lost        a link raises lost or moves the runner's odds or any other store of it.
+15 tally not by k         the chained tally gains something other than k * QUANTITY_SCALE (0, 1, reach).
+16 stale second chain     a second chain at one instant reads the tallies from before the first.
+17 mixed no chain         a completion from the mix does not resolve a chain.
+18 chain repeats as rate  a chain card on a ruled lane repeats as a rate: its landings are not events.
+19 capped no chain        a capped card's completion does not resolve a chain.
+20 links out of order     links land before a capped card's own line, or after an uncapped card's tap line.
+21 link card is none     a link line names no card.
+22 reach rounds per entry the reach rounds up, or after each entry, not once down at the end.
+23 reach at tap start    a tap runs the reach it showed when it started, not the reach at its completion.
+24 uncapped no chain     an uncapped card's completion (a rate, no event) does not resolve a chain.
+25 chain at the tap      the chain resolves at the tap's start, or one second off the completion.
+26 members zero          a threat of members 0 (or less) validates.
+27 runner unchecked      a chain that names no standing action, or one with no fight, validates.
+28 fight card chains     a card with both a fight and a chain validates.
+29 empty chain           a reach under 1, or no link line, validates.
+30 chained misplaced     chained on a card's fight, on a standing fight of a single creature, or a chain whose runner has no
+                        chained or fought tally validates.
+31 chained shared        a chained tally that is also fought, lost, another fight's, a flow's or an outcome's store validates.
+32 reach entry unchecked a falling reach entry (add < 0, mul < BP) or one aimed at an undeclared or chain-less card validates.
+33 reach not coded       a ChainReach entry or the chained tally does not survive encode and decode.
+34 digest moves          members, chained and chain are encoded at their defaults, so rules without a chain change digest;
+                        or a chain is left out of the digest.
+35 fight view chained    FightView.chained is not floor(chained / QUANTITY_SCALE) (0 always, unfloored, or counts fought).
+36 chain views listed     chain_views lists a locked or completed card, or in another order.
+37 view due differs      ChainView.due is not the due the completion would run (or not 0 for an idle runner).
+38 content unserved      ThreatInfo.members or CardInfo.chain is not served as authored.
+39 view chains sources    View.chains up_to is not the value or lacks the base source first.
+40 fight chained wire     Fight.chained is not the whole links, or links are counted into the wire's fought or lost.
+41 link lines folded     the wire folds link lines of one instant, or drops a repeat of a key.

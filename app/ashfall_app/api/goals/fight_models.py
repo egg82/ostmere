@@ -53,6 +53,9 @@ class Fight(BaseModel):
     fought: int
     lost: int
     """Whole fights since the runner first ran; lost <= fought."""
+    chained: int
+    """Whole links chains have resolved for this runner since it first ran, in neither fought nor lost (contract/spells.txt,
+    "SPELLS"); 0 for a runner no chain names."""
 
 
 class SideInfo(BaseModel):
@@ -63,3 +66,6 @@ class SideInfo(BaseModel):
 class ThreatInfo(BaseModel):
     threat: str
     label_key: str
+    members: int
+    """One group's members, fought one after another: 1 for a single creature, 2 or more for a group a chain can reach
+    (contract/spells.txt, "SPELLS")."""

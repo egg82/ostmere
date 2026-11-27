@@ -22,3 +22,7 @@ class PlaceEntry(Entry):
     reveal: UnlockEntry
     label_key: str | None = None
     """None for a place drawn unnamed (a forest, a range)."""
+    labelled_after: UnlockEntry | None = None
+    """When set, the place is drawn unlabelled until this unlock is held, then takes its label_key. A reveal's kinds."""
+    over: str | None = None
+    """The id of the place whose cell this one shares, drawn as a stamp on its stamp: the only way two places hold one cell."""

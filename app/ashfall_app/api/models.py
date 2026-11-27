@@ -53,6 +53,7 @@ from .goals.decision_models import (
     UndoPick as UndoPick,
     MovePick as MovePick,
 )
+from .goals.chain_models import Chain as Chain, ChainInfo as ChainInfo
 from .goals.fight_models import (
     Fight as Fight,
     StoreLevel as StoreLevel,
@@ -232,6 +233,8 @@ class View(BaseModel):
     """Every offer shown so far, in content order (contract/offers.txt, "Offers")."""
     fights: list[Fight]
     """One per unlocked fight card, then standing fight, each in content order (contract/fights.txt, "FIGHTS")."""
+    chains: list[Chain]
+    """One per unlocked card with a chain that is not completed, in content order (contract/spells.txt, "SPELLS")."""
     goals: list[Goal]
     """What the next beat waits on, unmet: at most one step of work, then at most one clock (contract/goals.txt, "Goals")."""
     goal_rows: list[GoalRow]

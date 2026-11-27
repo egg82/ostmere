@@ -4,6 +4,7 @@ from enum import StrEnum
 
 from pydantic import BaseModel
 
+from ..goals.chain_models import ChainInfo
 from ..goals.fight_models import SideInfo as SideInfo, ThreatInfo as ThreatInfo
 from .feature_models import FeatureCard as FeatureCard, FeatureInfo
 from .find_models import FindInfo as FindInfo
@@ -154,6 +155,8 @@ class CardInfo(BaseModel):
     """The one glow lands on it the first time it is ready while its lane is free (contract/)."""
     fight: FightInfo | None
     """Set on a fight card (contract/fights.txt, "FIGHTS")."""
+    chain: ChainInfo | None
+    """Set on a working with a chain (contract/spells.txt, "SPELLS")."""
     replaced_by: str | None
     """The card that takes this one's place once it retires, when the content names one: a greyed mix is fixed by the swap."""
 
@@ -221,6 +224,8 @@ class OrderCard(BaseModel):
     then: OrderVerb
     offered_after: Unlock | None
     """Offered only once view.unlocked holds this: the drain the order answers has begun."""
+    offered_until: Unlock | None
+    """Not offered once view.unlocked holds this (an order card offered once: its rule was retired at a season's turn)."""
     chip: str | None
     """The chip this card answers (its `when` is that chip's): offered in the hands strip while the chip shows, never
     under a ledger line (contract/)."""

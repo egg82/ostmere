@@ -32,3 +32,4 @@ design/rule-guards.txt: RULE GUARDS
 design/or-else.txt: OR ELSE
 design/nexts-row.txt: NEXT'S ROW
 design/full-output.txt: FULL OUTPUT
+design/spells.txt: SPELLS

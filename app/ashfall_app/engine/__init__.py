@@ -12,8 +12,8 @@ from .errors import (
 )
 from .events import CascadeLimit, Event, EventKind
 from .cards import (
-    HELD_PREFIX, Amount, Blocker, CapRaise, Cast, CastPick, CardDef, CardState, FightDef, HeldSpeed, Join, LaneState,
-    Leave, Mark, Outcome, RuleInstall, WhileRunning,
+    HELD_PREFIX, Amount, Blocker, CapRaise, Cast, CastPick, CardDef, CardState, ChainDef, FightDef, HeldSpeed, Join,
+    LaneState, Leave, Mark, Outcome, RuleInstall, WhileRunning,
 )
 from .flows import Flow
 from .forecast import Forecast, ForecastPath, forecast
@@ -24,7 +24,7 @@ from .ids import (
 from .lanes import LaneDef, TapCard
 from .mixes import MAX_MIXES, CardShare, Mix, SpentShare, SubMix, SwitchMix, flatten_shares
 from .modifiers import (
-    Explanation, FlowKind, LaneSpeed, Modifier, ModifierKind, RateRef, Run, RunKind, SideStrength, StoreCap, Target,
+    ChainReach, Explanation, FlowKind, LaneSpeed, Modifier, ModifierKind, RateRef, Run, RunKind, SideStrength, StoreCap, Target,
     ThreatStrength, WorkRef, modified_rate,
 )
 from .orders import (
@@ -54,6 +54,7 @@ from .pending import Pending, pending
 from .spent import spent_stores
 from .view import View, view
 from .fightview import FightView
+from .chains import ChainView, chain_views
 from .viewparts import (
     AnswerShift, AnswerView, CardView, CompletedCard, Contribution, GuardView, HeldView, LaneBar, LedgerLine, MenuNode, Need, OfferView, RunBy,
     SkillBar, SkillPhase, StandingBar,
@@ -68,7 +69,7 @@ __all__ = [
     "EngineError", "InvalidRulesError", "InvalidVerbError", "StateFormatError", "TimeOrderError",
     "CascadeLimit", "Event", "EventKind",
     "HELD_PREFIX", "Amount", "Cast", "CastPick", "Blocker", "CapRaise", "CardDef", "CardState", "FightDef", "Join", "LaneState", "Leave", "Mark", "Outcome",
-    "RuleInstall", "WhileRunning", "HeldSpeed",
+    "RuleInstall", "WhileRunning", "HeldSpeed", "ChainDef", "ChainReach", "ChainView", "chain_views",
     "AnswerDef", "OfferDef",
     "Flow",
     "Forecast", "ForecastPath", "forecast",

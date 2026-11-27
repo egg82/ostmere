@@ -7,7 +7,9 @@ import "./reminders.css";
 import "./slider.css";
 import "./map.css";
 import { boot } from "./app/boot";
+import { walkOffStale } from "./ui/back";
 
+walkOffStale();
 boot();
 // The page loaded whole: a later failed boot may reload once again (static/index.html, bootFailed).
 addEventListener("load", () => {
