@@ -9,7 +9,7 @@ from ..opening import convert as authored
 from ..opening.goals import goal_defs
 from ..opening.eaters import bonus_bp
 from ..opening.makers import card_makes, card_takes, made_by, makers_by_store, rises_in_steps
-from ..opening.entries import CardEntry, FightEntry, ModifierEntry
+from ..opening.entries import CardEntry, ModifierEntry
 from ..opening.order_entries import OrderCardEntry
 from ..opening.refs import outcomes
 from ..opening.stake_checks import reach_modifiers, reach_stops
@@ -30,6 +30,7 @@ from .rules.mixrows import MixNumbers
 from .goals.levels import levels
 from .world.scenestores import scene_stores
 from .rules.ruledry import order_dry
+from .goals.fight_infos import fight_info, find_infos
 from .goals.goals import goals
 from .world.line_causes import line_infos, offer_cause, worded_stores
 from .world.line_models import PeopleBand, PeopleInfo
@@ -119,24 +120,6 @@ class Game:
             marks=[jm.Mark(k) for k in d.marks]) for d in days if d.notes]
 
 
-def _fight(f: e.FightDef | None, entry: FightEntry | None) -> cm.FightInfo | None:
-    if f is None:
-        return None
-    return cm.FightInfo(side=f.side, threat=f.threat, loses=[cm.Amount(store=a.store, quantity=a.quantity) for a in f.loses],
-                        wounds=[cm.Amount(store=a.store, quantity=a.quantity) for a in f.wounds],
-                        won_line_keys=[] if entry is None else list(entry.won_line_keys),
-                        lost_line_keys=[] if entry is None else list(entry.lost_line_keys),
-                        loss_pool=None if entry is None else entry.loss_pool,
-                        loss_notes=None if entry is None else entry.loss_notes,
-                        on_loss_key=None if entry is None else entry.on_loss_key)
-
-
-def _finds(o: Opening) -> list[cm.FindInfo]:
-    return [cm.FindInfo(line_key=t.outcome.found_line_key, store=t.outcome.stores[0].store,
-                        quantity=e.units(t.outcome.stores[0].items))
-            for t in o.triggers if t.outcome.found_line_key is not None]
-
-
 def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
     cards = {x.id for x in o.cards}
     card_fights = {c.id: c.fight for c in rules.cards}
@@ -154,9 +137,9 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                      for s in o.stores],
         side_infos=[cm.SideInfo(side=s.id, label_key=s.label_key) for s in o.sides],
         threat_infos=[cm.ThreatInfo(threat=t.id, label_key=t.label_key) for t in o.threats],
-        find_infos=_finds(o),
+        find_infos=find_infos(o),
         standing_infos=[cm.StandingInfo(action=a.id, label_key=a.label_key, skill=a.skill,
-                                        fight=_fight(standing_fights.get(e.ActionId(a.id)), a.fight)) for a in o.standing],
+                                        fight=fight_info(standing_fights.get(e.ActionId(a.id)), a.fight)) for a in o.standing],
         card_infos=[cm.CardInfo(
             card=c.id, lane=c.lane, presentation=cm.CardPresentation(c.presentation), label_key=c.label_key,
             upside_key=c.upside_key, change_bp=[v for v, _ in _card_slots(c, o)], work_s=c.work_s, variant_of=c.variant_of,
@@ -167,7 +150,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                          if r.subject_kind == "skill_level" and r.test == "at_least" and r.id is not None],
             step_needs=[cm.StepNeed(card=r.id, count=r.value) for r in c.requires
                         if r.subject_kind == "card_count" and r.test == "at_least" and r.id is not None],
-            glows=c.glows, fight=_fight(card_fights.get(e.CardId(c.id)), c.fight), replaced_by=replacements.get(c.id))
+            glows=c.glows, fight=fight_info(card_fights.get(e.CardId(c.id)), c.fight), replaced_by=replacements.get(c.id))
             for c in o.cards],
         chip_infos=chip_infos(o, rules),
         feature_infos=[feature_info(o, f) for f in o.features],
