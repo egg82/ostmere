@@ -13,7 +13,7 @@ SPECS = ms.APP / "tools" / SPENT.specs
 def _specs_with(tmp_path: Path, broken: str, old: str) -> Path:
     for f in SPECS.glob("m*.py"):
         (tmp_path / f.name).write_text(f.read_text())
-    (tmp_path / broken).write_text(f'EDITS = [("ashfall_app/engine/spent.py", {old!r}, "pass\\n")]\n')
+    (tmp_path / broken).write_text(f'EDITS = [("ashfall_app/engine/mixes/spent.py", {old!r}, "pass\\n")]\n')
     return tmp_path
 
 
@@ -24,7 +24,7 @@ def test_every_spent_mutant_plants_on_the_current_engine():
 
 def test_a_missing_anchor_is_reported_by_mutant_name(tmp_path: Path):
     specs = _specs_with(tmp_path, "m11.py", "text that is nowhere in the engine\n")
-    assert ms.unplanted(SPENT, specs) == ["m11.py: ashfall_app/engine/spent.py: anchor occurs 0 times, not once"]
+    assert ms.unplanted(SPENT, specs) == ["m11.py: ashfall_app/engine/mixes/spent.py: anchor occurs 0 times, not once"]
 
 
 def test_an_anchor_that_occurs_twice_is_reported(tmp_path: Path):

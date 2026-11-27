@@ -10,7 +10,7 @@ import pytest
 from ashfall_app.engine import (
     QUANTITY_SCALE as Q, Rules, Save, StoreId, TriggerId, Unlock, UnlockKind, advance, encode, new_save, rebase,
 )
-from ashfall_app.engine.ids import FeatureId
+from ashfall_app.engine.core.ids import FeatureId
 from ashfall_app.rules.schema import CHAPTERS, OPENING, Opening, load_opening, to_rules
 
 FIXTURE = Path(__file__).resolve().parents[1] / "fixtures" / "arrivals.toml"

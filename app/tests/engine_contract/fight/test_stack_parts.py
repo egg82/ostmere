@@ -3,7 +3,7 @@ lanes enter them only as the speeds a fight tap kept, so a lane change that leav
 from dataclasses import replace
 
 from ashfall_app.engine import TapCard, decide, new_save
-from ashfall_app.engine.gates import stack_inputs
+from ashfall_app.engine.unlocks.gates import stack_inputs
 from fight_world import HUNT, world
 
 

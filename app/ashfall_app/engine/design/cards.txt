@@ -331,5 +331,5 @@ KNOWN GAPS (cards)
 - A save written before lumps were paid by work, in the middle of a completion, keeps what the old rates had paid of
   it, under one unit a second short (or over, past a tap's last partial second): no save field records that history.
   From then on it is paid exactly by the work, so that completion lands that much off and a trigger at exactly one
-  completion's amount does not fire, as on the engine that wrote it (tests/engine/test_old_lump_saves.py).
+  completion's amount does not fire, as on the engine that wrote it (tests/engine/savefile/test_old_lump_saves.py).
 

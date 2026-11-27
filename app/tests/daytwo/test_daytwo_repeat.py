@@ -11,8 +11,8 @@ from ashfall_app.engine import (
     BP, QUANTITY_SCALE as Q, AtLeast, CardId, EventKind, LaneId, Order, Rules, Save, SetOrders, StoreId, StoreValue,
     TapCard, advance, decide, next_event,
 )
-from ashfall_app.engine import retap
-from ashfall_app.engine.schedule import events
+from ashfall_app.engine.orders import retap
+from ashfall_app.engine.loop.schedule import events
 from tests.daytwo.player import DayTwoPlayer
 
 HER = LaneId("n1")

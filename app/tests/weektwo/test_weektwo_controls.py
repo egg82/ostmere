@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 from ashfall_app.engine import CardId, CardShare, Mix, Rules, Save, SaveMix, SetQueue, TapCard, decide, rebase, view
-from ashfall_app.engine.codec import canonical
+from ashfall_app.engine.savefile.codec import canonical
 from tests.daythree import counters as c3
 from tests.daythree import shifts, visits
 from tests.daythree.content import rules3

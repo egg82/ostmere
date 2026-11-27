@@ -6,7 +6,7 @@ from ashfall_app import engine as e
 from ashfall_app.api.goals import goal_models as g
 from ashfall_app.api.goals.goals import goals
 from ashfall_app.rules.goals import GoalDef
-from tests.engine.held_impl_world import HUNT, LOST, Q, world
+from tests.engine.modifiers.held_impl_world import HUNT, LOST, Q, world
 
 
 def served(waits: dict[str, int], lost: int = 1, card_in_play: bool = True) -> list[g.Goal]:

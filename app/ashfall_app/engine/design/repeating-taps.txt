@@ -1,4 +1,4 @@
-REPEATING TAPS (a lane's task run as a rate, engine/retap.py). Where this part and an entry above disagree, this part
+REPEATING TAPS (a lane's task run as a rate, engine/orders/retap.py). Where this part and an entry above disagree, this part
 holds.
 
 FIT PASS

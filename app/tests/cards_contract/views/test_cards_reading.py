@@ -9,7 +9,7 @@ from hypothesis import given
 from ashfall_app.engine import (
     FlowKind, RateRef, Rules, Save, advance, explain, explain_work, level, next_event, segment, value, view, xp,
 )
-from ashfall_app.engine import work as engine_work
+from ashfall_app.engine.loop import work as engine_work
 from cards_gen import Scenario, few, play, scenario_st, span
 from cards_world import rich_rules, rich_saves
 

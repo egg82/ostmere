@@ -1,16 +1,16 @@
 """Row 17 of MUTANTS_guards.txt: past cap: a guard letting go on a mix rule past the firing cap does not wait."""
 EDITS: list[tuple[str, str, str]] = [
-    ('ashfall_app/engine/instant.py',
+    ('ashfall_app/engine/loop/instant.py',
      '''and _moves_mix(save, event):''',
      '''and _moves_mix(save, event, rules):'''),
-    ('ashfall_app/engine/instant.py',
+    ('ashfall_app/engine/loop/instant.py',
      '''def _moves_mix(save: Save, event: Event) -> bool:
 ''',
      '''def _moves_mix(save: Save, event: Event, rules: Rules) -> bool:
     if not (event.kind is EventKind.LATCH and isinstance(save.orders[event.sequence].then, SwitchMix)):
         return False
-    from .latches import flipped_now
-    from .orders import guard_latches
+    from ..orders.latches import flipped_now
+    from ..orders.orders import guard_latches
     i = event.sequence
     flipped = flipped_now(save, rules, save.orders[i], save.latches[i])
     was = guard_latches(save.latches[i])

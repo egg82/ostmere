@@ -48,7 +48,7 @@ FIGHTS
     seeded draw keyed by the save, the runner, "won" (or "lost") and floor(k / n): each line once before any repeats,
     the same on every device. A round's first is swapped with its second when it would repeat the round before's last,
     so no line comes twice in a row; a pool of two keeps its first round's order (game/ledger/fights.ts, bagged; the engine
-    draws a chip's off lines with the same bag, engine/rotation.py).
+    draws a chip's off lines with the same bag, engine/cards/rotation.py).
   THE CLIENT MAY NOT:
   - show odds for a fight whose fought is 0; it draws ui.fight.odds_unknown there, whatever loss_bp holds, and the threat's strength as ui.fight.threat_unknown
     with no entries to open (the two strengths would give the odds away); the side's own strength shows as always.

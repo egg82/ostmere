@@ -7,7 +7,7 @@ without day eleven, loads under today's and plays on. The rhythm is the readouts
 import pytest
 
 from ashfall_app.engine import StoreId, Unlock, UnlockKind, units
-from ashfall_app.engine.rates import store_value
+from ashfall_app.engine.loop.rates import store_value
 from tests.daythree import counters
 from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S

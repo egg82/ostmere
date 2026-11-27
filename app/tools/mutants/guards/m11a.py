@@ -1,15 +1,15 @@
 """Row 11 of MUTANTS_guards.txt: start cap: a share guard's latch is read off the store's starting cap."""
 EDITS: list[tuple[str, str, str]] = [
-    ('ashfall_app/engine/latches.py',
-     '''from .state import Save
+    ('ashfall_app/engine/orders/latches.py',
+     '''from ..core.state import Save
 ''',
-     '''from .state import Save
+     '''from ..core.state import Save
 from dataclasses import replace as _replace
 
-from .gates import store_cap as _store_cap
+from ..unlocks.gates import store_cap as _store_cap
 from .orders import AtLeast as _AtLeast, AtMost as _AtMost
 from .sharelevels import _quantity, read_levels as _read_levels
-from .units import BP as _BP, QUANTITY_SCALE as _Q, ceil_div as _ceil_div
+from ..core.units import BP as _BP, QUANTITY_SCALE as _Q, ceil_div as _ceil_div
 
 
 def _read(save, rules, c):
@@ -23,12 +23,12 @@ def _read(save, rules, c):
         return _AtMost(c.subject, value, max(release, value, min(value + _Q, whole * _Q - 1)))
     return _AtLeast(c.subject, value, min(release, value, max(value - _Q, _Q)))
 '''),
-    ('ashfall_app/engine/latches.py',
+    ('ashfall_app/engine/orders/latches.py',
      '''        g = change_time(save, rules, cond, on)
 ''',
      '''        g = change_time(save, rules, _read(save, rules, cond), on)
 '''),
-    ('ashfall_app/engine/latches.py',
+    ('ashfall_app/engine/orders/latches.py',
      '''        if changes_now(save, rules, cond, on):
 ''',
      '''        if changes_now(save, rules, _read(save, rules, cond), on):

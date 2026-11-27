@@ -200,14 +200,14 @@ steps, building stages, recipes). A one-off is a card with a cap; at its cap it 
 raise the cap. Standing actions (a fire burning) are not cards. Semantics: `engine/design/`, "CARDS".
 
 Mixes: one mechanism for both layers, the player's time (hands) and the town's. A mix is a hands mix or a town mix by
-the lanes its cards sit on (`engine.plan.mix_layer`); a town mix's share is a part of one person's time, the person
+the lanes its cards sit on (`engine.orders.plan.mix_layer`); a town mix's share is a part of one person's time, the person
 being the lane its card is on, each person's shares summing to at most 100%, and the running one is set by the town's
-always rule, a SwitchMix order, never the player's switch (`app/ashfall_app/engine/mixruns.py`; `engine/design/`,
+always rule, a SwitchMix order, never the player's switch (`app/ashfall_app/engine/mixes/mixruns.py`; `engine/design/`,
 "THE TOWN'S MIX"). A mix holding a completed card greys whole and falls through to the queue or the orders. A card
 paused on a dry store gives its share to the rest of its mix on its lane until its pause lifts (a store a maker refills
 at its hourly resume, a spent one, which nothing in play can make again, when an outcome refills it), each gain named
 in `explain()` and shown on the page as the split that runs now: derived at the instant, never saved
-(`app/ashfall_app/engine/spent.py`; `engine/design/`, "SPENT"). Buildings running cards remain planned: pooled
+(`app/ashfall_app/engine/mixes/spent.py`; `engine/design/`, "SPENT"). Buildings running cards remain planned: pooled
 work is a known gap.
 
 Standing orders and the queue: an order's mix is a pushdown of one over the player's, read per layer (a town mix's
@@ -215,9 +215,9 @@ order never moves the hands' running mix), and a tap yields the mix. Evaluation 
 act at an instant, not only the first, so no lane idles on a ready order (`engine/design/`, "Evaluation applies
 every verb"). A story outcome installs a ruled lane's always rule as an ordinary order, and an answer can queue a hands
 one-off as a When ready entry (`engine/design/`, "Installed rule", "Queued one-off";
-`app/ashfall_app/engine/installs.py`); a new save has neither, and nothing installs a rule that watches a store.
+`app/ashfall_app/engine/orders/installs.py`); a new save has neither, and nothing installs a rule that watches a store.
 Content order cards are never built for the player: they feed the first rule's lesson and the hint dots. Where each
-order stands (on, waiting, outranked, passed over, behind Next) is served on the View as order_states (`engine.plan.order_states`),
+order stands (on, waiting, outranked, passed over, behind Next) is served on the View as order_states (`engine.orders.plan.order_states`),
 and the Rules tab says why a rule is off under it (`app/client/src/ui/rules/rulewhy.ts`). The page queues one run of a card
 (held until its count is one past the runs planned before it), and a mix until a goal row lands (a goal
 stint: a queued switch runs over the player's mix until it pops, `engine/design/`, "Queue mix";
@@ -253,7 +253,7 @@ Modifiers: buildings, tools, spells, prestige, seasons, injuries and supply are 
 Planned for combat: a side's and a threat's strength are targets too, a threat's raised only by its region's schedule
 triggers, and a fight's odds join the effective stack while it runs (`engine/design/`, "FIGHTS"). A card's
 `while_running` entries on a side join the stack while it runs, at its share of its lane's time
-(`app/ashfall_app/engine/heldentries.py`, "ENTRIES HELD WHILE A CARD RUNS"): derived from the lanes and running mixes
+(`app/ashfall_app/engine/modifiers/heldentries.py`, "ENTRIES HELD WHILE A CARD RUNS"): derived from the lanes and running mixes
 wherever the stack is read, never stored.
 
 Lanes: tapping trades mix time one for one, so attention earns nothing. Tapping a card unready is a failed tap: no
@@ -261,12 +261,12 @@ time, nothing changed, its line at once (known at the tap, never chance). A glow
 hands task the queue or a rule holds (a stage an order names too, its latch having fallen as the stage drank the
 store), which takes it up again once the step lands, and a player's tap of a cure for a chip shown now cuts in on any
 hands task but a cure, the task going to the queue's front if nothing else would take it up (`engine/design/`,
-"CUT-IN", "CURE CUT-IN", "ORDER CARD ON A STAGED BUILD"; `app/ashfall_app/engine/decisions.py`,
-`app/ashfall_app/engine/cure_reading.py`). Other lanes (a drying rack, later buildings) never touch the player's time.
+"CUT-IN", "CURE CUT-IN", "ORDER CARD ON A STAGED BUILD"; `app/ashfall_app/engine/orders/decisions.py`,
+`app/ashfall_app/engine/cards/cure_reading.py`). Other lanes (a drying rack, later buildings) never touch the player's time.
 A ruled lane's person is in the town mix once they have joined, and a tap on that lane (a rule's) takes the whole of
 the person while their shares yield, as a hands tap yields the hands' mix. A townsperson who works is a ruled lane: the
 player's rules set its task (a single task, never a mix), the player never taps it, its rules' order is its priority,
 and the view names the rule whose task it runs (`engine/design/`, "Ruled lane", "Lane order", "THE TOWN'S MIX";
-`app/ashfall_app/engine/plan.py`). A lane whose rules would start the same card again at each completion runs it as a
+`app/ashfall_app/engine/orders/plan.py`). A lane whose rules would start the same card again at each completion runs it as a
 rate, as a mix runs its cards, and lands only when its task changes (`engine/design/`, "REPEATING TAPS";
-`app/ashfall_app/engine/retap.py`).
+`app/ashfall_app/engine/orders/retap.py`).

@@ -6,7 +6,7 @@ the opening's moves left out."""
 from dataclasses import dataclass
 
 from ashfall_app.engine import Rules, Save, advance, decide, new_save, view
-from ashfall_app.engine.phases import level_shown, phase_state
+from ashfall_app.engine.prestige.phases import level_shown, phase_state
 from tests.dayone.player import policy
 from tests.dayone.player.player import DayOnePlayer
 from tests.dayone.player.schedules import Schedule, Visit

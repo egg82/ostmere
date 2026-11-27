@@ -9,7 +9,7 @@ FIT PASS
   State).
 - It extends Lanes and THE TOWN'S MIX, no new system: a group is a lane of a new kind (pooled), its split is
   CardShares in the town mix that already holds each person's, and the one reader that turns people into runs is
-  engine/mixruns.py _town_entries. It is the share unit of "people" that THE TOWN'S MIX's KNOWN GAPS, "Pooled work",
+  engine/mixes/mixruns.py _town_entries. It is the share unit of "people" that THE TOWN'S MIX's KNOWN GAPS, "Pooled work",
   asked for.
 - Nystrom's near-death attack is the typed object selectively overriding the type's behaviour, which is the mark.
 
@@ -28,7 +28,7 @@ CHOICES (groups)
     PhaseState-on-SkillState precedent in PRESTIGE PHASES). Written only by a join and a Mark.
   - Every field is left out of the codec and the rules digest while at its default. "General" is content, not an
     engine case: content declares a pooled lane for people with no specialty and sets `group` to it.
-- How a group's split runs (engine/mixruns.py, _town_entries):
+- How a group's split runs (engine/mixes/mixruns.py, _town_entries):
   - Members of pooled lane G at instant t: person lanes L with LaneDef.group == G, JOINED, not LEFT, LaneState.own_split
     False. Free members: members whose lane holds no tap.
   - A CardShare of a card on G is basis points of EACH member's time. Its card runs at effective share
@@ -48,17 +48,17 @@ CHOICES (groups)
     pooled time.
   - Rates change only at instants that already rebuild rates: a join, a leave, a mark (an outcome instant), a tap start
     and a tap landing. No new event kind.
-- Join (engine/joins.py): a join with own_split False sets LaneState.own_split False, still removes the lane's uncapped
+- Join (engine/people/joins.py): a join with own_split False sets LaneState.own_split False, still removes the lane's uncapped
   always rules (they would yield the person for good), and gives the join's share to G instead of L: if the town mix
   holds no share of a card on G, append CardShare(card, BP), `card` being the join's, which must be on G. So the first
   member starts the group at a whole split, and every later member adds output under the split already set.
-- Mark (engine/marks.py): set LaneState.own_split; when the town mix holds no share on L (setting it True) or on G
+- Mark (engine/people/marks.py): set LaneState.own_split; when the town mix holds no share on L (setting it True) or on G
   (clearing it), append CardShare(card, BP) if the mark names a card, which is on L or on G respectively. A mark on a lane not joined, or left, changes nothing (as a join of a
   joined lane does).
-- Verbs (engine/verbs.py, plan checks): SaveMix of a TOWN mix treats G as a lane: G's shares sum to at most BP, no
+- Verbs (engine/core/verbs.py, plan checks): SaveMix of a TOWN mix treats G as a lane: G's shares sum to at most BP, no
   capped card. A card on G is accepted whether or not G has members. SetOrders, installs, starts and the queue refuse
   any TapCard of a card on a pooled lane.
-- View (engine/view.py, viewparts.py): LaneBar gains own_split (person lanes only); CardView of a group card gains crew
+- View (engine/read/view.py, viewparts.py): LaneBar gains own_split (person lanes only); CardView of a group card gains crew
   (free_members) beside its share and run, so the page can say "x3" and the ledger's rate is the total.
   While crew is above 0, the card's share_bp and `gained` are the totals over the free members (the card runs at
   them: saved share x crew), and crew is 0 with no free member (members all tapped, or none): then the share is the

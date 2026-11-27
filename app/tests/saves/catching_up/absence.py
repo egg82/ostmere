@@ -2,8 +2,10 @@
 busy runner cannot hide them (tests/saves/catching_up/test_long_absence.py, tests/weekone/test_weekone_long_absence.py)."""
 from collections.abc import Callable
 
-from ashfall_app.engine import Event, Rules, Save, advance, api, schedule
-from ashfall_app.engine.handlers import Emit, ignore
+from ashfall_app.engine import Event, Rules, Save, advance
+from ashfall_app.engine.core import api
+from ashfall_app.engine.loop import schedule
+from ashfall_app.engine.loop.handlers import Emit, ignore
 
 DAY_S = 86_400
 

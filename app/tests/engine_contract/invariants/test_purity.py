@@ -91,5 +91,5 @@ def test_clean_imports_are_not_flagged(tmp_path: Path):
     f = tmp_path / "clean.py"
     f.write_text("import dataclasses\nfrom enum import IntEnum\nfrom typing import NewType\nfrom fractions import Fraction\n"
                  "from .ids import StoreId\nfrom ..engine import api\nfrom ashfall_app.engine import units\n"
-                 "import ashfall_app.engine.rules\nfrom ashfall_app.engine.state import Save\nimport math, functools\n")
+                 "import ashfall_app.engine.core.rules\nfrom ashfall_app.engine.core.state import Save\nimport math, functools\n")
     assert violations(f) == []

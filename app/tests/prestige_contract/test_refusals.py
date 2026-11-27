@@ -8,7 +8,7 @@ import pytest
 from ashfall_app.engine import (
     NodeId, Prestige, PrestigeRefusal, PrestigeRefused, Rules, Save, SkillId, Unlock, UnlockKind, UndoPick, advance, decide, new_save,
 )
-from ashfall_app.engine.prestige import applied, refusal
+from ashfall_app.engine.prestige.prestige import applied, refusal
 from prestige_world import J, J1, K, N1, N2, N3, N4, at_second, click, rules, undo, without_prestige
 
 R = rules()

@@ -5,7 +5,7 @@ from hypothesis import given, strategies as st
 from hypothesis.strategies import DrawFn
 
 from ashfall_app.engine import PacingCurve, PhaseState, PrestigeDef, level_for, xp_for
-from ashfall_app.engine.phases import (
+from ashfall_app.engine.prestige.phases import (
     accrues, carry_ends_at, level_counted, level_shown, phase_top, span, waiting_levels, xp_ceiling,
 )
 

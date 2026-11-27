@@ -7,7 +7,7 @@ from ashfall_app.engine import (
     BP, AnswerOffer, CardShare, Mix, MixId, SaveMix, SetOrders, SetQueue, StoreId, SwitchMix, TapCard, advance, decide,
     new_save, value_at, view,
 )
-from ashfall_app.engine.offerstate import answer_given
+from ashfall_app.engine.offers.offerstate import answer_given
 from tests.banked.chapter import CHAPTER, COMFORT, FOUND, GATHER, NEWCOMER, STAY, TRIP, WOOD, rules
 from tests.banked.play import Played, built, play
 from tests.dayone.absence import capcheck

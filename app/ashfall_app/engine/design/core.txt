@@ -141,7 +141,7 @@ CHOICES (each with its reason)
   lines), and never again: Save.chips_seen[i] records that chip i has shown (time 0 included, whose lines are not
   returned) and never resets. Why: a chip can clear and show again every cycle while the player is away, and the line
   says something once. Each time it stops being shown (its latch releasing, since unlocks only grow), one of its
-  off_lines: the k-th draw of a shuffle bag over them keyed by the chip (engine/rotation.py, the page's own draw for a
+  off_lines: the k-th draw of a shuffle bag over them keyed by the chip (engine/cards/rotation.py, the page's own draw for a
   fight's pool), k the off lines it has said, which chips_seen[i] counts above its 1. Each line comes once a round
   and none twice in a row. Why: a chip that clears every cycle says its off line every cycle, and one line said
   fifteen times reads as a stuck record; a count in the save keeps the turns exact across saves and devices.
@@ -274,7 +274,7 @@ KNOWN GAPS (stage 2 or later, each named where a test will need it)
 - (Closed, day one.) READY and a discrete requires: no requires turns true at an instant that does not evaluate. Since
   CARDS, CardCount is solved off the work segment (a blocker's ready_at, so READY falls at the count); a requires may
   not read Running (validation); Unlocked changes only when an Outcome lands, which is a COMPLETION, a TAP_DONE or a
-  TRIGGER, each of which evaluates. tests/engine/test_dayone_questions.py holds each case, a queued card starting at
+  TRIGGER, each of which evaluates. tests/engine/core/test_dayone_questions.py holds each case, a queued card starting at
   the instant the last of its requires holds.
 
 INVARIANTS (testable properties; r = valid rules, s = any save the engine returned)

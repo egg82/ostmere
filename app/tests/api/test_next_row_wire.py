@@ -10,8 +10,8 @@ from ashfall_app import engine as e
 from ashfall_app.api import convert
 from ashfall_app.api import models as w
 from ashfall_app.api.service import Game
-from ashfall_app.engine import codec
-from ashfall_app.engine.rulelog import rule_changes
+from ashfall_app.engine.savefile import codec
+from ashfall_app.engine.orders.rulelog import rule_changes
 from tests.shipped_ruleset import ShippedRuleset
 
 Json = dict[str, Any]

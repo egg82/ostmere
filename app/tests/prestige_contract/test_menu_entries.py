@@ -9,9 +9,9 @@ from ashfall_app.engine import (
     BP, Modifier, ModifierKind, NodeId, PhaseState, Rules, Run, RunKind, Save, SkillId, SourceId, modified_rate,
     new_save,
 )
-from ashfall_app.engine.nodes import NODE_PREFIX
-from ashfall_app.engine.pickentries import pick_entries, pick_source
-from ashfall_app.engine.prestige import menu, ranks_taken, track
+from ashfall_app.engine.prestige.nodes import NODE_PREFIX
+from ashfall_app.engine.prestige.pickentries import pick_entries, pick_source
+from ashfall_app.engine.prestige.prestige import menu, ranks_taken, track
 from prestige_world import (
     J, J1, K, K_RANKS, MAKE_OTHER, MENU_SIZE, N1, N2, N3, N4, NODES, rules, without_prestige,
 )

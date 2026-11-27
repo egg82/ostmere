@@ -2,7 +2,7 @@
 entry per rule, counting its starts and keeping its last start and let-go with levels; an entry whose rule the save no
 longer has goes; past KEPT, the entries changed longest ago go; and the stored form reads back as written."""
 from ashfall_app import engine as e
-from ashfall_app.engine.codec import Json
+from ashfall_app.engine.savefile.codec import Json
 from ashfall_app.saves.ruleruns import KEPT, RuleRun, gathered, merged, runs_from_json, runs_to_json, standing
 
 S = e.StoreId("s0")

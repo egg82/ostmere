@@ -7,8 +7,8 @@ from hypothesis import given, strategies as st
 from ashfall_app.engine import (
     AtLeast, LineKey, Outcome, Prestige, SkillLevel, TriggerDef, TriggerId, advance, value,
 )
-from ashfall_app.engine.phases import at_top, level_counted, level_shown, phase_state, waiting_levels
-from ashfall_app.engine.prestige import refusal
+from ashfall_app.engine.prestige.phases import at_top, level_counted, level_shown, phase_state, waiting_levels
+from ashfall_app.engine.prestige.prestige import refusal
 from prestige_world import CURVE, K, N1, P, SPAN, WOOD, at_second, click, rules, xp_now
 
 R = rules()

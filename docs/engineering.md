@@ -160,7 +160,7 @@ for the Python-run gates, `app/client/gates/held/` for the client's. `app/tools/
 | `app/tests/rules/checks/test_player_only.py` | every card on a player's lane (the hands, or a lane not ruled) has a town copy naming it in `twin_of` or an `only_player` tag (`app/ashfall_app/rules/checks/people/player_checks.py` checks both fields point the right way) | `player_only.json` |
 | `app/tests/gates/test_boundaries.py` | package-to-package imports of `ashfall_app`: a new edge fails until added to `ALLOWED` | none (the list is in the test) |
 | `app/tests/gates/test_doc_citations.py` | backticked paths in this file and `systems.md`, and symbols in `systems.md`, must resolve; `<!--planned-->` after a reference skips it while its target is missing and fails once it exists; `<!--external-->` is never checked | none |
-| `app/tests/engine/test_design_index.py` | `engine/DESIGN.txt` lists every part in `engine/design/` once and no missing one; every `design/<part>.txt` cited in the repo exists | none |
+| `app/tests/engine/core/test_design_index.py` | `engine/DESIGN.txt` lists every part in `engine/design/` once and no missing one; every `design/<part>.txt` cited in the repo exists | none |
 | `app/tests/gates/test_decision_citations.py` | a decision title quoted after `decisions.md` (or bare, closing a parenthesis) is an index entry or starts exactly one heading or bold lead in `docs/decisions/`; the index and those files' `##` headings agree | none |
 | `app/tests/scene/test_scene_depth.py` (and the scene build, `tools/scene/audits/depth.py` `fire_on_walls`) | no layer marked `open_fire` (a fire's ring, kindling, flames, ghosts; set where the layer is defined) meets a wall at any stage; fails too when no layer carries the mark | none |
 | `app/tests/scene/test_scene_builds.py` (and the scene build, `tools/scene/audits/builds.py`, run by `output.check_builds`) | no two builds (a build's states, parts and what it carries) share 30 px at any stage; every layer belongs to a build, `NOT_BUILDS`, the figures or an overlay; fails too when no stage shows two builds; every build is retired (`builds.RETIRED`: what supersedes it and its fate, each of its layers taking it as an `until`), kept with a reason (`builds.KEPT`), or held | none (`HELD_CROWDED` and `HELD_UNDECIDED` in `builds.py` only shrink) |
@@ -357,8 +357,8 @@ an example, check which side it is on.
 - **Content may change any id or outcome.** There is no release lock and no renames table: a save that held an id the
   rules no longer have loses it at its next load (logged as `save.dropped`, with the save id and a count per kind),
   and never fails to load for it. A change that should carry a save across (a rename worth keeping progress for) is a
-  step on the upgrade chain, `engine/upgrade.py`, as a bump of the save format (`engine.codec.FORMAT`) is;
-  `tests/engine/test_rebase_impl.py` checks every format has one. A renamed trigger is a new one to a save: if its
+  step on the upgrade chain, `engine/savefile/upgrade.py`, as a bump of the save format (`engine.savefile.codec.FORMAT`) is;
+  `tests/engine/savefile/test_rebase_impl.py` checks every format has one. A renamed trigger is a new one to a save: if its
   condition already holds it fires again. The golden saves (`app/tools/golden_saves.py`) run each older format through
   the chain. The rebase's rules: engine `DESIGN.txt`, "Rebase".
 - **Loading is the whole promise to a save in progress.** A change may move where a running game stands (a card it

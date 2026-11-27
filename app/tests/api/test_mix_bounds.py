@@ -15,7 +15,7 @@ from ashfall_app.db import saves as rows
 from ashfall_app.db.stored import savewrite
 from ashfall_app.db.engine import open_database
 from ashfall_app.saves.write import written
-from ashfall_app.engine.ids import CardId, MixId
+from ashfall_app.engine.core.ids import CardId, MixId
 from tests.game_client import GameClient
 from tests.shipped_ruleset import ShippedRuleset
 

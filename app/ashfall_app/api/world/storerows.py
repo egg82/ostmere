@@ -1,9 +1,9 @@
 """View.store_rows: each ledger store's net as set and where it heads (contract/store-rows.txt, "Store rows"). The rates are
 setrates.py's, the same running set as goal_rows, so a dry run's goals and stores are one simulation."""
 from ... import engine as e
-from ...engine.mixruns import mix_entries
-from ...engine.rates import Running
-from ...engine.sides import costs, makes
+from ...engine.mixes.mixruns import mix_entries
+from ...engine.loop.rates import Running
+from ...engine.loop.sides import costs, makes
 from ..rules import setrates as sr
 from . import store_models as s
 from ..goals.goalrows import lands

@@ -4,7 +4,7 @@ standing threat drains to nothing has something in reach that puts it up. Each r
 problems, so a route showing no fight reads as blind and not as clean. Problems name ids and seconds only (CLAUDE.md,
 "Never spoil the owner")."""
 from ashfall_app.engine import Rules, RunBy, Save, StoreId, value, view
-from ashfall_app.engine.cure_reading import puts_up
+from ashfall_app.engine.cards.cure_reading import puts_up
 from tests.dayone.fights.cures import raises
 from tests.dayone.checks.sinkchecks import landing_kept
 

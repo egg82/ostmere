@@ -9,7 +9,7 @@ from ...engine import (
     StoreId, StoreValue, TriggerDef, TriggerId, Unlock, Unlocked, UnlockKind,
     per_hour, units,
 )
-from ...engine.units import QUANTITY_SCALE
+from ...engine.core.units import QUANTITY_SCALE
 from . import move_convert
 from .condition_convert import condition, modifier
 from .tally_convert import tally_triggers

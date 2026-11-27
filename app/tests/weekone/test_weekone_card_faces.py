@@ -8,9 +8,9 @@ import pytest
 from ashfall_app.api.world.content_models import StoreInfo
 from ashfall_app.api.service import Game
 from ashfall_app.engine import AtLeast, CardCount, Condition, SkillLevel, StoreValue, UnlockKind, view
-from ashfall_app.engine.index import index
-from ashfall_app.engine.viewparts import CardView
-from ashfall_app.engine.work import unmet_conditions
+from ashfall_app.engine.core.index import index
+from ashfall_app.engine.read.viewparts import CardView
+from ashfall_app.engine.loop.work import unmet_conditions
 from ashfall_app.rules.schema import Opening
 from ashfall_app.saves.ruleset import ruleset
 from tests.daytwo.player import DayTwoPlayer

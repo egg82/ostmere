@@ -10,7 +10,7 @@ than B4 plus DAY_TWO_H, the length day two was written to take: earlier, the lev
 from dataclasses import dataclass
 
 from ashfall_app.engine import Save, advance
-from ashfall_app.engine.skills import level_for, xp_for
+from ashfall_app.engine.core.skills import level_for, xp_for
 from ashfall_app.rules.expand.convert import camp_trigger_id
 from tests.daytwo.checks import b3_at
 from tests.daytwo.player import DayTwoPlayer

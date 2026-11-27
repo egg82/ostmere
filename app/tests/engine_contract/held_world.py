@@ -22,7 +22,7 @@ from ashfall_app.engine import (
     SwitchMix, ThreatDef, ThreatId, TriggerDef, Unlock, UnlockKind, advance, decide, new_save, next_event, per_hour,
     strength, view,
 )
-from ashfall_app.engine.gates import effective_stack
+from ashfall_app.engine.unlocks.gates import effective_stack
 from town_mix_world import LA, LB, PER_SECOND, TM, WORK, joiner, world as town_world
 
 G, G2, WOLF = SideId("g"), SideId("g2"), ThreatId("wolf")

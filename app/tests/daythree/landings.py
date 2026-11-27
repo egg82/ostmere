@@ -1,6 +1,6 @@
 """When the goals on offer land with nobody deciding (counters.py, "decide"; shifts.py). A goal is a capped card on offer."""
 from ashfall_app.engine import CardId, Rules, Save, advance, next_event, view
-from ashfall_app.engine.work import completions
+from ashfall_app.engine.loop.work import completions
 
 HORIZON_S = 24 * 3600
 """How far ahead a goal's landing is looked for, in LOOK_S steps; a goal not landing by then lands last."""

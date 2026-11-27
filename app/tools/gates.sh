@@ -21,7 +21,7 @@ PYTEST_GATES=(
   app/tests/gates/test_boundaries.py
   app/tests/gates/test_doc_citations.py
   app/tests/tools/test_saves_plan.py
-  app/tests/engine/test_design_index.py
+  app/tests/engine/core/test_design_index.py
   app/tests/gates/test_decision_citations.py
   app/tests/gates/test_canon_ids.py
   app/tests/scene/test_scene_depth.py

@@ -1,6 +1,6 @@
 """Row 11 of MUTANTS_guards.txt: start cap: the view reads the quantity a share guard lets go at off the starting cap."""
 EDITS: list[tuple[str, str, str]] = [
-    ('ashfall_app/engine/view.py',
+    ('ashfall_app/engine/read/view.py',
      '''        return read_levels(save, rules, cond).release
 ''',
      '''        if cond.value_of_cap or cond.release_of_cap:

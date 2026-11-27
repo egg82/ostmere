@@ -5,7 +5,7 @@ from dataclasses import replace
 from ashfall_app import engine as e
 from ashfall_app.api import convert
 from ashfall_app.api import models as w
-from tests.engine.test_prestige_impl import A, B, GATHER, H, RULES, START
+from tests.engine.prestige.test_prestige_impl import A, B, GATHER, H, RULES, START
 
 
 def wire_bar(save: e.Save, rules: e.Rules) -> w.SkillBar:

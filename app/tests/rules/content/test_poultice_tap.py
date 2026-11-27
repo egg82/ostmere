@@ -4,11 +4,11 @@ from dataclasses import replace
 from functools import cache
 
 from ashfall_app.engine import CardId, Rules, Save, StoreId, StoreState, TapCard, new_save, units
-from ashfall_app.engine.api import decide_logged
-from ashfall_app.engine.rates import tapped_cards
-from ashfall_app.engine.segments import Segment
-from ashfall_app.engine.unlocks import Unlock, UnlockKind, unlock_key
-from ashfall_app.engine.work import blocker
+from ashfall_app.engine.core.api import decide_logged
+from ashfall_app.engine.loop.rates import tapped_cards
+from ashfall_app.engine.core.segments import Segment
+from ashfall_app.engine.unlocks.unlocks import Unlock, UnlockKind, unlock_key
+from ashfall_app.engine.loop.work import blocker
 from ashfall_app.rules.schema import load_opening, to_rules
 
 POULTICE, HURT = CardId("poultice"), StoreId("hurt")

@@ -73,7 +73,7 @@ Saves: a save under older rules is rebased when it next loads (format upgrades c
 lack dropped: `engine/design/`, "Rebase"), by data it carries (a manifest of the rules it was written under):
 forward-only with no per-change flags. Content may rename or remove any id; a save loses its progress under an id that
 went, and never fails to load for it. A change that should carry a save across (a rename worth keeping progress for,
-a retroactive change) is a step on the upgrade chain (`app/ashfall_app/engine/upgrade.py`). Stored in Postgres (`app/ashfall_app/db/tables.py`): the save's state
+a retroactive change) is a step on the upgrade chain (`app/ashfall_app/engine/savefile/upgrade.py`). Stored in Postgres (`app/ashfall_app/db/tables.py`): the save's state
 with its decision log, lines and day snapshots, and each rules digest's manifest once, put back into a row stored
 without it when it is read (`app/ashfall_app/db/stored/manifests.py`). A build writes rows without its manifest once its
 start finds it held (`app/ashfall_app/saves/manifest.py`); `python -m ashfall_app.saves strip` does the same for older

@@ -6,7 +6,7 @@ with the earlier mix. Kept on the save's row; a mix edited or deleted later does
 from dataclasses import dataclass
 
 from .. import engine as e
-from ..engine.codec import Json
+from ..engine.savefile.codec import Json
 
 
 @dataclass(frozen=True)

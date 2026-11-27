@@ -11,8 +11,8 @@ from ashfall_app.engine import (
     AtLeast, CardId, ChipId, Order, Rules, SetOrders, StoreId, StoreValue, TapCard, advance, decide, new_save,
     units, value,
 )
-from ashfall_app.engine.counts import completions
-from ashfall_app.engine.gates import shown_chips
+from ashfall_app.engine.cards.counts import completions
+from ashfall_app.engine.unlocks.gates import shown_chips
 from ashfall_app.rules.checks import run as checks
 from ashfall_app.rules.schema import OPENING, Opening, load_opening, to_rules
 from ashfall_app.saves.ruleset import ruleset

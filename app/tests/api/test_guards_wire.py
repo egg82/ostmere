@@ -11,7 +11,7 @@ from ashfall_app import engine as e
 from ashfall_app.api import convert
 from ashfall_app.api import models as w
 from ashfall_app.api.service import Game
-from ashfall_app.engine import codec
+from ashfall_app.engine.savefile import codec
 from ashfall_app.main import create_app
 from tests.shipped_ruleset import ShippedRuleset
 

@@ -13,7 +13,7 @@ level the screen times at the leave (human_flags.leave), at least one is a named
 from dataclasses import dataclass
 
 from ashfall_app.engine import Outcome, Rules, Save, view
-from ashfall_app.engine.orders import AtLeast, SkillLevel
+from ashfall_app.engine.orders.orders import AtLeast, SkillLevel
 from tests.dayone.human.human_flags import Leave, leave
 from tests.dayone.player.player import DayOnePlayer
 

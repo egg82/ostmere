@@ -17,7 +17,7 @@ from ashfall_app.engine import (
     StandingDef, StoreDef, StoreId, SwitchMix, TapCard, TriggerDef, TriggerId, Unlock, UnlockKind, advance, decide,
     explain, explain_work, new_save, per_hour, segment, validate_rules, view,
 )
-from ashfall_app.engine.viewparts import CardView
+from ashfall_app.engine.read.viewparts import CardView
 
 P, P2, P3, U, Y, Z, W, V = (StoreId(n) for n in ("p", "p2", "p3", "u", "y", "z", "w", "v"))
 EAT, EAT2, R1, R2, R3, MK, MK2 = (CardId(n) for n in ("eat", "eat2", "r1", "r2", "r3", "mk", "mk2"))

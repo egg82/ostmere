@@ -1,9 +1,9 @@
 """Row 03 of MUTANTS_drains.txt: no clamp at 0 on a drained store: its falling segment has no limit, so x goes below 0."""
 EDITS: list[tuple[str, str, str]] = [
-    ('ashfall_app/engine/rebuild.py',
-     'from .lumps import NO_TERMS, Terms, forgiven, lump_lines, lump_terms, motion, moving_lumps\n',
-     'from .lumps import NO_TERMS, Terms, drainers, forgiven, lump_lines, lump_terms, motion, moving_lumps\n'),
-    ('ashfall_app/engine/rebuild.py',
+    ('ashfall_app/engine/loop/rebuild.py',
+     'from ..cards.lumps import NO_TERMS, Terms, forgiven, lump_lines, lump_terms, motion, moving_lumps\n',
+     'from ..cards.lumps import NO_TERMS, Terms, drainers, forgiven, lump_lines, lump_terms, motion, moving_lumps\n'),
+    ('ashfall_app/engine/loop/rebuild.py',
      '    limit = _limit(v, slope, cap)\n',
      '    limit = None if slope < 0 and drainers(rules, d.id) else _limit(v, slope, cap)\n'),
 ]

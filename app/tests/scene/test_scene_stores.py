@@ -1,5 +1,5 @@
 """tools/scene: a layer's `store:` condition reads the page's ledger, which holds only stores the opening unlocks
-(engine/view.py `_ledger`), else View.levels, which serves the rest the scene names (api/goals/levels.py, from the committed
+(engine/read/view.py `_ledger`), else View.levels, which serves the rest the scene names (api/goals/levels.py, from the committed
 api/world/scene_stores.json). Judged here: that list is the stores the scene names, and each is one the opening defines. What a built thing shows on is a card's completions."""
 import json
 import re

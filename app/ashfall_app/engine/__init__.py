@@ -1,61 +1,66 @@
 """The economy engine: a pure, deterministic discrete-event simulation. Imports only the stdlib and itself.
-Semantics and the invariants tests check: engine/design/ beside this file."""
-from .api import (
+Semantics and the invariants tests check: engine/design/ beside this file.
+
+Subpackages, one per system or close family: core (state, ids, units, segments, events, the entry points), loop (instants,
+scheduling, rates, work), cards, orders (orders, the queue, plan, lanes), mixes (mixes, spent, groups), modifiers, unlocks,
+people (joins, leaves, casts), offers, combat, prestige, read (the read model), lookahead (forecast), savefile (codec,
+upgrade, rebase) and validate (what makes rules and verbs valid). tests/engine mirrors them."""
+from .core.api import (
     Line, Step, advance, advance_logged, decide, decide_logged, explain, explain_work, level, new_save, next_event,
     segment, value, xp,
 )
-from .answers import AnswerKind, AnswerOffer
-from .context import DecisionContext, context_from_json, context_to_json, decision_context
-from .codec import FORMAT, decode, encode, rules_digest, verb_from_json, verb_to_json
-from .errors import (
+from .offers.answers import AnswerKind, AnswerOffer
+from .savefile.context import DecisionContext, context_from_json, context_to_json, decision_context
+from .savefile.codec import FORMAT, decode, encode, rules_digest, verb_from_json, verb_to_json
+from .core.errors import (
     EngineError, InvalidRulesError, InvalidVerbError, StateFormatError, TimeOrderError,
 )
-from .events import CascadeLimit, Event, EventKind
-from .cards import (
+from .core.events import CascadeLimit, Event, EventKind
+from .cards.cards import (
     HELD_PREFIX, Amount, Blocker, CapRaise, Cast, CastPick, CardDef, CardState, ChainDef, FightDef, HeldSpeed, Join,
     LaneState, Leave, Mark, Outcome, RuleInstall, WhileRunning,
 )
-from .flows import Flow
-from .forecast import Forecast, ForecastPath, forecast
-from .ids import (
+from .core.flows import Flow
+from .lookahead.forecast import Forecast, ForecastPath, forecast
+from .core.ids import (
     HANDS, TOWN_PREFIX, ActionId, AnswerId, CardId, ChipId, EntryId, FeatureId, IdKind, KindId, LaneId, LineKey, MixId, NodeId, NoteId, OfferId, RoleId, Runner, SkillId,
     SideId, SourceId, StoreId, ThreatId, TriggerId,
 )
-from .lanes import LaneDef, TapCard
-from .mixes import MAX_MIXES, CardShare, Mix, SpentShare, SubMix, SwitchMix, flatten_shares
-from .modifiers import (
+from .orders.lanes import LaneDef, TapCard
+from .mixes.mixes import MAX_MIXES, CardShare, Mix, SpentShare, SubMix, SwitchMix, flatten_shares
+from .modifiers.modifiers import (
     ChainReach, Explanation, FlowKind, LaneSpeed, Modifier, ModifierKind, RateRef, Run, RunKind, SideStrength, StoreCap, Target,
     ThreatStrength, WorkRef, modified_rate,
 )
-from .orders import (
+from .orders.orders import (
     MAX_ACTIONS, MAX_GUARDS, AfterTime, AtLeast, AtMost, CardCount, Condition, GuardedLatch, LaneRules, Latch, Order, OrderVerb,
     QueueEntry, Running, SkillLevel, StoreValue, Subject, Unlocked,
 )
-from .offers import AnswerDef, OfferDef
-from .plan import OrderState
-from .rebase import rebase, rebase_logged
-from .rulelog import Ended, RuleChange
-from .powers import explain_strength, strength
-from .strengthmath import StrengthExplanation
-from .nodes import NODE_PREFIX, NodeDef, NodeTarget, PrestigeDef
-from .prestigeverbs import MovePick, Prestige, PrestigeRefusal, PrestigeRefused, UndoPick
-from .rules import PacingCurve, Rules, SkillDef, StandingDef, StoreDef, validate_rules
-from .segments import Segment, reach_time, value_at
-from .skills import level_for, xp_for
-from .strengthdefs import SideDef, ThreatDef
-from .state import FIRST_PHASE, ParkedRank, Pause, PhaseState, Save, SkillState, StoreState
-from .status import ChipDef, TriggerDef
-from .unlocks import Unlock, UnlockKind, unlock_key
-from .upgrade import OLDEST_FORMAT, UPGRADES
-from .units import BP, QUANTITY_SCALE, RATE_SCALE, SECONDS_PER_HOUR, ceil_div, per_hour, units
-from .verbs import DeleteMix, SaveMix, SetOrders, SetQueue, Verb
-from .needs import store_need
-from .pending import Pending, pending
-from .spent import spent_stores
-from .view import View, view
-from .fightview import FightView
-from .chains import ChainView, chain_views
-from .viewparts import (
+from .offers.offers import AnswerDef, OfferDef
+from .orders.plan import OrderState
+from .savefile.rebase import rebase, rebase_logged
+from .orders.rulelog import Ended, RuleChange
+from .combat.powers import explain_strength, strength
+from .combat.strengthmath import StrengthExplanation
+from .prestige.nodes import NODE_PREFIX, NodeDef, NodeTarget, PrestigeDef
+from .prestige.prestigeverbs import MovePick, Prestige, PrestigeRefusal, PrestigeRefused, UndoPick
+from .core.rules import PacingCurve, Rules, SkillDef, StandingDef, StoreDef, validate_rules
+from .core.segments import Segment, reach_time, value_at
+from .core.skills import level_for, xp_for
+from .combat.strengthdefs import SideDef, ThreatDef
+from .core.state import FIRST_PHASE, ParkedRank, Pause, PhaseState, Save, SkillState, StoreState
+from .cards.status import ChipDef, TriggerDef
+from .unlocks.unlocks import Unlock, UnlockKind, unlock_key
+from .savefile.upgrade import OLDEST_FORMAT, UPGRADES
+from .core.units import BP, QUANTITY_SCALE, RATE_SCALE, SECONDS_PER_HOUR, ceil_div, per_hour, units
+from .core.verbs import DeleteMix, SaveMix, SetOrders, SetQueue, Verb
+from .cards.needs import store_need
+from .cards.pending import Pending, pending
+from .mixes.spent import spent_stores
+from .read.view import View, view
+from .read.fightview import FightView
+from .combat.chains import ChainView, chain_views
+from .read.viewparts import (
     AnswerShift, AnswerView, CardView, CompletedCard, Contribution, GuardView, HeldView, LaneBar, LedgerLine, MenuNode, Need, OfferView, RunBy,
     SkillBar, SkillPhase, StandingBar,
 )

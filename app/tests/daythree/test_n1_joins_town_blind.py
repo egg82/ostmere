@@ -10,8 +10,8 @@ from ashfall_app.engine import (
     BP, QUANTITY_SCALE as Q, AfterTime, CardId, CardShare, LaneId, Order, Rules, Save, StoreId, TapCard, Unlock,
     UnlockKind, advance, view,
 )
-from ashfall_app.engine.rates import store_value
-from ashfall_app.engine.segments import value_at
+from ashfall_app.engine.loop.rates import store_value
+from ashfall_app.engine.core.segments import value_at
 from tests.daytwo.player import DayTwoPlayer
 
 N1 = LaneId("n1")

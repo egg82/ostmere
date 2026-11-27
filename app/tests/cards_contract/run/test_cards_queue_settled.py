@@ -14,8 +14,8 @@ from ashfall_app.engine import (
     Unlocked, advance, decide, decode, encode, level,
     new_save, next_event, rebase, view,
 )
-from ashfall_app.engine.gates import is_unlocked
-from ashfall_app.engine.schedule import events
+from ashfall_app.engine.unlocks.gates import is_unlocked
+from ashfall_app.engine.loop.schedule import events
 from cards_gen import Scenario, few, play, scenario_st, timeline, try_decide
 from cards_world import K, Q, done, rules, running_mix, save_mix, with_mix
 
