@@ -18,8 +18,8 @@ from dataclasses import dataclass, replace
 from ashfall_app.engine import AnswerId, CardId, ChipId, OfferId, Order, Rules, Save, Unlock, View
 from tests.daythree import moves
 from tests.daythree.chapter import ChipRule, Keep, Later, Offer, Share
-from tests.dayone.policy import Move
-from tests.dayone.sinks import SINKS, Chapter, Trip
+from tests.dayone.player.policy import Move
+from tests.dayone.player.sinks import SINKS, Chapter, Trip
 from tests.weekfive.reads import cast_lane
 
 TYPICAL = "typical"
