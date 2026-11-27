@@ -19,7 +19,8 @@
    "nineteen": 300,
    "twentytwo": 137,
    "twentythree": 239,
-   "twentyfive": 384
+   "twentyfive": 384,
+   "twentyseven": 384
   },
   "typical": {
    "week1": 49,
@@ -33,7 +34,8 @@
    "nineteen": 88,
    "twentytwo": 234,
    "twentythree": 170,
-   "twentyfive": 273
+   "twentyfive": 273,
+   "twentyseven": 273
   },
   "whenever": {
    "week1": 38,
@@ -47,7 +49,8 @@
    "nineteen": 206,
    "twentytwo": 191,
    "twentythree": 104,
-   "twentyfive": 168
+   "twentyfive": 168,
+   "twentyseven": 168
   }
  },
  "rebased": {
@@ -61,7 +64,8 @@
   "nineteen": 307,
   "twentytwo": 298,
   "twentythree": 369,
-  "twentyfive": 462
+  "twentyfive": 462,
+  "twentyseven": 578
  },
  "readings": {
   "eight": {
@@ -242,6 +246,20 @@
     232,
     210
    ]
+  },
+  "twentynine": {
+   "setup_s": 273,
+   "steps_s": [
+    79,
+    79,
+    78,
+    73,
+    62,
+    170,
+    172,
+    232,
+    210
+   ]
   }
  },
  "unmeasured": {
@@ -250,7 +268,7 @@
    "typical": 342,
    "whenever": 258
   },
-  "rebased": 578,
+  "rebased": 723,
   "readings": {
    "setup_s": 342,
    "steps_s": [
@@ -283,8 +301,13 @@
    "ends:sharp:twentyfive",
    "ends:whenever:twentyfive",
    "rebased:twentyfive",
-   "readings:twentyseven"
+   "readings:twentyseven",
+   "ends:typical:twentyseven",
+   "ends:sharp:twentyseven",
+   "ends:whenever:twentyseven",
+   "rebased:twentyseven",
+   "readings:twentynine"
   ],
-  "basis": "not measured: written with day twenty-seven, from day twenty-five's shape. typical's end is day twenty-five's readings setup (typical played through day twenty-five from day twenty-three's end); sharp's and whenever's scale it by their day-twenty-three ends against typical's; the rebased save is day twenty-three's plus a quarter; day twenty-seven's readings row copies day twenty-five's. The nightly's refresh replaces each with its measurement and drops this block."
+  "basis": "not measured: written with day twenty-seven, from day twenty-five's shape. typical's end is day twenty-five's readings setup (typical played through day twenty-five from day twenty-three's end); sharp's and whenever's scale it by their day-twenty-three ends against typical's; the rebased save is day twenty-three's plus a quarter; day twenty-seven's readings row copies day twenty-five's. The nightly's refresh replaces each with its measurement and drops this block. Day twenty-nine's rows, written with it the same way: day twenty-seven's ends copy day twenty-five's (typical's is day twenty-seven's readings setup), its rebased save is day twenty-five's plus a quarter, and day twenty-nine's readings row copies day twenty-seven's."
  }
 }
