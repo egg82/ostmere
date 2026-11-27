@@ -50,3 +50,17 @@ def test_no_aims_fails_the_load(tmp_path: Path):
     path.write_text(start + tail + sep + words)
     with pytest.raises(ValueError, match="aims"):
         load_opening(path)
+
+
+def test_an_until_some_outcome_gives_loads_and_one_nothing_unlocks_fails(tmp_path: Path):
+    """An aim that ends before the next begins names an unlock the content really gives (the check is the same as `after`)."""
+    ok = broken(tmp_path, SECOND_AFTER, SECOND_AFTER + 'until = { unlock_kind = "feature", id = "fireback" }\n')
+    assert load_opening(ok).aims[1].until is not None
+    path = broken(tmp_path, SECOND_AFTER, SECOND_AFTER + 'until = { unlock_kind = "retired", id = "stand_up" }\n')
+    with pytest.raises(ValueError, match="nothing unlocks retired stand_up, so the aim never gives way"):
+        load_opening(path)
+
+
+def test_the_road_aim_gives_way_once_the_road_is_laid():
+    road = next(a for a in load_opening().aims if a.id == "aim_road")
+    assert road.until is not None and road.until.id == "road_laid"

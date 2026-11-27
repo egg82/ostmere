@@ -1,6 +1,7 @@
 // A story beat's store with no ledger line yet (CONTRACT.txt, "Goals"; game/story.ts, unlined): nothing on screen to
 // mark, so the Camp bar's box states it under its level as the store's label, how far along against its target, and a
-// bar, with the bar's "▸ something new", never what.
+// bar, with the bar's "▸ something new", never what. While the wait line is up its "something new" is the story's next
+// step, so these rows carry no marker of their own: two of them would read as the same step.
 import type { Goal, View } from "../api/types";
 import { sample } from "../game/clock";
 import { storyMarks } from "../game/story";
@@ -18,13 +19,16 @@ export class GoalRows {
   private goals: Goal[] = [];
   private rows: Row[] = [];
   private key = "";
+  private marked = true;
 
   constructor(private readonly ctx: PartContext) {}
 
   /** True when there is a goal to show. */
   update(view: View): boolean {
-    this.goals = storyMarks(this.ctx.catalog, view).unlined;
-    const key = this.goals.map((g) => `${g.store ?? ""}|${g.target}`).join(",");
+    const marks = storyMarks(this.ctx.catalog, view);
+    this.goals = marks.unlined;
+    this.marked = marks.clock === null;
+    const key = `${this.marked}:` + this.goals.map((g) => `${g.store ?? ""}|${g.target}`).join(",");
     if (key !== this.key) {
       this.key = key;
       const made = this.goals.map(() => this.make());
@@ -50,7 +54,7 @@ export class GoalRows {
     const node = el("div", "goal");
     const head = el("span", "camp-head");
     const what = el("span", "goal-what");
-    head.append(what, el("span", "camp-next", this.ctx.catalog.text.get(UI.nextUnnamed)));
+    head.append(what, ...(this.marked ? [el("span", "camp-next", this.ctx.catalog.text.get(UI.nextUnnamed))] : []));
     const track = el("span", "camp-track");
     const fill = el("span", "camp-fill");
     track.append(fill);
