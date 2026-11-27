@@ -15,10 +15,15 @@ from tests.daytwo import content as c
 from tests.daytwo import policy as p2
 from tests.dayone.player import policy, sinks
 from tests.dayone.human.human import lands_within, thresholds
+from tests.dayone.player.beats import target_day
 from tests.dayone.player.player import DayOnePlayer, VisitRecord
+from tests.dayone.player.schedules import HOUR, extended
 from tests.rules.play.playthrough import News
 
 LINGER_S = 10 * 60
+DAY_S = 24 * HOUR
+MARGIN_DAYS = 2
+"""How far past the stop beat's target day a play on runs its schedule: room for a slow route to land it late."""
 QUEUEABLE = (*policy.QUEUEABLE, *c.BUILDS)
 """Day one's queueable steps and the two builds (A16 is not: look_out's shape, day_two.toml)."""
 
@@ -51,6 +56,12 @@ class DayTwoPlayer(DayOnePlayer):
     def b3_visit(self) -> int | None:
         """The index (1-based) of the visit B3 was seen in: day two's V1."""
         return visit_seen(self.visits, self.seen_at.get("B3"))
+
+    def play_on(self) -> None:
+        """Played on with the schedule run on to MARGIN_DAYS past the stop beat's target day, so a play on from a saved
+        end is never held to the horizon its schedule was made with."""
+        self.schedule = extended(self.schedule, (target_day(self.stop_beat()) + MARGIN_DAYS) * DAY_S)
+        super().play_on()
 
     def leaves(self) -> bool:
         """Past B3, by the human player's rule: nothing to act on and no tap of the player's landing within the dead

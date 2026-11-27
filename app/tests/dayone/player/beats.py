@@ -69,3 +69,10 @@ def questions_open(seen: Iterable[str]) -> frozenset[str]:
         opened |= opens
         paid |= pays
     return frozenset(opened - paid)
+
+
+def target_day(beat: str) -> int:
+    """The day from the save's start `beat` is meant to land by (its target_day in beats.yaml)."""
+    found = re.search(rf"\{{id:\s*{re.escape(beat)},[^\n]*?\btarget_day:\s*(\d+)", BEATS_YAML.read_text())
+    assert found is not None, f"beats.yaml gives {beat} no target_day"
+    return int(found.group(1))

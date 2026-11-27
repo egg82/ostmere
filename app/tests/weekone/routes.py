@@ -14,8 +14,8 @@ from tests.dayone.player.sinks import SINKS, SinkKnobs
 from tests.weekone import content as w1
 
 HORIZON_S = 30 * 24 * HOUR
-"""Long enough for the lazy route, which reaches B7 late if at all, and for the later weeks' plays on from these, which
-end by week four's last night (672 h at the latest)."""
+"""Long enough for the lazy route, which reaches B7 late if at all. A later chapter's play on from these runs the
+schedule on past its own stop beat (DayTwoPlayer.play_on), never short of this."""
 PUSH_ROUTES = ("typical", "sharp", "babysitter", "whenever")
 
 
