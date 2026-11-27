@@ -36,6 +36,7 @@ export const UI = {
   goalWhile: "ui.goal.while", // "{store}": the wait line's clock runs while this store holds some
   goalPaused: "ui.goal.paused", // "{store}": the wait line's clock stopped on this dry store
   goalLost: "ui.goal.lost", // "{card}", "{n}": the wait line's count of a card's fights lost
+  goalCount: "ui.goal.count", // "{store}", "{n}": the wait line's count of a store the clock waits on, as ui.store.amount words it
   needs: "ui.card.needs", // "{store} {have}/{n}": a card's need
   needsSpent: "ui.card.needs_spent", // "{store} {have}/{n}": a card's need on a store nothing will bring again
   needsSkill: "ui.card.needs_skill", // "{skill} level {have}/{n}": a card held back by a skill level

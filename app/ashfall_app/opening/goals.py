@@ -28,6 +28,8 @@ class GoalDef:
     """A store's: the cards that make it (makers.made_by). It shows once its store is unlocked or one is in play."""
     fed_by: tuple[str, ...] = ()
     """A clock's: the stores whose running dry pauses it (the other costs of the standing actions that move it)."""
+    count: str | None = None
+    """A clock on a store authored `stated`: the store whose amount the wait line states against `target`."""
     tally: str | None = None
     """A fight's: the lost tally store the card's fight adds to."""
 
@@ -36,10 +38,11 @@ def goal_defs(o: "Opening", rules: Rules) -> dict[str, GoalDef]:
     """Trigger id to what it waits on, for each story beat of `rules` (the content's) the page can show."""
     out: dict[str, GoalDef] = {}
     clocks = _clocks(o)
+    stated = frozenset(s.id for s in o.stores if s.stated)
     camp = None if o.camp is None else o.camp.store
     fights = {c.fight.lost: c.id for c in o.cards if c.fight is not None}
     for t in rules.triggers:
-        goal = _goal(o, t, clocks, camp, fights) if story(t.outcome) else None
+        goal = _goal(o, t, clocks, camp, fights, stated) if story(t.outcome) else None
         if goal is not None:
             out[str(t.id)] = goal
     return out
@@ -77,9 +80,10 @@ def _costs(a: "StandingEntry") -> list[str]:
 
 
 def _goal(o: "Opening", t: TriggerDef, clocks: frozenset[str], camp: str | None,
-          fights: dict[str, str]) -> GoalDef | None:
+          fights: dict[str, str], stated: frozenset[str]) -> GoalDef | None:
     """None for an unlock (it waits on what gives it), a lane's rules (the lesson on screen is the step), and the Camp's
-    store (its bar states its levels). `fights`: each card fight's lost tally store to its card."""
+    store (its bar states its levels). `fights`: each card fight's lost tally store to its card; `stated`: the hidden
+    stores whose amount a clock on them states."""
     w = t.when
     if isinstance(w, AfterTime):
         return GoalDef("clock", None, 0)
@@ -95,5 +99,8 @@ def _goal(o: "Opening", t: TriggerDef, clocks: frozenset[str], camp: str | None,
     if isinstance(w, AtLeast) and str(s.store) in fights:
         return GoalDef("fight", fights[str(s.store)], w.value, tally=str(s.store))
     if isinstance(w, AtMost) or s.store in clocks:
-        return GoalDef("clock", None, 0, fed_by=_fed_by(o, str(s.store)))
+        store = str(s.store)
+        if isinstance(w, AtLeast) and store in stated:
+            return GoalDef("clock", None, w.value, fed_by=_fed_by(o, store), count=store)
+        return GoalDef("clock", None, 0, fed_by=_fed_by(o, store))
     return GoalDef("store", str(s.store), w.value, tuple(made_by(o, str(s.store))))

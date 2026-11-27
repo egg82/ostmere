@@ -43,7 +43,7 @@ const stepAt = (unlocked: Unlock[]): Step => ({ ...mid, view: { ...mid.view, unl
 const startPlus = (...more: Unlock[]): Step => ({ ...start, view: { ...start.view, unlocked: [...start.view.unlocked, ...more] } });
 
 const TEXTS = { a0: "Aim zero text", a1: "Aim one text", a2: "Aim two text" };
-const infos = (...aims: [keyof typeof TEXTS, Unlock | null][]): AimInfo[] => aims.map(([id, after]) => ({ aim: id, text_key: `aim.${id}`, after }));
+const infos = (...aims: [keyof typeof TEXTS, Unlock | null][]): AimInfo[] => aims.map(([id, after]) => ({ aim: id, text_key: `aim.${id}`, after, ends_after: null }));
 function contentWith(aims: AimInfo[]): Content {
   const entries = Object.entries(TEXTS).map(([id, text]) => ({ key: `aim.${id}`, text }));
   return { ...fixtureContent, aim_infos: aims, text_entries: [...fixtureContent.text_entries, ...entries] };

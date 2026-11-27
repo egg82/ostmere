@@ -46,7 +46,8 @@ mix changes which goal arrives first.
 the next step but not why, and one asked "so I just click buttons?"). One line just above the art says what the
 current stretch is for, in the story's voice: a goal the player feels, never the task that gets there, and it changes
 when the story moves on, so the next step reads as progress toward something. It is there from the first screen and
-never empty. Each aim is content keyed to the unlock that starts it, and the next aim's start ends it;
+empty only once its `until` holds (its step is done), when the wait line or a goal is the step. Each aim is content
+keyed to the unlock that starts it, and the next aim's start, or its own `until` unlock, ends it;
 nothing reads it from the prose. A plain objective line is genre-standard, so it is not one of the first five minutes'
 Ashfall-specific mechanics ("The screen arrives when it means something"). Held by
 `tests/dayone/test_dayone_aims.py` and the content check in `app/ashfall_app/opening/aims.py`.
