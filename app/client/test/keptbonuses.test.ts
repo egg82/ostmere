@@ -1,12 +1,12 @@
 // The camp header keeps what changes: the passing states (chips) stay in its row, and the permanent bonuses carried
-// (FeatureInfo.label_key) are one control, a count that opens their list (ui/keptbonuses.ts, ui/story.ts).
+// (FeatureInfo.label_key) are one control, a count that opens their list (ui/story/keptbonuses.ts, ui/story/story.ts).
 import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Content, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { Story } from "../src/ui/story";
+import { Catalog } from "../src/game/page/catalog";
+import { Story } from "../src/ui/story/story";
 
 install();
 

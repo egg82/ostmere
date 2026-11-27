@@ -4,7 +4,7 @@ import { fakeDocument, type FakeEl, FakeEvent, install, pointer } from "./fake-d
 import { pageRig } from "./personrig";
 import { townStep } from "../fixtures/town";
 import type { Decision, Mix, View } from "../src/api/types";
-import { ShareBar } from "../src/ui/sharebar";
+import { ShareBar } from "../src/ui/mixes/sharebar";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

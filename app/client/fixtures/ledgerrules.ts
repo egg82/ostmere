@@ -1,4 +1,4 @@
-// FIXTURE, never shipped: ledger rows a rule watches (ui/ledger.ts), on mid's screen with the lessons behind.
+// FIXTURE, never shipped: ledger rows a rule watches (ui/ledger/ledger.ts), on mid's screen with the lessons behind.
 // spendrule: a rule smoking the catch while there is some, until under one, is on and draws the catch down; mid's wood
 // still falls with no rule on it. behindrule: a rule keeping wood stocked whose mix makes wood, and the forecast still
 // empties it; the smoke rule on with the catch full and more coming in. Neither row blames its rule.

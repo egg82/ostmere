@@ -1,13 +1,13 @@
 // A store that only feeds a bonus (StoreInfo.bonus_bp: its eaters hold a lane speed while they run) is never drawn as
-// an alarm and names no drain; dry, it says the bonus is off, with the bonus as a number (ui/ledger.ts; contract/,
+// an alarm and names no drain; dry, it says the bonus is off, with the bonus as a number (ui/ledger/ledger.ts; contract/,
 // the ledger's white and red). Any other store keeps the red and "ran dry".
 import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureContent, Q, R } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { LedgerLine, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { Ledger } from "../src/ui/ledger";
+import { Catalog } from "../src/game/page/catalog";
+import { Ledger } from "../src/ui/ledger/ledger";
 import { keepsOf, NEW_FLAT } from "./kept";
 
 install();
@@ -67,7 +67,7 @@ const fallingStone = line("stone", 3, [["tend", -1]]);
 
 {
   const part = ledger(fixtureContent);
-  part.update({ ...view([dryStone]), queue: [lookQueued] }, null);   // something the player has queued takes stone (game/dryneed.ts)
+  part.update({ ...view([dryStone]), queue: [lookQueued] }, null);   // something the player has queued takes stone (game/cards/dryneed.ts)
   part.tick(AT);
   expect("control: the same dry store without a bonus is an alarm", drawn(part, "stone").alarm, true);
   expect("and reads ran dry", drawn(part, "stone").eta, "ran dry");

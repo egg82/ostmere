@@ -69,7 +69,7 @@ def side_sources(o: Opening) -> list[tuple[str, str]]:
 
 def unworded(o: Opening, content: Content) -> list[str]:
     """Side sources the fight panel would show as a raw id: it words a card, skill, chip, store or labelled feature
-    (client/src/ui/fightpanel.ts, sourceName)."""
+    (client/src/ui/ledger/fightpanel.ts, sourceName)."""
     named = {*(c.card for c in content.card_infos), *(s.skill for s in content.skill_infos),
              *(c.chip for c in content.chip_infos), *(s.store for s in content.store_infos),
              *(f.feature for f in content.feature_infos if f.label_key)}

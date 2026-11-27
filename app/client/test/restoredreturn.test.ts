@@ -1,7 +1,7 @@
 // A save opened again soon after a long return (too soon to be a return of its own, chronicle.ts AWAY_MIN_S): the
 // return's lines now come back as the save's history (Opened.history), and the "Since you left" chapter is still that
 // return's. A chip's off-lines that landed inside a kept return collapse to the chip's last change there, in the
-// chronicle only, as they did when the return first showed them (game/awaylines.ts); a line from after the return,
+// chronicle only, as they did when the return first showed them (game/book/awaylines.ts); a line from after the return,
 // played live, is restored as it was shown, on the band. Driven through play() with a scripted api.
 import type { GameApi } from "../src/api/api";
 import type { Content, PastLine, Step } from "../src/api/types";
@@ -9,7 +9,7 @@ import { fixtureContent } from "../fixtures/content";
 import { dayOneStep } from "../fixtures/dayone";
 import { play } from "../src/game";
 import { fakeDocument, install } from "./fake-dom";
-import { NEW_SAVE, NEW_ACCOUNT, NEW_SETTINGS } from "../src/game/keeps";
+import { NEW_SAVE, NEW_ACCOUNT, NEW_SETTINGS } from "../src/game/account/keeps";
 
 install();
 const realInterval = globalThis.setInterval;   // the page's self-update polls forever; this run clears it to end

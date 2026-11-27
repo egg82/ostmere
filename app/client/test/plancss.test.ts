@@ -1,4 +1,4 @@
-// Next's "+ Plan" lists the saved mixes as Mixes-list rows (.selector-run, ui/stintplan.ts) straight in the Rules tab's
+// Next's "+ Plan" lists the saved mixes as Mixes-list rows (.selector-run, ui/next/stintplan.ts) straight in the Rules tab's
 // list, a flex column: there the row's flex basis (18rem, sized for a row of rows) would be its height, so each row
 // takes its content's height instead (src/game.css), as the rule picker's do. The layout is CSS, so this reads the rules.
 import { readGameCss } from "./gamecss";

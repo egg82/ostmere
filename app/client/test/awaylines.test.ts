@@ -9,9 +9,9 @@ import { FakeEvent, fakeDocument, install } from "./fake-dom";
 import { dayOneStep } from "../fixtures/dayone";
 import { fixtureContent } from "../fixtures/content";
 import type { Content, LogLine, Step } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
-import { readingMs } from "../src/game/reading";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
+import { readingMs } from "../src/game/story/reading";
 import { Screen } from "../src/ui/screen";
 
 install();

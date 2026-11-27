@@ -10,7 +10,7 @@
 //            reading time ends or the player taps again, whichever is sooner (`aloneStrict`: until its reading time ends).
 // Onsets, counted only when on screen: an element gaining arrive, landed, flourish, burst, settle, fired, glow or done;
 // a card leaving the deck; another line showing. A line counts as seen when one of its instances meets all three. The reading time is the
-// page's own (game/reading.ts: 2.9 words a second, at least 3 s), used for every build so they share one yardstick.
+// page's own (game/story/reading.ts: 2.9 words a second, at least 3 s), used for every build so they share one yardstick.
 // window.__seenReport() returns the lines (with their text, which the caller maps to keys and never prints).
 (() => {
   const EDGE_MS = 50;   // an onset at the window's very end is the next thing, not a rival (frame timing)

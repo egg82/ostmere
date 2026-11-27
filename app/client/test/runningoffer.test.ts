@@ -3,9 +3,9 @@
 // hands tap, a mix switch or no action yet, none. Each offer builds the one Running shape and reads back as itself.
 import { fixtureContent } from "../fixtures/content";
 import { townStep } from "../fixtures/town";
-import { Catalog } from "../src/game/catalog";
-import { subjectChoices } from "../src/game/ruleoffers";
-import { buildSubject, readSubject, subjectKey, subjectWords } from "../src/game/subjectrule";
+import { Catalog } from "../src/game/page/catalog";
+import { subjectChoices } from "../src/game/condition/ruleoffers";
+import { buildSubject, readSubject, subjectKey, subjectWords } from "../src/game/condition/subjectrule";
 
 const catalog = new Catalog(fixtureContent);
 const view = townStep("town").view;

@@ -1,10 +1,10 @@
-// The stores a rule is about (game/relevant.ts): read off the cards' served makes and takes alone, never their names.
+// The stores a rule is about (game/condition/relevant.ts): read off the cards' served makes and takes alone, never their names.
 // The planted content gives smoking the catch a card one step out on each side, a card that only shares its input,
 // a maker it does not know yet, and a card whose name shares a word with a store it has nothing to do with.
 import { fixtureContent } from "../fixtures/content";
 import type { Content } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { relevantStores } from "../src/game/relevant";
+import { Catalog } from "../src/game/page/catalog";
+import { relevantStores } from "../src/game/condition/relevant";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

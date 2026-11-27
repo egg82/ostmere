@@ -1,7 +1,7 @@
 // The fields the sound wiring reads (docs/design/sound.md, "What wiring needs"): a served line says whether it opens a
 // beat, and a scene layer says what it sounds as; neither is taken from a key or a layer id.
 import type { LogLine } from "../src/api/types";
-import { beatOpeners } from "../src/game/beats";
+import { beatOpeners } from "../src/game/story/beats";
 import { isManifest, soundLayer, type SceneLayer } from "../src/scene/manifest";
 
 function expect(label: string, got: unknown, want: unknown): void {

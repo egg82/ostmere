@@ -131,7 +131,7 @@ Read: `decisions.md` ("Fun, but never vying for attention", "Automation is desig
 1. **Fade the rule lesson.** If the mix lesson was completed, the rule lesson drops the steps whose controls repeat the
    editor's shape (the save step and the "where it lives" read) and keeps only what is new: the when/do pair. Test:
    completion and Skip rates for the rule lesson, faded vs full, and whether players who saw the faded version
-   still build a working rule. This treats A5's fade as a tweak on the existing lesson data (`game/lessons.ts`), not a
+   still build a working rule. This treats A5's fade as a tweak on the existing lesson data (`game/lessons/lessons.ts`), not a
    new system.
 2. **Record the step each Skip lands on, and the step where a lesson waits longest.** One count per lesson step in the
    existing decision log. If Skip clusters on one step or a "(read)" step, that is the Valve "too many ideas" or

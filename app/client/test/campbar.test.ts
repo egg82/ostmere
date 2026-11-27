@@ -1,13 +1,13 @@
-// The Camp bar past a held level (ui/camp.ts; contract/, the Camp bar): a held level a step lifts counts as
+// The Camp bar past a held level (ui/story/camp.ts; contract/, the Camp bar): a held level a step lifts counts as
 // reached once that step has finished and the bar has filled to it; one nothing lifts never counts.
 import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Content, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { UI } from "../src/game/text";
-import { CampBar } from "../src/ui/camp";
+import { Catalog } from "../src/game/page/catalog";
+import { UI } from "../src/game/page/text";
+import { CampBar } from "../src/ui/story/camp";
 
 install();
 

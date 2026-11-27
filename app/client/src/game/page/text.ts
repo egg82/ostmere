@@ -1,0 +1,297 @@
+// Every visible word comes from Content's text table (contract/). The page names keys, never text: a key
+// the content lacks renders as nothing and is reported once on the console, so the gap is found, not papered over.
+import type { Content } from "../../api/types";
+import { ASK_KEYS } from "../asks/askkeys";
+import { GOAL_ROW_KEYS } from "../story/goalkeys";
+import { LESSON_KEYS } from "../lessons/lessonkeys";
+import { CHRONICLE_KEYS } from "../book/chronkeys";
+import { PRESTIGE_KEYS } from "../skills/prestigekeys";
+import { TOWN_KEYS } from "../town/townkeys";
+import { REMINDER_KEYS } from "../account/reminderkeys";
+import { RULE_KEYS } from "../rules/rulekeys";
+import { TIME_KEYS } from "../condition/timewords";
+
+/** Keys the page itself asks for: units, templates, the controls. Line, label and card keys come from the content. */
+export const UI = {
+  durationD: "ui.duration.d", // "{days} …": DAYS_FROM_H hours and over, on the day exactly
+  durationDH: "ui.duration.dh", // "{days} … {h} …": DAYS_FROM_H hours and over
+  durationH: "ui.duration.h", // "{h} …", on the hour exactly
+  durationHM: "ui.duration.hm", // "{h} … {m} …"
+  durationMS: "ui.duration.ms", // "{m} … {s} …"
+  durationS: "ui.duration.s", // "{s} …"
+  perMinute: "ui.rate.per_minute", // "{n}/min"
+  amount: "ui.store.amount", // "{n} of {cap}"
+  keptBonuses: "ui.chip.kept", // "Bonuses · {n}": the camp header's one control for the permanent bonuses carried
+  empties: "ui.ledger.empties", // "{d}" until a falling store is empty
+  fills: "ui.ledger.fills", // "{d}" until a rising store is full
+  level: "ui.skill.level", // "{n}"
+  skillNextIn: "ui.skill.next_in", // "{pays} {d}": what the next level pays, and the forecast's time to it
+  skillNone: "ui.skill.none", // a skill row with nothing ahead in this content
+  nextUnnamed: "ui.next.unnamed", // a Camp marker whose pays names something the player has not met
+  jobNew: "ui.job.new", // "{person}{card}": the story line when one card is first offered a person nobody has set to it
+  jobNewMany: "ui.job.new_many", // "{person}": the same, when one person is offered several jobs in one step
+  jobNewTown: "ui.job.new_town", // "{card}": the same, when one job is offered several people
+  jobNewAll: "ui.job.new_all", // the same, when several jobs are offered several people in one step
+  goalIn: "ui.goal.in", // "{d}": the time left on the wait line (ui/story/waitline.ts)
+  goalWhile: "ui.goal.while", // "{store}": the wait line's clock runs while this store holds some
+  goalPaused: "ui.goal.paused", // "{store}": the wait line's clock stopped on this dry store
+  goalLost: "ui.goal.lost", // "{card}", "{n}": the wait line's count of a card's fights lost
+  goalCount: "ui.goal.count", // "{store}", "{n}": the wait line's count of a store the clock waits on, as ui.store.amount words it
+  needs: "ui.card.needs", // "{store} {have}/{n}": a card's need
+  needsSpent: "ui.card.needs_spent", // "{store} {have}/{n}": a card's need on a store nothing will bring again
+  needsSkill: "ui.card.needs_skill", // "{skill} level {have}/{n}": a card held back by a skill level
+  reach: "ui.card.reach", // "{store} {have}, next reach at {n}": the store a reach stake fills, against its next stop
+  opensIn: "ui.card.opens_in", // "{d}": the foot of a card waiting to open, apart from a running card's bare timer
+  takesNothing: "ui.card.takes_nothing", // a card that takes from no store: its only price is its share of time
+  noRoom: "ui.card.no_room", // "{store}": a full-paused card's face: every store it fills is full (contract/full-output.txt, "FULL OUTPUT")
+  needsStep: "ui.card.needs_step", // "{card} {have}/{n}": a card held back by another card's completions
+  ledgerHeading: "ui.heading.ledger",
+  ledgerYours: "ui.ledger.yours", // the ledger's group of the player's own stores
+  ledgerThreats: "ui.ledger.threats", // the ledger's group of threats at the stores
+  craftHeading: "ui.heading.craft",
+  ordersHeading: "ui.heading.orders",
+  mixesHeading: "ui.heading.mixes",
+  runs: "ui.mix.runs", // "{d}"
+  runsIndefinitely: "ui.mix.runs_indefinitely",
+  defaultMix: "ui.mix.default", // the id of the first mix, saved from the first-mix offer
+  orderAdd: "ui.order.add",
+  orderRemove: "ui.order.remove",
+  ...RULE_KEYS,
+  handsByRule: "ui.hands.by_rule", // "{store}{n}": the strip while a "below" rule with no band runs
+  handsUntilUp: "ui.hands.until_up", // "{store}{m}": the strip while a "below" rule runs
+  handsUntilDown: "ui.hands.until_down", // "{store}{m}": the strip while a "reaches" rule runs
+  handsUntilUpTo: "ui.hands.until_up_to", // "{store}{m}": the same two, the until a share
+  handsUntilDownTo: "ui.hands.until_down_to", // "{store}{m}"
+  handsWhileChip: "ui.hands.while_chip", // "{chip}": the strip while a rule worded as a chip runs
+  close: "ui.close",
+  feedbackOpen: "ui.feedback.open",
+  feedbackPrompt: "ui.feedback.prompt", // the field's placeholder and accessible name
+  feedbackNote: "ui.feedback.note", // what is sent along
+  feedbackSend: "ui.feedback.send",
+  feedbackCancel: "ui.feedback.cancel",
+  feedbackThanks: "ui.feedback.thanks",
+  feedbackLater: "ui.feedback.later", // not kept: too many just now, or no answer
+  tabCards: "ui.tab.cards",
+  tabBook: "ui.tab.book",   // the chronicle's sheet, with Done beside it
+  bookDone: "ui.book.done",   // the Book's page of what is finished
+  handsIdle: "ui.hands.idle",
+  laneIdle: "ui.lane.idle",   // a lane row while its lane is free
+  laneChange: "ui.lane.change",   // a lane row's way to the rule that sets its task
+  ruleAlways: "ui.rule.always",   // "{card}": a lane's always rule
+  ruleAnswer: "ui.rule.answer",   // "{answer}": what a rule or queue entry that answers an offer does
+  ruleAnswerNext: "ui.rule.answer_next",   // the answer rule builder's line over its role buttons
+  ruleAnswered: "ui.rule.answered",   // "{answer}": the builder's word of the answer its offer was given
+  ruleAnswers: "ui.rule.answers",   // the Rules tab's heading over the rules that answer offers
+  both: "ui.mix.both",
+  ...GOAL_ROW_KEYS,
+  ...LESSON_KEYS,
+  ...CHRONICLE_KEYS,
+  ...TIME_KEYS,
+  ...ASK_KEYS,
+  ...PRESTIGE_KEYS,
+  ...TOWN_KEYS,
+  ...REMINDER_KEYS,
+  townTitle: "ui.town.title",   // the camp's shown name, one home: its tab, its view's and rules' heading, its mix's label
+  townIdle: "ui.town.idle",   // "{person}": a person's unshared remainder
+  townCount: "ui.town.count",   // "{n}": a group's head count on its row
+  townEach: "ui.town.each",   // "{n}": under a group's split, how many free members each share is of
+  townTied: "ui.town.tied",   // "{name}": a group page's line naming the one person tied to it
+  townBusy: "ui.town.busy",   // under a group's split while every member is on a one-off of their own
+  edit: "ui.mix.edit",
+  editMix: "ui.mix.edit_mix",
+  save: "ui.mix.save",
+  saveNew: "ui.mix.save_new",
+  newMix: "ui.mix.new",
+  mixFull: "ui.mix.full", // in the place of New mix once the save holds Content.limits.max_mixes
+  runMix: "ui.mix.run", // the Mixes list: tapping this row runs the mix
+  mixRunning: "ui.mix.running", // the Mixes list: the mix running now, when no time to state
+  name: "ui.mix.name",
+  mixNameReserved: "ui.mix.name_reserved",   // "{prefix}": under the editor's name, a name the game keeps
+  mixNameTaken: "ui.mix.name_taken",   // under the editor's name, another saved mix's
+  add: "ui.mix.add",
+  forecastUnknown: "ui.mix.forecast_unknown", // the editor's totals when the preview got no answer
+  perMinuteHead: "ui.mix.per_minute",
+  now: "ui.mix.now",
+  after: "ui.mix.after",
+  ifRun: "ui.mix.if_run", // the totals' second column for a mix that Save does not run
+  spent: "ui.mix.spent", // "{store}": a card of the mix is stopped on a store nothing can make again
+  runningNow: "ui.mix.running_now", // the label of the split the mix runs now, while a card of it is stopped
+  gainFrom: "ui.mix.from", // "{pct}{card}": a part of the split that runs now gained from a stopped card
+  waiting: "ui.mix.waiting", // "{card}": a stopped card's part of the split that runs now
+  stopped: "ui.mix.stopped", // "{card}": the strip's note on a greyed mix, naming the card in it that is done
+  deleteMix: "ui.mix.delete",
+  deleteAsk: "ui.mix.delete_ask",
+  yes: "ui.yes",
+  no: "ui.no",
+  namedByOrder: "ui.mix.named_by_order",
+  usedBy: "ui.mix.used_by", // "{n}": the Mixes list's note on a mix several rules run
+  usedByOne: "ui.mix.used_by_one",
+  mixEarlier: "ui.mix.earlier", // "{mix}", "{when}": the player's own earlier best for a goal, with the mix that set it
+  mixNets: "ui.mix.nets", // "{n}": a mix's store net rates, joined
+  nested: "ui.mix.nested",
+  cardCount: "ui.card.count", // "{n}/{cap}"
+  cardLevelled: "ui.card.levelled", // "{skill}{n}{before}{after}": a level on the card it speeds up, its old and new time
+  retired: "ui.card.retired",
+  full: "ui.ledger.full",
+  campPays: "ui.camp.pays", // "{level} {pays}": the next Camp level and its pays words, their own {from} and {to} filled
+  starved: "ui.ledger.starved",
+  unfed: "ui.ledger.unfed", // "{pct}": a dry store that only feeds a bonus (StoreInfo.bonus_bp), the bonus it holds back
+  queueWhenReady: "ui.queue.when_ready", // a step's button that lines up its tap for when it turns ready
+  queueQueued: "ui.queue.queued", // the same button once the tap is in the queue
+  queueUntilDone: "ui.queue.until_done", // the same button on a staged card a tap runs: run it on to its cap
+  queueRunning: "ui.queue.running", // a Next entry whose tap a lane already runs, in Remove's place
+  queueMove: "ui.queue.move", // a Next entry's ≡, for screen readers: it drags, or moves by the arrow keys
+  queueMoveOne: "ui.queue.move_one", // the same on a Next row of several runs of a card: it moves one of them
+  queueOnce: "ui.queue.once", // "{card}": a Next row of one run of a card
+  queueRuns: "ui.queue.runs", // "{card}{n}": a Next row of n runs of a card one after another
+  queueRemoveOne: "ui.queue.remove_one", // Remove on a Next row of several runs: it takes one off
+  queueHeading: "ui.queue.heading", // the Rules tab's list of what the queue taps next
+  queuePlan: "ui.queue.plan", // Next's "+ Plan": a stint written from the list (ui/next/stintplan.ts)
+  queueFull: "ui.queue.full", // the When ready button's place once the queue holds Content.limits.max_queue
+  handsNext: "ui.hands.next", // "{card}": the strip's note of the queue's head
+  handsThen: "ui.hands.then", // "{mix}": what the hands go back to, while a tap, a rule's mix or a goal stint holds them
+  handsUntilGoal: "ui.hands.until_goal", // "{goal}": the strip while a goal stint's mix runs, where it lets go
+  devicesOpen: "ui.devices.open", // the panel foot's way to the "Another device" sheet
+  devicesHeading: "ui.devices.heading",
+  settingsOpen: "ui.settings.open", // the panel foot's way to the Settings sheet
+  settingsHeading: "ui.settings.heading",
+  settingsDevice: "ui.settings.device", // the group heading for the choices this device keeps
+  settingsEvery: "ui.settings.every", // the group heading for the choices every game shares
+  soundOn: "ui.sound.on", // the speaker button's name while sound is on (it mutes)
+  soundOff: "ui.sound.off", // the speaker button's name while sound is off (it unmutes)
+  soundRow: "ui.sound.row", // the Settings checkbox for the same switch
+  codeLead: "ui.devices.code_lead",
+  codeNote: "ui.devices.code_note", // "{d}": how long the code still works
+  codeGone: "ui.devices.code_gone",
+  codeNew: "ui.devices.code_new",
+  wordsHeading: "ui.devices.words_heading",
+  wordsLead: "ui.devices.words_lead",
+  wordsMake: "ui.devices.words_make",
+  wordsRemake: "ui.devices.words_remake",
+  wordsReplaceAsk: "ui.devices.words_replace_ask",
+  wordsNote: "ui.devices.words_note",
+  wordsSave: "ui.devices.words_save",
+  wordsCopy: "ui.devices.words_copy",
+  wordsCopied: "ui.devices.words_copied",
+  wordsCopyFailed: "ui.devices.words_copy_failed",
+  joinHeading: "ui.devices.join_heading",
+  joinLead: "ui.devices.join_lead",
+  joinCode: "ui.devices.join_code", // the code box's label
+  joinWords: "ui.devices.join_words", // the recovery words box's label
+  join: "ui.devices.join",
+  joinNone: "ui.devices.join_none", // "{minutes}": how long a code works (Content.transfer_code_s)
+  joinLimited: "ui.devices.join_limited",
+  joinFull: "ui.devices.join_full", // "{max}": MergeSummary.max_saves; both devices' games together pass it
+  mergeAsk: "ui.devices.merge_ask", // this device has games of its own: move them into the other account?
+  mergeWords: "ui.devices.merge_words", // added to the question when both accounts have recovery words
+  merge: "ui.devices.merge", // the ask's primary answer: move the games
+  keep: "ui.devices.keep", // the ask's other answer: join and leave the games on the old account
+  mergeCancel: "ui.devices.merge_cancel", // the ask's no
+  keptHeading: "ui.devices.kept_heading", // after a join that kept the games
+  keptNew: "ui.devices.kept_new", // the old account's new words are shown below
+  keptHad: "ui.devices.kept_had", // it had words already: they are what brings the games back
+  keptDone: "ui.devices.kept_done", // reload into the other account
+  devicesAway: "ui.devices.away", // the server did not answer
+  listHeading: "ui.devices.list_heading",
+  listLead: "ui.devices.list_lead",
+  listThis: "ui.devices.list_this", // the row of the browser asking
+  listSeen: "ui.devices.list_seen", // "{seen}": Device.last_seen_at as a date
+  listRemove: "ui.devices.list_remove",
+  listRemoveAsk: "ui.devices.list_remove_ask", // asked only before this browser is signed out
+  listRemoveYes: "ui.devices.list_remove_yes",
+  listRemoveNo: "ui.devices.list_remove_no",
+  gamesOpen: "ui.games.open", // the panel foot's way to the Games sheet
+  gamesHeading: "ui.games.heading",
+  gameName: "ui.games.name", // "{number}": SaveInfo.number
+  gameUnnumbered: "ui.games.unnumbered", // a save with no number yet
+  gameCamp: "ui.games.camp", // "{level}": SaveInfo.camp_level
+  gameDates: "ui.games.dates", // "{started}", "{played}": dates
+  gamePlaying: "ui.games.playing", // the game this page plays
+  gameSwitch: "ui.games.switch",
+  gameDelete: "ui.games.delete",
+  gameDeleteAsk: "ui.games.delete_ask", // "{days}": Games.kept_days
+  gameStartOver: "ui.games.start_over",
+  gameStartOverAsk: "ui.games.start_over_ask", // "{days}": Games.kept_days
+  gameCancel: "ui.games.cancel",
+  gameNew: "ui.games.new",
+  gamesFull: "ui.games.full", // "{max}": Games.max_saves
+  gamesLimited: "ui.games.limited",
+  creditsStains: "ui.games.credits_stains",
+  gamesDeleted: "ui.games.deleted_heading",
+  gameKept: "ui.games.kept", // "{until}": DeletedSave.purge_at as a date
+  gameRestore: "ui.games.restore",
+  gameStraight: "ui.games.straight", // the per-device choice to skip the front page (app/straight.ts)
+  gameSkipLessons: "ui.games.skip_lessons", // the account's choice to turn lessons off in every game (AccountSettings.lessons)
+  frontContinue: "ui.front.continue", // the front page's button for a browser with games
+  frontBegin: "ui.front.begin", // the front page's button on a first visit, and while New game is selected
+  frontFirst: "ui.front.first", // the front page's line under the title on a first visit
+  gamesPlayed: "ui.games.played", // "Last played {when}": {when} is one of the ui.time.* words
+  timeNow: "ui.time.now",
+  timeMinutes: "ui.time.minutes", // "{n} minutes ago"
+  timeHour: "ui.time.hour",
+  timeHours: "ui.time.hours", // "{n} hours ago"
+  timeYesterday: "ui.time.yesterday",
+  timeDays: "ui.time.days", // "{n} days ago"
+  frameKept: "ui.frame.kept_out", // this browser keeps no game inside the page that frames it
+  frameOpen: "ui.frame.open", // the link that plays it in its own tab
+  fightOdds: "ui.fight.odds", // "{lost}{of}": a fight's odds as a whole pair
+  fightOddsPct: "ui.fight.odds_pct", // "{pct}": the odds when no small pair is exact
+  fightOddsUnknown: "ui.fight.odds_unknown", // a fight not yet fought: its odds are not known
+  fightThreatUnknown: "ui.fight.threat_unknown", // the threat's strength in the vs words, before the first fight
+  fightVs: "ui.fight.vs", // "{side_name}{power}{threat_name}{threat}": the two strengths, each a tap to its entries, each named
+  fightOnLoss: "ui.fight.on_loss", // "{costs}": what one lost fight costs, as a list
+  fightOnWound: "ui.fight.on_wound", // "{store}{n}": what one lost fight adds to a level, in the level's own measure
+  fightBase: "ui.fight.base", // a strength's base row
+  fightTally: "ui.fight.tally", // "{fought}{lost}": a standing fight's counts
+  fightSince: "ui.fight.since", // "{fought}{won}{lost}{runner}": a window past three fights, in the arrival queue
+  fightWon: "ui.fight.won", // "{runner}": one fight in the arrival queue
+  fightLost: "ui.fight.lost", // "{runner}"
+  catchingUp: "ui.catching_up", // "{percent}": how far through the time away the server has caught up
+} as const;
+
+export type Slots = Record<string, string>;
+
+/** The text table with every person's name slot and each find's `{found}` slot filled (contract/text-and-numbers.txt, "Text and
+ * numbers", {<lane>}, {found}): the lane's name_key text, lowercased in a line as the lines' voice writes it; the
+ * amount a find found, in whole items. Any other slot is left for fill(). */
+function named(content: Content): Map<string, string> {
+  const raw = new Map(content.text_entries.map((e) => [e.key, e.text]));
+  const names = new Map(content.lane_infos.flatMap((l) => (l.name_key ? [[l.lane, raw.get(l.name_key) ?? ""] as const] : [])));
+  const lines = new Set(content.line_infos.map((l) => l.key));
+  const found = new Map(content.find_infos.map((f) => [f.line_key, String(Math.floor(f.quantity / content.scales.quantity_per_item))]));
+  const fillNames = (key: string, text: string): string => text.replace(/\{(\w+)\}/g, (slot, lane: string) => {
+    if (lane === "found") return found.get(key) ?? slot;
+    const name = names.get(lane);
+    if (name === undefined) return slot;
+    return lines.has(key) ? name.toLowerCase() : name;
+  });
+  return new Map([...raw].map(([key, text]) => [key, fillNames(key, text)]));
+}
+
+export class Text {
+  private readonly table: Map<string, string>;
+  private readonly reported = new Set<string>();
+
+  constructor(content: Content) {
+    this.table = named(content);
+  }
+
+  has(key: string): boolean {
+    return this.table.has(key);
+  }
+
+  get(key: string): string {
+    const text = this.table.get(key);
+    if (text !== undefined) return text;
+    if (!this.reported.has(key)) {
+      this.reported.add(key);
+      console.warn(`ashfall: the content has no text for key "${key}"`);
+    }
+    return "";
+  }
+
+  /** A template with `{name}` slots; a slot with no value is left empty. */
+  fill(key: string, slots: Slots): string {
+    return this.get(key).replace(/\{(\w+)\}/g, (_, name: string) => slots[name] ?? "");
+  }
+}

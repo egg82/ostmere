@@ -35,7 +35,7 @@ Nothing here is a new system.
 | Goal conditions | The order vocabulary: `CardCount`, `SkillLevel`, `Unlocked`, `StoreValue` (`engine/conditions.py`) | The condition editor offers the subjects the engine already solves for. A card's count, a skill's level and an unlock only grow, so a stint on one cannot come back on |
 | Goal times in editors | View.goals and the readout's rate measure, over the editors' dry run | One dry run per edit; the server reads each open goal's time and binding line off the engine's own rates as set (`api/goals/goalrows.py`) |
 | Lately for stints | Chronicle and unwrap, via `engine/rulelog.py` | A stint's entry records its start, its goal landing and what its mix made while it ran |
-| Offers that step back | Offers and quests; the repeat offers (`opening-screen/hands-strip.md`, the hands strip); the lessons (`game/lessons.ts`) | The same detection, a quiet dot in place of the build, below |
+| Offers that step back | Offers and quests; the repeat offers (`opening-screen/hands-strip.md`, the hands strip); the lessons (`game/lessons/lessons.ts`) | The same detection, a quiet dot in place of the build, below |
 | The moments | Cards, goals, prestige, seasons and chores, trips, offers: all content on existing systems | Content supplies them; the simulator counts them |
 | The readout | Simulator, issue #27, "What a re-mix is worth" | This note specifies that item |
 

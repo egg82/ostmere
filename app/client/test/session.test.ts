@@ -1,13 +1,13 @@
-// The page's side of a save the server holds (src/game/session.ts): Begin and open, decisions sent with the count the
+// The page's side of a save the server holds (src/game/page/session.ts): Begin and open, decisions sent with the count the
 // page last saw, another page's decision (409) drawn at once, a server away (503, no answer) asked again with backoff
 // while the page shows it is reconnecting, a deploy redrawing the game, and what the page keeps sent to the server.
 import { ApiFailure, type GameApi } from "../src/api/api";
 import type { Content, Decision, Step, View } from "../src/api/types";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
-import { Session, type SessionEvents } from "../src/game/session";
-import { NEW_SAVE, NEW_SETTINGS } from "../src/game/keeps";
-import type { Past } from "../src/game/chronicle";
+import { Session, type SessionEvents } from "../src/game/page/session";
+import { NEW_SAVE, NEW_SETTINGS } from "../src/game/account/keeps";
+import type { Past } from "../src/game/book/chronicle";
 
 function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(what);

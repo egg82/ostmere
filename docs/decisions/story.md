@@ -150,11 +150,11 @@ Triggers: deterministic, so what a level or a count earns shows the moment it is
 triggers are the engine firing it. The end is one too, with its time kept (`Save.ended_at`; `engine/design/`, "The
 end"). What the next beat waits on is a query over them: the pending triggers with when each lands
 (`app/ashfall_app/engine/pending.py`), read against the content's goals (`app/ashfall_app/opening/goals.py`) into the
-view's goals (`app/ashfall_app/api/goals/goals.py`), which the page marks (`app/client/src/game/story.ts`, the wait line
-`app/client/src/ui/waitline.ts`). Each store and level goal, and each skill's next level, also gets when it lands at
+view's goals (`app/ashfall_app/api/goals/goals.py`), which the page marks (`app/client/src/game/story/story.ts`, the wait line
+`app/client/src/ui/story/waitline.ts`). Each store and level goal, and each skill's next level, also gets when it lands at
 the rates as set, a tap of the hands set aside, and the dry store that binds it (`app/ashfall_app/api/goals/goalrows.py`,
 `app/ashfall_app/api/rules/setrates.py`), which the mix and condition editors list for an edit
-(`app/client/src/ui/goaltimes.ts`). "The player set a rule on a ruled lane" is one: the LaneRules subject, fired at
+(`app/client/src/ui/mixes/goaltimes.ts`). "The player set a rule on a ruled lane" is one: the LaneRules subject, fired at
 the decision that sets it (`engine/design/`, "Lane rules"). A later prestige phase's level pays are one table per
 skill, keyed by the level within the phase, which the merge expands into ordinary triggers
 (`app/ashfall_app/opening/phase_pays.py`).
@@ -163,7 +163,7 @@ Unlocks: the client never decides what exists. A person joining the town is one 
 outcome part that adds the joined unlock and turns the lane's always task into its share), and a person leaving
 another (`app/ashfall_app/engine/leaves.py`: the left unlock, from which `app/ashfall_app/engine/gone.py` derives the
 lane's cards out of play and the standings it stops). The page decides when an unlocked part is first drawn, from the
-view, the content and what the account keeps (`app/client/src/game/shown.ts`; `decisions.md`, "The screen arrives
+view, the content and what the account keeps (`app/client/src/game/page/shown.ts`; `decisions.md`, "The screen arrives
 when it means something"). Features (the ledger, the craft list) are page parts the engine only switches on. Facts
 that only grow live here too: a card retired, an offer shown, answered, and by which answer, a person joined or left.
 The stated aim is read off this set the same way: each aim in the content names the unlock it starts at, and the page

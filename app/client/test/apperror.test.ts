@@ -6,8 +6,8 @@ import { httpApi, type GameApi } from "../src/api/api";
 import type { Decision, NewSave, Step } from "../src/api/types";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
-import { Session } from "../src/game/session";
-import { NEW_SAVE } from "../src/game/keeps";
+import { Session } from "../src/game/page/session";
+import { NEW_SAVE } from "../src/game/account/keeps";
 
 const TAP: Decision = { kind: "tap_card", card: "stand" };
 const APP_RETRIES = 3;

@@ -128,7 +128,7 @@ class SavePresentation(BaseModel):
     """The tasks of lanes run by rules that the player has had in front of them on the person's page (their Change): a
     person with a task not listed here carries a quiet dot on Change in their Town row."""
     lessons: list[Id] = Field(default=[], max_length=MAX_LIST)
-    """The lessons done or skipped in this save (the page's game/lessons.ts ids): each comes once."""
+    """The lessons done or skipped in this save (the page's game/lessons/lessons.ts ids): each comes once."""
     lesson_ends: list[LessonEnd] = Field(default=[], max_length=MAX_LIST)
     """Where each lesson in `lessons` ended, once each."""
     visits: list[Visit] = Field(default=[], max_length=MAX_LIST)

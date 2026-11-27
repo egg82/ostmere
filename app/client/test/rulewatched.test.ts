@@ -1,4 +1,4 @@
-// A new store rule on a phone (issue 467; ui/conditiondraft.ts keepOffered, ui/condstore.ts): a task picked on a rule with
+// A new store rule on a phone (issue 467; ui/condition/conditiondraft.ts keepOffered, ui/condition/condstore.ts): a task picked on a rule with
 // no condition yet starts on the first store it makes, as a tap on that store would, so Rules, + New rule, the task and
 // Add rule is the whole rule (4 taps, from 6); and the foot shows the watched store as it stands (held / cap, net per
 // minute, where it heads) over the sentence while the levels are set. A chip's rule shows no number.
@@ -7,8 +7,8 @@ import { testContext } from "./context";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Decision, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { RulesTab } from "../src/ui/rules";
+import { Catalog } from "../src/game/page/catalog";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 

@@ -6,10 +6,10 @@ import { install } from "./fake-dom";
 import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, Order, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { UI } from "../src/game/text";
-import { Keeps } from "../src/game/keeps";
-import { canQueue } from "../src/game/queue";
+import { Catalog } from "../src/game/page/catalog";
+import { UI } from "../src/game/page/text";
+import { Keeps } from "../src/game/account/keeps";
+import { canQueue } from "../src/game/mixes/queue";
 import { Screen } from "../src/ui/screen";
 
 install();

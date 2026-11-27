@@ -1,11 +1,11 @@
-// The mix editor's forecast (ui/editor.ts, "after" totals) while a divider is being dragged: the numbers follow the
+// The mix editor's forecast (ui/mixes/editor.ts, "after" totals) while a divider is being dragged: the numbers follow the
 // drag and are still there after the finger lifts, and a new view arriving mid-drag does not wipe them.
 import { fakeDocument, FakeEl, install, pointer } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
 import type { Decision, View } from "../src/api/types";
-import { NewMarks } from "../src/game/marks";
-import { MixEditor } from "../src/ui/editor";
+import { NewMarks } from "../src/game/lessons/marks";
+import { MixEditor } from "../src/ui/mixes/editor";
 import type { PartContext } from "../src/ui/part";
 
 install();
