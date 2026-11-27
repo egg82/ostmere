@@ -261,16 +261,16 @@
     290
    ]
   },
-  "basis": "a chapter with no row is planned at the costliest measured one plus a quarter: per route, its dearest end; the dearest rebased save; the dearest setup and heavy step, at the step count of the chapter with the most reading time",
-  "estimated": {
-   "rows": [
-    "ends:typical:twentyfive",
-    "ends:sharp:twentyfive",
-    "ends:whenever:twentyfive",
-    "rebased:twentyfive",
-    "readings:twentyseven"
-   ],
-   "basis": "not measured: written with day twenty-seven, from day twenty-five's shape. typical's end is day twenty-five's readings setup (typical played through day twenty-five from day twenty-three's end); sharp's and whenever's scale it by their day-twenty-three ends against typical's; the rebased save is day twenty-three's plus a quarter; day twenty-seven's readings row copies day twenty-five's. The nightly's refresh replaces each with its measurement and drops this block."
-  }
+  "basis": "a chapter with no row is planned at the costliest measured one plus a quarter: per route, its dearest end; the dearest rebased save; the dearest setup and heavy step, at the step count of the chapter with the most reading time"
+ },
+ "estimated": {
+  "rows": [
+   "ends:typical:twentyfive",
+   "ends:sharp:twentyfive",
+   "ends:whenever:twentyfive",
+   "rebased:twentyfive",
+   "readings:twentyseven"
+  ],
+  "basis": "not measured: written with day twenty-seven, from day twenty-five's shape. typical's end is day twenty-five's readings setup (typical played through day twenty-five from day twenty-three's end); sharp's and whenever's scale it by their day-twenty-three ends against typical's; the rebased save is day twenty-three's plus a quarter; day twenty-seven's readings row copies day twenty-five's. The nightly's refresh replaces each with its measurement and drops this block."
  }
 }
