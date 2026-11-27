@@ -1,4 +1,4 @@
-"""Who a request is (CONTRACT.txt, "Accounts and sessions"): the account its session cookie names, from the Accounts
+"""Who a request is (contract/accounts-and-sessions.txt, "Accounts and sessions"): the account its session cookie names, from the Accounts
 system. Looking changes nothing; a write that succeeded renews the session and its cookie (renew, called by the route
 class), so a GET or a refused write never writes."""
 import logging

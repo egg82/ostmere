@@ -95,7 +95,7 @@ pass (below, "Gaps the chapter files found"): 13 before day three ships, 14 befo
 
 The first pass at `day_four.toml` and `day_five.toml` hit four places where this plan assumed something the code does
 not do. Two share a cause: the simulator's policies set an answer order and a hold through the engine, and no page
-builds either (the client sends `holds: []` in every mix and builds no answer rule; `api/CONTRACT.txt`, "OFFERS",
+builds either (the client sends `holds: []` in every mix and builds no answer rule; `api/contract/offers.txt`, "OFFERS",
 forbids one). So the bands, the cap-loss check and the 2 AM test measured a player who cannot exist. Items 10-13 give
 the player both, and the policies then use only what the page offers.
 
@@ -146,7 +146,7 @@ the player both, and the policies then use only what the page offers.
     yet shown; a player may send it). Accept: each mutant goes red; ambiguities logged and answered in `DESIGN.txt`
     before item 10 merges.
 12. **The answer rule on the page** (**M**, api, client and simulator). The wire's order verb and
-    `Content.offer_infos` gain kind and role; `CONTRACT.txt`, "OFFERS", lets the page build one answer rule per kind,
+    `Content.offer_infos` gain kind and role; `contract/offers.txt`, "OFFERS", lets the page build one answer rule per kind,
     in the Rules tab's answers section, once an offer of that kind has been answered, offering the kind's roles by
     that answer's labels, and edit or remove it (the page still builds no `answer_offer` rule). The simulator's
     policies set the kind's rule only after answering the kind's first offer, in place of today's per-offer orders

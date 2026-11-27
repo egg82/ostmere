@@ -1,4 +1,4 @@
-// The editors' goal rows (CONTRACT.txt, "Goal rows"): each goal whose time or limit a dry run changes, now → after,
+// The editors' goal rows (contract/goal-rows.txt, "Goal rows"): each goal whose time or limit a dry run changes, now → after,
 // and under it the line that binds it after the edit, as the server states it. The page computes no rate or time.
 import type { GoalRow, View } from "../api/types";
 import type { Catalog } from "../game/catalog";

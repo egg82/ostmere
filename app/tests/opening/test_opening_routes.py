@@ -133,7 +133,7 @@ def test_set_orders_and_set_queue_come_back_in_the_view(game: GameClient):
 
 
 def test_a_store_rule_the_page_writes_is_taken_both_ways_with_a_band(game: GameClient):
-    """Run when…'s two shapes (api/CONTRACT.txt, "a store rule"): "10 or more, until under 5" on a full store and
+    """Run when…'s two shapes (api/contract/the-client-may.txt, "a store rule"): "10 or more, until under 5" on a full store and
     "under 2, until 4" on an empty one are accepted, come back as sent, and hold at once."""
     g = Step.model_validate(game.begin()["step"])
     q = units(1)
@@ -151,7 +151,7 @@ def test_a_store_rule_the_page_writes_is_taken_both_ways_with_a_band(game: GameC
 
 
 def test_an_order_or_queue_condition_cannot_watch_running(game: GameClient):
-    """The page builds no `running` subject (api/CONTRACT.txt, "Decisions"): one in set_orders or set_queue is refused
+    """The page builds no `running` subject (api/contract/endpoints.txt, "Decisions"): one in set_orders or set_queue is refused
     and writes nothing, while the page's own store rule is taken."""
     g = Step.model_validate(game.begin()["step"])
     watching = {"kind": "at_least", "watched": {"kind": "running", "runner": "stand_up"}, "value": 1, "release": 1}

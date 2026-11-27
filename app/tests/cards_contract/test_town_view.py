@@ -1,5 +1,5 @@
 """The read model of offers (engine DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS": "Read model", "The
-answer's card"; invariant 64; api CONTRACT.txt, "OFFERS"). View.offers is every shown offer in rules order, each
+answer's card"; invariant 64; api/contract/offers.txt, "OFFERS"). View.offers is every shown offer in rules order, each
 OfferView(offer, answer, answers) with `answer` None while open; each AnswerView(answer, card, takes_s) in the offer's
 answer order. An answer's card is the first card its outcome queues, else its first RuleInstall's, else the first card
 it starts, else None; takes_s is one completion of that card started now from its current work at a full share

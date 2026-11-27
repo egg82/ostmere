@@ -1,5 +1,5 @@
 """A save is written by the server on every decision and advance; open answers it as the player last saw it, its past
-lines and the time away (CONTRACT.txt: Step, ENDPOINTS). The wall clock is moved by ageing the save's row (rows.py)."""
+lines and the time away (contract/: Step, ENDPOINTS). The wall clock is moved by ageing the save's row (rows.py)."""
 import random
 from typing import Any
 

@@ -1,7 +1,7 @@
 // Blind contract tests, written from the contract alone (not the implementation), ported to the story strip: the strip
 // shows the newest line once read, a step's lines each stay until their reading time, the Chronicle button gets a dot for a
 // line that left unseen, and the lone first card is `first untapped`. The CSS items read src/game.css.
-import { readFileSync } from "node:fs";
+import { readGameCss } from "./gamecss";
 import { FakeEvent, fakeDocument, install } from "./fake-dom";
 import type { FakeEl } from "./fake-dom";
 import { testContext } from "./context";
@@ -245,7 +245,7 @@ for (const onPhone of [true, false]) {
 
 // ---- 5. CSS ----
 {
-  const css = readFileSync("src/game.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  const css = readGameCss().replace(/\/\*[\s\S]*?\*\//g, "");
   interface Rule { media: string | null; selectors: string[]; decls: Map<string, string> }
   const rules: Rule[] = [];
   /** A selector list split at the commas outside parentheses (so :is(a, b) stays whole). */

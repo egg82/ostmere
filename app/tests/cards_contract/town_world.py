@@ -41,7 +41,7 @@ NO_OUT = Outcome(lines=(LineKey("no.said"),), queues=(HC,))
 
 
 def always(card: CardId) -> Order:
-    """A lane's always rule (DESIGN.txt, "Ruled lane"; api CONTRACT.txt, "A lane run by rules")."""
+    """A lane's always rule (DESIGN.txt, "Ruled lane"; api/contract/a-lane-run-by-rules.txt, "A lane run by rules")."""
     return Order(ALWAYS, TapCard(card))
 
 

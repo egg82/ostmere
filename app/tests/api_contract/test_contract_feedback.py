@@ -1,4 +1,4 @@
-"""Tester feedback (api/CONTRACT.txt, "POST /api/feedback"): 1 to 2000 characters from any browser, kept with the build
+"""Tester feedback (api/contract/endpoints.txt, "POST /api/feedback"): 1 to 2000 characters from any browser, kept with the build
 and, when the browser's account owns the save, where in the game it was; limited per account (or per client address
 without one) and in all; and the words never reach a log line. Rows are read where HTTP cannot reach."""
 from collections.abc import Iterator

@@ -1,5 +1,5 @@
 """Rates of the setup as set: the engine's own running shares and lines (engine/rates.py) with a tap of the hands set
-aside, so the hands' mix runs at its shares (CONTRACT.txt, "Goal rows"). A tap ends in minutes; a goal is hours out,
+aside, so the hands' mix runs at its shares (contract/goal-rows.txt, "Goal rows"). A tap ends in minutes; a goal is hours out,
 and a dry run of a mix edit made while a tap runs would otherwise move nothing. A hold keeps the run it had with the
 tap in place."""
 from fractions import Fraction

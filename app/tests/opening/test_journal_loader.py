@@ -1,4 +1,4 @@
-"""The journal's loader and unlocks (api/CONTRACT.txt, "JOURNAL", acceptance 1 to 4), on fixtures/journal.toml merged onto
+"""The journal's loader and unlocks (api/contract/journal.txt, "JOURNAL", acceptance 1 to 4), on fixtures/journal.toml merged onto
 the opening alone, its own journal taken out (bookless.py). Each refusal is the fixture edited to break it, beside the unedited control that loads."""
 from collections.abc import Callable
 from pathlib import Path

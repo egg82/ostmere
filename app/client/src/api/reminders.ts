@@ -1,4 +1,4 @@
-// PUT and DELETE /api/reminders (CONTRACT.txt, "Reminders"): the endpoint only ever in a body.
+// PUT and DELETE /api/reminders (contract/reminders.txt, "Reminders"): the endpoint only ever in a body.
 import type { Subscribed } from "../app/push";
 import { ApiFailure, request } from "./api";
 import type { components } from "../../generated/schema";

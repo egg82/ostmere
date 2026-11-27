@@ -1,5 +1,5 @@
 // A subject rule offers only numbers still ahead (docs/decisions/principles.md, "Every option offered works as worded"):
-// a level is the one the engine's skill_level counts, across prestige phases (CONTRACT.txt, "PRESTIGE PHASES"); a
+// a level is the one the engine's skill_level counts, across prestige phases (contract/prestige-phases.txt, "PRESTIGE PHASES"); a
 // slider starts past where the count or level stands, save for the number a rule being changed already holds; the
 // Camp is not offered once no level a rule can name is left; and a person's copy of a task reads apart from the hands'.
 import { fixtureContent, Q } from "../fixtures/content";

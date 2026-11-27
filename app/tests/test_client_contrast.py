@@ -1,7 +1,7 @@
 """The client's colours keep WCAG contrast (tests/contrast.py reads them from game.css): text 4.5:1, large text, a
 control's border and a mix hue 3:1. Testers called the scheme low-contrast; this holds the line for the controls, the
 text and the bars."""
-from tests.contrast import CSS, Pair, hue_pairs, pairs
+from tests.contrast import Pair, game_css, hue_pairs, pairs
 
 def failing(found: list[Pair]) -> list[str]:
     return [f"{p.what}: {p.fg} on {p.bg} is {p.ratio:.2f}, needs {p.need}" for p in found
@@ -9,12 +9,12 @@ def failing(found: list[Pair]) -> list[str]:
 
 
 def test_the_stylesheet_is_actually_read():
-    found = pairs(CSS.read_text())
+    found = pairs(game_css())
     assert len(found) > 80 and any(p.what.endswith("border") for p in found)
 
 
 def test_text_and_control_borders_meet_wcag():
-    assert failing(pairs(CSS.read_text())) == []
+    assert failing(pairs(game_css())) == []
 
 
 def test_the_check_fails_on_a_low_contrast_pair():
@@ -28,7 +28,7 @@ def test_the_check_fails_on_a_low_contrast_pair():
 
 
 def test_every_mix_hue_stands_off_what_it_sits_on():
-    found = hue_pairs(CSS.read_text())
+    found = hue_pairs(game_css())
     assert len(found) >= 18, "the six mix hues against three surfaces were not all read"
     assert failing(found) == []
 

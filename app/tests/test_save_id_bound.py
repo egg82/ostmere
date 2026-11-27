@@ -1,4 +1,4 @@
-"""A save id past what the database stores is a request that does not fit the contract (api/CONTRACT.txt, "Save ids"):
+"""A save id past what the database stores is a request that does not fit the contract (api/contract/endpoints.txt, "Save ids"):
 422 invalid_decision on every route that names a save, and on POST /api/feedback, not a 500. An id in range that is
 not this account's stays 404."""
 from typing import Any

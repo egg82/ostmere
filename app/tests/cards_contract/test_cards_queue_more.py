@@ -1,4 +1,4 @@
-"""One run per entry (Plan's entries, CONTRACT.txt "Goal stints"): each is TapCard(c) until c's count reaches one more
+"""One run per entry (Plan's entries, contract/goal-stints.txt "Goal stints"): each is TapCard(c) until c's count reaches one more
 than the runs planned before it (the tap under way and the earlier entries of c), so entries of a card a lane runs now
 add runs after that tap. Each is checked when its turn comes: an entry of a card that reached its cap is dropped at that
 instant (DESIGN.txt, "Greyed mix"), and one waiting on an input nothing makes is kept but passed over, so the hands go on

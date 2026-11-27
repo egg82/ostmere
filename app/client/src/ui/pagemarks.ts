@@ -1,5 +1,5 @@
 // The marks layer over a journal page (docs/design/journal.md, "Marks on the page"): it loads the marks' manifest
-// once, when the journal is made (so turning to a page sends nothing, as CONTRACT.txt's JOURNAL asks), measures the
+// once, when the journal is made (so turning to a page sends nothing, as contract/'s JOURNAL asks), measures the
 // words, headings and drawings the page shows, and draws each mark game/pagemarks.ts places. It is redrawn when the page
 // is, when the fonts arrive and when its size changes, since a place depends on where the words lie. A manifest or an
 // image that fails to load draws no marks and is reported once.

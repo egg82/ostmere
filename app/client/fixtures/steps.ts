@@ -284,7 +284,7 @@ function variant(phase: Phase, view: View, at: number): View {
       unlocked: [...view.unlocked, { category: "retired", id: "tend" }],
     };
   }
-  if (phase === "dry" || phase === "fullpause") {   // the mix's first card paused on a dry store, or a full one (CONTRACT.txt, "FULL OUTPUT"), its share run by the rest
+  if (phase === "dry" || phase === "fullpause") {   // the mix's first card paused on a dry store, or a full one (contract/full-output.txt, "FULL OUTPUT"), its share run by the rest
     const [stop, ...rest] = view.cards.filter((c) => c.share_bp > 0);
     const total = rest.reduce((n, c) => n + c.share_bp, 0);
     const gain = (c: Card): number => (stop && total > 0 ? Math.floor((stop.share_bp * c.share_bp) / total) : 0);

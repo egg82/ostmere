@@ -1,4 +1,4 @@
-"""A dry run takes at most 8 decisions (api/CONTRACT.txt, "Request limits"); the page sends at most 2."""
+"""A dry run takes at most 8 decisions (api/contract/request-limits.txt, "Request limits"); the page sends at most 2."""
 from typing import Any
 
 import pytest

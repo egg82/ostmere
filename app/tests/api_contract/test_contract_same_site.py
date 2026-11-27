@@ -1,4 +1,4 @@
-"""Every POST and PUT under /api comes from this site, with a JSON body when it has one (CONTRACT.txt, ACCOUNTS AND
+"""Every POST and PUT under /api comes from this site, with a JSON body when it has one (contract/accounts-and-sessions.txt, ACCOUNTS AND
 SESSIONS: 403 cross_site, 415 not_json). Nothing a refused write asked for happens."""
 from typing import Any
 

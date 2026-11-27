@@ -1,4 +1,4 @@
-// A chip's cost, as a contract (api/CONTRACT.txt: "A chip with a cost_key draws that text with its word"). Written
+// A chip's cost, as a contract (api/contract/: "A chip with a cost_key draws that text with its word"). Written
 // blind: the band draws a chip's cost_key text inside the chip as .chip-cost; a chip with no cost_key draws only its
 // word; and ChipInfo.cost_key is a nullable string.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";

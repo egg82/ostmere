@@ -1,4 +1,4 @@
-"""Day two's engine parts on the wire (api/CONTRACT.txt, "A lane run by rules", "Offers"), on the test chapter
+"""Day two's engine parts on the wire (api/contract/, "A lane run by rules", "Offers"), on the test chapter
 (tests/opening/fixtures/townsfolk.toml): the content's lane and offer infos, the view's lane order and offers, and
 answer_offer as a decision and as an order verb, each a plain copy of the engine's."""
 from functools import cache

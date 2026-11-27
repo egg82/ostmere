@@ -1,4 +1,4 @@
-"""LOSS LINES composer (api/CONTRACT.txt, L1-L6), written from the contract alone. The expected key is an oracle that
+"""LOSS LINES composer (api/contract/, L1-L6), written from the contract alone. The expected key is an oracle that
 restates L5 (the hash and the round rule); the counts and order are L2-L4. Mutants: MUTANTS.txt beside this file."""
 import hashlib
 from collections.abc import Sequence

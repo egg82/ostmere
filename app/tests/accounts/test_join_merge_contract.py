@@ -1,4 +1,4 @@
-"""The account merge on POST /api/join, written from api/CONTRACT.txt alone ("Moving to another device"; "Games on
+"""The account merge on POST /api/join, written from api/contract/ alone ("Moving to another device"; "Games on
 one account"): what a join moves, what it refuses, who owns what afterwards, and the recovery words."""
 from collections.abc import Iterator
 from typing import Any

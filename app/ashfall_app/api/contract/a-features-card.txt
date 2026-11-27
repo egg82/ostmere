@@ -1,0 +1,8 @@
+A FEATURE'S CARD
+  A FeatureInfo with a feature_card is shown as that card once, when the page first sees the feature unlocked: a View
+  after one without it, live or on a return (Opened.was without it, the step with it). It waits until what arrived with
+  that View has been revealed and its lines read, then docks at the panel's foot (along the bottom edge on a phone),
+  with nothing dimming the scene: the title, each of line_keys, and one button (button_key) that puts it away. Nothing
+  else waits on it, and play goes on under it. A page whose first View already holds the feature (a reopen, a redraw
+  for a deploy) never shows it, so a card put away stays away and nothing is kept for it. The content's end card is one.
+

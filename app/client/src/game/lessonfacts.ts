@@ -3,7 +3,7 @@ import type { View } from "../api/types";
 
 const WHOLE_BP = 10000;
 
-/** The save's town mix is as the game made it: each person's whole time on one card (api CONTRACT.txt, "The town's mix"),
+/** The save's town mix is as the game made it: each person's whole time on one card (api/contract/the-towns-mix.txt, "The town's mix"),
  * not split or moved to another task since. */
 export function townMixAsMade(view: View): boolean {
   const mix = view.mixes.find((m) => m.id === view.running_town_mix_id);

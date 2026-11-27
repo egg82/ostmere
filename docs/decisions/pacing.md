@@ -206,4 +206,4 @@ shrinking past the shipped ones; a level's pay speeds its skill's work (more mad
 grows with the curve and the loop stays tame (`app/tests/dayone/growth.py`).
 
 Forecast: `app/ashfall_app/engine/forecast.py`, sent when the page asks (a new or opened save, an advance after its plan
-changed) and kept across plain advances, so the page draws only times that come true (CONTRACT.txt, "Forecast").
+changed) and kept across plain advances, so the page draws only times that come true (contract/forecast.txt, "Forecast").

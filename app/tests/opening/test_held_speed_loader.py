@@ -1,6 +1,6 @@
 """A while_running entry names a side or a lane (entries.WhileRunningEntry), and a standing action or a card may carry
 one (engine DESIGN.txt, "HELD SPEED"); a card's upside_of names the runner whose entries its upside serves
-(api/CONTRACT.txt, {pct}): the pot's card for a recipe (#473)."""
+(api/contract/, {pct}): the pot's card for a recipe (#473)."""
 import pytest
 from fastapi.testclient import TestClient
 from pydantic import ValidationError

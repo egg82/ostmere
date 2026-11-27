@@ -1,4 +1,4 @@
-// Games (CONTRACT.txt, "Games on one account"): a quiet text button at the panel's foot opening a sheet that lists the
+// Games (contract/games-on-one-account.txt, "Games on one account"): a quiet text button at the panel's foot opening a sheet that lists the
 // account's games, asked for afresh each time it opens. The game this page plays is marked; each other has Open and
 // Delete, which asks once more before the game goes. New game starts another beside them, and the deleted games still
 // held come last, each with Restore. What a tap does to the page (switch, a new game) is the caller's (GamesActions).

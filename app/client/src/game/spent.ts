@@ -1,4 +1,4 @@
-// A stopped card in the running mix (CONTRACT.txt, "SPENT"): the engine says which cards of the running mix are paused
+// A stopped card in the running mix (contract/spent.txt, "SPENT"): the engine says which cards of the running mix are paused
 // or spent and which cards run their shares. The page words that and works out nothing.
 import type { SpentShare, View } from "../api/types";
 import type { Catalog } from "./catalog";

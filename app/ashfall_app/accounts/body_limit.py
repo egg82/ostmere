@@ -1,5 +1,5 @@
 """A request body over MAX_BODY_BYTES under /api/ is refused before any route parses it: 413 too_large
-(api/CONTRACT.txt, ERRORS), by the declared Content-Length when there is one, else by the bytes counted as they
+(api/contract/errors.txt, ERRORS), by the declared Content-Length when there is one, else by the bytes counted as they
 arrive (a chunked body has no length). The refusal is logged by route and size only."""
 import logging
 from typing import Any

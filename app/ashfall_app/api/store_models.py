@@ -1,4 +1,4 @@
-"""Wire model of the stores' rates as set (View.store_rows; CONTRACT.txt, "Store rows"); the conventions in models.py
+"""Wire model of the stores' rates as set (View.store_rows; contract/store-rows.txt, "Store rows"); the conventions in models.py
 hold here."""
 from enum import StrEnum
 

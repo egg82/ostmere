@@ -3,7 +3,7 @@
 // lines); the page shown again (dev-main's #back) lands on its `back` phase, that long later. sincelong brings every
 // section (stores up and down, two skills and the Camp up, two rules run, a find, a level, an ask); sinceshort one store
 // and one line; sincenone nothing at all; sincejoin one store, a line and a person's joining; sincemention the same with
-// the day's mention of two people in place of the joining (the people section, CONTRACT.txt, "PEOPLE").
+// the day's mention of two people in place of the joining (the people section, contract/people.txt, "PEOPLE").
 import type { Content, LedgerLine, LogLine, RuleRun, Step, View, Visit } from "../src/api/types";
 import { Q } from "./content";
 import { fixtureStep, type Kept } from "./steps";

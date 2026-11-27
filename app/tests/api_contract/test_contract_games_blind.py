@@ -1,4 +1,4 @@
-# Blind contract tests for several saves on one account (CONTRACT.txt, GAMES ON ONE ACCOUNT), written from the contract,
+# Blind contract tests for several saves on one account (contract/games-on-one-account.txt, GAMES ON ONE ACCOUNT), written from the contract,
 # the openapi models and the harness (site.py, rows.py) only.
 #
 # Ambiguities in the contract, each tested on the stricter reading:

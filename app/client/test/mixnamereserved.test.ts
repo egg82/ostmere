@@ -1,4 +1,4 @@
-// A name typed in the mix editor never reaches a mix that isn't the one being edited (CONTRACT.txt, "The town's mix",
+// A name typed in the mix editor never reaches a mix that isn't the one being edited (contract/the-towns-mix.txt, "The town's mix",
 // "Reserved ids"): a name the game keeps for the town (its town mix's, or any new one beginning as the game's do) is
 // refused where it is typed, with one line saying so, and so is a rename onto another saved mix, which Save would
 // overwrite. Save as new already refuses a taken name. The view is the engine's own town over the day-two page.

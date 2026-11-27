@@ -24,7 +24,7 @@ def test_it_waits_while_nothing_is_hurt():
 
 
 def test_reaches_two_is_on_when_the_chip_reads_two():
-    """The page builds "reaches 2, until under 1" on hurt, whose chip shows whole items rounded up (CONTRACT.txt, "a store
+    """The page builds "reaches 2, until under 1" on hurt, whose chip shows whole items rounded up (contract/the-client-may.txt, "a store
     rule"), as at_least above one item (Q + 1) releasing under one (1): on at 1.5 hurt, off at 1 and under."""
     rule = SetOrders((Order(AtLeast(StoreValue(HURT), Q + 1, 1), TapCard(POULTICE)),))
 

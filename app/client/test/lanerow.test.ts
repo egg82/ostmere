@@ -1,4 +1,4 @@
-// A lane run by rules (CONTRACT.txt, "A lane run by rules"; docs/design/opening-screen/hands-strip.md, the hands strip's lane
+// A lane run by rules (contract/a-lane-run-by-rules.txt, "A lane run by rules"; docs/design/opening-screen/hands-strip.md, the hands strip's lane
 // rows): a row under the hands strip per ruled lane, its label (the last later label whose unlock is held), what it
 // does (the running card, or idle) and Change, which opens the person's page (personpage.ts). The rule editor's simple
 // view scoped to a lane, which the page's rule buttons open, changes that rule's tap_card in place, or appends a new

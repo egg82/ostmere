@@ -1,4 +1,4 @@
-// "Until done" on a staged card a tap started (CONTRACT.txt, "UNTIL DONE"): the running tap becomes the plan it would
+// "Until done" on a staged card a tap started (contract/until-done.txt, "UNTIL DONE"): the running tap becomes the plan it would
 // have been had the player planned it first, its work kept. On the hands (or any lane that is not ruled), a queue entry
 // tapping it until its cap, at Next's front (where it would stand, running), or the running When ready entry held on to
 // the cap; on a ruled lane, where the queue may not go, an always rule tapping it, placed as a new lane rule goes.

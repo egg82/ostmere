@@ -22,7 +22,7 @@ start = [
 ]
 start_line_keys = []
 
-# The label of the hands lane (never declared in [[lanes]]). The end moment is this feature unlocked (api/CONTRACT.txt,
+# The label of the hands lane (never declared in [[lanes]]). The end moment is this feature unlocked (api/contract/the-end.txt,
 # "The end"); its lines are appended by the page then, since no engine event marks it.
 hands_label_key = "lane_hands"
 end_feature = "keeps_going"
@@ -1372,7 +1372,7 @@ aim_fire = "you're freezing. a fire, before dark."
 aim_alive = "keep the fire alive, and yourself."
 aim_stay = "make this somewhere you could stay."
 
-# The journal's notes (api/CONTRACT.txt, "JOURNAL").
+# The journal's notes (api/contract/journal.txt, "JOURNAL").
 n_day_b2 = "fire, by my own hand. the first thing i've made, that i know of"
 # The journal's slots (docs/design/journal.md, "The content's side").
 j_b2_catchup = "got a fire lit"

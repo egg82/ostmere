@@ -70,7 +70,7 @@ def named(r: Rules) -> Save:
 
 
 def test_a_town_mix_the_player_named_never_takes_the_hands_once_a_leave_empties_it():
-    """The page's new town mix has the player's name and the town's always rule pointed at it (CONTRACT.txt)."""
+    """The page's new town mix has the player's name and the town's always rule pointed at it (contract/)."""
     r = world(leave_at=20)
     s = named(r)
     assert (running_mix_id(advance(s, r, 10), r), running_town_mix_id(advance(s, r, 10), r)) == (M, OWN)

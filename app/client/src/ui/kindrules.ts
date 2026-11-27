@@ -1,4 +1,4 @@
-// The answer rule's builder in the Rules tab's answers section (CONTRACT.txt, "Offers"): for each offer kind with an
+// The answer rule's builder in the Rules tab's answers section (contract/offers.txt, "Offers"): for each offer kind with an
 // offer answered, a row with that offer's question, the answer it was given, and one button per role for the offers of
 // the kind still to come, worded by the answer that offer gave under it. A tap sets the kind's rule to that role (the pressed button is the rule's role; Remove is on the rule's own row).
 import type { View } from "../api/types";

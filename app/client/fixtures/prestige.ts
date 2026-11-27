@@ -1,4 +1,4 @@
-// FIXTURE, never shipped: a skill's prestige shapes (CONTRACT.txt, "PRESTIGE PHASES") with placeholder ids and words, on
+// FIXTURE, never shipped: a skill's prestige shapes (contract/prestige-phases.txt, "PRESTIGE PHASES") with placeholder ids and words, on
 // the fire's `mid` phase (the shipped game has no prestige yet). withPrestige adds a third skill and four nodes.
 //   prestige:        foraging below its top, the forecast topping it out in 2 h; firecraft at its top in phase 1, six
 //                    levels waiting, three nodes on its menu; carving at its top in phase 3, mastered.

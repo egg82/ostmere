@@ -1,6 +1,6 @@
 // Every option Plan offers works as worded (docs/decisions/principles.md): a card already running is listed and adds a
 // run after the tap under way (not an entry that pops at that landing), and a card on a ruled lane is refused by the
-// server (CONTRACT.txt, "A LANE RUN BY RULES"), so it is neither listed nor taken.
+// server (contract/a-lane-run-by-rules.txt, "A LANE RUN BY RULES"), so it is neither listed nor taken.
 import { install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";

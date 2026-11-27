@@ -1,4 +1,4 @@
-// Which served lines open a story beat (api/CONTRACT.txt, "Beat lines"): the server says so on the line, so the page
+// Which served lines open a story beat (api/contract/endpoints.txt, "Beat lines"): the server says so on the line, so the page
 // never takes a beat from a key or a line's words.
 import type { LogLine } from "../api/types";
 

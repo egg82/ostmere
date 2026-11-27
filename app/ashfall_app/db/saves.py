@@ -38,7 +38,7 @@ class SaveRecord:
     mix_best: Any = None
     """The earlier best per goal (saves/mixbest.py), as JSONB reads back."""
     presentation: Any = None
-    """What the page keeps about the save's teaching (api/CONTRACT.txt, SavePresentation), as JSONB reads back."""
+    """What the page keeps about the save's teaching (api/contract/endpoints.txt, SavePresentation), as JSONB reads back."""
     ahead_at: int | None = None
     """How far the advance kept ahead of the save reached (db/ahead.py), whatever row it began from; None for none."""
 

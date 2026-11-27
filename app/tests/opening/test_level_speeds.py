@@ -1,4 +1,4 @@
-"""LevelPays.speeds (api/CONTRACT.txt, "Skills"): the cards a level makes faster, read from the trigger that lands at
+"""LevelPays.speeds (api/contract/, "Skills"): the cards a level makes faster, read from the trigger that lands at
 that level, so the page can show the level on the card it speeds up. A work entry names its card, a lane entry every
 card on that lane; a rate, a cap or a find names none."""
 import pytest

@@ -1,4 +1,4 @@
-"""A person's name slot (api/CONTRACT.txt, "Text and numbers", {<lane>}): a lane's name_key is a text key, served on
+"""A person's name slot (api/contract/text-and-numbers.txt, "Text and numbers", {<lane>}): a lane's name_key is a text key, served on
 its LaneInfo, and a text's slot naming a lane must name one with a name_key; a digit in a slot's name is not a number."""
 import pytest
 

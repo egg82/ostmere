@@ -1,4 +1,4 @@
-"""Moving an account to another device (CONTRACT.txt, "Moving to another device"): a transfer code with its link and QR
+"""Moving an account to another device (contract/moving-to-another-device.txt, "Moving to another device"): a transfer code with its link and QR
 code, recovery words, and the join that either one makes. Each asks the Accounts system (services.py); what it
 raises becomes the contract's error. Every answer here, errors included, is no-store (route.py)."""
 from collections.abc import Generator

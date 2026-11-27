@@ -1,4 +1,4 @@
-"""Transfer codes (api/CONTRACT.txt, "Moving to another device"): eight characters of ALPHABET (about 40 bits), shown
+"""Transfer codes (api/contract/moving-to-another-device.txt, "Moving to another device"): eight characters of ALPHABET (about 40 bits), shown
 "ABCD-EFGH", working once within LIFETIME. Stored only as "h1$" + HMAC-SHA256(ASHFALL_JOIN_KEY, the code), so a copied
 database holds nothing to try without the key. The rows are db/codes.py; one live code per account, and each mint
 sweeps a batch of expired ones (the writer enforces its own retention)."""

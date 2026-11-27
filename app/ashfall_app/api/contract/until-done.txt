@@ -1,0 +1,13 @@
+UNTIL DONE
+  A capped card a tap started (its LaneBar's running_card, order null) with completions + 1 below its cap can be run on
+  to its cap without waiting for the tap to land. Nothing new on the wire: the page sends the plan the card would have
+  had were it planned before the tap, and the engine leaves the running tap as it stands (its work kept) and takes it
+  up again at each landing until the cap.
+  THE CLIENT MAY, on such a card's face, offer ui.queue.until_done in the place of When ready:
+  - on a lane that is not ruled (the hands, a bench), once view.ended_at is not null: set_queue with the entry tap_card c until c's card_count reaches its cap
+    in place of a tap_card c entry already queued (one whose until is below the cap), else at the front of view.queue
+    while the queue has room;
+  - on a ruled lane: set_orders with an always rule tapping c (after_time 0) where a new rule on that lane goes, while
+    the rules have room and no rule already does exactly that. At the cap it is passed over, as a one-off task's rule.
+  New text key: ui.queue.until_done.
+

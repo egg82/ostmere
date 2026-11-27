@@ -1,4 +1,4 @@
-"""The content's lanes and the town's later names, whose labels change with the unlocks (CONTRACT.txt, "A lane run by
+"""The content's lanes and the town's later names, whose labels change with the unlocks (contract/, "A lane run by
 rules", "The town's mix")."""
 from .. import engine as e
 from ..opening import convert as authored

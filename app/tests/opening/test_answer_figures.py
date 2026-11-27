@@ -1,4 +1,4 @@
-"""An offer answer's figures are served, never typed into its cost text (api/CONTRACT.txt, "OFFERS" and "Text and
+"""An offer answer's figures are served, never typed into its cost text (api/contract/offers.txt, "OFFERS" and "Text and
 numbers", {pct} {gain}): AnswerInfo.change_bp and AnswerInfo.gains are the answer's own modifiers and stores, and its
 cost text holds a pct slot for each change and no gain slot beyond what is served."""
 import re

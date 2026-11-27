@@ -1,6 +1,6 @@
 """Offers and AnswerOffer (engine DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS": "Offers", "ANSWERED and
 ANSWER are written ... whatever rules.opening is", "AnswerOffer", "Dead", "No new event", "Covered"; invariants 61 and
-62; api CONTRACT.txt, "OFFERS"). An offer is shown once Unlock(OFFER) is held, open until answered, and never expires.
+62; api/contract/offers.txt, "OFFERS"). An offer is shown once Unlock(OFFER) is held, open until answered, and never expires.
 An applied AnswerOffer adds Unlock(ANSWERED, o) and Unlock(ANSWER, a), lands the answer's outcome as a trigger's (lines
 with card None), then orders and the queue evaluate. The player's bad answer raises; an order's or the queue's changes
 nothing. Evaluation picks a true order's answer that can act before any tap."""

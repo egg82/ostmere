@@ -1,4 +1,4 @@
-"""View.goals for a story beat waiting on a store a standing action moves (api/goals.py; CONTRACT.txt, "Goals"): the
+"""View.goals for a story beat waiting on a store a standing action moves (api/goals.py; contract/goals.txt, "Goals"): the
 clock carries the store and its amount when the content states it (GoalDef.count), and nothing else when it does not."""
 from dataclasses import replace
 

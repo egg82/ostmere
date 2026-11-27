@@ -1,4 +1,4 @@
-"""View.levels: the segment of each store the page reads as a level though it has no ledger line (CONTRACT.txt, "FIGHTS",
+"""View.levels: the segment of each store the page reads as a level though it has no ledger line (contract/fights.txt, "FIGHTS",
 "read a level"): each store a lost fight adds to (FightDef.wounds) in content order, then each store the scene manifest
 reads that the ledger does not list. The segment is the raw sampled amount."""
 from .. import engine as e

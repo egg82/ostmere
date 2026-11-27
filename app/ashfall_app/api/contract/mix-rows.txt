@@ -1,0 +1,11 @@
+MIX ROWS (POST /api/saves/{save_id}/mix-rows)
+  The Mixes list's numbers: separate per mix, never one score. rows: one MixRow per saved mix of the player's own (a
+  town mix and a greyed one have none), in saved order: goals (the View.goal_rows rows under that mix, as if it
+  were switched to now), nets (each ledger store's net per hour, rate units, unclamped) and runs_out_at (View.runs_out_at
+  under it, null: indefinitely). best: the player's own earlier best per goal, from MixBest {goal, mix_id, lands_at,
+  saved_at}: when a mix is saved (a save_mix decision) each open goal it lands is projected, at the rates as set then,
+  and a goal's entry is replaced only by a strictly earlier landing (a tie stays with the earlier mix). mix_id is the
+  name the mix had when saved; editing or deleting that mix later does not change the entry. `goal` is the goal's
+  key: kind, store, skill and target joined with '|' (empty for a null). The page words it "earlier", never as a
+  verdict, and computes no rate or time. Kept on the save's row (saves.mix_best), so it survives every save round
+  trip; a save written before it has none.

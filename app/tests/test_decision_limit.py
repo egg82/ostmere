@@ -1,4 +1,4 @@
-"""A save takes a bounded number of decisions a minute and an hour (api/CONTRACT.txt, "Request limits"): past either,
+"""A save takes a bounded number of decisions a minute and an hour (api/contract/request-limits.txt, "Request limits"): past either,
 429 rate_limited with Retry-After, and nothing written. The limits are shrunk here; their real size is
 accounts/limits.py's. A refused decision writes no row and counts nothing, and a decision that is stale or invalid
 counts nothing either."""

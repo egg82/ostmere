@@ -1,4 +1,4 @@
-"""The town's mix on the wire (api/CONTRACT.txt, "The town's mix"): the view's running_town_mix_id and town_mix_order,
+"""The town's mix on the wire (api/contract/the-towns-mix.txt, "The town's mix"): the view's running_town_mix_id and town_mix_order,
 the joined unlock category and the decisions' refusals, each a plain copy of the engine's, on one ruled lane whose
 person joins at second 100."""
 from dataclasses import replace

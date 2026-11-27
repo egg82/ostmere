@@ -10,7 +10,7 @@ class StoreNet(BaseModel):
 
 
 class MixRow(BaseModel):
-    """One saved mix of the player's own as if it ran from now (CONTRACT.txt, "Mix rows")."""
+    """One saved mix of the player's own as if it ran from now (contract/mix-rows.txt, "Mix rows")."""
 
     id: str
     goals: list[GoalRow]

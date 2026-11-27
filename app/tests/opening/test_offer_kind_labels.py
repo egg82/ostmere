@@ -1,4 +1,4 @@
-"""An offer kind's label per role (offer_kinds; CONTRACT.txt, "Offers"): every kind of offer in the shipped chapters and
+"""An offer kind's label per role (offer_kinds; contract/offers.txt, "Offers"): every kind of offer in the shipped chapters and
 the chapters in writing has a label for each role its answers carry, so the rule that answers the kind is worded for
 whoever asks. The loader refuses a kind without them; each refusal has a planted case."""
 from pathlib import Path

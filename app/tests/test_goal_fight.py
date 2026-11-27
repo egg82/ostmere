@@ -1,4 +1,4 @@
-"""View.goals for a story beat waiting on a card fight's lost tally (api/goals.py; CONTRACT.txt, "Goals"): the goal names
+"""View.goals for a story beat waiting on a card fight's lost tally (api/goals.py; contract/goals.txt, "Goals"): the goal names
 the fight's card and states the tally, in play once the card is, at the lowest target of the beats waiting on it."""
 from dataclasses import replace
 

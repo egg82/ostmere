@@ -27,7 +27,7 @@ function fullStore(view: View, card: Card): string | null {
 }
 
 /** The card waits on a store the player has never been shown (the night): its countdown is all the page draws of it,
- * with no have/need and no When ready (CONTRACT.txt, "The client may"; docs/design/opening-screen/rules-tab.md, "When ready"). */
+ * with no have/need and no When ready (contract/the-client-may.txt, "The client may"; docs/design/opening-screen/rules-tab.md, "When ready"). */
 export function waitsOnUnseen(view: View, card: Card): boolean {
   const when = card.blocker?.condition;
   if (when?.kind !== "at_least" || when.watched.kind !== "store_value") return false;

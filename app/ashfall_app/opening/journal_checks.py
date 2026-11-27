@@ -1,4 +1,4 @@
-"""The loader's checks on the journal (api/CONTRACT.txt, "JOURNAL"), each naming ids and never text: an entry or note
+"""The loader's checks on the journal (api/contract/journal.txt, "JOURNAL"), each naming ids and never text: an entry or note
 needs the book, the book is a feature with a label, a runner has a fight, a note is on a page declared so far, a sketch
 id is not a path, and every entry has a first note in its own chapter. A note's words and their digits are the text
 checks'. Raises ValueError naming the entry."""

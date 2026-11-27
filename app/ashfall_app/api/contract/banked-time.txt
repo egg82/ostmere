@@ -1,0 +1,22 @@
+BANKED TIME
+  Where production past a cap goes: trips, comforts and arrivals, each a card or an offer the wire already carries
+  (engine DESIGN.txt, "BANKED TIME"). Nothing new on the wire: no model, field, feature or text key. A trip is a
+  CardInfo with an uncapped card whose Card.needs list its supplies; a comfort is a capped craft; an arrival is an
+  OfferInfo whose answer queues a make-room one-off (OFFERS; "Queued one-off").
+  THE CLIENT MAY:
+  - draw a trip in the arrival queue like any uncapped card's completions (in the log, never the band), and the
+    trip's finds, which are triggers with lines, like any trigger's lines.
+  - draw the player's figure away from the scene while a trip runs on a tap, and for the trip's share of a cycle while
+    it runs mixed, choosing the pose from the card id as it does for any task.
+  THE CLIENT MAY NOT:
+  - show what a cap lost, as a number, a line or a colour ("time away is shown as what got done"): a full store's
+    ledger line reads as full, its net as served, and nothing totals overflow.
+  - mark a trip, comfort or arrival as a kind of its own (a tab, a badge, a "spend" button): each is drawn where its
+    card or offer is drawn, with the controls cards and offers already have.
+
+  Rejected, and why (banked time on the wire):
+  - A `trip: bool` on CardInfo for the scene: the page already picks a pose per card id, and a flag would be a second
+    home for what the card id says.
+  - A "banked hours" or "surplus" number served for the page to show: a bank the player watches fill is an offline cap's
+    shape, and it would read as what was missed.
+

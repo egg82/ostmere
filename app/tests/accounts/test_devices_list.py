@@ -1,4 +1,4 @@
-"""Your devices (api/CONTRACT.txt, "Your devices"): an account lists its sessions and ends one, which signs that
+"""Your devices (api/contract/your-devices.txt, "Your devices"): an account lists its sessions and ends one, which signs that
 browser out. Through the app on a database of the test's own."""
 from collections.abc import Iterator
 from typing import Any

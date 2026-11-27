@@ -128,7 +128,7 @@ def test_a_day_away_counts_each_new_opening_once():
 
 
 def test_a_journal_entry_and_a_note_each_count_as_something_opened():
-    """api/CONTRACT.txt, "JOURNAL": an entry and each of its notes are unlocks, so a day away that writes them is
+    """api/contract/journal.txt, "JOURNAL": an entry and each of its notes are unlocks, so a day away that writes them is
     counted. A planted note alone, an entry alone, and an entry with its note in one outcome (one moment) each report."""
     rules = opening_rules()
     base = checks.absence_unlocks(rules, new_save(rules))

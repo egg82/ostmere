@@ -1,4 +1,4 @@
-// A page with no sketch is laid out as text alone (CONTRACT.txt, "JOURNAL", THE CLIENT MAY): no empty room for a
+// A page with no sketch is laid out as text alone (contract/journal.txt, "JOURNAL", THE CLIENT MAY): no empty room for a
 // drawing, nothing loaded and nothing reported.
 import { expect, fire, requests, rig, text } from "./journalrig";
 import { NOTES_A, NOTES_D } from "../fixtures/journal";

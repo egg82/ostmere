@@ -1,4 +1,4 @@
-"""Content.line_infos (api/CONTRACT.txt, "The client may"): every key a story line can carry is served, each once, so the
+"""Content.line_infos (api/contract/the-client-may.txt, "The client may"): every key a story line can carry is served, each once, so the
 page's story strip can keep room for the tallest. The oracle walks the engine's Rules for every field typed LineKey,
 independently of the list the service builds, and adds the content's start and end lines, which no engine event writes."""
 import dataclasses

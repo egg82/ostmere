@@ -1,7 +1,7 @@
 // A request the app itself answered with a 5xx (X-Ashfall-Server: app, a body that is not an ApiError) is asked again a
 // bounded number of times and then refused, so one that fails every time does not freeze the save's queue behind
 // "reconnecting"; a 5xx the app did not answer (a gateway's, no header) and a request that got no answer are asked again
-// without bound, because a deploy or a pod restart must recover (api/CONTRACT.txt, "THE CLIENT MAY").
+// without bound, because a deploy or a pod restart must recover (api/contract/the-client-may.txt, "THE CLIENT MAY").
 import { httpApi, type GameApi } from "../src/api/api";
 import type { Decision, NewSave, Step } from "../src/api/types";
 import { fixtureContent } from "../fixtures/content";
