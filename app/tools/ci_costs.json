@@ -1,5 +1,5 @@
 {
- "measured": "max over the last three runs that played chapter saves of the per-chapter cpu_s the chapter_saves jobs log; refreshed by tools/ci_costs.py",
+ "measured": "max over the last three full runs (every planned save job ran) of the per-chapter cpu_s the chapter_saves jobs log; refreshed by tools/ci_costs.py",
  "source_runs": [
   45871053343,
   45889036860,

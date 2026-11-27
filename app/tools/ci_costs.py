@@ -4,11 +4,13 @@
 Run from app/: python -m tools.ci_costs [run-id ...] [--repo OWNER/NAME] [--scan N] [--table PATH] [--dry-run]
 
 The chapter_saves jobs log `cpu_s` for each end, rebased save and heavy-step reading they play (tools/chapter_saves.py). With
-no run ids, the newest runs of ci.yml and nightly.yml are read, newest first, until three have a job that played something
-(a run whose saves were all cached logs nothing to measure); --scan bounds how many runs are looked at. Each job's log is
-fetched once. The new table holds, per measured end (route and chapter), rebased chapter and reading step, the max over those
-runs, rounded up to whole seconds. Anything no run measured keeps its old value and is listed as unmeasured, never dropped or
-zeroed; `job_overhead_s` and each reading row's `setup_s` (no job logs them) are kept. The `unmeasured` figures are derived
+no run ids, the newest runs of ci.yml and nightly.yml are read, newest first, until three are full runs (fewer than three, and the table is left alone): every save job
+their `saves-plan` job planned ran and succeeded (the nightly's, or a pull request labelled `playthroughs`; a slice run's
+save jobs are skipped, and one that measures a few chapters on its own runner would lower a worse figure). --scan bounds how
+many runs of each workflow are looked at. Each job's log is fetched once. The new table holds, per measured end (route and chapter), rebased
+chapter and reading step, the max over those runs, rounded up to whole seconds. A key only some of the runs measured (the
+others had its save cached) takes the max of those and is named on the `partial=` line. Anything no run measured keeps its
+old value and is listed as unmeasured, never dropped or zeroed; `job_overhead_s` and each reading row's `setup_s` (no job logs them) are kept. The `unmeasured` figures are derived
 again from the table (`unmeasured_row`).
 
 Standard library only: the nightly runs it with no install (it needs GH_TOKEN with actions: read).
@@ -27,8 +29,9 @@ from typing import Any, Callable
 TABLE = Path(__file__).with_name("ci_costs.json")
 WORKFLOWS = ("ci.yml", "nightly.yml")
 WANTED = 3
-MEASURED = ("max over the last three runs that played chapter saves of the per-chapter cpu_s the chapter_saves jobs log; "
-            "refreshed by tools/ci_costs.py")
+MEASURED = ("max over the last three full runs (every planned save job ran) of the per-chapter cpu_s the chapter_saves jobs "
+            "log; refreshed by tools/ci_costs.py")
+PLANNED = re.compile(r"event=saves_plan\.job part=(\S+)")
 LINE = re.compile(r"event=chapter_saves\.(player|rebased|reading)\s(.*)")
 Key = tuple[Any, ...]
 """("ends", route, chapter), ("rebased", chapter) or ("readings", chapter, step index)."""
@@ -147,35 +150,42 @@ class GitHub:
         return [json.loads(line) for line in out.splitlines() if line.strip()]
 
     def recent_runs(self, scan: int) -> list[int]:
-        """The newest `scan` run ids of the workflows that run the chapter saves, newest first (ids rise with time)."""
+        """The newest `scan` run ids of each workflow that runs the chapter saves, newest first (ids rise with time)."""
         ids = [r["id"] for w in WORKFLOWS
                for r in self.lines(f"actions/workflows/{w}/runs", ".workflow_runs[]|{id}", "-f", f"per_page={scan}", paginate=False)]
-        return sorted(set(ids), reverse=True)[:scan]
+        return sorted(set(ids), reverse=True)
 
-    def saves_jobs(self, run: int) -> list[int]:
-        """The ids of the run's chapter-save jobs that finished successfully."""
-        jobs = self.lines(f"actions/runs/{run}/jobs", ".jobs[]|{id,name,conclusion}", "-f", "per_page=100")
-        return [j["id"] for j in jobs if "chapter-saves" in j["name"] and j["conclusion"] == "success"]
+    def jobs(self, run: int) -> list[dict[str, Any]]:
+        return self.lines(f"actions/runs/{run}/jobs", ".jobs[]|{id,name,conclusion}", "-f", "per_page=100")
+
+    def full_run(self, jobs: list[dict[str, Any]]) -> bool:
+        """Whether every save job the run's `saves-plan` planned is in `jobs` and succeeded: a part `p` is the job
+        `chapter-saves-... (p, ...)`. A run with no plan, or one that planned nothing, is not a full run."""
+        plan = [j for j in jobs if j["name"] == "saves-plan" and j["conclusion"] == "success"]
+        parts = PLANNED.findall(self.log(plan[0]["id"])) if plan else []
+        done = {p.strip() for j in jobs if j["conclusion"] == "success" and j["name"].startswith("chapter-saves-") and "(" in j["name"]
+                for p in j["name"].split("(", 1)[1].rstrip(")").split(",")}
+        return bool(parts) and set(parts) <= done
 
     def log(self, job: int) -> str:
         return self.gh(["api", f"repos/{self.repo}/actions/jobs/{job}/logs"])
 
 
-def read_run(forge: GitHub, run: int) -> tuple[int, dict[Key, int]]:
-    """(the run's chapter-save jobs, the worst cost of each key they log)."""
-    jobs = forge.saves_jobs(run)
-    return len(jobs), worst([parse(forge.log(j)) for j in jobs])
+def read_run(forge: GitHub, jobs: list[dict[str, Any]]) -> dict[Key, int]:
+    """The worst cost of each key the run's successful chapter-save jobs log."""
+    return worst([parse(forge.log(j["id"])) for j in jobs if "chapter-saves" in j["name"] and j["conclusion"] == "success"])
 
 
 def collect(forge: GitHub, ids: list[int], scan: int) -> tuple[list[int], list[dict[Key, int]]]:
-    """The runs read and what each measured: `ids` as given, else the newest runs, newest first, that measured anything,
-    until WANTED."""
+    """The runs read and what each measured: `ids` as given, else the newest full runs, newest first, until WANTED."""
     used: list[int] = []
     costs: list[dict[Key, int]] = []
     for run in ids or forge.recent_runs(scan):
-        jobs, found = read_run(forge, run)
-        print(f"event=ci_costs.run run={run} jobs={jobs} measured={len(found)}", flush=True)
-        if found:
+        jobs = forge.jobs(run)
+        full = bool(ids) or forge.full_run(jobs)
+        found = read_run(forge, jobs) if full else {}
+        print(f"event=ci_costs.run run={run} full={str(full).lower()} jobs={len(jobs)} measured={len(found)}", flush=True)
+        if full and found:
             used.append(run)
             costs.append(found)
         if not ids and len(used) == WANTED:
@@ -187,16 +197,20 @@ def refresh(forge: GitHub, ids: list[int], scan: int, path: Path, write: bool = 
     table = json.loads(path.read_text())
     print(f"event=ci_costs.start table={path.name} runs={','.join(map(str, ids)) or 'default'} scan={scan}", flush=True)
     used, costs = collect(forge, ids, scan)
-    if not costs:
-        print("event=ci_costs.finish measured=0 table=unchanged: no run measured anything", file=sys.stderr)
+    if not costs or (not ids and len(used) < WANTED):
+        print(f"event=ci_costs.finish measured={len(costs)} table=unchanged: found {len(used)} of the {WANTED} full runs wanted "
+              f"in the last {scan} of each workflow, or none measured anything", file=sys.stderr)
         return 1
     measured = worst(costs)
     new, unmeasured, unplaced = merge(table, measured, used)
+    partial = [k for k in measured if sum(k in c for c in costs) < len(costs)]
     changed = sum(1 for k in measured if k not in unplaced and lookup(table, k) != measured[k])
     if write:
         path.write_text(json.dumps(new, indent=1) + "\n")
     print(f"event=ci_costs.finish runs={','.join(map(str, used))} measured={len(measured)} changed={changed} "
-          f"unmeasured={len(unmeasured)} unplaced={len(unplaced)} written={str(write).lower()}")
+          f"partial={len(partial)} unmeasured={len(unmeasured)} unplaced={len(unplaced)} written={str(write).lower()}")
+    if partial:
+        print(f"event=ci_costs.partial of={len(costs)} keys={names(partial)}")
     if unmeasured:
         print(f"event=ci_costs.unmeasured kept={names(unmeasured)}")
     if unplaced:
@@ -217,7 +231,7 @@ def main(argv: list[str], gh: Gh = gh_cli) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("runs", nargs="*", type=int)
     ap.add_argument("--repo", default=os.environ.get("GITHUB_REPOSITORY", ""))
-    ap.add_argument("--scan", type=int, default=40)
+    ap.add_argument("--scan", type=int, default=20)
     ap.add_argument("--table", type=Path, default=TABLE)
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args(argv)
