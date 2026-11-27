@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-ENGINE = Path(__file__).resolve().parents[2] / "ashfall_app" / "engine"
+ENGINE = Path(__file__).resolve().parents[3] / "ashfall_app" / "engine"
 PACKAGE = "ashfall_app.engine"
 STDLIB = sys.stdlib_module_names
 NONDETERMINISTIC_OR_IO = {

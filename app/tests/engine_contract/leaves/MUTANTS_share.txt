@@ -14,7 +14,7 @@ test_share_levels_*.py. Record each run below the list as MUTANTS_drains.txt doe
 10 latch unread    the latch SetOrders sets reads a share level as a quantity.                            [162]
 
 RUNS
-- Suite tests/engine_contract/test_share_levels_*.py. Run: python -m tools.mutate_suite share --run (specs
+- Suite tests/engine_contract/leaves/test_share_levels_*.py. Run: python -m tools.mutate_suite share --run (specs
   tools/share_mutants/mNN.py).
 - Against the implementation: rows 1-10 all KILLED, each with a test that claims it red; no survivors, no equivalent
   mutants.

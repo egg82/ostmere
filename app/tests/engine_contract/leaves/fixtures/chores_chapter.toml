@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/engine_contract/test_retire_loader_contract.py): a season whose
+# A test chapter, merged onto the opening alone (tests/engine_contract/leaves/test_retire_loader_contract.py): a season whose
 # standing action fills a pool (t_pool) and a chip on that pool whose cure is t_scoop; and a second turn at the season's
 # end. The slots written between two @ signs are filled by the test (its default is the plain shape that loads). Not
 # story: the ids and words are the tests' own.
