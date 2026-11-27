@@ -46,6 +46,7 @@ offered_after = { unlock_kind = "card", id = "cut_over" }
 
 [[cards]]
 id = "n11_first_over"
+site = { no_site = "the old road lies up the valley outside the palisade, and the shovelling stands nowhere in the camp; the road layers show the cut, not the clearing" }
 lane = "n11"
 twin_of = "shovel_road"
 presentation = "action"

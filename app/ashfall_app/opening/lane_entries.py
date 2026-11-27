@@ -22,16 +22,18 @@ class LodgingEntry(Entry):
 
 class ByDayEntry(Entry):
     """Where a person is by day when no card of theirs is running (app/tests/test_scene_day.py): `card` the card of their
-    lane whose work they stand at (its `site` names the scene layer), `at_fire` why the content seats them at the camp fire
-    instead. Exactly one; words only to the engine."""
+    lane (or their crew's) whose work they stand at (its `site` names the scene layer), `at_fire` why the content seats them
+    at the camp fire instead, `off_scene` why their work or place is outside what the scene draws (the scene keeps drawing
+    them as before). Exactly one; words only to the engine."""
 
     card: str | None = None
     at_fire: str | None = None
+    off_scene: str | None = None
 
     @model_validator(mode="after")
     def _one_answer(self) -> "ByDayEntry":
-        if (self.card is None) == (self.at_fire is None):
-            raise ValueError("by_day: name exactly one of card and at_fire")
+        if sum(x is not None for x in (self.card, self.at_fire, self.off_scene)) != 1:
+            raise ValueError("by_day: name exactly one of card, at_fire and off_scene")
         return self
 
 
