@@ -525,7 +525,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "catch_broth" }] }
 [[town_cards]]
 id = "{lane}_catch_broth"
 twin_of = "catch_broth"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
 label_key = "c_catch_broth"
 upside_key = "up_catch_broth"

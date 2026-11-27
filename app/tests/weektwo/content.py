@@ -2,7 +2,7 @@
 and the chapter's sinks, order cards, shares and each route's split of the town, on the rules day three loads (every
 chapter in writing merged). Ids only (CLAUDE.md, "Never spoil the owner")."""
 from ashfall_app.engine import (
-    AfterTime, AnswerId, CardId, OfferId, Order, Rules, Save, StoreId, TapCard, Unlock, UnlockKind,
+    BP, AfterTime, AnswerId, CardId, OfferId, Order, Rules, Save, StoreId, TapCard, Unlock, UnlockKind,
     View,
 )
 from ashfall_app.engine.rates import store_value
@@ -111,6 +111,33 @@ POT_BARLEY = (Unlock(UnlockKind.CARD, CardId("pot_barley_stew")),
                     or_else=(TapCard(CardId("pot_fungus_stew")), TapCard(CardId("pot_stew")))))
 """The barley pot on, as the route cooks it on full barley (day fifteen), the others its fallbacks."""
 
+F, H = "g_field_", "g_hearth_"
+N5, N7, N4, N6 = {F + "forage": BP}, {F + "pick": BP}, {H + "watch": BP}, {H + "watch": BP}
+"""Each person's own split before the crews, as the routes played it (a crew's split at a moment is the mean of its
+members' here, so each card keeps its person-time): her forager's, her picker's, the two watchers'."""
+N2_FORAGE_WATCH = {F + "forage": BP // 2, F + "watch": BP // 2}
+N2_WATCH, N2_WATCH_ROAD = {F + "watch": BP}, {F + "watch": BP // 2, F + "clear_road": BP // 2}
+ROAD_FIELD, ROAD_HEARTH = {F + "clear_road": BP}, {H + "clear_road": BP}
+REAP_FIELD, REAP_HEARTH = {F + "reap": BP}, {H + "reap": BP}
+REAP_FORAGE_FIELD, REAP_FORAGE_HEARTH = {F + "reap": BP // 2, F + "forage": BP // 2}, {H + "reap": BP // 2, H + "forage": BP // 2}
+WALK_FORAGE_TYPICAL, WALK_FORAGE_SHARP = ({F + "walk_ashwood": 2500, F + "forage": 7500},
+                                          {F + "walk_ashwood": BP // 2, F + "forage": BP // 2})
+"""The newcomers' own splits as each answer and the open road left them: whole on the card the answer joined them with,
+the reaping and foraging halves from the road's opening, the Ashwood walk's share beside the roots."""
+
+
+def crew(*members: dict[str, int]) -> tuple[tuple[str, int], ...]:
+    """A crew's split: the mean of its members' shares, each card floored and the remainder on the last card."""
+    total: dict[str, int] = {}
+    for m in members:
+        assert sum(m.values()) == BP, m
+        for card_id, bp in m.items():
+            total[card_id] = total.get(card_id, 0) + bp
+    shares = {c: t // len(members) for c, t in total.items()}
+    shares[list(shares)[-1]] += BP - sum(shares.values())
+    return tuple(shares.items())
+
+
 TYPICAL = WeekTwoKnobs(
     splits=(
         Split("n2", (("n2_forage", 5000), ("n2_stakes", 5000)), card("palisade")),
@@ -120,16 +147,16 @@ TYPICAL = WeekTwoKnobs(
         Split("n2", (("n2_stakes", 5000), ("n2_watch", 5000)), Unlock(UnlockKind.ACTION, "e2_strip")),
         Split("n2", (("n2_forage", 5000), ("n2_watch", 5000)), feature("ring_closed")),
         Split("n2", (("n2_stakes", 5000), ("n2_watch", 5000)), card("make_hut")),
-        Split("n2", (("n2_forage", 5000), ("n2_watch", 5000)), feature("family_joined")),
-        Split("g_field", (("g_field_forage", 3333), ("g_field_watch", 3333), ("g_field_pick", 3334)), feature("family_joined")),
-        Split("n2", (("n2_watch", 5000), ("n2_clear_road", 5000)), feature("road_marked")),
-        Split("g_field", (("g_field_clear_road", 5000), ("g_field_forage", 1666), ("g_field_watch", 1666), ("g_field_pick", 1668)), answer("o_choir_road")),
-        Split("g_field", (("g_field_clear_road", 4999), ("g_field_reap", 1250), ("g_field_forage", 1250), ("g_field_watch", 1249), ("g_field_pick", 1252)),
-              answer("o_cutter_beds")),
-        Split("g_field", (("g_field_reap", 3571), ("g_field_forage", 3570), ("g_field_watch", 1428), ("g_field_pick", 1431)), feature("r2_open")),
-        Split("n2", (("n2_watch", 5000), ("n2_forage", 5000)), feature("r2_open")),
-        Split("g_field", (("g_field_reap", 2856), ("g_field_forage", 4285), ("g_field_watch", 1428), ("g_field_pick", 1431)), feature("ashwood")),
-        Split("n2", (("n2_walk_ashwood", 2500), ("n2_forage", 2500), ("n2_watch", 5000)), feature("ashwood")),
+        Split("g_field", crew(N2_FORAGE_WATCH, N5, N7), feature("family_joined")),
+        Split("g_hearth", crew(N4, N6), feature("family_joined")),
+        Split("g_field", crew(N2_WATCH_ROAD, N5, N7), feature("road_marked")),
+        Split("g_field", crew(N2_WATCH_ROAD, N5, N7, ROAD_FIELD), answer("o_choir_road")),
+        Split("g_hearth", crew(N4, N6, ROAD_HEARTH, ROAD_HEARTH), answer("o_choir_road")),
+        Split("g_field", crew(N2_WATCH_ROAD, N5, N7, ROAD_FIELD, REAP_FIELD), answer("o_cutter_beds")),
+        Split("g_hearth", crew(N4, N6, ROAD_HEARTH, ROAD_HEARTH, ROAD_HEARTH), answer("o_cutter_beds")),
+        Split("g_field", crew(N2_FORAGE_WATCH, N5, N7, REAP_FORAGE_FIELD, REAP_FIELD), feature("r2_open")),
+        Split("g_hearth", crew(N4, N6, REAP_FORAGE_HEARTH, REAP_FORAGE_HEARTH), feature("r2_open")),
+        Split("g_field", crew(N2_FORAGE_WATCH, N5, N7, WALK_FORAGE_TYPICAL, REAP_FIELD), feature("ashwood")),
         Split("n13", (("n13_walk_ashwood", 5000), ("n13_forage", 5000)), feature("sorrel_named")),
         Split("g_road", (("g_road_fog_fish", 5000), ("g_road_fungus_stew", 5000)), answer("o_fiddle_food")),
         Split("g_road", (("g_road_fog_fish", 1667), ("g_road_fungus_stew", 8333)), answer("o_walkers_food")),
@@ -140,7 +167,8 @@ its rules: she is the town's forager, and the track's roots need her (moving her
 hands' roots rule then taps every few seconds). Once the pack has come in round the open side (E2) his foraging goes to
 the watch; once the ring is closed his stakes go back to foraging, until the hut is asked for (B10's offer answered by
 the hands) and done (Z1). A group's split at each moment is the mean, over its members then, of the shares each had
-on their own split before groups (so each card keeps its person-time; n7's was all picking); a walk the field crew cannot take goes to n2."""
+on their own split before groups (so each card keeps its person-time; n7's was all picking). The two early companions
+are in the crews from the family's day: n2 with the field crew, n4 at the watch with the hearth crew."""
 SHARP = WeekTwoKnobs(
     splits=(
         Split("n2", (("n2_stakes", 10000),), card("palisade")),
@@ -148,23 +176,23 @@ SHARP = WeekTwoKnobs(
         Split("n3", (("n3_forage", 4000), ("n3_pick", 4000), ("n3_ash_ground", 2000)), card("n3_ash_ground")),
         Split("n2", (("n2_forage", 10000),), feature("ring_closed")),
         Split("n2", (("n2_stakes", 10000),), card("make_hut")),
-        Split("n2", (("n2_watch", 10000),), feature("family_joined")),
-        Split("g_field", (("g_field_forage", 3333), ("g_field_watch", 3333), ("g_field_pick", 3334)), feature("family_joined")),
-        Split("n2", (("n2_watch", 5000), ("n2_clear_road", 5000)), feature("road_marked")),
-        Split("g_field", (("g_field_reap", 5000), ("g_field_forage", 1666), ("g_field_watch", 1666), ("g_field_pick", 1668)), answer("o_choir_beds")),
-        Split("g_field", (("g_field_reap", 3750), ("g_field_clear_road", 2499), ("g_field_forage", 1250), ("g_field_watch", 1249), ("g_field_pick", 1252)),
-              answer("o_cutter_road")),
-        Split("g_field", (("g_field_reap", 4999), ("g_field_forage", 2142), ("g_field_watch", 1428), ("g_field_pick", 1431)), feature("r2_open")),
-        Split("n2", (("n2_watch", 10000),), feature("r2_open")),
-        Split("g_field", (("g_field_reap", 4285), ("g_field_forage", 2142), ("g_field_watch", 2142), ("g_field_pick", 1431)), feature("ashwood")),
-        Split("n2", (("n2_walk_ashwood", 5000), ("n2_watch", 5000)), feature("ashwood")),
+        Split("g_field", crew(N2_WATCH, N5, N7), feature("family_joined")),
+        Split("g_hearth", crew(N4, N6), feature("family_joined")),
+        Split("g_field", crew(N2_WATCH_ROAD, N5, N7), feature("road_marked")),
+        Split("g_field", crew(N2_WATCH_ROAD, N5, N7, REAP_FIELD), answer("o_choir_beds")),
+        Split("g_hearth", crew(N4, N6, REAP_HEARTH, REAP_HEARTH), answer("o_choir_beds")),
+        Split("g_field", crew(N2_WATCH_ROAD, N5, N7, REAP_FIELD, ROAD_FIELD), answer("o_cutter_road")),
+        Split("g_hearth", crew(N4, N6, REAP_HEARTH, REAP_HEARTH, ROAD_HEARTH), answer("o_cutter_road")),
+        Split("g_field", crew(N2_WATCH, N5, N7, REAP_FIELD, REAP_FORAGE_FIELD), feature("r2_open")),
+        Split("g_hearth", crew(N4, N6, REAP_HEARTH, REAP_HEARTH), feature("r2_open")),
+        Split("g_field", crew(N2_WATCH, N5, N7, REAP_FIELD, WALK_FORAGE_SHARP), feature("ashwood")),
         Split("n13", (("n13_walk_ashwood", 5000), ("n13_fog_fish", 5000)), feature("sorrel_named")),
         Split("g_road", (("g_road_clear_road", 5000), ("g_road_stakes", 5000)), answer("o_fiddle_build")),
         Split("g_road", (("g_road_clear_road", 8333), ("g_road_stakes", 1667)), answer("o_walkers_build")),
         Split("g_road", (("g_road_clear_road", 5556), ("g_road_stakes", 1111), ("g_road_fungus_stew", 3333)), answer("o_widowers_food")),
     ))
 """Once the road is over the top (B17) both routes take the lanes they had clearing it to the beds and the roots; once
-the town can walk the Ashwood (B18) n2 takes the walk one of them had, the beds being over. Group shares as typical's."""
+the town can walk the Ashwood (B18) one of them walks beside the roots, the beds being over. Crew shares as typical's."""
 KNOBS = {"sharp": SHARP}
 """Each route's split; a route not named follows typical."""
 HANDS = {"typical": (1500, 0), "sharp": (3000, 0)}

@@ -627,6 +627,15 @@ id = "t_bay_mid"
 when = { test = "at_least", subject_kind = "store", id = "bay_clock", value = 40 }
 outcome = { line_keys = ["l_bay_mid"] }
 
+# The crews (decisions/people.md, "Groups follow what people can do"): a crew holds the jobs its people do and not the
+# ones they cannot, and is tied to the hand who looks after it. The field crew's first member is the hand who leads it.
+[[lanes]]
+id = "g_field"
+label_key = "lane_g_field"
+ruled = true
+pooled = true
+tied = "n2"
+
 # His lane: a townsperson the player's rules set, as hers.
 [[lanes]]
 id = "n2"
@@ -635,6 +644,7 @@ ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "n2_joined" }, label_key = "lane_n2_named" }]
 name_key = "name_n2"
+crews = ["g_field"]
 
 # A24 on his lane, the same real time and stores as A23.
 [[cards]]
@@ -659,7 +669,7 @@ cap_items = 1
 [[town_cards]]
 id = "{lane}_forage"
 twin_of = "forage"
-lanes = ["n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n13", "g_field"]
+lanes = ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n13", "g_field", "g_hearth"]
 presentation = "action"
 label_key = "c_forage"
 work_s = 120
@@ -760,7 +770,7 @@ outcome = { stores = [{ store = "clay", items = 1 }] }
 [[town_cards]]
 id = "{lane}_stew"
 twin_of = "stew"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
 label_key = "c_stew"
 upside_key = "up_stew"
@@ -1263,6 +1273,7 @@ k_arrival_self = "You build it"
 k_arrival_other = "They build it"
 c_make_bay = "Build a sleeping bay"
 lane_n2 = "His hands"
+lane_g_field = "The field crew"
 lane_n2_named = "{n2}'s hands"
 name_n2 = "Martin"
 c_n2_build_bay = "Build a sleeping bay"
