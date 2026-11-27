@@ -504,6 +504,7 @@ export const fixtureContent: Content = {
     { lane: "helper", label_key: "lane.helper", ruled: true, station: false, later_labels: [{ after: { category: "feature", id: "yard" }, label_key: "lane.helper.later" }], name_key: null, told: "mention", pooled: false, group: null, tied: null },
     { lane: "mason", label_key: "lane.mason", ruled: true, station: false, later_labels: [], name_key: null, told: "mention", pooled: false, group: null, tied: null },
   ],
+  cast_infos: [],
   end_line_keys: ["line.end"],
   line_infos: [   // one cause of each kind (contract/endpoints.txt, "Line causes")
     { key: "line.1", kind: "story", cause: null, person: false, mention: null }, { key: "line.2", kind: "story", cause: { kind: "when", when: { kind: "after_time", at: 0 } }, person: false, mention: null },

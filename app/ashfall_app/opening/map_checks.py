@@ -3,6 +3,7 @@ something in the content adds, and no two places share a cell, the town's includ
 Raises ValueError naming the place."""
 from typing import TYPE_CHECKING
 
+from .casts import cast_unlocks
 from .map_entries import MAP_REACH
 from .refs import fail, ids_by_kind, need, outcomes
 
@@ -17,6 +18,7 @@ first note, so whether anything reveals the place is checkable from the content.
 def check_places(o: "Opening") -> None:
     ids = ids_by_kind(o)
     added = {(u.unlock_kind, u.id) for _, out in outcomes(o) for u in out.unlocks} | {(u.unlock_kind, u.id) for u in o.start}
+    added |= {unlock for _, unlock in cast_unlocks(o)}
     taken: dict[tuple[int, int], str] = {(0, 0): "the town"}
     for p in o.places:
         where, r = f"place {p.id}", p.reveal

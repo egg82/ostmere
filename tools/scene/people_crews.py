@@ -25,7 +25,7 @@ FISH = "n14"
 REAP_AT = {n: (626.0 + 40 * i, 418.0) for i, n in enumerate(REAPERS)}
 COOK_AT: dict[str, tuple[float, float, str]] = {
     "n16": (106, 298, "right"), "n17": (112, 366, "right"),
-    "n15": (356, 320, "up"), "n18": (400, 346, "up"), "n19": (306, 372, "up"),
+    "n15": (356, 320, "up"), "n18": (400, 346, "up"), "n19": (306, 380, "up"),
     "n20": (402, 254, "up"), "n21": (444, 300, "up"), "n22": (500, 262, "left"),
 }
 """The stew crew at the three places its work is: the wood on the camp's west side (the stacks), the pot below the fire, the

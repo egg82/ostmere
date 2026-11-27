@@ -19,7 +19,7 @@ from .derived import derived
 from .drains import check_drains
 from .groupchecks import check_group_outcome, check_groups, join_problem
 from .fightcheck import check_fight, check_no_odds_source, check_tallies, check_while_running, standing_stores
-from .planchecks import check_leaves, check_one_leave_each, check_retire
+from .planchecks import check_casts, check_leaves, check_one_cast_each, check_one_leave_each, check_retire
 from .unlock_known import features, unlock_known
 from .unlocks import PRESENT_ONLY
 
@@ -95,6 +95,7 @@ def check_parts(rules: "Rules") -> None:
     _require(rules.end is None or rules.end in features(rules), f"end: unknown feature {rules.end}")
     _check_offers(rules)
     check_one_leave_each(rules)
+    check_one_cast_each(rules)
 
 
 def _check_offers(rules: "Rules") -> None:
@@ -224,6 +225,7 @@ def _check_outcome(
     _require(all(q in {c.id for c in rules.cards} for q in o.starts), f"{where}: outcome starts an unknown card")
     check_retire(rules, o, where, trigger is not None)
     check_leaves(rules, o, where, installs)
+    check_casts(rules, o, where, installs)
 
 
 def _outcome_ground(rules: "Rules") -> tuple[set[CardId], set[LaneId], dict[CardId, LaneId]]:

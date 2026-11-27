@@ -4,6 +4,7 @@ card lifts). A rule offered then may let go above the store's first cap, never a
 from collections.abc import Iterator, Mapping
 from typing import TYPE_CHECKING
 
+from .casts import cast_unlocks
 from .condition_convert import levels
 from .convert import amount
 from .refs import outcomes
@@ -44,6 +45,8 @@ class Chain:
         for w, out in self.out.items():
             for u in out.unlocks:
                 self.unlocked_by.setdefault((u.unlock_kind, u.id), []).append(w)
+        for w, unlock in cast_unlocks(o):
+            self.unlocked_by.setdefault(unlock, []).append(w)
         for x in o.offers:
             for a in x.answers:
                 self.unlocked_by.setdefault(("answer", a.id), []).append(f"answer {a.id}")

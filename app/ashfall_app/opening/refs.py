@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, NoReturn
 
 from ..engine import HANDS, QUANTITY_SCALE, per_hour, units
 from .condition_convert import levels
+from .casts import cast_feature_ids
 from .convert import note_trigger_id, offer_trigger_id
 
 if TYPE_CHECKING:
@@ -23,7 +24,7 @@ def ids_by_kind(o: "Opening") -> dict[str, list[str]]:
         "lane": [x.id for x in o.lanes], "card": [c.id for c in o.cards], "chip": [c.id for c in o.chips],
         "trigger": [t.id for t in o.triggers] + [offer_trigger_id(x.id) for x in o.offers]
         + [note_trigger_id(n.id) for n in o.notes],
-        "feature": [f.id for f in o.features], "aim": [a.id for a in o.aims],
+        "feature": [f.id for f in o.features] + cast_feature_ids(o), "aim": [a.id for a in o.aims],
         "runner": [a.id for a in o.standing] + [c.id for c in o.cards],
         "side": [s.id for s in o.sides], "threat": [t.id for t in o.threats],
         "offer": [x.id for x in o.offers], "answer": [a.id for x in o.offers for a in x.answers],

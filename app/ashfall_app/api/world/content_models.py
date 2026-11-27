@@ -16,7 +16,7 @@ from ..player.journal_models import (
     NoteInfo as NoteInfo,
     Section as Section,
 )
-from ..rules.lane_models import LaneInfo, LaneLabel as LaneLabel
+from ..rules.lane_models import CastInfo, CastLane as CastLane, LaneInfo, LaneLabel as LaneLabel
 from .line_models import LineInfo, PeopleInfo
 from .map_models import PlaceInfo, Stamp as Stamp
 from ..models import Condition, OrderVerb, Unlock
@@ -249,6 +249,8 @@ class Content(BaseModel):
     node_infos: list[NodeInfo]
     """Every node of every skill's track, in track order; empty when the content has no prestige."""
     lane_infos: list[LaneInfo]
+    cast_infos: list[CastInfo]
+    """Every role an outcome casts, in content order (contract/casting.txt, "CASTING"); empty when none does."""
     offer_infos: list[OfferInfo]
     """Every offer, in content order (contract/offers.txt, "Offers")."""
     offer_kinds: list[OfferKindInfo]

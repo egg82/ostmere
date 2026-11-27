@@ -76,8 +76,9 @@ they are at the fire or their work as before. A build the camp outgrows is retir
 supersedes it and its fate (taken down, or indoors); one kept says why. Props stand where their purpose puts them. People stand at their work, not at whatever fire
 they happen to be near, and no two figures are drawn on top of each other; a person is drawn in one place at a time.
 By day an idle person stands at their work's site: their lane names which card's work is theirs (`by_day`), or why the
-content seats them at the fire (`at_fire`); a lane that says nothing yet keeps them at the fire and is held
-(`people_day.HELD_UNDECIDED`, only shrinks).
+content seats them at the fire (`at_fire`); a person whose work or place is outside what the scene draws says so
+(`off_scene`) and is drawn as before. The crews' people stand at their crews' sites by day even when nothing of theirs
+runs; at dusk and night they are indoors once the hall is roofed.
 
 ## The chronicle and unwrap, as built
 

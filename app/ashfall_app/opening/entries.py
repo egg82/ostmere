@@ -2,16 +2,12 @@
 load (schema.Opening and schema.Chapter are made of these)."""
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import Field, model_validator
 
 from .chain_entries import ChainEntry
+from .entry_base import Entry
+from .move_entries import CastEntry, JoinEntry, LeaveEntry, MarkEntry
 from .site_entries import SiteEntry
-
-
-class Entry(BaseModel):
-    """Content is our own file one directory away: an unknown field is a typo, so it fails the load."""
-
-    model_config = ConfigDict(extra="forbid")
 
 
 class ItemAmount(Entry):
@@ -152,38 +148,6 @@ class InstallEntry(Entry):
     first: bool = False
 
 
-class JoinEntry(Entry):
-    """A person joins the town (engine Join): the ruled lane `lane`'s person is present from now on, and the lane's
-    always task becomes its share in the town mix `mix` (an id beginning "town:"). `card` is the share when the lane has
-    no uncapped always rule. `counted`: a tally counted this person when they arrived, so the join adds none."""
-
-    lane: str
-    mix: str
-    card: str | None = None
-    counted: bool = False
-    own_split: bool
-    """Whether the person keeps their own split as they arrive: authored on every join, never defaulted. False needs
-    the lane to have a `group`, and `card` (if any) is then a card on that group."""
-
-
-class MarkEntry(Entry):
-    """A joined person's mark set or cleared (engine Mark): `own_split` False hands the person to their lane's `group`;
-    `card` is an uncapped card given a share when the town mix holds none on its lane: on the person's own lane when
-    the mark is set, on their group when it is cleared."""
-
-    lane: str
-    own_split: bool
-    card: str | None = None
-
-
-class LeaveEntry(Entry):
-    """A person leaves the town for good (engine Leave): the ruled lane `lane`'s person is gone, and each standing
-    action in `stops` stops with them."""
-
-    lane: str
-    stops: list[str] = []
-
-
 class WhereaboutsEntry(Entry):
     """Where an outcome puts a person, and what the scene shows of it (app/tests/test_scene_people.py): `layer` is the id of
     the scene layer that shows it, `no_scene` the reason nothing does. Exactly one; words only to the engine."""
@@ -229,6 +193,8 @@ class OutcomeEntry(Entry):
     """Chores' cures whose orders go at a season's turn; only there (retire_checks.py)."""
     leaves: list[LeaveEntry] = []
     """Only in a trigger's or an answer's outcome, one per lane across the content (leave_checks.py)."""
+    casts: list[CastEntry] = []
+    """Only in a trigger's or an answer's outcome, one per role across the content (cast_checks.py)."""
     marks: list[MarkEntry] = []
     """Only in a trigger's or an answer's outcome (group_checks.py)."""
     doings: list[str] = []

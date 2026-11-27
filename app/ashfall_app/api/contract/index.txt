@@ -38,6 +38,7 @@ the-towns-mix.txt                    THE TOWN'S MIX
 groups.txt                           GROUPS
 leaves.txt                           LEAVES
 people.txt                           PEOPLE
+casting.txt                          CASTING
 spent.txt                            SPENT
 full-output.txt                      FULL OUTPUT
 mix-rows.txt                         MIX ROWS
