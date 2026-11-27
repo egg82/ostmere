@@ -1,0 +1,114 @@
+FULL OUTPUT (a job never spends its inputs on an outcome its stores cannot hold: issue #438). Where this part and an
+entry above disagree, this part holds; it amends CHOICES "Cap" for the cards it names and leaves it as it was for
+every other runner.
+
+FIT PASS
+- The mirror of the dry rule (Running dry; Inputs against a dry store): a consumer pauses when its input store runs
+  dry, and a fillable card pauses when its output stores are full. Same Pause, same last-first order, same yield of a
+  paused mix card's share to the rest of its mix (SPENT, "Giver"). No new Save
+  field, verb, event kind or system: a full pause is a Pause on a store the card makes, a dry pause one on a store it
+  takes, and a store is on one side of a card only (validation), so which kind a Pause is reads off the rules.
+- The need: a card that draws a pool (a store nothing refills) into a store with a cap below what the pool holds threw
+  the overflow away at the cap, and the pool with it, so the player could lose for good what a later project needs.
+- How games do it: a machine whose output is blocked stops and keeps its inputs (Factorio's assemblers and inserters,
+  a full chest), and starts again when there is room.
+
+CHOICES (full output)
+- Fillable card: a card with at least one input, at least one outcome store, and no cap. A capped card never pauses
+  full: each completion counts toward its cap and lands its discrete effects, so it is never lost entirely. A card with
+  no inputs gathers and keeps CHOICES "Cap": the overflow is lost and the waste is a visible fact for an order. Standing
+  actions are no fillable runners (they take costs, not inputs).
+- Pools only: the rule reads a fillable card only while one of its input stores is a pool, a store no maker in play
+  can make (SPENT, "Makers", read now: spent.unmade). A card turning a store something in play refills keeps CHOICES
+  "Cap": what it wastes comes back. Why: the loss that cannot be undone is of a pool; and every full pause shows a
+  falling line while its store drains to the resume level, which on a store a maker keeps full would be a red line
+  for nothing. Whether a store is a pool can change as makers come into play; a full pause made while it was one lifts
+  by its resume rule as any.
+- Outcome stores: the card's Outcome.stores, the per-completion amounts. Its flow makes (the camp bar every hands card
+  fills by its work) and its fight's tallies and wounds are no outcome here: by-products of the work, as XP is. A card
+  whose only full stores are those runs on.
+- Full: a fillable card, not tapped, holding no Pause, whose work is moving (its work segment's rate above 0), whose
+  every outcome store stands at its cap (gates.store_cap) with an unclamped exact net above 0. Nothing fits, so
+  everything its inputs would pay for is lost. One outcome store full while another has room: the card runs, and the
+  full store's overflow is lost as CHOICES "Cap" says. Why: pausing when any output is full would stall a job forever
+  on a by-product nothing uses (a hunt's second yield); the loader's finite-supply check (opening/finite_checks.py)
+  refuses content where such a loss could cost progress.
+- The full rule: at an instant where a card is full, pause it, last in running order first (rates.Running, as the dry
+  rule reads it), re-reading after each pause, since pausing one card lowers its stores' nets and can leave an earlier
+  card no longer overflowing; until no card is full. The Pause: (card, its first outcome store in declaration order,
+  that store's resume level at the pause).
+- When it runs: in the STORE_LIMIT handler, after the dry pass. A store reaching its cap is a STORE_LIMIT already; a
+  STORE_LIMIT also falls at save.time, subject the full card's first outcome store, while any card is full (a mix
+  change, a tap ending, a resume, a consumer pausing or a cap reached on another of its stores can make one full at a
+  store already standing at its cap).
+- Resume: a full pause lifts at the first instant any of its card's outcome stores has room for one whole completion
+  of it: at or below its cap now (gates.store_cap) less the card's lump on it (lumps.lump_amount), both read at that
+  instant, so a cap raised meanwhile is read as raised. One completion of room, not the dry rule's hour nor a share of
+  the cap: the store stays near full, so a rule of the player's on that store (an at_most) does not come on for a band
+  the engine made, and no rate is written into the save; a pause and its resume are one completion of a consumer's
+  draw apart, so they cannot chatter within an instant. Pause.resume_at holds the first store's level at the pause, for
+  a reader; the resume reads the levels now.
+- Run: a full-paused card reads PAUSED with `store` its Pause's store, and gives its share as any giver. It is never
+  SPENT: spent.spend reads only pauses on a store the card takes. Its line is never starved (a full store is not 0).
+- View: CardView.full_store is the Pause's store while the card's run is PAUSED on a store it makes, None otherwise;
+  the card face words it (api CONTRACT.txt, "FULL OUTPUT"), since a full pause is no blocker and draws no need row.
+- Read model: every outcome store of a full-paused card reads covered (coverage.covered), since the card resumes as
+  the store falls: the band down to the resume level is a store being drawn as planned, not one that needs the
+  player, so its falling line is white.
+- Taps: a tap is never full, and a full pause is no blocker: a tap, whoever starts it (the player, an order, the
+  queue), runs its one completion at a full store and its overflow is lost, as CHOICES "Cap" says; the card's Run
+  while tapped ignores a full pause (rates._tap_run reads dry pauses only). A tap is a choice of one completion with
+  the store in view; the full rule stops what runs on its own, the mix. When the tap lands, the card is back in its mix
+  with its Pause as it was. Why: the card face draws each need of a tappable card, and "no room" is no need a face
+  can draw, so a full card that refused taps would look ready and do nothing; and the loader's check holds converters
+  to a cap that keeps what progress needs, so a tap can lose only what progress does not.
+- Queue entries and order rules: nothing new, since a tap is never held by a full pause; a queue stint whose mix card
+  pauses full hands the hands back (Dry stint reads any Pause). A change of the running
+  mix clears the pauses on every store its cards make or cost (Running dry), full ones included, and the full rule
+  pauses again at once where a card is still full.
+- Rebase: step 5 drops every Pause on a store its card makes under the new rules, and the resolved instant pauses again
+  at once where a card is still full. The kind of a Pause reads off the rules, so one written under other rules is
+  re-decided rather than read.
+
+INVARIANTS (full output; numbered on from 178)
+179. Nothing spent on nothing: in a resolved save, no running fillable card holding no Pause has every outcome store at
+     its cap with an exact net above 0.
+180. Gathering kept: a card with no inputs, a capped card, a standing action and a card drawing no pool are never
+     paused full; rules with no fillable card drawing a pool advance exactly as before this part.
+181. A by-product never stalls: a fillable card with an outcome store below its cap is never paused full.
+182. Room resumes: a full pause lifts at the first instant one of its card's outcome stores has room for one whole
+     completion of that card's lump on it.
+183. Inputs kept: while a card holds a full pause its input stores take nothing from it.
+
+REJECTED, AND WHY (full output)
+- Pausing when any outcome store is full: a job would stand forever on a by-product with no sink (the opposite soft
+  lock), its other yields lost with it.
+- Clamping the inputs to what the outputs can hold (paying part of a completion): a completion's inputs are paid in
+  proportion to its work (Rate form); a second rate on the inputs would split one bar into two.
+- Every fillable card, pool or not: a renewable store's maker would show a falling line through each pause's band
+  and the economy everywhere would shift for losses that come back.
+- Every runner that takes anything, standing actions and flow costs included: chores and the body's needs would stop
+  at a full store and stall XP, which CHOICES "Cap" keeps for gathering; the pools issue #438 names are all drawn by
+  card inputs.
+- Counting flow makes as outcomes: every hands card fills the camp bar, whose cap is far above anything, so no hands
+  card would ever pause.
+- An hour of make as the resume level, as the dry rule's hour of cost: a card with several outcome stores would need a
+  level per store written into the save, and an hour of a fast card's make is above many caps, so it would wait for
+  the store to empty.
+- Half the cap as the resume level: the store drained through half its range before the card ran again, which brought
+  a player's rule on that store (an at_most, "when low, fetch more") on at every pause, a cycle the engine made.
+- A new RunKind for a full pause: the page and the yield treat it as every paused card; a new kind is wire, client and
+  contract for one word. The store a Pause names says which.
+- Pausing taps too (a full pause as a blocker, AtMost on its store): the card face words each need of a tappable card
+  and has no words for "no room", so the card would show every need met and not move (tests/dayone/sinkchecks.py's
+  invariant); whether a card overflows also reads the rates (a consumer may keep up), and a tap's preconditions read
+  values only.
+
+KNOWN GAPS (full output)
+- A store reaching its cap mid-second: the event falls at the end of that second (Event times), so the card's last
+  partial second is paid by its inputs while its overflow, under one second of its make, is lost; once per pause.
+  Closing it needs the card's work limited where its stores fill, as Inputs against a dry store's mirror gap does.
+  Interim: the loader's finite-supply check asks a converter's target to hold all progress needs of it, so the loss
+  is only ever of what progress does not need.
+- Modifiers that raise an outcome amount are read through the exact net, as everything is; the loader's check reads
+  base amounts (opening/finite_checks.py).

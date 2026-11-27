@@ -1,0 +1,145 @@
+FIGHTS (combat's first slice: docs/design/combat-plan.md, items 1 to 3). Where this part and an entry above disagree,
+this part holds. Examples name ids only; which creatures, stakes and numbers is content's.
+
+FIT PASS
+- A fight is work with odds on it, not a new kind of runner. A fight the player chooses (a hunt, clearing a path) is
+  a card (Cards: "fighting is an action in your mix", docs/core-loop.md), tapped, mixed, queued or ruled like any
+  card, so every verb already has an order. A threat that comes to the town (something at the stores, something at the
+  camp's edge) is a standing action (Standing): it runs whenever unlocked, whatever the player does, which is
+  "threats resolve on their own, with no response window". What both gain is one Component, FightDef, attached to a
+  CardDef or a StandingDef (Nystrom, Component: one entity spans a second domain without the domains coupling;
+  outside code, the content, supplies it, and the runner's own machinery never reads it).
+- Chance never touches the engine (docs/systems.md, "The engine"), so a fight's result is a flow: the engine pays
+  what a fight wins scaled by the share of fights won, and what a lost fight costs scaled by the share lost, both as
+  the lines a card's lumps already run as (CARDS, "Rate form"). An uncapped card's single completion is already
+  invisible to the engine (its lumps are rates), so no fight is ever an event and none costs an instant. The share
+  lost is the odds; they are MUL_BP entries in the effective stack, sourced by the fight, so explain() names them
+  like a chip's effects (Chips; Modifiers row: "why is it that number").
+- Power and threat are two more Modifier targets with a base (Store caps' shape: a base under ADD_BP and MUL_BP,
+  rounded down). Gear, skill pays, walls and guards append entries to a side's strength; the region's schedule
+  appends entries to a threat's strength. Both are Type Objects in the rules (SideDef, ThreatDef), so a region's
+  roster is data (Nystrom, Type Object: new kinds without code, and the typed thing holds a reference to its kind).
+  "Threats ramp by region and time, never by your defences" is a validation rule on who may aim at a threat.
+- The schedule's clock is a never-unlocked store filled by a standing action, the idiom day one's night and the
+  visitor's clock already use; its thresholds are ordinary triggers. No region state, no Save field.
+- Which fights the log calls lost is presentation: the engine keeps an exact count (a tally store, made by lost
+  fights only), and the Chronicle picks which fights in a window carry the losses with a shuffle-bag draw from
+  Chance (decisions.md, "Chance shows, preparation decides"). The engine never sees the draw.
+- Odds are derived data, recomputed from the effective stack wherever it is read, never cached in state. Nystrom's
+  Dirty Flag fits only when primary data changes more often than the derived data is read, and warns that a flag
+  missed in one place serves stale data; here the inputs change only at instants, which already rebuild the stack, so
+  a cache would be a second home with nothing to save.
+- How games do it: Melvor and Idle Fantasy run a fight as a repeating action whose rate and loot follow your stats
+  against the monster's, with the numbers shown before you start; RimWorld's raids grow with the colony's wealth and
+  time, and here only the region's clock moves them (never wealth or defences, done differently on purpose). Tower
+  defence's "walls and guards" are strength entries on the town's side, not a placed-unit simulation.
+- What is not new: no Save field, no event kind, no verb, no system. The Combat row's "threat schedule" is content
+  data until a second schedule is run beside it (docs/systems.md, Combat).
+
+CHOICES (fights)
+- Kinds. SideDef(id: SideId, base: int >= 0): who fights, by strength (the player's hands, later a lane's person,
+  a region's guard). ThreatDef(id: ThreatId, base: int > 0): one entry of a roster. Rules gain sides and threats
+  (tuples, rules order). Neither has state: a strength is read off the effective stack.
+- Strength targets (Modifiers, Target union): SideStrength(side) and ThreatStrength(threat). Value = base under the
+  entries aimed there, the Store caps arithmetic (ADD_BP summed and floored at 0, MUL_BP multiplied in), rounded down
+  once. explain() over either names every entry's source, so "strength 12: base 4, spear +100%, Melee 3 +50%" is a
+  query. Never a rate: modified_rate never reads them.
+- Who may aim where. Entries aimed at ThreatStrength appear only in a TriggerDef's outcome, only ADD_BP >= 0 or
+  MUL_BP >= BP (a threat only rises, like a store cap), and only with a source that is that trigger's id. Validation
+  refuses one in a card's outcome or finished, an answer's outcome or a chip's effects. Why: "threats ramp by region
+  and time, never by your defences" becomes a rule the loader cannot break; which triggers count as the schedule
+  (their `when` reads only a clock store) is the content check's (combat-plan item 6). Entries aimed at SideStrength
+  may come from anywhere modifiers come from, and a chip may lower one (an injury makes you weaker as well as slower).
+- FightDef(side: SideId, threat: ThreatId, lost: StoreId, fought: StoreId | None = None, per_hour: int = 0,
+  loses: tuple[Amount, ...] = (), wounds: tuple[Amount, ...] = ()). CardDef and StandingDef gain
+  `fight: FightDef | None = None`.
+  - A fight's rate f, in fights per hour at full speed: a card's completions per hour (3600 / work_s, under its work
+    speed and share, exactly as its lumps run: CARDS, "Rate form"); a standing action's per_hour (> 0, required on a
+    standing fight, refused on a card's, in rate units like a Flow's: RATE_SCALE per fight an hour).
+  - Lines. `loses`: per lost fight, taken from a store: a cost line of the runner, RateRef(runner, COST, store).
+    `wounds`: per lost fight, added to a store: a make line, RateRef(runner, MAKE, store). `lost`: one unit per lost
+    fight, a make line on the tally store. `fought` (standing only; a card counts its completions, CardCount): one
+    unit per fight, a make line. Each runs at amount * f, a lump run as a rate, rounded as every line is (makes down,
+    costs up). Each store appears at most once across the runner's makes, costs, inputs, outcome stores, loses,
+    wounds and tallies (the card rule, extended).
+  - Odds. P = SideStrength(side), T = ThreatStrength(threat). loss_bp = ceil_div(BP * T, T + P), so 0 < loss_bp <= BP
+    (T > 0 always; P = 0 loses every fight). win_bp = BP - loss_bp. Rounded up, so the odds never favour the player
+    (the rate rule's direction). At P = T half are lost; at P = 4T one in five.
+  - The odds entries. While a fight runner runs, the effective stack (gates.effective_stack) holds MUL_BP entries
+    sourced "odds:" + runner: win_bp on each of the runner's ordinary makes and outcome-store lines (what a won fight
+    brings), loss_bp on each loses, wounds and `lost` line. Its costs and inputs are untouched: a lost fight still
+    spent the attempt (decisions.md, "Combat has fangs"). `fought` carries none. Content may not use an "odds:" source
+    (validation).
+  - A tap keeps its odds. A fight card's tap keeps its odds entries with its speed entries in LaneState.speed, as
+    they stood at its start, and runs at them to its end (Speed: "a task runs at the speed it had when it started"):
+    the odds the card showed when it was tapped are the odds it pays. In the mix, on a repeating tap (REPEATING
+    TAPS) and on a standing fight they are live: a new spear changes them at its instant.
+  - Dry: a loses line is a cost, so a store it drains to empty pauses the runner as any cost does (the visitor's
+    pause): a raid with nothing left to take stops taking. Its tallies pause with it, so fought and lost stay true.
+- Tally stores: StoreDefs no outcome unlocks (never drawn as a store), made only by their fight's line, read by
+  conditions (a gate on "a third fight lost" is allowed), never cost, never an input, never shared by two fights. Cap:
+  content sets it at least a year of the fastest fight rate the rules can reach; a tally at its cap stops counting
+  (KNOWN GAPS).
+- What a fight is not: a story fight (a beat's fight that goes as written) is a card or a trigger with lines and no
+  FightDef, so a beat's outcome never carries odds. A fight card has no cap (validation; KNOWN GAPS, "Capped fights").
+- View: fights, one FightView per unlocked fight runner in rules order (cards, then standing): runner, side,
+  threat, power (the SideStrength Explanation), threat_strength (its Explanation), loss_bp now (for a running tap,
+  the kept one), fought (CardCount for a card, else the fought tally) and lost (the tally), both whole fights (the tally stores
+  floored to whole units, so lost <= fought holds). Reading writes nothing.
+- Codec: SideStrength and ThreatStrength are new Target tags in a Modifier's encoding, and LaneState.speed may hold
+  odds entries. No live save holds either before this part ships, so decoding old saves is unchanged and FORMAT
+  stays. Confirmed against codec.py: a Target tag is one entry in its class table, and rules_digest leaves sides and
+  threats out of the rules' encoding while empty, so rules that declare none keep their digest and old saves decode as
+  they were (tests/engine/test_pre_fights_save.py).
+- Rebase: a release that adds a FightDef to a released card changes what its lines pay; a
+  ramp step is always a new trigger.
+- Held entries: a card's while_running entries join the stack the odds are read from, scaled by the card's share of
+  its lane's time while it runs (ENTRIES HELD WHILE A CARD RUNS, the last part).
+
+INVARIANTS (fights; numbered on from 79. A "fight runner" is a card or standing action with a FightDef.)
+80. Flow: over a span where a fight runner runs at a constant share and P and T are constant, each of its lines pays
+    exactly what the same runner with the odds entries written into its stack by hand pays; no fight is an event.
+81. Timing does not matter: for any two ways of reaching time t from the same save with the same decisions at the same
+    times (one advance, or any slicing into advances, views and snapshots in between), the saves at t are equal,
+    tallies included. This is invariant 1 for fights, and the 2 AM test's fight half.
+82. Odds move one way: adding an entry that raises a SideStrength never raises any loss_bp; one that raises a
+    ThreatStrength never lowers one. 0 < loss_bp <= BP always.
+83. Never by defences: no entry aimed at a ThreatStrength is in any outcome but a trigger's, and in no save does a
+    ThreatStrength fall.
+84. Tallies: at any t, a fight runner's lost <= fought, and lost and fought differ from the exact integrals of their
+    lines by less than one unit (rounding once, as every store).
+85. A tap keeps its odds: a fight card tapped at t pays at loss_bp(t) until it lands, whatever is appended meanwhile.
+86. No instant: adding a FightDef to a runner adds no event to any advance (TAP_DONE and READY as without it).
+
+REJECTED, AND WHY (fights)
+- Dice in the engine, a seeded roll per fight: chance would move progress (decisions.md, "Chance decides how nice"),
+  and a week's losses would depend on when the player looked, breaking the 2 AM test.
+- Each fight an event with a shuffle bag in the engine: an instant per fight (the cost REPEATING TAPS just removed),
+  bag state in the save (a Save field: the held list refuses it), and a bag of 1/p fights is ill-defined when
+  preparation changes p mid-bag.
+- A per-save seeded phase in the engine, so the engine itself decides which fight is lost: it needs the seed in the
+  engine, which the Chance row forbids, for a label the engine never acts on.
+- A separate fight runner (a FightCard beside cards): a second copy of tap, mix, queue, rules and lanes, the "system
+  in hiding" the fit pass exists to stop.
+- Region state (days in region, threat level) as a new state type: a Save field, for what a clock store and triggers
+  already hold.
+- Threat scaled by the player's strength, the town's size or its stores: decisions.md, "Combat is a large pillar".
+- Odds from a table of power-to-threat bands: tunable, but the number would come from a lookup the player cannot
+  follow; one formula keeps "where does this come from" two strengths deep, and tuning lives in bases and entries.
+- Odds cached in state: a second home for a value the stack already gives (FIT PASS, Dirty Flag).
+- An Outcome part that takes stores, for a story moment that takes some: the visitor's idiom (a standing drain with
+  a clock store, day one's h7_clock) already does it with no engine change, and pauses on an empty store.
+- Wins and losses as two cards (a won hunt, a lost hunt) chosen per completion: the choice is the dice again.
+
+KNOWN GAPS (fights)
+- Whole losses that are people (a companion or a townsperson dying when a tally crosses a unit): needs an outcome
+  that lands at each unit of a store, a repeating trigger. Decided by: the first fight whose stake is a person.
+- Capped fights ("clear the pass" once): the proposed shape is the win share scaling the card's WorkRef, so a worse
+  side clears it slower rather than losing it. Decided by: the first region gate behind a fight.
+- Stance (retreat or push through, braver orders winning and losing more): a stance as a pair of entries, on side
+  strength and on stakes, chosen by an order. Decided by: the first expedition.
+- Who you bring: an expedition's side as its members' strengths. Decided by: the Expeditions row's fit pass.
+- The out-of-place threat: chance picks when, so its moment enters as input recorded in the save's log (as Claude's
+  output does), never as a roll in the engine. Decided by: the first out-of-place threat.
+- A tally at its cap stops counting, and the log's counts with it.
+

@@ -1,0 +1,47 @@
+OR ELSE (a rule's fallbacks: issue #91, docs/design/rule-guards.md, which holds the design, the page's words and the
+contract). Where this part and an entry above disagree, this part holds.
+
+FIT PASS
+- A fallback is an instance of Standing orders: its verbs are OrderVerbs, read as the order list is read, first that
+  can act. A rule with actions a1..an stands for n adjacent rules sharing its `when` and guards, one action each, and
+  every reader walks it that way (orders.listed), so evaluation gains no rule of its own. No new event kind, verb or
+  Save field; the latch is the rule's, one entry as before.
+
+CHOICES (or else)
+- Shape: Order.or_else, a tuple of OrderVerbs; Order.actions is `then` followed by it. Left out of the codec's text
+  while empty, so every save and logged SetOrders without one keeps its text: FORMAT is unchanged.
+- SetOrders refuses (InvalidVerbError, checks.check_actions) more than MAX_ACTIONS (3) actions, an action listed twice,
+  and, with any fallback: a first action that answers an offer, two kinds of verb, taps of cards on two lanes, mixes of
+  two layers. Each action passes the checks a `then` passes. A tap of an undeclared card puts no lane in the
+  comparison, as a `then` naming one is accepted today.
+- Readers walk orders.listed (rule index, action, the rule's latch), rule order then list order: the tap source, the
+  running mix of each layer, candidates (so READY falls for every listed tap of a rule that is on), the lane order,
+  and the READY watch of a repeating lane (a fallback running as a rate lands once an earlier action can act). Readers
+  asking whether any rule names a verb (requeued, the cut-in's _ordered, coverage, DeleteMix) read every action.
+- A rule's taps share one lane, so it starts at most one tap an instant, and the loop of "Evaluation applies every verb"
+  still ends. Readers that branch on the kind of a rule's verb (the firing cap on a mix rule's LATCH, answers) read
+  `then`: every action is that kind.
+- order_states: passed over when every action is dead (is_dead); outranked compares the rule's lane (that of its first
+  declared tap) or its layer as before. order_doing[i] (View, out of the repr): the index in actions of the card its
+  lane runs for it (lane_order) or of the mix that runs by it, else None.
+- Taking actions out (installs.without_actions, orders.pruned): a season's retire_orders and a join's removal of the
+  lane's always rules take the matching actions out of each rule's list, the rule keeping its place and its latch;
+  a rule left with none is removed with its latch. A rule a retirement only trimmed is not logged as ended, nor as
+  coming on (rulelog matches it through the same trim). LaneRules counts a rule once if any action taps the lane.
+- A rebase takes an action naming a gone id out of `or_else` as out of `then`; the rule goes when none is left.
+
+INVARIANTS (or else; numbered on from 172. listed(s) is orders.listed(s.orders, s.latches).)
+173. Unchanged without fallbacks: a save whose orders hold no fallback encodes, evaluates, logs and reads exactly as
+     before Order.or_else existed; a logged SetOrders without one keeps its text.
+174. Expansion: from the same save, decisions and times, a save holding rule o with actions a1..an and one holding in
+     its place the n adjacent rules Order(o.when, ak, o.unless) agree on stores, skills, lanes, cards, pauses, unlocks,
+     the queue and the running mix, at instants that do not hit the firing cap, under rules where no trigger reads
+     LaneRules.
+175. Invariant 57 reads "an order with a true latch has a TapCard" as "a rule that is on lists a tap".
+
+REJECTED, AND WHY (or else)
+- Storing which action a rule chose: the choice is a function of the save at that instant (docs/design/rule-guards.md,
+  "No memory"); a stored choice would be state with no home and a second "until".
+- Expanding the rules into one-action orders inside the save: the latch, the rule log, the page and SetOrders' equality
+  all speak of one rule; expansion lives in the reading, not the saved shape.
+

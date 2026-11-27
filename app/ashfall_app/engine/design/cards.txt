@@ -1,0 +1,335 @@
+CARDS (every card mixable). Where this part and an entry above disagree, this part holds. Above, a "project" is now
+a card, a "push" a completion, a "project's action" the card's own lines, and a "mix action" a card in a mix; the type
+names above are already the new ones.
+
+FIT PASS
+- An instance of Type Object (Nystrom): one CardDef per kind of work, its counts in CardState, never a subclass per
+  kind; narrative, gathering and craft differ only in data and in the page's dress (CardPresentation). The tap is
+  Command: TapCard is the one verb the player, an order and the queue issue, as StartProject was. A card's parts
+  (continuous lines, per-completion lumps, requires, a cap, a finished outcome) are optional fields in the Component
+  sense: each is used only when present, and no kind is a subclass.
+- Merges four rows of docs/systems.md: Projects (ProjectDef), Actions in the mix and project roles (ActionDef), Mixes
+  (a share is now of a card) and Lanes (a lane runs taps). Orders and the queue keep their shape with TapCard.
+- Removes: ProjectDef, pushes and PushCount, Completion, repeatable (cap None), the mix-role and project-role
+  ActionDef (StandingDef is what remains), ActionShare, StartProject, ProjectCount as a discrete subject,
+  ProjectCard.done and "a finished one-off leaves the screen" (it moves to the Completed tab), ActionRole.
+- How idle games do it. Idle Awakening, as played: one card, tapped by hand or run by the mix with the
+  same visuals; tapping pauses the mix; a one-off is a card with an end that moves to Completed; a mix holding a
+  completed card greys whole until edited or deleted. Melvor (its wiki): Cooking's passive stations run
+  at a fifth of the speed while another is used, a share of attention by another name; Township's main tasks complete
+  once and its casual tasks repeat, one task list for both. The usual model is one action type with a count and an
+  optional limit, which is this one.
+- Reuse, never abuse, checked part by part. Bent and so not merged: standing actions (a fire burning has no bar, no
+  tap and no cap; as a card it would be a card that is never a card), and lanes other than HANDS (a rack runs one tap
+  at a time; mixing it needs a mix per lane, the town's mix, a decision of its own: KNOWN GAPS). Kept honest by a
+  rule rather than a special case: a card runs its lumps as rates, tapped or mixed (Rate form), because a lump per
+  completion would turn every store into steps, which holds and empties_at cannot work with, and would charge a
+  completion twice when a tap takes over a bar the mix had half filled (REJECTED, below).
+
+CHOICES (cards)
+- Card: work_s per completion at full speed; continuous lines (makes, costs, XP); inputs and outcome stores per
+  completion; requires; an optional cap; finished, landing at the cap. One lane; HANDS by default.
+- Mixable: a card on HANDS can be tapped and mixed; a card on another lane is tapped only (by the player, an order or
+  the queue). SaveMix rejects an off-HANDS card.
+- One bar: a card has one cumulative work segment (CardState.work) and so one bar, the remainder of its work modulo
+  work_s * BP. A tap and a mix share both advance that same work. On HANDS a tap yields the whole mix (every mix card
+  reads YIELDED, share kept and shown, as before), so at most one of tap or mix runs a given card at any instant, and
+  the view says which (CardView.by). A tap runs the card at a full share from wherever its bar stands to the next
+  completion, then ends (TAP_DONE) and the mix resumes; tapping a card the mix had half done finishes that half.
+- Rate form: whoever runs a card, its lines run at the running share. Its flows and XP are per hour of running: their
+  rate is the share under the modifiers aimed at their RateRef and the lane's LaneSpeed. Each lump A per completion
+  (an input or an outcome store) is paid by the card's work: the store moves by A' * dW / (work_s * BP), A' the lump
+  under the modifiers aimed at its RateRef alone (lumps.lump_amount, rounded down for an outcome store, up for an
+  input), dW the card's work, one floor per store over its lump lines and flows together (CHOICES, "Time"). Speed
+  enters only through the work (WorkRef and LaneSpeed), since faster work is more completions an hour. So a whole
+  completion pays exactly A' at the second its work crosses the boundary, at any speed, share or run, tapped or
+  mixed, and a lump stops where its work is clamped (a tap's landing, a cap). A completion's inputs are paid in
+  proportion to its work as the work is done, by whoever does it; no lump is ever taken at a start or landed at an
+  end. The save keeps a store's plain Segment (its slope rounded down); motion.store_segment adds the cards' work back
+  from the save's cards and the flow lines' net from the rates, never from the saved rate (one written before lumps
+  were paid by work had the old lump rates rounded into it), so the save, the codec and FORMAT do not change. A lump line's Explanation is its display
+  rate: A / work_s per second at full speed (Explanation.base_den = work_s) under every modifier aimed at it and at
+  the card's work, rounded once. Why: the work segment is already exact integer state, so the store needs no
+  remainder of its own; segments stay exact between events, the ledger reads per hour, and one bar
+  cannot be charged twice. Each store appears at most once across a card's makes, costs, inputs and outcome stores
+  (validation), so one RateRef is a flow or a lump, never both.
+- Completions: a card completes each time its work crosses a multiple of work_s * BP, tapped or mixed, at the speed
+  it runs at (a share s fills it s / BP as fast as a tap). completions = work // (work_s * BP), solved off the
+  segment, so CardCount is a solved subject: an order on it fires at the exact second, and an AtMost on it releases
+  when the count passes its release. A completion is an event (COMPLETION, at the second the work first reaches the
+  boundary, solved as a latch is) exactly when it has a discrete effect, which is always for a card with a cap: its
+  line, its outcome's non-store parts (unlocks, modifiers, raises, starts, lines) and, at the cap, `finished`. A card
+  without a cap has no discrete effects (validation: its outcome is stores only, and its one line, if any, is a
+  tap's), so its completions are counted, not evented; a tap of it still ends at TAP_DONE. The work segment is
+  limited only where the work must stop: at the effective cap, and at a tap's boundary (a tap does exactly one
+  completion; the last partial second's overshoot is clamped there, as a store's is at its cap). Elsewhere it is
+  unlimited, so a capped and an uncapped card at one share complete at the same seconds.
+- Caps: effective cap = cap + raised (Outcome.raises, CapRaise). A card is completed when completions reach it:
+  derived, never stored. At the COMPLETION that reaches the cap, mid-mix or mid-tap: `outcome` then `finished`
+  land, the card's work stops (rate 0), every mix holding it is greyed from that instant (the running one included:
+  its cards run GREYED), a tap of it ends at that instant (TAP_DONE follows), and orders and the queue evaluate.
+  Whether a completion reaches the cap is judged against the cap before its own outcome applies; its raises then
+  apply, so a step that lands `finished` and raises its own cap is live again at once. A completed card cannot be
+  tapped (InvalidVerbError from the player; nothing from an order, the queue or an Outcome) nor saved into a mix. A
+  raise returns it to the panel and un-greys its mixes at that instant. A finished story step is a capped card like
+  any other and goes to the Completed set; it does not leave the screen (docs/decisions.md, "The first minutes are
+  slow, made by hand, and told").
+- Inputs against a dry store: an input is a cost line like any other. When its store runs dry the dry rule pauses
+  consumers last first, in this order read backwards: standing actions (rules order), then HANDS (the mix in mix order,
+  then the tapped card), then other lanes (rules order); so another lane's tap pauses first and standing actions last.
+  A paused card's work stops with it, so a completion is never finished unpaid, and the store's line reads starved.
+  The Pause belongs to the card, not to who ran it: it resumes when the store reaches one hour of the cost it was
+  paused at (a tap's at BP, a mix card's at its share) and outlives a tap's end. A tap needs, at its start, the rest
+  of the current completion's inputs in store and no Pause on the card (its Blocker is then AtLeast(the pause's
+  store, resume_at), and READY falls at the resume); else the player's tap is a failed tap and an order's does
+  nothing. A tap ends, interrupted (work.interrupt: work kept, lane free, mix resumes, orders evaluate), when its card
+  is paused, a requires turns false, or its speed falls to 0; it never holds the hands while its card is not moving.
+  A hands tap the dry rule interrupts goes to the queue's front as its When ready entry unless a true order or a queue
+  entry already taps the card (installs.requeued, as CURE CUT-IN does), so it takes up its kept work when the store
+  refills: the tap was the player's choice and resuming it picks nothing for them.
+  After an interrupt the dry rule runs again at that instant over what then runs (existing pauses kept, new ones
+  added last first); nothing is recomputed from scratch. Work that has reached a completion boundary at the instant
+  its store runs dry has finished that completion, which counts (by work, capped or not). What happens next depends
+  on whether the card stops there: a tap lands (TAP_DONE) and stops, so the dry rule passes the tapped card over and
+  the landing stands; a mix card carries on into its next completion, which nothing has paid for, so the dry rule
+  pauses it like any consumer, capped or uncapped alike. Test: card c on HANDS, work_s 100, input 1 item of x per
+  completion (36_000 per second at full speed), no other flow on x; x starts at 1 item, nothing refills it; the
+  active mix runs c at 100%. x reaches 0 at t = 100: at t = 100 and at t = 1_000, c has 1 completion, its run is
+  PAUSED and x is 0, for cap None and for cap 5 alike (the rejected reading gives 10 at t = 1_000). The same world
+  with c tapped at 0 instead of mixed: the tap lands at 100, 1 completion, the lane free, an uncapped tap line.
+- Multi-step one-offs: a told step of n parts is a card with cap n and one line per completion number; what pushes
+  did. Inputs are per completion, so content that took an input once across n pushes takes its share on each.
+- Requires: plain thresholds, read without a latch (validation: release == value; a Running subject is invalid,
+  since running reads requires). They hold at a tap's start and while the card runs. In the mix a false one makes
+  the card WAITING (0/1, share idles) until it holds; for a tap it interrupts the tap. A REQUIRES event falls when
+  the truth changes.
+- Failed tap: a player's tap of an unready card returns the save unchanged and emits no line
+  (decisions.failed_tap names it). A tap at speed 0 (tap_seconds None), ready or not, is refused: InvalidVerbError
+  from the player, nothing from an order.
+- Greyed mix: a saved mix whose flattened cards include a completed one. Derived, never stored. An order naming a
+  greyed mix is passed over: its mix does not run, and the next order's mix or the player's own runs (Order mix);
+  when a raise or a SaveMix un-greys it, it runs again at that instant if its latch is true. In the queue, an entry whose verb is dead (a switch to a greyed mix, a tap of a
+  completed card) is passed over: the controlling entry is the first live one, and QUEUE_POP watches that entry's
+  `until`. A tap of a completed card leaves the queue at that instant, whatever its `until` (as an answer to an
+  answered offer does, "Dead"): the page queues one run of a card per entry, so runs planned past a cap are dropped at
+  the cap rather than kept for a raise that may never come (owner: "if I add beams 100 times... do they clear out once
+  the card goes away?"). A switch to a greyed mix is kept, frozen (never popped while dead) unless it settles; when a
+  SaveMix or a raise revives it, it controls again at that instant, popping at once if its `until` already holds. It
+  settles, and pops at that instant, once its `until` holds and cannot fall (an AfterTime, or an AtLeast on a card
+  count, a skill level or an unlock): a revival would pop it at once, so keeping it would only list a finished stint
+  as the plan. The player may still switch to a greyed mix
+  (nothing runs). DeleteMix removes a saved mix not nested in another and not named by an order or queue entry;
+  deleting the active one leaves no mix active, clears the pauses (Running dry) if the running mix changed, and evaluates at once.
+  Why: the decision (docs/decisions.md, "The mix") that a saved mix never quietly runs something else, and the 2 AM
+  test's "falls through".
+- Never ready: a queue entry tapping a card whose blocker has no ready time (a material nothing makes under the current
+  rates) is stuck, not dead: it stays queued and is passed over like a dead entry for the first entry that is not, so
+  the hands work what can run (plan.is_stuck, controlling_entry). It controls again once a ready time exists, and when
+  every live entry is stuck the first of them controls and the hands wait: nothing can run. An entry with a ready time
+  still holds the queue. Why: the player may queue any unlocked card (the page's Plan); an entry that cannot yet run must
+  never hold the hands idle behind it.
+- Order mix: save.active is the player's own mix; only the player's SwitchMix and DeleteMix write it, so no order
+  and no queue entry ever changes it. The running mix is the mix of the first order, in sequence, whose latch is
+  true, whose verb is a SwitchMix and whose mix is not greyed; else the queue mix (below); else save.active
+  (plan.running_mix_id). It is a pure
+  function of the latches and of greying, never stored: a pushdown of one over the player's mix, popped when the
+  latch releases or the mix greys, and the player's mix comes back. Everything above that reads "the active mix"
+  (rates, dry pauses, Explain, the card panel, explain_work, runs_out_at, requires events) reads the running
+  mix. Order sequence is priority among mix orders; a tap order and
+  a mix order never compete: a HANDS tap yields whichever mix runs, and a tap on another lane runs beside it. The
+  queue waits while an order's mix runs, except an entry taking up a hands task with kept work (CURE CUT-IN).
+  Whenever the running mix changes (a latch rising or releasing, a mix
+  greying or un-greying, SetOrders, SaveMix, a switch, a delete), its pauses clear (Running dry) and rates are rebuilt
+  at that instant, as a switch does; a change that leaves the running mix as it was clears nothing. A player's switch while
+  an order's mix runs sets only save.active, the mix that comes back. The queue head still pops on its `until` while
+  an order's mix runs; only its verb waits. Only the
+  player's own mix can be greyed while it runs: a greyed order mix is never the running one. Below the firing cap a
+  latch change takes effect at once, so an order's mix takes over even at an instant that then reaches the cap; past
+  it, a mix order's latch change waits (Firing cap). Why: "when low on x, run Rest" means run it while low; a switch that stays lost the player's mix, and a
+  latched switch, always able to act, shadowed every later order.
+- Queue mix (goal stints: "run {mix} until {goal}", docs/design/worth-a-change.md): when the controlling queue entry
+  (the first not dead) is a SwitchMix, its mix runs over save.active while no order's mix runs, a pushdown of one
+  exactly as an order's mix is, and save.active comes back at the entry's pop (plan.queue_mix_id). Evaluation still
+  picks the entry's verb last, as any queue head's, and applying it changes nothing (one firing, which ends the loop);
+  its pop is a QUEUE_POP like any entry's, and pops still resolve past the firing cap, so the mix changes at the pop's
+  instant even past the cap (a run of pops ends with the queue). The next live entry then controls: its mix runs if it is a switch, else save.active runs and its verb
+  applies as before. A queue entry whose `until` never comes true (its goal's rate is 0, a store goal over its cap,
+  a store that falls) keeps controlling and its mix keeps running: nothing passes it over, pops it or rescues the
+  plan, and the entries behind it wait. A greyed queue mix is a dead entry (Greyed mix): the next live entry
+  controls. Dry stint: when the dry rule pauses a card the running queue mix holds at a share above 0 that the
+  player's own mix (save.active) does not run, the entry pops at that instant and the player's mix runs on, as an
+  order's action that cannot act yields to the next (OR ELSE); the pop clears the pauses with the running mix. A card the
+  player's mix runs too is not the stint's, and a pause on one does not end it. An input can run dry partway through
+  a stint that was fine when it began, so the offer is not refused up front. Why: a switch that stood lost the player's mix at the first stint, the reason Order mix rejected it for
+  orders; the queue writing save.active was never sent by the page, and no live save held such an entry.
+- Retired: an Outcome retires a card by unlocking Unlock(RETIRED, card) (a newer tool replaces older work,
+  docs/decisions.md, "The mix"). A retired card is out of play exactly as a completed one is, by the one predicate
+  "completed or retired": it leaves View.cards for View.completed, every mix holding it greys, a tap of it is refused
+  (InvalidVerbError from the player, nothing from an order) and SaveMix rejects it; a ready tap of it running when it
+  retires ends at that instant as an interrupt does (work kept, lane free). Unlocks only grow, so a retirement is
+  for good, and with rules.opening None (no gating) nothing is retired. Why: retirement is a fact that only grows,
+  keyed by kind and id, which is what the unlock set already is; a separate set would be state, codec and FORMAT
+  for the same thing. The page tells retired from finished by the unlock (api/CONTRACT.txt).
+- Starved line (LedgerLine.starved): the store is at 0 and something waits on it: a runner paused on it, or a tap a
+  true order or the queue's controlling entry names, blocked by an AtLeast on its value. Shown as a problem whether
+  covered or not; all_covered is false while any line is starved. Why: a dry store with a waiting order read as
+  covered and white, so the opening needed a spare unit to make its end wait on the right order.
+- Card panel (view.py): View.cards (unlocked, not completed: completions, cap, the one bar with who runs it and when
+  it next fills, share and Run in the running mix, blocker, needs, tap_s; needs are one whole completion's inputs under
+  the modifiers aimed at them, constant while the bar runs, and the blocker asks only for the rest of the current
+  completion's, prorated and rounded up), View.completed (the Completed tab),
+  View.greyed_mixes, View.standing (every unlocked standing action, makers and consumers, in rules order, with its
+  Run), and a LaneBar per lane naming the tapped card. The page samples the bar segment and draws it modulo its
+  total; that is sampling, not a rule (api/CONTRACT.txt). CardView.by is who moves the work now: TAP while it is
+  tapped, MIX while its mix share runs (FULL),
+  else None (paused, waiting, greyed or yielded: the bar holds still). CardView.completes_at is a TAP's
+  next landing (the tap keeps its speed and a rule waits for it, CURE CUT-IN), None otherwise: a share claims no
+  landing, since a rule that takes the hands yields the mix partway. CardView.run is its mix share's
+  state, whoever runs the card: a card tapped while in the mix reads YIELDED there while explain() gives its tap
+  FULL. A card's mix Run, when several apply, is the longest-lasting: GREYED, then PAUSED, then WAITING, then
+  YIELDED. explain_work: the tap if tapped; else, if the running mix holds the card, its mix share and Run
+  (per_hour 0 when it does not move); else a tap started now.
+- Ids: CardId and ActionId (standing) share one namespace, Runner = ActionId | CardId, so a RateRef, a Pause, a
+  Running subject and a Contribution name one rate owner. The UnlockKind PROJECT is now CARD; ACTION unlocks a
+  standing action only; mix use needs the CARD unlock.
+- Validation of cards (InvalidRulesError): runner ids unique across standing and cards; lane HANDS or declared;
+  work_s >= 1; cap None or >= 1; skill known, or None with xp_per_hour 0; flows and amounts on known stores, > 0 for
+  amounts; each store at most once across a card's makes, costs, inputs and outcome stores (so no store listed twice
+  in makes or in costs, as for standing actions, and none on both sides); requires with release == value and no
+  Running subject; without a cap: the outcome holds stores only, `finished` is empty, at most one line; with a cap:
+  lines empty or one per completion of the base cap; every CapRaise names a capped card, by > 0; every id in
+  outcomes, conditions and the opening known; no chip effect aims at a StoreCap; no outcome taps a HANDS card from a HANDS completion. Only HANDS cards
+  are mixable until the town's mix (a default pending the owner). An order or queue entry may name an unknown card: it is
+  never tappable, covers nothing and is never a candidate.
+- State, canonical: a CardState is present iff its work's value, its rate or its raise is non-zero. A free lane is
+  card None.
+- Evaluation after a cascade: when the firing cap suspended evaluation at instant T, READY falls at T + 1 for every
+  candidate already ready, so a true order whose card was ready all along still acts and the hands never idle on the
+  cap. Computed from save.last_cascade.time == save.time; no new state.
+- Migration (stage 2): opening.toml's actions and projects become `standing` and `cards`; each tap/mix pair (a
+  gathering tap and its mix action, a rest tap and its mix action, a felling tap and its mix action) becomes one card;
+  repeatable becomes no cap, a one-off cap 1, n pushes cap n; order cards use tap_card; the template slot {project}
+  becomes {card}; the opening's spare unit for the end wait goes once starved lines show. Taps now move stores over
+  their bar instead of in lumps, which the opening's timings absorb (bars are seconds). FORMAT is 2: old saves decode
+  as StateFormatError, which the API already answers as rules_changed or bad_state.
+
+INVARIANTS (cards; numbered on from 33)
+34. One bar: a card's work rises under a tap or under a mix share, never both; a tap started at work w lands when the
+    work reaches the next multiple of work_s * BP above w.
+35. One card both ways: running a card for one completion's work, by a tap or by any mix share, changes each store by
+    exactly the same amount (invariant 80) and trains the same XP; no input is taken twice.
+36. Linear: every store and work segment is linear between events; no event falls at an uncapped card's completion.
+37. Counts: CardCount equals work // (work_s * BP) at every t; an order on it fires at the exact second the work
+    crosses the boundary.
+38. Caps: completions never exceed the effective cap; a capped card's COMPLETION falls at each boundary, tapped or
+    mixed; a completed card's tap from the player raises InvalidVerbError and from an order changes nothing;
+    `finished` lands exactly once per reach of the cap.
+39. Greyed: from the instant the running mix holds a completed card, every one of its cards contributes 0 to every
+    rate and orders and the queue evaluate; a cap raise un-greys it with no player action.
+40. Dead queue heads: a queue whose head is dead behaves as the same queue with the head removed, and the head is
+    still there after unless it settled (its `until` holds and cannot fall) or taps a completed card, when it is gone
+    from that instant.
+41. Starved: a line is starved iff its store is at 0 and a runner is paused on it or a candidate tap is blocked on it;
+    all_covered is false while one is. A paused card's work does not move.
+42. DeleteMix: refused for a nested or named mix (the save unchanged); otherwise the mix is gone and, if it was active,
+    nothing is active and evaluation ran.
+43. Order mix: view(s, r).running_mix is the mix of the first order whose latch is true and whose verb is a SwitchMix
+    to a mix that is not greyed, else the controlling queue entry's mix when that entry is a SwitchMix, else
+    s.active, and mix_order is that order's index (None otherwise); no evaluation ever changes s.active (only the
+    player's SwitchMix and DeleteMix do); while no such order is latched and no queue entry is a SwitchMix, every
+    segment equals that of the same save with its SwitchMix orders removed. When the running mix changes at an
+    instant, its pauses are cleared there (Running dry); a player's switch that leaves it unchanged changes
+    only s.active.
+44. Kinds don't shadow: an order's TapCard that can act acts whether or not an earlier order's mix runs, and a mix
+    order's mix runs whether or not an earlier order taps.
+80. Whole completions (numbered after the last part's, added with lumps paid by work): while a card is the only line
+    on a store, its work going from k to m whole completions changes the store by exactly (m - k) * A', tapped or
+    mixed, at any speed and share, while the modifiers aimed at its line are unchanged and the store reaches no limit
+    (its cap or 0) on the way.
+
+REJECTED, AND WHY (cards)
+- Lumps for taps (inputs taken at a tap's start, outcome landed at its end) with rates in the mix, on one bar: a card
+  charged twice. The sequence: card C (input A per completion) runs in the mix at 50% for half a completion's time,
+  so its bar is half full and A/2 has been drawn as a rate; the player taps C; the tap takes A at its start and runs
+  the bar's remaining half; it lands, and that one completion has cost 1.5A (and, with outcome stores, paid out A/2
+  as a rate plus A as a lump). Splitting the bars (a tap's own timer beside the mix's) avoids that but gives one card
+  two bars, against "same card, same visual"; prorating the lump to the bar's remainder is the rate form with extra
+  steps. So both use the rate form.
+- Lumps for both, a completion event for every card: stores become steps, empties_at and
+  "runs 7 h" stop being exact, and a season of a seconds-long card is millions of events for the simulator. Only
+  completions with a discrete effect (capped cards) are events; a count is solved off the work segment.
+- A tap that refuses unless its whole input is in store and then drains it as a rate: a tap of a half-done card
+  would demand more than it will use; the Blocker asks for the rest of the current completion only.
+- A tap that holds the hands while its card is paused: the mix would yield to a tap that is not moving, finishing
+  into idleness; the tap ends, interrupted, and keeps its work.
+- Standing actions as cards with a flag: a card that is never tapped, mixed or capped is not a card.
+- Mixes on every lane now: a mix per lane is the town's mix, with its own questions (who owns the share, what greys);
+  until then the rack is driven by orders, as it is today.
+- A stored Completed set: a cap raise and the set would have to be kept in step; derived from counts it cannot drift.
+- Greying only the completed card's share: the saved mix would quietly run a different split (docs/decisions.md).
+- A dead queue head that waits: a greyed mix never ungreys by itself, so the hands would idle for good. Popping a dead
+  switch: the plan would lose the entry a cap raise could revive (unless it has settled: a revival would pop it at
+  once). A dead tap is popped all the same: the page's entries are one run each, so runs planned past a cap would sit
+  in the queue for a raise that may never come.
+- Inputs once across a multi-step card: needs a per-card "first step" counter, the pushes machinery this part removes.
+- One id type for cards and standing actions: nothing would say which definition an id looks up; a union of two
+  NewTypes keeps one namespace and two lookups.
+- The engine dressing cards (an enum on CardDef for narrative, action, craft): it changes no rule, so it is content.
+- A separate starved event or chip: starved is a fact of the read model, like covered; nothing in the engine acts on
+  it.
+- A dead queue head that blocks the pop of the live entry behind it (the head's own `until` the only one watched):
+  the live entry would control forever, so a dead head would change what the queue does. Keeping a dead tap of a
+  completed card as a dead switch is kept: a tap is one run of a card, and a card at its cap has no run left to plan.
+- Interrupting a tap whose work reached its boundary at the instant its store ran dry: the count would stand without
+  the landing, a completion half-registered by event order alone.
+- Passing over a mix card at its boundary as a tap is passed over: the mix card does not stop there, so it would run
+  on with its input store at 0, every later completion unpaid (one starved day measured 213 completions against 160
+  for the paused reading); and only capped cards would get it, since only their boundaries are events, so capped and
+  uncapped cards would diverge.
+- Requires with hysteresis: a latch per card per requires is state the save would carry for a gate a tap reads once;
+  a band belongs in an order.
+- WorkRef scaling a card's flows and XP: a flow is per hour of running, and faster work is more completions, not more
+  per hour; only per-completion lumps scale with it. A flow and a lump on one store, merged into one base: the
+  WorkRef would then scale the flow's part too; forbidding the pair costs content nothing.
+- A capped card's work limited at every completion: each completion would lose the last partial second, so a capped
+  and an uncapped card at one share would drift apart.
+- A lump as its own per-second rate (A / work_s under the card's whole work speed, rounded once), as before lumps
+  were paid by work: a second clock beside the work's. A completion came up short or over by under one rate step
+  (a 4.6 h one-item card paid 0.998 items and its beat never fired), a tap paid its lump on through the last partial
+  second after its work had stopped (a 4 s card at 1.1x paid 2.2 items a tap), and a whole input could empty its
+  store before the work reached the boundary, stalling the tap.
+- Refusing lumps that do not divide at reachable speeds (in its tractable form, lump * work rate / (work_s * BP)
+  whole at every speed iff work_s * BP divides the lump): it refuses long one-item cards, which content writes for
+  story beats, and leaves the last partial second's over-pay.
+- Conditions that tolerate the miss: no tolerance fits both a long card's 0.002 and a short card's 0.3 items, a
+  tolerance fires early by what it forgives (invariant 8), and every reader of a store would need it.
+- Lumps rounded the other way (outcomes up, inputs down): a store reached a completion's amount before the
+  completion itself, so a beat keyed on it fired before the card's own line, and rounding favoured the player.
+- A rate from the integer work speed, a divisibility check at load, and keeping a tap's overshoot: three patches for
+  one defect, still over-paying at a capped card's last completion and refusing the long cards.
+- A remainder on CardState (what has been paid so far): a Save field and a FORMAT bump for what the work segment
+  already carries, and steps at completions (holds, empties_at) where the work gives a line.
+- A pause dropped with the tap it interrupted: the card would restart in the mix on a store still dry and pause again
+  at once, chattering at one instant.
+- View.standing listing only consumers: a maker (a generator) is a standing action the player sees running too.
+- Storing the player's mix in the save (a field beside active, for the mix to come back to): a new Save field fails
+  decode for every live save, a reset, for state the latches already give.
+- An order's switch that stands (the order writes save.active, as before Order mix): the player's mix is lost once
+  the condition releases, and a latched switch, always able to act, shadows every later order.
+- An order's mix taking over past the firing cap (latch changes handled after the cap like any event): two mix
+  orders on a Running subject flip each other within one instant forever (one's mix stops the card, which releases
+  it, the other mix runs the card, which raises it again), each flip an event with no verb, so the cap would bound
+  nothing and the instant would never settle.
+- Strict first match between tap orders and mix orders: the running mix would depend on whether a tap order is
+  ready, and would flip within one instant when a rack tap lands.
+
+KNOWN GAPS (cards)
+- A mix card's work has no limit, so at the instant an input store runs dry its last second has run past the
+  completion boundary: its outcome lumps are paid for that part (under one second's work) and the dry input, clamped
+  at 0, is not charged for it. Closing it needs the work limited where the input runs out. Decided by: a card whose
+  second's work pays enough to matter.
+- A save written before lumps were paid by work, in the middle of a completion, keeps what the old rates had paid of
+  it, under one unit a second short (or over, past a tap's last partial second): no save field records that history.
+  From then on it is paid exactly by the work, so that completion lands that much off and a trigger at exactly one
+  completion's amount does not fire, as on the engine that wrote it (tests/engine/test_old_lump_saves.py).
+

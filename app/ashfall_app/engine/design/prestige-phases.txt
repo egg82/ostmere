@@ -1,0 +1,66 @@
+PRESTIGE PHASES (a skill at its top waits for the player's click: docs/design/prestige-phases.md;
+nodes.py, nodechecks.py, phases.py, phaseevents.py, prestige.py, prestigeverbs.py, pickentries.py, Forecast.tops_out). Where this
+part and an entry above disagree, this part holds for rules whose prestige is set; with Rules.prestige None nothing
+above changes. Each function's contract is its docstring.
+
+FIT PASS
+- The design note's table: the phase's top extends the XP cap the way THE CAMP's held levels extend a store's cap; a
+  node's ranks are Modifiers entries derived from the picks, as ENTRIES HELD WHILE A CARD RUNS are; the click is a
+  Command; the carry is ordinary XP whose level waits; "tops out" is one more Forecast kind. No new system.
+
+CHOICES (prestige phases)
+- State: one PhaseState per skill on its SkillState (SkillState.phase), not a Save field ("A new engine part adds its
+  own state type"). Its default, FIRST_PHASE, is left out of the codec's text, so a save that never topped out encodes
+  as before, FORMAT is unchanged, and every engine write of a SkillState carries the phase on.
+- Rules: Rules.prestige (PrestigeDef: top_level, carry_window_s, menu_size) and Rules.nodes (NodeDef, a Type Object:
+  skill, target, ranks, per_rank_bp). The digest leaves both out while unused, so rules without prestige keep theirs.
+- What a node may change: a make, a card's work or a store's cap, of work outside its skill (nodechecks.check_nodes;
+  the loader's schema has no way to write another, opening/prestige.py). XP, costs, lane speed and strengths are
+  refused, since anything aimed at XP or at a lane's speed would make levels come sooner and the loop spiral.
+- A rank's entry: one MUL_BP entry per node, BP + n * per_rank_bp for n ranks, sourced NODE_PREFIX + the node's id,
+  joining the base stack after the held entries, and the entries a store's cap reads (gates.store_cap). Ranks add within a node; separate nodes compound, so a full track
+  is bounded by the product over its nodes, fixed by the content.
+- XP: with prestige set, a skill in phase n has limit xp_ceiling (one unit below the top of phase n + 1, so a click
+  always lands below the new top and one absence leaves one click waiting) and accrues until carry_ends_at
+  (topped_at + carry_window_s); its shown level reads the curve from level 1 in each phase
+  (level_shown), and SkillLevel conditions read levels counted across phases (level_counted), which never fall at
+  a click. LEVEL_UP falls at the phase's own thresholds and none past its top (phases.next_level_xp).
+- Events: TOP_OUT (XP reaches the phase's top, or holds it with topped_at None: topped_at becomes the instant) and
+  CARRY_END (the carry's end while XP still rises: rebuilt, XP rate 0), both solved off the XP segment, sequence the
+  skill's index, ordered right after LEVEL_UP (phaseevents.py). Neither makes orders evaluate: no condition reads
+  topped_at.
+- Rebase keeps each skill's phase, its XP held at or under the phase's ceiling, and its picks as they are: a pick on a
+  node the new rules lack holds nothing (DESIGN.txt, "Rebase", step 4). No
+  rules modifier, nor a new save's starting one, may be sourced NODE_PREFIX: only a pick's entry is.
+- A finished track: the skill is mastered. Prestige is refused TRACK_DONE for good, and the skill rests at its top,
+  its XP stopping at the carry's end as at any top.
+- The loader's bar (opening/prestige.check_phase_spans): carry_window_s <= nodes.ORDINARY_ABSENCE_S, and per skill
+  span >= the fastest base xp_per_hour of a card or standing action training it times ORDINARY_ABSENCE_S. So the
+  window binds before the ceiling, which is only the guarantee.
+- The menu: the first menu_size unfinished nodes of the track in rules order. A function of the picks alone, so fixed
+  for the phase with no draw, and an undo shows the menu the undone pick came from.
+- Undo: UndoPick removes the last pick and leaves a pick owed in the same phase; the next Prestige of the skill fills
+  it. Open while the shown level is still the one the click landed at (PhaseState.click_level).
+- Move: MovePick(skill, node, to) takes the rank `node` holds and parks it on `to`, a node on the menu now. The cost is
+  that rank's progress: it is out of play (PhaseState.parked, held by neither node) for the rest of the phase and the
+  whole of the next, and takes effect at the click that lifts the skill into the phase after next. Its due phase is
+  stored, so the cost is the same whenever in a phase the move is made. A parked rank holds its node's rank for the
+  menu, so the menu moves on; pick_entries reads picks only, so the stack never counts a parked rank. A click settles
+  the ranks due, just before its own pick, so UndoPick still takes back the click's. Refused PICK_OWED while an undone
+  pick is owed, NOT_PICKED, NOT_ON_MENU (a node to itself too, as it is full).
+- By hand only: Prestige, UndoPick and MovePick are in Verb, not OrderVerb, and SetOrders or SetQueue naming one is
+  refused (PrestigeRefused, reason BY_HAND_ONLY: prestigeverbs.refuse_by_hand). Refusals are PrestigeRefused, an
+  InvalidVerbError carrying a PrestigeRefusal. The decision log's kinds are "prestige", "undo_pick" and "move_pick".
+- Forecast: level_ups are the LEVEL_UPs (phases.next_level_xp, so they end at the phase's top), and tops_out is each
+  skill's XP reaching its phase's top, solved off its segment as a level-up is: the instant TOP_OUT sets topped_at.
+  A skill at its top, or mastered (prestige.mastered), has none.
+- Read model: a SkillBar reads the shown level, the bar's ends within the phase (next_level_xp None at the top) and a
+  SkillPhase (phaseview.py): phase, level_counted, at_top, waiting_levels, the menu with each node's ranks taken and
+  its target's value before and after one more rank at a full share, undo_open, mastered, the nodes the picks hold and the
+  ranks parked; None with rules.prestige
+  None, and left out of the repr. api.level reads level_shown.
+
+KNOWN GAPS (prestige phases)
+- The wire serves no prestige decision (Prestige, UndoPick), and Content serves no node (its target, label).
+- Loader check the note lists and this part leaves out: later phases' work pays are adds.
+

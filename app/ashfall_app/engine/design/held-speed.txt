@@ -1,0 +1,88 @@
+HELD SPEED, AND ENTRIES HELD BY STANDING ACTIONS (a joiner who is fed works faster: stew earns its place as a bonus
+while fed, 2026-11-10). Where this part and ENTRIES HELD WHILE A CARD RUNS disagree, this part holds; everything
+there not named here is unchanged. Examples name ids only; which runners, lanes and amounts is content's. Blind tests
+are written from this part, that part and api/CONTRACT.txt, against app/tests/engine_contract/MUTANTS_heldspeed.txt.
+
+FIT PASS
+- The need: while a joiner's eating (a standing action) runs, that joiner's work runs faster; while it is paused on a
+  dry store, it does not. An instance of Modifiers held while a runner runs, which ENTRIES HELD WHILE A CARD RUNS
+  already is, aimed at a target the stack already has: LaneSpeed (Speed), which scopes an entry to every line on one
+  lane, so to one joiner. Two of that part's refusals are lifted, each for a reason its text did not weigh (its
+  REJECTED entries carry a dated pointer here). No new system, Save field, verb or event kind.
+- How games do it: RimWorld's "ate a fine meal" and Don't Starve's food buffs are a bonus held while fed and gone when
+  the larder is empty, never a penalty for plain food. Nystrom's Component again (the entries are an optional part of
+  a StandingDef that its own machinery never reads).
+
+CHOICES (held speed)
+- Shape: a second dedicated type, HeldSpeed(lane: LaneId, amount_bp: int), exported beside WhileRunning. A runner's
+  while_running is tuple[WhileRunning | HeldSpeed, ...]. Each HeldSpeed is an ADD_BP entry on LaneSpeed(lane), sourced
+  "held:" + the runner's id, at the runner's held share. Kind, target and source stay fixed by the type: no held entry
+  can aim at a rate, a WorkRef, a cap, a threat or HANDS, or be a multiplier.
+- Why lane speed is now allowed (lifting part of "Held entries on rates, work, lane speeds or caps"): that refusal's
+  reason was HANDS's kept speed. A HANDS tap keeps the speed entries it started under (Speed, LaneState.speed), so a
+  speed entry that came and went with someone else's work would make a tap's shown time depend on who else works.
+  Every other lane keeps no speed: its lines read the live stack at every instant (Speed, "Other lanes stay live"), as
+  a chip aimed at one already does. So a HeldSpeed may name any declared lane and never HANDS (validation), and no
+  LaneState.speed ever holds a held entry. The rest of that refusal stands: a card's own effect on rates is its
+  lines, so no held entry aims at a rate or a WorkRef, and none at a cap.
+- Why standing actions may now hold entries (lifting "while_running on standing actions"): that refusal assumed a
+  standing action runs whenever unlocked. It does not while paused on a dry store (Standing, the dry rule), and that
+  pause is exactly the state a fed bonus turns on, so its entry is not an outcome landed at the unlock. StandingDef
+  gains `while_running: tuple[WhileRunning | HeldSpeed, ...] = ()`, either kind, validated as a card's.
+- The held share of a standing action a: h(a) = BP while a runs (unlocked, not stopped by a leave, and holding no
+  Pause in save.pauses); else 0. It reads only the unlock set and save.pauses, never a rate, so building the stack
+  still never recurses into running(). A card's h(c) is unchanged.
+- The dry rule is unchanged and already right for it: it pauses one consumer at a time and rebuilds after each, so a
+  paused eater's speed entry has left its lane before the next consumer is picked, and pausing stops at the first
+  pause that brings the net to 0 or above. Eaters of one store pause last first (standing in reverse rules order), so
+  with a store short of all its eaters the later ones go unfed and the earlier ones stay fed: the bonus is per
+  runner. A resume (its Pause's level reached) returns the entry at that instant.
+- The entries: while h > 0, for each HeldSpeed(lane, a) in declaration order, Modifier(LaneSpeed(lane), ADD_BP,
+  a * h // BP, "held:" + id); WhileRunning entries as before. They join base_stack where held entries already do,
+  so every line on that lane (each make, cost and XP of what runs there, and each card's work there) reads them, and
+  explain lists them among that line's adds with their "held:" source, aimed at the line itself as it aims every entry
+  it lists (rates.aimed_stack).
+- Ids: a held source is "held:" + the runner's id, which names one runner because runner ids are already unique
+  across cards and standing actions (Validation, "duplicate runner id").
+- Validation (InvalidRulesError), per runner, cards and standing actions alike: each WhileRunning's side declared, as
+  before; each HeldSpeed's lane one rules.lanes declares (HANDS is never declared, so naming it is refused); amount_bp
+  >= 1 on each; no side twice and no lane twice in one runner's while_running. A message names the runner id and the side or lane id; a test may assert both appear, and nothing else of it.
+- View: View.held lists standing holders too, after the cards, in rules.standing order, with share_bp BP; HeldView's
+  `card` field holds the runner's id (one namespace). The wire's Strength.sources serves a standing holder's side
+  entry as a card's (source the runner id, share_bp BP). A HeldSpeed entry is on no strength, so it reaches the wire
+  only through the rates and work times it changes, and through CardInfo.change_bp (CONTRACT.txt, "upside_of").
+- Codec: HeldSpeed joins the rules encoding's classes; a StandingDef's `while_running` is left out while empty, as a
+  card's is, so rules that declare none keep their digest. No Save field, no manifest change, FORMAT unchanged.
+
+INVARIANTS (held speed; numbered on from 155. Invariants 110-118 hold for standing holders and HeldSpeed as below.)
+156. Held exactly while running, standing: for a standing action a with while_running, the effective stack holds,
+    per entry of a, exactly one Modifier(target, ADD_BP, amount_bp, "held:" + a) while a is unlocked, not stopped
+    and not paused, and none sourced "held:" + a otherwise; target is SideStrength(side) for a WhileRunning and
+    LaneSpeed(lane) for a HeldSpeed.
+157. Speed scoped to the lane: with a HeldSpeed(l, A) held at share h, every make, cost and XP line of a runner on
+    lane l, and every card's work on l, equals the same rules with Modifier(LaneSpeed(l), ADD_BP, A * h // BP) written
+    into save.modifiers by hand; no line on another lane, HANDS included, changes.
+158. Dry pause drops it: when a standing holder is paused on a dry store at T, its entries leave the stack at T and
+    every line on its HeldSpeed lanes is rebuilt at T; they return at the instant its Pause resumes. Of several
+    holders eating one store that runs short, the dry rule pauses them in reverse rules order and stops at the first
+    pause that brings the store's net to 0 or above, so the earlier ones keep their entries.
+159. Never kept: no LaneState.speed of any save holds a held entry, and a HANDS tap's time is unchanged by any
+    HeldSpeed.
+160. Validation: InvalidRulesError for a HeldSpeed naming HANDS or an undeclared lane, amount_bp below 1, one lane twice
+    in one runner, and a standing action's WhileRunning naming an undeclared side or one side twice.
+161. Timing does not matter (113's shape) with a standing holder whose store runs dry and refills.
+Invariant 114 now reads: "no ThreatStrength explanation and no rate, work or cap Explanation lists a WhileRunning's
+entry, and only the lines on a HeldSpeed's lane list that HeldSpeed's entry; s.modifiers ..." and the rest unchanged.
+
+REJECTED, AND WHY (held speed)
+- A positive chip "fed" on the eaten store: it bends chips (bad states with cures), and a store-level latch cannot say
+  which eater is paused when the store is short of some of them.
+- HeldSpeed on HANDS: its taps keep their speed, the original refusal's case, which still holds.
+- A multiplier: as for sides, an add scales linearly with the share and has one meaning.
+- A held entry on a runner's own rates or work (a RateRef, a WorkRef): a card's own effect on rates is its lines.
+- Feeding the speed from the eaten store's level: modifiers never read stores.
+
+KNOWN GAPS (held speed)
+- A HeldSpeed on a lane whose card is a fight raises the fight's rate with the lane's speed, as any speed entry there
+  does; no content does this yet. Decided by: whoever first writes it.
+

@@ -1,0 +1,201 @@
+ENTRIES HELD WHILE A CARD RUNS (a watch or a guard raising a side while it works: docs/design/week-two-plan.md, item 2;
+blind tests from this part and api/CONTRACT.txt alone, item 3, against app/tests/engine_contract/MUTANTS_held.txt).
+Where this part and an entry above disagree, this part holds. Examples name ids only; which cards, sides and amounts
+is content's.
+
+FIT PASS
+- An instance of Modifiers (an entry with a source; docs/systems.md, "Modifiers") placed by Lanes and Mixes (what runs
+  where, at what share) and read by Combat (sides). The engine already holds entries that exist only while something
+  is true: a chip's effects while it shows (Chips) and a fight's odds while it runs (FIGHTS, "The odds entries"). This
+  is the third of that shape, keyed by a card running: no new system, Save field, verb or event kind.
+- How games do it: RimWorld's and Dwarf Fortress's guards raise a defence only while they are posted, and the posting
+  is a work assignment the player changes; Melvor's combat stats are derived from what is equipped now, never stored.
+  Nystrom's Component (the entries are an optional part of a CardDef that the card's own machinery never reads) and
+  his Dirty Flag chapter's caution (FIGHTS, FIT PASS: derived from the inputs wherever read, never cached in state).
+
+CHOICES (entries held while a card runs)
+- Shape: CardDef gains `while_running: tuple[WhileRunning, ...] = ()`, WhileRunning(side: SideId, amount_bp: int), a
+  new frozen type exported by the engine package. Each is an ADD_BP entry on SideStrength(side) at a whole share. A
+  dedicated type, not a Modifier: kind, target and source are fixed by the rule, so a held entry aimed at a threat, at
+  a rate, as a multiplier or under another source cannot be written. Standing actions do not take one (REJECTED).
+- Validation (InvalidRulesError): each side is one rules.sides declares; amount_bp >= 1; no side twice in one card's
+  while_running; and no Modifier in the rules (outcomes, finished, chip effects) has a source beginning "held:", the
+  engine's tag below. new_save's starting stack with such a source raises InvalidVerbError, as one with "odds:" does
+  (every refusal of a starting-stack entry is that error). A WhileRunning message names the card id and the side id;
+  a test may assert both appear, and nothing else of its wording. Side and threat ids are separate kinds and no check
+  spans them, so a threat may share a side's id; a held entry then lands on SideStrength(id) only and that threat's
+  strength is untouched.
+- The held share h(c) of card c, in basis points of its lane's time, read off the save at an instant:
+  1. BP while a lane holds a tap of c: a tap by the player, an order, the queue or an Outcome's start, on HANDS or on
+     a declared lane, bounded or repeating (REPEATING TAPS). This covers a queued or rule-run hands task, a ruled
+     lane's always task and a lane's one-off.
+  2. Else, when c is in the running mix of its own layer (the hands' running mix for a HANDS card, the running town
+     mix for a card on a ruled lane; CARDS, "Order mix"; THE TOWN'S MIX, "Running town mix"), its flattened share
+     there (Nested mix share: already a whole number of basis points) when its Run is FULL: not
+     yielded to a tap on its lane, not paused, not waiting on a requires, its mix not greyed, and for a TOWN mix card
+     its lane joined and the card unlocked.
+  3. Else 0: a card unlocked but in no running mix and untapped, a yielded share, a paused or waiting card, a greyed
+     mix, a completed or retired card, a When ready entry still waiting, a mix the player saved but no order or switch
+     runs (save.active is read only through the running mix).
+  A card both tapped and in the running mix counts once, at BP (rule 1), its mix share being yielded (One bar). A card
+  sits on one lane and a mix holds one layer, so no card has two shares. SaveMix refuses a locked card and a card on an
+  unjoined lane, so the only way play puts a locked card in a running mix is a Join whose share card (its lane's
+  always rule's card, or Join.card) is not yet unlocked; that is the path rule 3's "unlocked" exists for, and a test
+  reaches it so. An unjoined lane's card in a TOWN mix is not reachable by play (a join adds JOINED before the share);
+  rule 3 defines it for completeness and no test needs it. The hands' mix never holds a locked card (with
+  rules.opening None every card counts as unlocked).
+- Why the share: the share is the time the player gave the card, and its idle remainder goes to nobody (Shares);
+  the rates of a fight's lines read the odds and the odds read the side, so reading a rate here would make the stack
+  depend on the rates it sets. Speed likewise: a mix card's LaneSpeed changes how fast its work
+  fills, never its share. A tap at speed 0 never holds a lane (it is interrupted: CARDS, "Inputs against a dry store").
+- Why paused, waiting and yielded count 0: each is the card not running and its time given to nothing or to another
+  card. A guard whose food runs dry stops guarding, as a raid with nothing left to take stops taking (FIGHTS, "Dry").
+- The entries: while h(c) > 0, the effective stack holds, for each WhileRunning(side, a) of c in declaration order,
+  Modifier(SideStrength(side), ADD_BP, a * h(c) // BP, SourceId("held:" + c)); while h(c) = 0, none. Rounded down
+  once, on the flattened share, so it never favours the player; an entry whose product rounds to 0 is still held at
+  amount 0 (the card runs; the formula is unchanged by it). The strength then rounds once more by its own formula
+  (FIGHTS, "Strength targets"). So the two zeros differ: h(c) = 0 (paused, yielded, not running) means no entry, and
+  explain lists none for c; h(c) > 0 with a product below BP means an entry at amount 0, which explain lists and the
+  wire serves with its share_bp.
+- Why a tagged source and not the bare card id: a card's own outcome may land a permanent entry sourced by its id (the
+  Camp's lifts do), and the page must tell the held one from it to show the share (View, below).
+- Where the engine reads it: gates.base_stack becomes the save's modifiers, then the shown chips' effects, then the
+  held entries of every card in rules.cards order. Everything built from base_stack sees them: explain_strength,
+  strength, the odds entries (odds_entries reads base_stack), FightView's power and threat_strength, and so
+  effective_stack. They aim only at sides, so no rate, work, lane speed or cap stack changes, and modified_rate never
+  reads them. h(c) reads only discrete state at the save's instant (lanes' taps, latches and greying through the
+  running mixes, save.mixes, save.pauses, requires against values at save.time, unlocks): never rates or holds, so
+  building the stack never recurses into running(). The stack's memo (stack_inputs) must then cover that state when
+  any card declares while_running.
+- Cut-in and interrupt: a task interrupted with its work kept (CUT-IN, CURE CUT-IN, a requires falling, a pause, a
+  retirement) leaves the lane, so its entries leave at that instant; the card that cuts in holds its own (rule 1);
+  when the interrupted task is tapped again its entries return at that instant. Kept work is progress, not presence:
+  the bar waits, the person does not stand watch while doing something else. A cure's cut-in is the same as a glowing
+  step's, word for word: the interrupted task's entries leave at the cut-in, the cure's own (if any) are held while it
+  runs, and the task's return when an order or the queue taps it again; a hand tap the cure sends to the queue's front
+  holds nothing while it waits there.
+- Pause: a dry pause drops a mix card's entries at the instant it lands and they return at its RESUME. The dry rule
+  pauses one consumer at a time and rebuilds after each, so each net is read under the stack the pauses so far leave
+  (pausing a guard can raise a fight's losses on the very store that ran dry, and the next pick sees that). The order
+  is rates.Running's read backwards, among the store's consumers not yet paused: taps on declared lanes (lanes in
+  reverse rules order), then a HANDS tap, then the running town mix's cards last-in-mix first, then the hands' mix
+  last-in-mix first, then standing actions in reverse rules order. So a guard (a share or a tap) and a standing raid
+  on one dry store: the guard pauses first; the raid pauses at that same instant only if the store is still dry once
+  the guard's pause (and so its lost entry and the raid's higher loss rate) is rebuilt. It terminates as before: each
+  step adds a pause.
+- Completion and locking: an uncapped card's completions change nothing. A capped card's tap ends at the completion
+  that reaches its cap and its mixes grey (CARDS, "Caps"), so its entries leave there. A cap raise un-greys every mix
+  holding the card at that instant (Caps; Greyed mix): if an un-greyed mix is then its layer's running mix, its cards'
+  entries return at that instant with no tap; a card that only a tap ran returns when something taps it. A retirement
+  ends a tap and greys mixes for good. Unlocks only
+  grow, so no card is locked again; a card never unlocked is never tapped and its town share runs nothing (rule 3).
+- A tap keeps its odds (FIGHTS): a HANDS fight tap's kept odds are read, as today, on the save just before the tap,
+  so the odds the card showed are the odds it pays. Held entries the tap then yields stay in those kept odds, and a
+  held entry that comes or goes during the tap moves them only from its end. Mixed fights, fights on a repeating or
+  any declared-lane tap, and standing fights read the live stack and move at the instant.
+- Instants: h(c) changes only at an instant where a tap starts, lands or is interrupted; a running mix changes (a
+  latch, a greying or un-greying, SetOrders, SaveMix, a switch, DeleteMix, a join); a pause lands or resumes; a
+  requires turns (REQUIRES); an outcome unlocks, retires or joins. Each of those already rebuilds every rate at that
+  instant, so the stack, the odds and every fight line's rate are constant between events (docs/systems.md, "The
+  engine"), and no event kind is added. Reading writes nothing: the entries are never in save.modifiers nor in a
+  LaneState.speed (they aim at no LaneSpeed, WorkRef or odds line), so encode, the codec and the save are untouched.
+- Repeating taps: a repeating card holds its entries through its completions. The per-landing engine (invariant 75)
+  drops them for the landing's instant and re-taps, which can re-run the dry rule there with them absent; invariant
+  75's exception therefore also covers a store a fight on a held card's side touches standing at 0 at one of that
+  card's completions. Same totals otherwise.
+- View: View gains `held: tuple[HeldView, ...]`, HeldView(card: CardId, share_bp: int, entries: tuple[Modifier,
+  ...]), one per card with h(c) > 0 in rules.cards order, share_bp = h(c), entries as held in the stack; exported.
+  explain_strength (and so FightView.power) lists the held entries among its adds with their "held:" source. The
+  wire (api/CONTRACT.txt, "FIGHTS") serves a held entry in Strength.sources with the card id as its source and
+  share_bp set to h(c), so the strength sheet (plan item 9) draws its source label and share; every other entry has
+  share_bp null. A side is served only inside a Fight, as today. Strength.sources' order: the base, then the add_bp
+  entries in stack order (the save's modifiers, then the shown chips' effects, then the held entries by rules.cards
+  order and each card's in declaration order), then the mul_bp entries in stack order. Held entries are always adds.
+- Codec: the rules encoding leaves `while_running` out while empty (as a None `fight`), so rules without it keep
+  their digest and every save its text; WhileRunning joins the codec's classes for the rules encoding only. No Save
+  field, no manifest change (the manifest's cards carry id, work_s, lane and cap), FORMAT unchanged.
+- Rebase: nothing new; no save holds a held entry, so step 4 has nothing to drop, and a side's id is read from the
+  rules.
+- Content (the loader, app/ashfall_app/opening): CardEntry gains `while_running: list[WhileRunningEntry] = []`,
+  WhileRunningEntry {side: str, amount_bp: int, at least 1 by the schema} in entries.py beside CardEntry (not in
+  fight_entries.py beside SideEntry: fight_entries imports Entry from entries and CardEntry names this type, so that
+  placement is an import cycle);
+  convert maps each to WhileRunning.
+  No loader check of its own: the engine's validation names the card and the side for an undeclared side (a threat's
+  id included) or a side twice.
+
+INVARIANTS (entries held while a card runs; numbered on from 109. h(c) is the held share above; "held entries" are
+those sourced "held:" + a card.)
+110. Held exactly while running: for any save s the engine returned and card c with while_running, effective_stack(s,
+    r) and explain_strength(s, r, SideStrength(side)) hold, per WhileRunning(side, a) of c, exactly one entry
+    Modifier(SideStrength(side), ADD_BP, a * h(c) // BP, "held:" + c) when h(c) > 0, and none sourced "held:" + c when
+    h(c) = 0. The strength equals the same rules with those entries written into save.modifiers by hand.
+111. The share: h(c) = BP while any lane holds a tap of c (whatever ran it, bounded or repeating); else c's flattened
+    share in its layer's running mix when its Run is FULL; else 0, in
+    particular while yielded, paused, waiting, greyed, completed, retired, locked, on an unjoined lane, or in a saved
+    mix that does not run. A card tapped while in the running mix counts BP, not BP plus its share.
+    No card has two shares: it sits on one lane and a mix holds one layer, so a mix of both layers is refused and the
+    hands' and the town's running mixes never both hold a card; shares add only by flattening within one mix.
+112. Only at instants: for s.time <= t < the next instant of s, every held entry of advance(s, r, t) equals s's;
+    every instant at which the held entries change also changes a lane's tap, a running mix or its shares, a pause, a
+    card's Run, the unlock set or greying. A share change at T (a SaveMix of the running town mix, a tap starting or
+    landing on the card's lane) changes a mixed or standing fight's loss_bp on that side at T and at no other time.
+113. Timing does not matter (invariant 81's shape): with a held card in the running town mix and a fight on its side,
+    any slicing of the same decisions into advances, views and snapshots gives equal saves at t, tallies included.
+114. Sides only, never stored: no ThreatStrength explanation and no rate, work, lane speed or cap Explanation lists a
+    held entry; s.modifiers and every LaneState.speed of any save hold none; for rules with no while_running, encode,
+    the digest and the manifest are those of the engine before this part.
+115. Kept odds: a HANDS fight tap started at T pays loss_bp as read on the save just before T until it lands, whatever
+    held entries come or go meanwhile; FightView.loss_bp before the tap equals the tap's kept loss_bp.
+116. Validation: InvalidRulesError for a WhileRunning naming an undeclared side, amount_bp below 1, one side twice in
+    one card, and any rules Modifier whose source begins "held:"; InvalidVerbError for new_save given a starting stack
+    entry with that source.
+117. Rebase: rebasing any save the engine returned under the old rules into those rules succeeds with its time, store values, card work and
+    unlock set unchanged.
+118. View: View.held lists exactly the cards with h(c) > 0, in rules order, with share_bp = h(c) and entries equal to
+    their held entries in the stack; the wire's Strength.sources carries each held entry once with source the card
+    id and share_bp = h(c), and share_bp null on every other entry.
+
+REJECTED, AND WHY (entries held while a card runs)
+- A chip that raises (the plan's first alternative): it bends chips, which are bad states with cures.
+- A store-backed side (a watch store the guard fills and the side reads): modifiers never read stores.
+- A capped "post a guard" one-off landing a permanent entry: permanent, so moving someone off the watch would not
+  lower the side, and the share would stop being a decision.
+- Reading the Running subject: the stack would depend on the rates it sets (CHOICES, "Why the share").
+- Keeping the entry while an interrupted task's work is kept, or while its card is paused: one person's time would
+  hold two cards' entries at once (the cut-in card's and the waiting task's), and a starving guard would guard.
+- Multipliers held at a share: amount * s of a factor lowers the side below its base at a small share, and the other
+  reading (scaling the excess over BP) is a second formula for one idea; an add scales linearly with one meaning.
+- Held entries on rates, work, lane speeds or caps: a card's own effect on rates is its lines; a speed another card
+  holds would change a HANDS tap's kept speed by who else works; a cap that comes and goes is refused for chips for
+  the same reason (Store caps). A threat: invariant 83, and the type cannot name one. Amended 2026-11-10: a lane speed
+  off HANDS is allowed, since no other lane keeps a speed (HELD SPEED, "Why lane speed is now allowed"); rates, work,
+  caps, threats and HANDS stay refused.
+- while_running on standing actions: a standing action runs whenever unlocked, so its held entry would be an outcome
+  entry landed at the unlock, which content already writes. Lifted 2026-11-10: a standing action paused on a dry store
+  does not run, and that pause is the state a fed bonus turns on (HELD SPEED, "Why standing actions may now hold
+  entries").
+- The bare card id as the source: indistinguishable from the card's permanent entries, so the page could not show
+  the share (CHOICES).
+- The kept odds re-read with the tap running (or live): the odds a card showed would not be the odds it pays.
+- A new event when a share changes, or a held-entry state on the save (cached, with a dirty flag): every change is
+  already an instant that rebuilds, and a cache is a second home (FIGHTS, Dirty Flag).
+- CardInfo carrying each card's whole-share amounts so the page can show what a share would give: the page would
+  multiply by the share itself, a rule kept twice; the served entry says what the share gives now.
+- A loader check that some fight names the side: the entry then changes no number and draws nowhere, a typo is
+  already refused as an undeclared side, and a later chapter may add the fight.
+
+KNOWN GAPS (entries held while a card runs)
+- What a share would give before it is set (a what-if on the town mix's split) is a fork of the player's known view
+  (docs/systems.md, "What-if"), which no route serves yet. Decided by: plan item 9's render, if the sheet cannot be
+  read without it.
+- Joint projects (a card both layers work on) and pooled guards stay THE TOWN'S MIX's gaps: a held entry is one card's
+  on one lane.
+- A tapped card that is paused (a dry pause on a tap) or waiting on a requires for an instant: rule 1 reads "a lane holds
+  a tap of c" and invariant 111 says BP for any tap, while Pause and "Why paused, waiting and yielded count 0" speak of
+  a mix card. Interim: a tap holds at BP whatever its Run, so a guard tapped and dry still guards until its tap ends.
+  A requires falling ends the tap at once, so only a dry pause shows it. Decided by: the owner, if a content card ever taps
+  a guard that can run dry.
+- View.held is left out of View's repr, as the town's fields are, so the recorded fingerprints of a game with no
+  held card stay as they were; equality still includes it. Interim: as that; the text says only "View gains held".
+

@@ -1,0 +1,164 @@
+DRAINS (a take forgiven at 0) AND FRACTIONS AT THE LOADER (week one's lost-fight chip, issue #33). Where this
+part and an entry above disagree, this part holds. Examples name ids only; which stores, chips, cards and numbers is
+content's. Blind tests are written from this part alone, against app/tests/engine_contract/MUTANTS_drains.txt.
+
+FIT PASS
+- The need: a chip on a store x that shows at x >= θ, a cure that takes from x, a cap C, and three wants: the cure is
+  tappable at every level the chip shows, one tap clears the chip from any level, and C holds several whole hurts.
+  With a fixed take A per completion (an input) no content can give all three, at any scale: a tap needs the rest of
+  its completion's inputs in store, so tappable at x = θ needs A <= θ; one tap clears from x = C needs C - A < θ; so
+  C < 2θ, while stacking wants C > 3θ. Some part of the engine has to change; the smallest is the take.
+- A drain is an input with the dry rule turned the other way, which is Cap's rule mirrored at 0: at a cap overflow is
+  lost and the makers keep running (CHOICES, "Cap"); at 0 a drain's underflow is forgiven and its card keeps running.
+  It reuses Rate form (paid by the card's work) and the dry rule (for every other consumer); it asks nothing at a
+  tap's start, as a meal at a full belly or a rest at full energy asks nothing. No new type (a drain is an Amount), Save field, event kind, verb or system; CardDef gains one
+  tuple. Nystrom: a field on a Type Object, used only when present (Component's sense, as `fight` is).
+- How games do it: a cleanse that removes up to N stacks of a debuff, usable while any stack remains, and wasted in
+  part on fewer; the stacks decay by themselves meanwhile.
+- Fractions: the loader already writes an ItemAmount as `items` per `every` completions and refuses one that does not
+  divide into quantity units (refs.py). This part gives flows and store thresholds the same shape. The engine's units
+  already carry it (units.py: 3_600_000 units an item, 1000 a rate of one item an hour), so the engine is unchanged.
+
+CHOICES (drains)
+- Shape: CardDef.drains: tuple[Amount, ...] = (). Cards only: StandingDef has no drains (REJECTED, KNOWN GAPS).
+- Paid as an input: A', the drain's quantity under the modifiers aimed at RateRef(card, COST, store) alone and rounded
+  up (an input's rule, lumps.lump_amount), moves the store by A' * dW / (work_s * BP), dW the card's work, whoever runs
+  it, at any speed or share: no lump at a tap's start or end. Its line is a COST line, as an input's is: a modifier
+  aimed at it acts as on an input, and the fight odds leave it untouched, as costs and inputs.
+- The dry rule turned the other way. Let n be the store's exact net from every line but its drains, after the dry
+  rule's pauses, and d the drains' sum. Above 0 the store moves at n - d, and reaching 0 is a STORE_LIMIT event as
+  for any store: at the first whole second its exact value is at or below 0, where it reads 0. At 0: the dry rule
+  pauses the store's other consumers as if no drain were there (last first, until n >= 0, each Pause's level one hour
+  of that consumer's cost, as before: a heal costing 3 an hour resumes when the store first holds 3 items); then, if
+  n - d >= 0, the store moves at n - d and every drain is paid in full; else the store stays at 0 at rate 0 and the
+  drains take exactly n between them, the rest forgiven (lost, never created, as at a cap). What a drain takes is recorded nowhere (it makes nothing), so how n is shared
+  among several drains at 0 is not defined and nothing can observe it.
+- Never pauses its card: a drain never pauses, interrupts or makes WAITING the card it is on; the card's work, makes,
+  XP, outcome stores and other inputs run on while the drain takes less or nothing. A mix card at any share keeps
+  Run(MIX, FULL) with its drain store at 0, as with it above.
+- Up to its amount: over any span a drain takes at most A' * dW / (work_s * BP), and exactly that while its store is
+  above 0 for the whole span; so at most A' per completion of work.
+- Only drains are forgiven: the card's inputs and costs keep the dry rule as they were. An input store at 0 pauses the
+  card (CARDS, "Inputs against a dry store"), which stops its drains too. The invariant "a completion is never finished
+  unpaid" (CARDS, the same entry) holds with this one exception: the unpaid part of a drain.
+- Asks nothing at a tap's start: a drain is no precondition, so a tap with its store at 0 starts, is no failed tap,
+  and its blocker, ready_at and READY never name the drain; an order or the queue starts it at once. Its inputs are
+  paid as always and the drain takes nothing at 0 (the unpaid part forgiven). Once started, a tap never ends for a drain:
+  it lands at its completion with the store at 0 if it got there. In the mix the same: nothing is asked.
+- Read model: CardView.needs lists no drain (a drain is no need), and no tap is starved by one. In the content that
+  uses one the ledger draws no line for a drained store, and the card's face draws no need for it.
+  Explain and the ledger read a drain as an input line; its Explanation is its display rate, never clamped, so at 0 with
+  drains forgiven the store is at a limit (invariant 10's sum does not apply there), net_per_hour sums the drain in
+  unclamped as at a cap, and falling reads the segment (rate 0 there: not falling). A drain covers nothing.
+- Repeating taps: a tap of a card with drains is never repeat-eligible, as one with inputs is not (REPEATING TAPS): its
+  store is clamped at 0, which a rate would not see.
+- Cures: cure_reading.takes counts each drain's store, so a card that drains the store of an at_least chip is a cure
+  for it (invariant 120's words unchanged); the cures gate and the cure cut-in read that one answer. A card draining
+  the store of an at_most chip is no cure for it: its CardView.cuts_in is false, and a player's TapCard of it on a busy
+  lane is refused as any (invariant 20).
+- Validation (InvalidRulesError, its message holding the card's id and the store's): each drain on a declared store,
+  quantity >= 1; its store in none of the card's makes, costs, inputs, outcome stores (`outcome.stores`) or fight
+  lines (its fight's loses, wounds, and lost and fought tallies), and drained once. `finished` is not listed: its
+  stores land once, at the cap, as a lump from outside the card's running lines (as a trigger's outcome), and are
+  accepted on a drained store.
+- Codec: the rules encoding leaves `drains` out while empty (as `while_running`), so rules without a drain keep their
+  digest, their manifest and every save's text; a non-empty drains is in the rules encoding and so in rules_digest.
+  Amount is already a codec class. No Save field, no manifest change (cards carry id, work_s, lane, cap), FORMAT
+  unchanged, no upgrade. Rebase: nothing new (a drain is in the rules, never the save).
+
+CHOICES (fractions at the loader)
+- FlowEntry.every_hours (>= 1, default 1): items_per_hour items every every_hours hours, the Flow's rate
+  items_per_hour * RATE_SCALE / every_hours, refused (ValueError naming the entry) unless exact. Every FlowEntry: a
+  card's and a standing action's makes and costs.
+- ConditionEntry.every (>= 1, default 1): one divisor for value and release alike: value units(value) / every, release
+  units(release) / every (release defaulting to value, as before), each refused unless exact. Only on a store subject
+  with at_least or at_most: refused on after_time and on every other subject, lane rules and running included (a
+  level, a count or an unlock has no fraction). Refused on an order card's `when`: a rule's levels are worded and edited in whole items (api/CONTRACT.txt,
+  {n} and {m}), so a chip whose `when` has `every` has no order card (a chip's card must carry the chip's own `when`).
+  Every loader reader of a store threshold (checks.py's comparisons with a cap, makers.py, refs.py's band check) reads
+  it in quantity units through one helper, so none takes the written integer for whole items.
+- Drains in content: CardEntry.drains, a list of ItemAmount ({store, items, every}), exact as an input's (refs.py),
+  converted by convert.amount; tally_checks.py refuses a drain on a tally store, as it refuses a cost or an input.
+- Refused, never rounded: an inexact fraction fails the load naming the entry, as an inexact ItemAmount does. Every
+  refusal of this part is a ValueError whose message holds the entry's id (the card, standing action, trigger or chip;
+  for a drain on a tally store, the card or the store), raised by load_opening or by to_rules: either stage, since
+  no rules exist until both have run.
+
+INVARIANTS (drains and fractions; numbered on from 120)
+121. Never owed: no store is ever below 0 (invariant 16), and a card is never paused, interrupted or WAITING because
+    of a drain: with its drain store at 0 and its other preconditions held, a mixed card keeps its Run and a tap keeps
+    its lane, and its work moves at its speed.
+122. Up to its amount: with a drain of A' the only line on its store x, x at t equals max(0, x0 - A' * (W(t) - W(t0)) /
+    (work_s * BP)) to within one unit below and never above the exact rational (invariant 11): exact - 1 < x <= exact,
+    so x equals it wherever it is whole, at every completion among them; W the card's work; once x is 0
+    it stays 0 until something adds to it. A card's completion takes at most A' from x.
+123. Ready above 0: a player's TapCard of a card whose drain store holds 0, every other precondition met, is a failed
+    tap (invariant 22) with blocker AtLeast(StoreValue(x), 1, 1); with x at 1 unit or more it starts, and x is unchanged
+    at the start instant (no lump at the start). An order or queue entry naming it changes nothing at 0 and starts it
+    at the instant x first exceeds 0 (READY), the lane free.
+124. One tap clears: a tap of a card with drain A' started with 0 < x <= A' and nothing else on x lands at its
+    completion (start + its usual time), never interrupted, with x at 0 from the second the work has paid x (to within
+    one unit) to the landing.
+125. Forgiveness is the drain's alone: for a card with drains and inputs, the inputs, costs and their pauses equal
+    those of the same card without its drains at every t; an input store running dry pauses the card (and so its
+    drains), and no completion lands with an input unpaid.
+126. Other consumers pause: at a drain's store at 0, every other consumer of it is paused or running exactly as in the
+    same save without the drain's card running: a standing cost on x with no inflow is PAUSED while a drain runs on x
+    at 0, and resumes as before (one hour of its cost); and an inflow above that consumer's cost keeps it running.
+127. The remainder rises: at x = 0 with n the net of x's other lines and d its drains, x rises at n - d when that is
+    >= 0 and stays at 0 otherwise; a drain never makes x rise slower than n - d, nor stay at 0 while n > d.
+128. Codec and digest: for rules with no drain, encode, the digest and the manifest equal those of the engine before
+    this part; adding a drain to a card changes rules_digest; decode(encode(s, r), r) == s for rules with drains; Save's
+    fields are unchanged (app/tests/held/save_fields.json).
+129. Cures: a card draining x is a cure for an at_least chip on x and not for an at_most one (invariant 120); the cut-in
+    (109) reads it.
+130. Not repeat-eligible: a tap of a card with drains on a declared lane keeps its limit and lands at each completion
+    (invariant 78).
+131. Split: invariant 1 holds across a drain reaching 0 and across the instant it starts being forgiven.
+132. Loader fractions: a FlowEntry with every_hours k gives per_hour items_per_hour * RATE_SCALE / k, and a store
+    ConditionEntry with every k gives value units(value) / k and release units(release) / k (both, never one); each
+    is refused (ValueError naming the entry) when it does not divide exactly, never rounded; `every` other than 1 on
+    after_time, on a non-store subject or on an order card's `when` is refused; a drain's ItemAmount is exact as an
+    input's; a drain on a tally store is refused. With every_hours and every at 1, the rules are those of the loader
+    before this part.
+
+REJECTED, AND WHY (drains and fractions)
+- A fixed take (any input amount A): the bound in FIT PASS; no A, C and θ give a cure tappable at every shown level,
+  a clear in one tap and stacking.
+- Quarters with a take of 1 (the store counting quarter hurts, the cure taking one quarter): tappable at every level,
+  but clearing one hurt takes four taps and a full stack twelve, or the heal; one tap no longer clears.
+- A content-only threshold band that drops stacking (the cap at one hurt, or the chip set to read one level only):
+  meets the bound by giving up what the chip is for, a loss adding to the hurt.
+- A finer chip scale alone (a smaller θ or a store in smaller units, the take still fixed): the bound holds at every
+  scale, since all three wants scale together.
+- A drain as a plain input, ready above 0: the tap would pause at 0 mid-completion and end interrupted (CARDS, "A tap
+  ... never holds the hands while its card is not moving"), so a tap at a low level would not land, and the next tap
+  would find the store empty and fail.
+- A lump at the tap's start (take min(x, A) at once): a lump per tap is the two-bar charge REJECTED for lumps (CARDS),
+  and a mixed card would take differently from a tapped one.
+- Ready at the whole amount (x >= A' at a start, as an input's rest of the completion): the fixed take's bound again.
+- The dry rule counting drains in the net it reads: a consumer that the inflow could pay would be paused to feed a take
+  that is forgiven anyway, and the forgiven part would land on the wrong line.
+- Forgiving every take at 0 (inputs too): "a completion is never finished unpaid" would go for every card, and a trip
+  with no supplies would run on (BANKED TIME, "A dry trip sends nothing").
+- `every` per field (one divisor for value, another for release): two scales for one band, and a band whose ends sit
+  on different scales misreads; one divisor for both.
+- Rounding an inexact fraction to the nearest unit: a threshold or a rate that differs from what content wrote, with
+  nothing saying so (the loader refuses inexact ItemAmounts today for the same reason).
+- Drains on standing actions now (a heal that takes up to a rate and never pauses): a standing action has no completion
+  to bound "up to its amount", so it would be a second rule (a flow clamped at 0) beside this one. KNOWN GAPS.
+
+KNOWN GAPS (drains and fractions)
+- A standing consumer paused at 0 resumes at one hour of its cost (CHOICES, "Running dry"); a chip whose threshold is
+  below that level, cleared by that consumer, can show with nothing healing it once its store stops rising between the
+  two (a cure still clears it). A standing take forgiven at 0, which never pauses, would close it. Interim (the
+  orchestrator's, for the first retune that uses drains): a chip's threshold sits at or above its standing healer's
+  resume level, so that retune's chip reads at a quarter (`every = 4`), not a sixteenth, and the heal never stalls with
+  the chip showing.
+- An at_least order card taps a card that takes its store through an input or a cost (opening/checks.py); a card that
+  only drains the store is refused as that rule's card. Interim: as that; a chip whose `when` has `every` has no order
+  card anyway. Decided by: content's first order card meant to tap a draining cure.
+- "Every loader reader of a store threshold" names makers.py, which reads only skill levels (granted_by); it reads no
+  store threshold, so it is unchanged. The readers are condition_convert.condition, refs.py's band check and its count
+  of makers (_counted), and checks.py's order-card comparisons with a cap, all through condition_convert.levels.
+

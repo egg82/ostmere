@@ -1,0 +1,399 @@
+TOWNSFOLK, INSTALLED RULES AND OFFERS (day two's engine work, docs/design/day-two-plan.md items 1 to 4). Where this
+part and an entry above disagree, this part holds. Examples name ids only; what the content puts in them is content's.
+
+FIT PASS
+- A townsperson who works is a lane (Lanes, docs/systems.md): work beside the player's hands, one tap at a time, as
+  the smoke lane already is. Its task is a tap order on that lane (Standing orders): "a side lane's rule is a single
+  task, not a mix" (docs/decisions.md, "The mix"), and a tap order is already that. What is new is only that the
+  player never taps such a lane by hand: LaneDef.ruled. The town's mix with people as shares waits for a second
+  person (CARDS, "Mixable").
+- An installed rule is an Outcome part (Triggers, Cards: "what lands") whose payload is an ordinary Order, a ruled
+  lane's always rule and nothing else (a new save holds none). Nothing marks it as installed afterwards, so the player edits or
+  removes it as any rule (Command: the order is data the plan holds, not a special case).
+- An offer is a Type Object (OfferDef, AnswerDef) whose state lives in the unlock set, as retirement does (CARDS,
+  "Retired"): shown, answered, and which answer are facts that only grow, keyed by kind and id. Save holds no new field
+  (docs/systems.md, "The engine": a new part never adds one), and the gate that shows an offer is an ordinary trigger
+  (Gates, Triggers) whose outcome unlocks it. Answering is a Command, AnswerOffer, which joins OrderVerb, so an order
+  or the queue can issue it (docs/systems.md, "Every verb has an order").
+- How games do it: a quest log is a set of flags per quest (offered, accepted, declined) checked by story conditions
+  (Nystrom's Type Object for the quest kinds, Command for the answer); Idle Awakening and Melvor give a worker a task
+  from a list, which here is the order list. Factorio's and RimWorld's work priorities are the per-lane order
+  sequence (first true rule that can act).
+
+CHOICES (townsfolk, installed rules, offers)
+- Ruled lane: LaneDef.ruled (bool, default False). A player's TapCard of an uncapped card on a ruled lane raises
+  InvalidVerbError ("set by rules"); an order, the queue or an Outcome taps it as on any lane. A one-off (a card
+  with a cap) the player taps as a hands one-off: one completion, the lane held until it lands (refused while the
+  lane is busy, as any tap), then free for the lane's rules and the person's share of the town's mix. No rule is
+  made for it, so nothing is left in the orders once it lands. A ruled lane is a
+  declared lane (never HANDS), so its cards are never mixable (SaveMix already rejects off-HANDS cards). Nothing
+  else differs: rates, LaneSpeed, dry pauses (other lanes, rules order), landings, READY. Why: the person works by
+  the player's rules, not under their finger; a repeating hand tap would also make the row's "what the lane is
+  doing" a third source. A one-off is the exception (owner, 2026-11-17): its count means one completion per tap, as
+  on the hands, and the page draws the lane's tap as the hands strip draws a hands tap.
+- The lane's task is its first rule that can act: at each landing on the lane, evaluation taps the card of the first
+  true tap order on that lane whose card is ready (unchanged rule, Orders). A task change (a SetOrders editing the
+  rule) takes effect at the lane's next landing: the card running runs to its completion (no cancel, KNOWN GAPS
+  above). "Always" is AfterTime(0): true from the first instant, never released (can_fall False). A rule on the lane
+  below an always rule acts only while the always rule's card cannot, so the lane's default task is an always rule
+  placed after the lane's other rules, and the page builds it so (api/CONTRACT.txt, "A lane run by rules"). Of
+  several always rules on a lane, the one that acts next is the first that is not passed over.
+- The queue is the hands' plan: SetQueue refuses (InvalidVerbError) an entry tapping a card on a ruled lane. The
+  queue's head is never passed over, and a ruled lane's always rule retaps that lane at each of its landings before
+  the queue is read, so such a head would wait forever and hold every entry behind it.
+- Evaluation applies every verb that can act (replaces "It applies the TapCard of the first order ... else nothing"
+  in Orders for what one evaluation does). Evaluation is a loop: pick the controlling verb, apply it (one firing),
+  handle what that raises at this instant, and pick again; it ends when there is no controlling verb or applying it
+  changed nothing, or at the firing cap. The controlling verb, in this order: the AnswerOffer of the first order whose
+  latch is true and whose answer can act; else the TapCard of the first order whose latch is true and whose card can
+  act (ready: unlocked, not completed or retired, lane free, no blocker; and its speed above 0, tap_seconds not
+  None); else, while no order's mix runs, the verb of the controlling queue entry. Orders whose verb cannot act are
+  skipped when choosing, never chosen, so only the queue's head (which waits, never passed over) can be a chosen verb
+  that changes nothing, and it is read last. It terminates: a changing tap fills a free lane, a changing answer
+  closes its offer, and the queue's switch changes nothing (Queue mix). Why: one verb per
+  evaluation left every other lane idle until something else evaluated, and a ruled lane's always-true rule,
+  reapplied at each of its own landings, then kept the queue's head from ever acting (a lane idling on a ready order
+  is "finishing into idleness"). It is a behaviour change, shipped as below.
+- Shipping the evaluation change: on its own, ahead of the rest of this part, as its own commit and its own deploy.
+  It fixes a defect reachable in day one: an instant where a smoke-lane tap order and a hands verb (the queue's head,
+  or a hands tap order) could both act applied only the first, and the other lane waited for the next instant that
+  evaluated. Whether a shipped route or a live save actually hits such an instant is what the commit measures (below);
+  nothing here assumes it. Without offers the controlling verb is the tap order, then the queue; the AnswerOffer step
+  joins in front when offers land. The rule it follows is the one the SetOrders latch change followed (Rule changes):
+  - The stored save is the save. Loading is the whole promise (engineering.md, "Rules from day one"): every live save
+    decodes exactly as before (FORMAT and the rules digest do not change, so there is no rebase), and its time away from its last write runs under the
+    new evaluation, forward only. Nothing is rewritten, no flag marks old saves.
+  - A save written by the old build may stand at an instant with a ready order left unapplied. It stays so until the
+    next instant that evaluates (a landing, a latch, a READY, a trigger, a SetOrders), exactly as under the old build;
+    invariant 57 holds only from there on, which is why it is stated for saves the new engine has run.
+  - Replays diverge, logs do not break. saves/support.py's `replay` rebuilds from a day's snapshot through the logged
+    decisions under the running engine and compares with the stored save. For a save whose span from a kept snapshot
+    to its last write crosses an instant where the old build left a second verb unapplied, the rebuilt save differs
+    (the other lane started at once, so stores, work and every later landing move), and `replay` reports no match;
+    `restore` from such a snapshot would write the new engine's version. Every other save replays as before. A
+    divergent save matches again once its snapshots and decisions from before the release are gone: the writer prunes
+    them past 30 days (SNAPSHOT_DAYS, DECISIONS_KEPT, saves/write.py), but only when that save is written again, so a
+    save still played stops diverging 30 days after the release and a save never written again keeps its mismatch.
+  - Two builds during the rollout: with no release raised, old and new pods both serve a save until the rollout ends
+    (engineering.md, "Deploys with two builds live"). Each write is a valid save under the build that made it and only
+    moves forward, so a save's history may mix the two for those minutes; it shows in `replay` as above, nothing more.
+  - The commit carries its exposure, as the latch change's did: day one's playthroughs and simulator re-run (every held
+    counter that moves is named in the commit and brought to the lead before it lands, never raised to pass), and
+    `python -m ashfall_app.saves replay` from every kept snapshot of every live save, read-only against prod, with
+    the count of saves that no longer match and the date their logs age out. A divergent ended save is reported,
+    never repaired.
+- Lane order: plan.lane_order(save, rules, lane) is the index of the first order whose latch is true, whose verb is
+  not dead, and whose verb is a TapCard of the card the lane runs now; None while the lane is free or no such order
+  exists (the player's own tap, the queue's, an outcome's start, or a rule that has since let go). View's LaneBar
+  carries it as `order`. order_states gains OUTRANKED for tap orders: a tap order whose latch is true and whose verb
+  is not dead is OUTRANKED when its lane's lane_order is not None and below its own index; else ON (as before).
+  Mix orders are unchanged. Presentation only: evaluation never reads it.
+- Installed rule: Outcome.orders, a tuple of RuleInstall(card: CardId, first: bool = False). It installs exactly one
+  shape, a ruled lane's always rule, Order(AfterTime(0), TapCard(card)): a shape the page already draws, words and
+  edits (api/CONTRACT.txt, "A lane run by rules"), so whatever an install creates the player can see, change and
+  remove. It lands after `raises` and before `queues` and `starts` (so it sees the outcome's unlocks). Each install,
+  in tuple order: if save.orders already holds an equal order, nothing; else the first=True installs go to the top
+  as one block in tuple order (the first of them at index 0) and the first=False ones are appended in tuple order,
+  each with latch latch_now at that instant (always true), as SetOrders latches a new order (Rule changes: it is
+  reported as coming on). Orders and the queue evaluate after the outcome, as after every outcome. Afterwards nothing
+  tells an installed order from one the player set: SetOrders replaces, edits, moves or removes it.
+- Queued one-off: Outcome.queues, a tuple of CardId, each a HANDS card with a cap, allowed only in an answer's
+  outcome. Each puts the page's "When ready" entry, QueueEntry(TapCard(c), AtLeast(CardCount(c), n, n)) with n the
+  card's completions at that instant plus one, at the front of the queue (several in tuple order), unless an equal
+  entry is already queued. It lands after `orders`, before `starts`. The hands' one-off needs this, not a rule: on
+  the hands the page draws only mix rules, so a tap rule there could not be shown or edited, and a start does nothing
+  while the hands are mid-tap. As the controlling entry it starts the card at the first instant that evaluates with
+  the hands free and no order's mix running (the answer itself when the hands are free, else the tap's landing),
+  pops once the card completes (its `until` holds and cannot fall), and is drawn, and removable, as the queue's Next.
+  Accepted: the entry it pushes down stops being the controlling one, so its `until` is not watched until it
+  controls again, when it pops at once if its `until` holds then (the rule for an entry coming to control). An
+  `until` that held and fell in between is missed, and that entry's verb acts once more; the player's plan resumes
+  where it was, one step later, which is what putting the answer first means.
+- Installs land once: validation allows a non-empty Outcome.orders only in a TriggerDef's outcome and an AnswerDef's
+  outcome. A trigger fires at most once per save (invariant 29) and an offer is answered at most once, so no install
+  ever lands twice, and an installed rule the player removed never comes back: not at a later instant, not by a
+  rebase (step 6 never re-fires a fired trigger; an answer is an unlock, kept), not by a cap raise (card outcomes
+  hold no installs). A later release that wants a rule installed again adds a new trigger.
+- Retired chores (week-three-plan item 3; docs/decisions.md, "Each season brings its own chores": the rule goes away
+  when its season ends): Outcome.retire_orders, a tuple of CardId, the install's inverse. It lands after `raises` and
+  before `leaves` and `orders` (so an install in the same outcome stands). At that instant it removes from save.orders,
+  with their latches, every order whose verb is a TapCard of a named card, wherever it stands and whoever set it (an
+  install or the player); the rest keep their order and latches. Nothing else changes: not the queue, the mixes, the
+  unlock set, nor orders whose verb is a SwitchMix or an answer. A tap a removed order started runs on to its landing
+  (no cancel, as a task change) and is not tapped again by it. Orders and the queue evaluate after the outcome, as
+  always. It lands once (a trigger fires once), so a rule the player sets again afterwards stays. The chore's order
+  card needs nothing: the page offers it again while its line shows uncovered (LedgerLine.covered), as before. The
+  chore's leftover stores are content's to empty (a standing drain on its own pool, the visitor's idiom).
+- Logged: rulelog.RuleChange gains `ended: Ended | None = None`, Ended an Enum of SEASON ("season") and LEFT ("left",
+  LEAVES). rule_changes(before, after, rules) reports, beside the latch changes, one RuleChange(after.time, o, False,
+  level, ended) per distinct order o of `before` that `after` does not hold (by equality) and that an outcome
+  removed: SEASON when o taps a card named by the retire_orders of a trigger fired in `after` and not in `before`;
+  LEFT when o taps a card on a lane whose Unlock(LEFT) `after` holds and `before` does not. `level` is as for a
+  let-go (the store o's condition reads, at after.time; None for none). An order missing from `after` for any other
+  reason (a SetOrders removed or edited it) is not reported, as before. It reads the two saves and the rules only:
+  nothing is stored. advance_logged, decide_logged and rebase_logged carry them in Step.rule_changes as any change.
+  Ended and RuleChange are exported from ashfall_app.engine (defined in rulelog.py). Within one rule_changes call the
+  latch changes come first, in `after`'s order, then the ended entries, in `before`'s order, so a Step lists one
+  instant's ended rules in the order the player had them. `level` is read off `after`, after the instant's outcomes
+  have landed: subject_value of the order's StoreValue at after.time in quantity units, exactly what a let-go of that
+  order at that instant would record. An order removed for both reasons at once (it taps a retired cure on a lane that
+  left in the same instant) is logged once, SEASON.
+- Validation (InvalidRulesError, naming the card): Outcome.retire_orders is empty outside a trigger's outcome; each
+  card is declared; none named twice in one outcome. The card may be on any lane (a cure is a hands card or a ruled
+  lane's).
+- Codec and rebase: Outcome gains `retire_orders` (rules and released outcomes only, never a save), left out of the
+  rules encoding while empty (as `joins`), so rules without one keep their digest. FORMAT unchanged, Save's fields
+  unchanged. Rebase: step 6 lands a turn already true at the
+  rebase instant, so a save past it loses the orders then, and rebase_logged lists each as ended.
+- Content (the loader): OutcomeEntry gains `retire_orders`, a list of card ids. Refused (ValueError, refs.fail's
+  "where: message" shape) on any outcome but a trigger's with `season = true`: "trigger {id}: retires orders but is
+  not a season's turn" (for an answer or a card, where the other refusals name it, "card {id}", "card {id} finished"
+  or "answer {id}": "card {id}: retires orders outside a season's turn"); an unknown card as every unknown reference
+  is refused ("trigger {id}: unknown card {card}"); and for a
+  named card that is not the cure (cure_reading.cures_chip) of a chip whose store only a season's standing makes, a
+  season's standing being a standing action some season's turn unlocks, and "only" meaning every card and standing
+  action whose makes hold that store is one: "trigger {id}: retires the orders on {card}, which cures no chip whose
+  store only a season's standing makes" (opening/retire_checks.py). The cure check reads the built rules, so it is a content
+  check: it runs once, on the last state, with the others' errors naming the chapter.
+- Validation (InvalidRulesError): a RuleInstall's card is a declared card on a ruled lane; Outcome.orders is empty
+  outside a trigger's and an answer's outcome; Outcome.queues is empty outside an answer's outcome, each card a
+  declared HANDS card with a cap; no Outcome.unlocks and no Rules.opening holds an ANSWERED or ANSWER unlock (only an
+  applied AnswerOffer adds those, invariant 61). The card may be locked when the install lands (an order may name a
+  locked card); content unlocks it in the same outcome when it should act at once.
+- Lane rules: LaneRules(lane: LaneId), a discrete subject: the number of orders in save.orders whose verb is a TapCard
+  of a known card on the ruled lane and whose when is not AfterTime(0), the one shape an install makes, so the
+  count is the rules the player set; editing the always rule's task, or an install, leaves it unchanged. It is
+  allowed only as a trigger's when (an offer's gate is one): validation refuses it in a chip, a card's requires and a
+  trigger's requires, and SetOrders and SetQueue refuse it in a condition (InvalidVerbError), so no save holds it
+  and the codec, FORMAT and the wire are unchanged. save.orders changes only at a SetOrders and at an install (which
+  adds only AfterTime(0) orders), and a rebase drops only orders naming gone ids, so the count changes only at a
+  decision: rise_time is None, the pending check at that instant fires the trigger, and its lines land in that
+  decision's Step.lines. Forecasts and what-if forks never fire it. A rule the player later removes has still
+  landed the line (a trigger fires once). Its definition needs a known ruled lane (InvalidRulesError); a save that
+  already holds a qualifying order gets the line at the rebase instant, as any new trigger already true.
+  Rejected: a generic orders count (the player's hands rules and the always rules would count, and filters are a
+  query language for one need); a per-lane flag in the save (a new Save field copying what orders already say); an
+  unlock written by SetOrders (a second writer of the only-growing set); the condition in orders and chips (an order
+  on its own lane would count itself, and the wire and codec would learn a shape no rule needs).
+- Offers: Rules.offers, a tuple of OfferDef(id: OfferId, answers: tuple[AnswerDef, ...]), AnswerDef(id: AnswerId,
+  outcome: Outcome). OfferId and AnswerId are new NewTypes; answer ids are unique across all offers; an offer has
+  at least two answers. Three new UnlockKinds: OFFER (id an OfferId: the offer is shown), ANSWERED (id an OfferId:
+  it has been answered, by either answer) and ANSWER (id an AnswerId: this answer was given). An offer is shown once
+  Unlock(OFFER, o) is in the unlock set (an Outcome unlocks it: a trigger's, a card's or an answer's), open while
+  shown and not answered, and answered from the instant Unlock(ANSWERED, o) is in the set. It never expires: nothing
+  in the engine closes an open offer (KNOWN GAPS). Why ANSWERED beside ANSWER: "answered, either answer" is then one
+  Unlocked condition, with no disjunction added to the order vocabulary.
+- ANSWERED and ANSWER are written to save.unlocked and read from it whatever rules.opening is: with opening None the
+  unlock writer adds nothing today (every other unlock counts as held, Unlocks), but it adds these two kinds, and
+  is_unlocked and every Unlocked condition count them only when present. View.unlocked with opening None reports
+  the effective set as before, with ANSWERED and ANSWER only as save.unlocked holds them. OFFER follows the usual
+  rule (with opening None every offer is shown from time 0).
+- AnswerOffer(offer: OfferId, answer: AnswerId), a Verb and an OrderVerb. It can act when `answer` is one of
+  `offer`'s answers and the offer is open. Applying it adds Unlock(ANSWERED, offer) and Unlock(ANSWER, answer) to the
+  unlock set, then lands the answer's outcome as a trigger's lands (field order; its lines emitted with card None),
+  then orders and the queue evaluate at that instant (also when the player decided it: the answer's installs and
+  queued one-offs must act at once, which a player's TapCard deliberately does not do). From the player: an unknown
+  offer, an answer not of that offer, an offer not shown, or one already answered raises InvalidVerbError. From an
+  order or the queue: those change nothing. SetOrders and SetQueue refuse (InvalidVerbError) an AnswerOffer whose
+  pair is not a declared offer and one of its answers; a pair whose offer is not shown yet is accepted (planning
+  ahead, as a locked card is). Decision context (context.py) records it like any verb, with no card.
+- Dead: is_dead holds for an AnswerOffer of an answered offer (by anyone), so an order holding one is PASSED_OVER. A
+  queue entry holding one is dead for good (an answer is never taken back, so nothing revives it): it settles and
+  pops at the instant its offer is answered, whatever its `until`. An AnswerOffer of
+  an offer not yet shown is not dead: it waits (an order's is ON while its latch is true and simply cannot act; the
+  queue's head waits, as the queue always does).
+- Evaluation after a cascade (extends the CARDS entry): when the firing cap suspended evaluation at instant T, a
+  READY falls at T + 1 whenever, at the end of T, any verb could act: a ready TapCard candidate (as before), a true
+  order's AnswerOffer that can act, or, while no order's mix runs, a controlling queue entry whose verb would change
+  the save. Still computed from save.last_cascade.time == save.time; no new state. A ready TapCard candidate keeps its
+  READY (sequence its card's index in rules.cards, subject the card); for the verbs with no card one READY falls at
+  T + 1, sequence len(rules.cards) and subject the empty string, however many of them wait, and its handler always
+  asks for evaluation.
+- A chip that shows or hides evaluates (CHIP joins the events that make orders and the queue evaluate). A tap's
+  speed changes only with the effective stack, which changes only at an outcome (which evaluates) or at a chip
+  turning (which did not), so a TapCard skipped at speed 0 would otherwise stay unapplied once its speed returned.
+  By invariant 57 nothing else can act at such an instant, so the extra evaluation changes only that case. It ships
+  with the evaluation change, in the same commit.
+- No new event: an offer shows only when an Outcome lands (a COMPLETION, a TAP_DONE, a TRIGGER or an answer), each of
+  which evaluates, so a true answer order acts at the instant its offer shows; one whose latch rises later acts at
+  that LATCH. Answered while away is therefore an order's answer at that instant, with its lines in that instant's
+  lines; the player's own answer is only ever a decision.
+- Covered: an AnswerOffer covers no store (it acts once; covered is about what keeps a line fed).
+- The answer's card: for the view, an answer's card is the first card its outcome queues, else the card of its first
+  RuleInstall, else the first card it starts, else None. Read off the rule, so the engine holds no presentation field.
+- Read model (view.py): View.offers, every shown offer in rules order, as OfferView(offer, answer: AnswerId | None,
+  answers: tuple[AnswerView, ...]): `answer` the one given, None while open; AnswerView(answer, card, takes_s) in
+  the offer's answer order, card the answer's card, takes_s the seconds one completion of that card would take on
+  its lane started now from its current work at a full share (tap_seconds' formula, read for a locked card too),
+  None without a card or at speed 0. LaneBar gains `order` (Lane order, above).
+- Answer shifts (answershifts.py): AnswerView gains `shifts`, for an open offer one entry per distinct change of the
+  answer's modifiers (amount_bp, less BP for a multiplier), in authored order: AnswerShift(now_bp, after_bp), the
+  target's total change over the effective stack now and with the answer's entries added (modifiers.total_change_bp:
+  additions sum and floor at 0, multipliers compound, rounded down). None where entries of one change aim at targets
+  that stand differently; () once the offer is answered.
+- Codec: FORMAT is 7. The manifest gains `offers`, [{"id": offer id, "answers": [answer ids]}] in rules order, so a
+  rebase can find gone offer and answer ids. UPGRADES[6] adds "offers": [] to a format 6 manifest and changes
+  nothing else: a format 6 save predates offers, so its unlock set holds none of the three kinds and its orders and
+  queue no AnswerOffer. Outcome gains `orders` and `queues` (rules and released outcomes only, never a save).
+  AnswerOffer, RuleInstall, OfferDef and AnswerDef join the codec's classes (AnswerOffer in
+  saves' orders and the decision log; the rest in released outcomes and the rules digest). Save's fields are
+  unchanged (app/tests/held/save_fields.json).
+- Rebase: IdKind gains OFFER and ANSWER. Step 3 finds them gone as every declared id, and an answer the save's
+  manifest puts under one offer that the new rules put under another gone too; step 4 drops Unlock(OFFER) and
+  Unlock(ANSWERED) of a gone offer, Unlock(ANSWER) of a gone answer, and an AnswerOffer naming either, wherever an
+  OrderVerb appears (orders, queue). Step 6 (evaluation) is where
+  a new trigger already true installs its rule, so a save already past a moment that installs one gets it at the
+  rebase instant, forward only. rebase_logged's Step carries that instant's rule changes beside its lines (rulelog
+  over the step-5 save and the result, each at the save's time), so the server's rule runs list an installed rule
+  from the rebase; rebase returns only the save.
+- Content (the loader, app/ashfall_app/opening): LaneEntry gains `ruled` (default false) and `later_labels`, a list
+  of {after: UnlockEntry, label_key} (the row's label once `after` is unlocked; the last held one wins, as aims). A
+  card on a ruled lane has no skill and no XP (a loader check: townsfolk do not level, docs/decisions.md, "You and the
+  town") and gets the camp's make flow as hands cards do (CampEntry). OutcomeEntry gains `orders`, a list of
+  {tap_card, first (default false)} (a card on a ruled lane), refused by the loader outside a trigger's or an
+  answer's outcome, and `queues`, a list of hands card ids with a cap, refused outside an answer's outcome.
+  [[offers]] entries: {id, text_key, gate: ConditionEntry, requires: [ConditionEntry], line_keys, answers: [{id,
+  label_key, cost_key, outcome: OutcomeEntry}] (two or more)}; the loader makes one trigger per offer, id
+  "offer_" + the offer's id, on `gate` and `requires`, whose outcome unlocks Unlock(OFFER, id) and emits line_keys.
+  UnlockEntry and ConditionEntry's unlock_kind gain "offer", "answered" and "answer".
+- Content authors an answer's work as an installed rule (a ruled lane's one-off: a first=True RuleInstall) or a
+  queued one-off (the hands': Outcome.queues), never as Outcome.starts: a start on a busy lane changes nothing (KNOWN
+  GAPS above), so an answer given while that lane is mid-tap would set nothing running and the story would wait on a
+  step no one takes. Item 6 authors the first offer's two answers so, each unlocking its one-off card in the same
+  outcome.
+- A finished one-off rule stays in the order list, PASSED_OVER (its card completed); the player removes it. Nothing
+  removes an order by itself.
+
+INVARIANTS (townsfolk, installed rules, offers; numbered on from 56. Invariant 27 now reads: "... no Unlocked
+condition is false for a known id, except one on ANSWERED or ANSWER, which is true only once that answer is given".)
+57. Every lane driven: for s reached from new_save by advances and by decisions other than a player's SwitchMix and
+    SaveMix, and s2 = advance(s, r, t): no order with a true latch has a TapCard that can act in s2 (unlocked, not
+    completed or retired, its lane free, blocker None, speed above 0), none has an AnswerOffer that can act, and,
+    while no order's mix runs, the controlling queue entry's verb is not a TapCard that can act nor an AnswerOffer
+    that can act, and when it is a SwitchMix its mix is view(s2, r).running_mix. It need not hold at an instant that hit the firing cap,
+    and holds at every later t that did not itself hit it (Evaluation after a cascade). It holds across a chip
+    turning, also when that brings a skipped tap's speed back above 0. In particular two lanes landing at one
+    instant, each with a true order whose card is ready, are both running at that instant.
+58. Ruled: a player's TapCard of a card on a ruled lane raises InvalidVerbError; the same verb from an order or an
+    Outcome behaves exactly as on an unruled lane (the same rules with ruled False give the same saves).
+59. Install: with o = Order(AfterTime(0), TapCard(c)), an outcome whose orders are RuleInstalls landing at T, on a
+    save whose orders are `before`, gives F + before + L, where F are the first=True installs' orders and L the
+    first=False ones', each in tuple order and each left out when `before` or an earlier install of the same outcome
+    already holds it (a repeated install lands once), every new latch True.
+    The result equals the same save given SetOrders with that list at T, but for the outcome's other parts.
+60. Once: on any run, each RuleInstall (one place in one trigger's or one answer's outcome) lands at most once; after a
+    SetOrders without its order, no later advance, decision, or rebase that keeps that trigger puts that order back
+    through the same RuleInstall. (A different trigger installing an equal order may add it again.)
+61. Offers: Unlock(ANSWERED, o) and Unlock(ANSWER, a) enter the unlock set at the same instant, only by an applied
+    AnswerOffer(o, a), and at most one answer of o is ever in it. An open offer stays open across every advance in
+    which nothing answers it. A player's AnswerOffer of an unknown pair, an offer not shown or an answered one raises
+    InvalidVerbError; an order's or the queue's changes nothing.
+62. Answer both ways: for an open offer o at T, decide(s, r, T, AnswerOffer(o, a)) and the save in which an order
+    "AfterTime(0) -> AnswerOffer(o, a)" acted at T have equal stores, cards, lanes, unlocked, modifiers and fired,
+    and their orders differ only by that order; their lines at T are equal in order.
+63. Lane order: LaneBar.order is the index of the first order with a true latch, a verb not dead and a TapCard of the
+    lane's running card, else None; order_states[i] is OUTRANKED for a true tap order i that is not dead exactly when
+    its lane's LaneBar.order is not None and below i.
+64. View offers: View.offers lists exactly the shown offers, in rules order, with `answer` the a whose
+    Unlock(ANSWER, a) is held (None while open); each AnswerView's takes_s equals the time a tap of its card started
+    now would take if the card were unlocked and its lane free.
+65. Formats: rebase of any format 6 text gives what rebasing it with "offers": [] added to its manifest under format 7
+    gives, and the result's unlock set and orders hold nothing new but what the rebase instant's evaluation lands.
+66. Queued one-off: an answer with Outcome.queues (c) applied at T, the queue not already holding the entry (an entry
+    the same outcome queued earlier included: a repeated card queues once), gives a
+    queue whose first entry is (TapCard(c), AtLeast(CardCount(c), n, n)), n = c's completions at T + 1, followed by
+    the queue as it was; c starts at T if the hands are free, no order's mix runs, no true order taps the hands first
+    and c is ready, else at the first later instant that evaluates with all four true; the entry is gone from the
+    instant c's completions reach n.
+67. Validation: rules whose Outcome.unlocks or opening hold an ANSWERED or ANSWER unlock, a RuleInstall of a card off a
+    ruled lane, `orders` outside a trigger's or answer's outcome, or `queues` outside an answer's outcome or naming a
+    card off HANDS or without a cap, raise InvalidRulesError; SetQueue with an entry tapping a ruled-lane card raises
+    InvalidVerbError.
+Retired chores (numbered on from 141, after the file's highest. Invariant 49 now reads, for orders: "s2.orders is
+s.orders less the orders a retire_orders or a leave landing at the rebase instant removes, plus only what a
+RuleInstall landing then adds".)
+142. Retire: an outcome with retire_orders C landing at T on a save whose orders are O gives orders equal to O with
+    every order whose verb is TapCard(c), c in C, removed together with its latch, the rest in their order with their
+    latches; the queue, mixes, unlocks and every other order are as the same outcome without retire_orders leaves them.
+    An order tapping any card not in C survives, also one on the same lane or the same store.
+143. Logged: the rule_changes of the advance_logged (or decide_logged) span holding T include exactly one
+    RuleChange(T, o, False, level, Ended.SEASON) per distinct order o removed by 142, and none with `ended` set for an
+    order a SetOrders removed; a span with no retirement and no leave reports exactly what it reported before this
+    part (every `ended` None).
+144. Once, and the player's again: a retire_orders lands at most once per save; an order equal to a removed one that
+    SetOrders sets after T is kept by every later advance.
+145. Runs on to its landing: a tap running at T whose order is removed lands at its usual time, and no removed order
+    starts its card again.
+146. Validation and loader: retire_orders in an answer's or a card's outcome, naming an undeclared card, or naming a
+    card twice raises InvalidRulesError naming the card; the loader refuses (ValueError naming the trigger and the
+    card) a named card that cures no chip whose store only a season's standing makes, and refuses retire_orders on a
+    trigger without season = true or outside a trigger.
+147. Rebase and codec: rebasing a save past the turn into rules that add it gives orders without the named cards'
+    tap orders and rebase_logged's rule changes list each as ended SEASON at the save's time; rules with no
+    retire_orders keep their digest.
+
+REJECTED, AND WHY (townsfolk, installed rules, offers)
+- The town's mix with the person as a share: with one person a share is always all of them; it waits for the second
+  arrival (content's decision).
+- A per-lane default task stored in the save (like active for the hands), set by a new verb: a new Save field, a codec
+  change and a verb that would need its own order, for what an always-true rule already is.
+- An always rule on the lane's feature (Unlocked of a feature): ties every default rule to a content id the page then
+  has to build; AfterTime(0) is the same truth and the page can build it for any ruled lane.
+- Keeping one verb per evaluation and letting content avoid coincidences: a lane would idle on a ready order, and an
+  always-true rule on a ruled lane would keep the queue head from acting forever.
+- Holding the evaluation fix for day two's release, whose rules change raises the release and so keeps the two builds
+  off one save during the rollout: day one would keep its defect until then, and the mixing it avoids is minutes of
+  forward-only, valid writes, which the latch change already accepted.
+- A third evaluation order (queue before tap orders, or answers last): an answer's outcome may start a card, which
+  should take its lane before a tap order fills it; tap orders before the queue is the existing rule.
+- An install record (a set of install ids in the save) so an outcome landing twice installs once: a new Save field
+  for what restricting installs to once-only outcomes gives for nothing.
+- Reinstalling a removed installed rule when its outcome fires again: the player's edit would be undone by the
+  story, and "an ordinary rule the player can edit or remove" would be false.
+- Marking installed orders (a flag or an id on Order): the page would draw them differently and the player could not
+  treat them as their own; an Order stays (condition, verb).
+- Installs as Outcome.starts: a start on a busy lane changes nothing (KNOWN GAPS above), so a moment landing while the
+  lane works would be lost; a rule waits for the lane and acts at its next landing.
+- Installs of any rule SetOrders accepts (any condition, any lane): the page draws, words and edits only store rules
+  and a ruled lane's always rule, so an installed rule of another shape would act unseen and could not be removed.
+  Restricting installs to the always rule needs no new page drawing.
+- A tap rule on the hands for the hands' answer, and a Rules-tab drawing for hands tap rules: on the hands a rule
+  always runs a mix (docs/decisions.md, "The mix"), so it would be a new shape there for one step; the queue's When
+  ready entry is the existing shape for "do this once, when the hands are free".
+- A queued entry for the ruled lane's answer too: the queue is one list for the hands, its head is never passed over,
+  and the lane's always rule would keep it from acting (above).
+- Offer state as a new state type on Save (open, answered, answer): docs/systems.md forbids a new Save field, and the
+  facts only grow, which is what the unlock set holds (as RETIRED).
+- An Answered(offer) subject in the order vocabulary, or an Or condition: more vocabulary (change_time, latches,
+  codec, API) for one fact an unlock gives.
+- An offer with its own gate in the engine (OfferDef.when): a second firing mechanism beside triggers; the loader
+  makes the trigger.
+- AnswerOffer by offer kind ("answer every offer of this kind with yes") now: there is one offer, so a kind would be
+  a second name for its id; the kind arrives with the second offer kind, when the Rules tab shows answer rules, as a
+  new verb beside this one (content's decision 4).
+  Superseded 2026-10-28 by OFFER KINDS (the last part): day three's arrival offer and day five's are the second offer
+  of one kind, and the answer rule set at the first has to answer the second.
+- A player's answer that does not evaluate (as a tap does not): an answer that installs a rule or starts a card would
+  wait for some later instant, so answering would idle the lane it gives work to.
+- An expiry on offers now: the first offer is the story's next step, and a branch pauses only itself; expiry is
+  KNOWN GAPS.
+- takes_s computed by the page from the card's work_s: the page would simulate speed (THE CLIENT MAY NOT).
+- Leaving a season's chore rules in place (retired chores): docs/decisions.md says the rule goes away when its season
+  ends, and a rule tapping a cure for a chip that cannot show again would sit in the Rules tab with no reason on it.
+- An outcome part that takes stores, to empty the chore's leftovers with the rule: rejected in FIGHTS (a take that
+  lands at once); a standing drain on its own pool, the visitor's idiom, does it.
+- Retiring only installed rules: nothing tells an installed rule from the player's (Installed rule), and a chore rule
+  the player wrote by hand is the same chore.
+- Marking the retired order dead and keeping it (PASSED_OVER forever): the player would have to remove what the story
+  ended, and an order card offered beside a dead rule for the same cure would read as a duplicate.
+- A stored record of what an outcome removed (to log it): rule_changes reads it off the two saves and the rules.
+
+KNOWN GAPS (townsfolk, installed rules, offers)
+- Offer expiry ("on offer for a stretch and then go", docs/decisions.md, "The town"): would be a fourth only-growing
+  fact (an unlock of the offer having gone) and an event at its time; the content's expiry_key, which says so to the
+  player, is refused until then (opening/ask_checks.py). Decided by: the first offer that expires.
+- Claude-proposed offers (docs/systems.md, Offers and quests) are authored OfferDefs today; a proposed one needs its
+  own id space in the manifest. Decided by: the first emergent quest.
+- A queue entry tapping a retired chore's cure is left in the queue (retire_orders touches orders only); if the cure
+  can no longer start, that entry waits as any unready head does. Decided by: the first save seen holding one.
+

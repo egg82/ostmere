@@ -1,0 +1,107 @@
+BANKED TIME: WHERE PRODUCTION PAST A CAP GOES (docs/design/banked-time-plan.md). Where this part and an entry above
+disagree, this part holds. Examples name ids only; which trips, comforts and arrivals, and their numbers, are content's.
+
+FIT PASS
+- First question: does anything already take overflow at a cap? No. "Cap" (above) drops it on purpose and names the
+  answer, "hitting a cap is an order's job"; what was missing is something worth an order's switch once a chapter's
+  builds are done. Measured at 5f2b4c1 (docs/design/banked-time-plan.md, "Measured"): over day two as played, every
+  gathered store loses 82-100% of what it makes to its cap; over an 8, 24 or 72 h absence from day two's end with
+  nobody deciding, 96-100%. XP still trains, so levels are not lost; materials are.
+- It is not an attention bug: the 2 AM test is level on day two, because a babysitter has nothing to spend on either.
+  Loss no decision could avoid is a content ceiling, not an offline cap; loss a visit could have avoided would be one,
+  and the 2 AM test already fails that. So this part is about value ("a return after 8 h looks like one after 2 h"),
+  and its check is a number the content is sized to, not an engine guarantee.
+- What a sink is an instance of: work that takes stores. That is a card with inputs (CARDS), run in the mix or
+  queued like any card, so every spend already has an order. Three shapes cover the item's directions, each on
+  existing rows: a trip (an expedition's first slice) is an uncapped card with inputs and a long work_s; a comfort
+  (the camp made less miserable) is a capped craft with a big cost; an arrival ("surplus that lets people stay") is
+  an offer whose answer queues a make-room one-off (TOWNSFOLK, INSTALLED RULES AND OFFERS, "Queued one-off").
+  Nystrom, Type Object: a trip, a comfort and an arrival are kinds as data on CardDef and OfferDef, not classes, and
+  the chapter's cost (behaviour is harder than data) does not bite, because none needs behaviour a card lacks.
+- The combat seam (FIGHTS, KNOWN GAPS, "Who you bring" and "Stance"): a trip that fights carries a FightDef on its
+  CardDef, the Component FIGHTS already defined (Nystrom, Component: the trip's runner never reads it). Its side in
+  this slice is the hands' SideDef, so "a side made of who goes" is the player alone until backup is decided.
+- How games do it: Melvor's and Idle Fantasy's dungeon runs and Idle Awakening's expeditions take supplies per run
+  and return loot at a rate set by stats; Anno's and RimWorld's colonists turn surplus food into newcomers. None of
+  them banks idle time as a currency the player spends on speed, which is the one the constraints rule out.
+- What is new: nothing in the engine. No type, field, verb, event kind, Save field or system. The work is the
+  simulator's measure and checks, content, and the page's telling of a trip.
+
+CHOICES (banked time)
+- Trip: an uncapped CardDef with inputs (the supplies, per completion) and makes, work_s long enough that a
+  completion is a trip (an hour or more at full speed; content's number). Run in the mix it draws its inputs as cost
+  lines at its share (CARDS, "Inputs against a dry store"): production goes on trips instead of past the cap. A
+  reserve of the supply for another consumer is a rule on the store (Orders); a trip that drains its supply dry hands
+  its share to the rest of its mix (SPENT, "Giver"). Tapped, it takes the hands for one trip, as any tap. When supplies run dry the dry rule
+  pauses it last-in-mix first and resumes it at one hour's cost, so an empty camp never sends a trip.
+- Uncapped, not capped. A capped card completing in a mix greys the whole mix (CARDS, "Greyed mix"), so a capped trip
+  finishing at 03:00 would stop the hands until a visit: "Nothing finishes into idleness" broken by the sink meant to
+  fix idleness. Uncapped, a trip's single completion is a rate (Rate form), costs no instant, and repeats as long as
+  the mix runs it.
+- Finds: a trip's discrete returns (a map piece, a clue, a find, a line) are ordinary TriggerDefs on
+  AtLeast(CardCount(trip), n), one per n content gives, each with its outcome. CardCount is a solved subject
+  (Conditions; invariant 37), so the nth find lands at the exact second the nth trip's work completes, whatever the
+  share or the slicing (invariant 1). After the last find the trip still pays its makes (content: plan, BT2).
+- A fighting trip: FightDef(side = the hands' SideId, threat, lost, ...) on the trip's CardDef, as FIGHTS defines.
+  Its inputs and costs are untouched by the odds (a lost trip spent its supplies: decisions.md, "Combat has
+  fangs"); its makes are scaled by the share won. Finds read CardCount, so they count trips made, won or lost:
+  a find is story, and a beat's outcome never carries odds (FIGHTS, "What a fight is not").
+- Comfort: a capped CardDef (cap 1) with costs or inputs of several caps' worth, a scene stamp and a pay (a
+  modifier) or a need an arrival reads, built by the queue's "When ready" entry while the player is away. It must be
+  unlocked, in view and unready, before its inputs can be met: a sink first shown while the player is away cannot be
+  queued, and a babysitter could start it first (the day-two lesson behind A16's builds). The 2 AM test is the gate.
+- Arrival: a trigger on a food store's level ("food to spare") unlocks an offer; its yes queues a make-room one-off
+  (Outcome.queues: a capped HANDS card whose inputs are the pile) and installs nothing; a trigger on
+  AtLeast(CardCount(make_room), 1) unlocks the newcomer's lane and installs their default rule (Outcome.orders). An
+  order that answers offers of that kind (day-two plan, item 4) keeps arrivals coming while the player is away.
+- No spend buys raw speed: no sink's outcome or make aims at a WorkSpeed, LaneSpeed or a rate of a card already
+  running for its own sake. A comfort's pay may be a modifier like any build's (a build is how a camp gets better),
+  but nothing converts time away into a shorter bar. Held by absence: no verb or Outcome part shortens a running
+  bar, so there is nothing for a check to refuse.
+- No decay or upkeep: no sink takes anything over time while nothing runs it. A trip takes only while the mix or a
+  tap runs it; a comfort and an arrival take once. A standing action that costs stores (the visitor's idiom) is never
+  a sink; the only standing drains are story ones on a clock store (the visitor's idiom), reviewed as content.
+
+INVARIANTS (banked time; numbered on from 86. No engine invariant is new; these are existing ones on the new shapes,
+checked as engine-contract tests on fixture rules.)
+87. (Retired with Hold: docs/decisions.md, "No hold on a line".)
+88. Finds land on time: the trigger on AtLeast(CardCount(trip), n) fires at the instant CardCount reaches n, for any
+    slicing into advances, views and snapshots (invariants 1 and 37), and at the same instant whether the trip ran
+    mixed or as repeated taps of equal total work.
+89. A dry trip sends nothing: while its input store is below one completion's inputs and the trip is paused, its makes
+    pay nothing and CardCount does not rise.
+
+REJECTED, AND WHY (banked time)
+- An offline cap, a bank of idle hours, or decay while away: decisions.md, "No offline cap, full rate"; each sets a
+  check-in schedule.
+- Banked time spent on speed (a skip, a rush, a timer cut): the constraint "a spend buys no raw speed", and the
+  shop-shaped element decisions.md forbids.
+- Overflow spilling into another store (excess roots into a surplus pool): the engine would redistribute with no
+  decision ("Shares": a hidden redistribution is a number with no source), caps would stop meaning anything, and the
+  pool is an infinite point dump (decisions.md, "Finite, and the walls are the world").
+- A separate expedition runner with a roster, a destination and its own state (the Expeditions row as first planned):
+  a second copy of tap, mix, queue, rules and lanes, and a Save field the held list refuses, for what an uncapped card
+  with inputs and a few triggers already express. Revisited when a second member goes (KNOWN GAPS).
+- A trip as a hands tap re-sent by a hands tap rule: the page draws only mix rules on the hands (TOWNSFOLK, Rejected,
+  "A tap rule on the hands"), so a whenever player could not set it, and a trip that needed a visit per trip is the
+  babysitting the item exists to remove. Tapping a trip stays possible; repeating one is the mix's job.
+- A capped trip (a destination done after n trips): it greys the mix at 03:00 (CHOICES, "Uncapped, not capped").
+  A destination that ends is its finds ending; capped region-clearing fights stay FIGHTS' KNOWN GAP.
+- "Lost to caps" served to the page: decisions.md, "Shown in the design, not claimed".
+  It is the simulator's number only.
+- Loss to caps as an engine invariant ("nothing is ever lost"): it needs an infinite sink, which decisions.md rules
+  out. The check is a content target per chapter (plan item 1), not a guarantee.
+
+KNOWN GAPS (banked time)
+- Who goes (backup): the proposed shape is a support card on each member's ruled lane, run by their rule while
+  Running(trip) holds, and an entry on the trip's SideStrength sourced by that support card while it runs (as the
+  odds entries are while a fight runs). The entry is now a while_running entry on the support card (ENTRIES HELD
+  WHILE A CARD RUNS, the last part); what remains is content's rule and the trip's side. Decided by: the first
+  expedition with backup (R2's, by the spine).
+- Stance (retreat or push through): stays FIGHTS' gap; its decider moves from "the first expedition" to the first
+  expedition with backup, since a solo trip in the mix already stops when its supplies do.
+- Wide expeditions (the town sends people): a share of the town's mix on a trip, once the town has a mix (day-two
+  plan, Open 3). Decided by: the town's mix.
+- A trip's away pose in the scene while it runs mixed (the figure gone for the trip's share of a cycle) is the page's;
+  nothing on the wire marks a trip. Decided by: plan item 6's render.
+

@@ -1,0 +1,204 @@
+SPENT (a paused mix card's share yields to the rest of its mix until its Pause lifts, whether or not anything can
+make its store again: docs/design/week-three-plan.md, item 1, and docs/decisions.md, "A mix keeps going without a dry
+store"; blind tests from this part and api/CONTRACT.txt alone, item 2, against
+app/tests/engine_contract/MUTANTS_spent.txt). Where this part and an entry above disagree, this part holds; it replaces
+CHOICES "Shares" ("the engine never redistributes a share") and "Running dry" ("its share idles") for every mix card
+that holds a Pause, and amends invariant 41. Examples name ids only; which stores are pools, and when a season refills
+them, is content's.
+
+FIT PASS
+- An instance of Mixes (the flattened shares: what a share is a share of is unchanged) and of the dry rule (Stores
+  and caps: a paused card stays paused by the same Pause, resumes by the same level). What is new is what a paused
+  card's share does while its Pause holds, and one derived reading, "this store cannot be made again by anything in
+  play", which names the card's state (SPENT) and the starved line but moves no share. No new Save field, verb, event
+  kind or system: both are pure functions of the save at an instant, read wherever shares are read, as greying and
+  the held entries are (Nystrom: a derived query over the Type Objects, never cached state).
+- The need: a pool (a store only outcomes fill, such as a season's turn) empties mid-mix, and its card pauses. Idling
+  its share until the store refills to one hour of its cost means, for a pool, until the season's next turn: the
+  player must re-tune the mix for a season or lose that time, which the 2 AM test fails at every pool's end. A store a
+  running maker refills pauses its card the same way and looks the same on the page, so it yields the same way (a
+  card that behaves differently must look different; docs/decisions.md, "A mix keeps going without a dry store").
+- The source rule stays: the yield is a number with a source, named by explain() on every line that receives it
+  (Modifiers' sourced explain). What was rejected in "Shares" was a hidden redistribution; this one is sourced.
+- How games do it: a worker whose job runs out of material goes to the next job on its list (RimWorld's priorities,
+  Factorio's inserters taking the next recipe), rather than standing at the empty one, and comes back when there is
+  material again.
+
+CHOICES (spent)
+- Makers: the makers of a store x are every unlocked standing action whose makes include x, and every card that is
+  unlocked, neither completed nor retired (LEAVES: a card on a lane whose person left counts as retired), and has x
+  among its makes, its outcome's stores or its finished's stores. Triggers and answers are not makers: an outcome
+  that will land later (a season's next turn) is not something in play now. A maker is not asked to be running: a
+  card the player could tap, or a rule could, can make x, so x is not spent.
+- What a maker takes: its costs and its inputs. Drains are left out (a drain never stops its card, DRAINS).
+- Spent stores: the largest set S of stores such that, for every x in S, every maker of x takes from some store y in
+  S whose value is 0. Sets with that property are closed under union, so the largest is unique; it is found by starting
+  from every store and removing, until nothing changes, each x that has a maker taking from no store of S at 0. So a
+  store with no maker is spent; a store whose every maker needs a spent store that is empty is spent (resolved to the
+  fixpoint, cycles included: two empty stores each made only from the other are both spent); a store with a maker that
+  takes nothing, or takes only from stores above 0 or not spent, is not. Why the largest set: a dry cycle with nothing
+  feeding it in never refills, and the smallest set would call it refillable and idle its shares for good.
+- Spent card: a card of a running mix (the hands' or the town's) holding a Pause on a spent store. Its Run is SPENT
+  (RunKind.SPENT "spent", 0/1, `store` the spent store), which takes PAUSED's place in the longest-lasting order:
+  GREYED, then SPENT, then PAUSED, WAITING, YIELDED. A card holding a Pause on a store that is not spent (a
+  store with any maker in play: "a store a running maker can refill") is PAUSED and resumes at one hour of its cost,
+  as the dry rule says. SPENT and PAUSED differ in what lifts the Pause and in the starved line (Read model), never in
+  the yield: both give their share (Giver).
+- Giver: a card of a running mix that holds a Pause, its Run SPENT or PAUSED. Every giver yields by the one rule
+  below, whatever made its store dry and whatever can refill it; no reading of the store (spent, its level, its
+  makers) decides whether a share yields. A card that is greyed, waiting or yielded to a tap is no giver: it
+  holds no Pause, and its share idles or runs as before.
+- The yield, per lane: shares move only among the cards of one running mix on one lane (the hands for a hands mix;
+  one person's lane for the town's mix, each person's shares being their own time), never across lanes and never into
+  a mix that is not running. On lane L, with K the givers on L, R the other cards of that mix on L (whatever their
+  Run: FULL, WAITING or YIELDED), s each card's saved share (flattened, repeats summed) and Rsum the sum of s
+  over R: when Rsum > 0, each r in R gains floor(s_k * s_r / Rsum) from each k in K, and its effective share is s_r
+  plus its gains; each giver's share runs at 0 (its Run). When Rsum is 0 (every card on L a giver, or the rest at
+  share 0) nothing moves and every share idles. The remainder each floor leaves idles, as an unshared remainder does.
+- Rounded down once per pair (giver, receiver): each gain is one whole number with one source, so a line's gains
+  sum exactly to its effective share less its saved one, and explain() can list them. Rounding never favours the
+  player: the lane's effective shares sum to at most its saved ones.
+- Proportion over saved shares, not running ones: a receiver's gain does not move when it or a sibling waits
+  or yields to a tap, so the effective shares change only when the set of givers changes, which is when a Pause
+  is made or lifted. A receiver that is waiting holds its gain as it holds its own share, unused while
+  waiting.
+- Where it is read: everything that reads a mix card's share for a rate reads its effective share: the rates and
+  segments, the held entries (ENTRIES HELD WHILE A CARD
+  RUNS: h(c) reads the effective share), explain and explain_work, runs_out_at, and the dry rule's pauses. What the
+  player wrote (the saved mix, CardView.share_bp, the split panel) is never changed.
+- The instant, and the hour: the givers are the cards holding a Pause, so the yield starts at the instant a Pause is
+  made and ends at the instant it is lifted, and at no other: the dry rule's own instants. A Pause on a store a maker
+  refills lifts at its RESUME, when the store reaches the resume level (one hour of the card's cost at its saved share,
+  or the cap), so the share stays with the receivers while the store refills below that level, the store's rising off
+  0 included; the hour of hysteresis that keeps dry from chattering keeps the split still the same way, and the yield
+  adds no instant of its own. A change of the running mix, or SaveMix of it, clears its pauses (Running dry), and the
+  shares come back with them (re-yielding at once for a card that pauses again). S and the spent cards are a function
+  of the save at one instant (store values, unlocks, completions, pauses, the running mixes) and change only at
+  instants that already rebuild every rate: a store reaching 0 (its STORE_LIMIT), a Pause made or lifted, an outcome
+  (stores, unlocks, completions, retirements, leaves), a running mix changing. So no new event kind, and between events
+  the effective shares are constant. Within one rebuild the dry rule's pauses and the yields settle together: the rule
+  pauses with the yields of the pauses in force (a receiver drinking its gain can dry a store and pause in turn), then
+  reads the givers again, until neither changes; a rebuild only adds pauses, so it ends (at most one pass per mix
+  card, plus one).
+- The share comes back at the first instant its card holds no Pause. An outcome that raises a spent card's store to or
+  past the Pause's resume level lifts the Pause at that instant (RESUME at that instant), and a maker refilling a
+  paused card's store to that level lifts it at its RESUME: either way the card runs at its saved share from that
+  instant, the receivers back to theirs (less any other giver's gains). An outcome that brings a maker into play
+  (unlocks one, raises a cap that makes one live again) takes the store out of S at that instant: the card is PAUSED
+  from then, still holding its Pause, so its share stays with the receivers until it resumes. A refill below the
+  resume level leaves the card paused, so the share stays with the receivers until something lifts it.
+- Explain: Explanation gains `gained: tuple[SpentShare, ...] = ()`, SpentShare(card: CardId, share_bp: int) exported
+  from the engine package: one entry per giver that gives this line's card a non-zero gain, in the flattened mix order
+  of the givers. Explanation.share_bp is the effective share (saved plus every gain), so invariant 10's formula on its
+  own fields is unchanged. A giver's own lines explain with its saved share_bp and its Run, SPENT or PAUSED (per_hour
+  0), and list no gains.
+- Read model (view.py): CardView.run is SPENT for a spent card and PAUSED for another giver; CardView.share_bp stays
+  its saved share; CardView gains `spent_store: StoreId | None` (the spent card's store, None unless its run is SPENT)
+  and `gained: tuple[SpentShare, ...]` (as explain's, () when none). The wire carries both (api/CONTRACT.txt,
+  "SPENT"). A running mix's actual split is each card's share_bp plus its gained, a giver's 0; it differs from the set
+  split exactly while the mix holds a giver. Starved (amends invariant 41): a runner paused on a store makes
+  it starved only when it is not a spent card; a spent store has no cure in reach, and a red line all season would
+  say there is one (docs/decisions.md, "Every bad state has a cure in reach"). Covered is unchanged.
+- Codec: nothing. Run is not in a save; Save's fields are unchanged (app/tests/held/save_fields.json); Pause is as it
+  was. FORMAT, the manifest, the rules encoding and rules_digest are unchanged. Rebase: nothing new.
+- Shipping is a behaviour change, as "Shipping the evaluation change" was: the stored save is the save, every live save
+  decodes exactly as before, and a saved mix holding a paused card runs differently from the deploy on, forward only,
+  from its last write. That is the decision's own point (docs/decisions.md: a re-tune is only ever set off by something
+  the player chose): the player chose the split; a dry store did not. Replays from a snapshot across the deploy diverge
+  for such saves (saves/support.py's `replay` reports no match) until their pre-release snapshots age out. The commit
+  carries its exposure: the playthroughs and the simulator re-run, every held counter that moves named and brought to
+  the lead, never raised.
+
+INVARIANTS (spent; numbered on from 132. Invariant 41 now reads: "a line is starved iff its store is at 0 and a
+runner that is not a spent card is paused on it, or a candidate tap is blocked on it". Invariants 16 and 19 hold
+unchanged.)
+133. Spent stores: for any s and r, the spent set is the largest S with the property in CHOICES "Spent stores". In
+    particular a store no unlocked, live card or unlocked standing action makes is spent; a store whose every maker
+    takes from a spent store at 0 is spent; a store with a maker taking nothing, or taking only from stores above 0 or
+    not spent, is not; a maker that is locked, completed or retired, or a trigger or answer that adds to it, does not
+    keep a store out of S.
+134. The yield: for a running mix and each lane L, with K, R, s and Rsum as in CHOICES "The yield": when Rsum > 0
+    each r in R explains with share_bp s_r + sum over k in K of floor(s_k * s_r / Rsum) and `gained` listing exactly
+    the non-zero terms, sourced by k; each k explains with its Run (SPENT or PAUSED) and per_hour 0. The effective
+    shares on L sum to at most the saved ones, and to within |K| * |R| units of them. When Rsum is 0 nothing moves. No
+    card of another lane, of another mix, or of a mix that is not running gains anything.
+135. Only from a Pause: a card that holds no Pause gives no card a gain, whatever its Run; on a save whose running
+    mixes hold no paused card every rate, segment and view equals the engine's before this part.
+136. At that instant and nowhere else: a card that pauses at T under a running mix (its store emptying, a pool or a
+    store a maker refills alike) leaves every rate before T as it was; from T it runs 0 and every receiver runs at
+    its effective share (134); between T and the next instant a Pause is made or lifted, the receivers' shares stay
+    constant. Invariant 1 holds across T.
+137. Explain names the source: every Explanation of a receiver's lines has share_bp equal to its saved share plus the
+    sum of `gained`, each entry's card a giver on the same lane of the same running mix; invariant 10 holds on its own
+    fields.
+138. Back at the resume: an outcome at T that raises a giver's store to or past its Pause's resume level, or a maker
+    that refills it to that level by T, gives, from T, that card Run FULL (or as its other state says) at its saved
+    share and every receiver its saved share plus the gains of the givers left; an outcome at T that brings a maker
+    of a spent card's store into play gives, from T, the card Run PAUSED, and the receivers keep its gains.
+139. Dry pauses, and yields until the hour: a card paused on a store that a running maker refills is PAUSED, not
+    SPENT, gives its share from the instant it pauses, and holds it given while the store refills below the resume
+    level (at 0 or above it); it resumes, and takes its share back, at the instant the store reaches one hour of its
+    cost.
+140. Never stored: Save's fields are unchanged; encode(s, r) is the same text whether or not a card in s is a giver,
+    and saves that are equal give equal yields at every t; a save whose mix holds a giver at T and the same save
+    re-decoded give equal stores, work and views at every later t.
+141. The 2 AM property: with no decision, a running hands mix whose saved shares sum to BP, holding one giver and
+    receivers R with Rsum > 0, every receiver at Run FULL, has effective shares summing to more than BP - |R|, where
+    before this part they summed to BP minus the giver's share.
+
+REJECTED, AND WHY (spent)
+- Idling a paused card's share: for a pool the 2 AM test fails at every pool's end, and the player must re-tune the
+  mix for a whole season or lose the time; for a store a maker refills, the card would look like every other paused
+  card and be treated differently (docs/decisions.md, "A mix keeps going without a dry store").
+- Pointing at a spent card so the player re-tunes, its share idle: the same 2 AM failure, with a note added.
+- A yield read off the store rather than the Pause (the share back once the store rises off 0, or a yield that waits
+  for the store to stay at 0): the split would move between the pause and the resume, at instants the dry rule does
+  not have, where the hour of hysteresis holds it still.
+- Greying the mix when a store is spent: a season's end would stop every saved mix holding a pool's card, and nothing
+  runs until a visit.
+- Retiring the spent card: the next season brings it back, so it would need un-retiring (unlocks only grow), and a
+  retired card greys every mix holding it.
+- A hidden redistribution (shares moved with nothing saying so): a number with no source (CHOICES, "Shares"); each
+  gain is named in explain() and on the card, and the page shows the split that runs beside the one set.
+- Giving only to receivers that take nothing from the giver's store (each giver over its own Rsum): a second rule
+  beside the one yield, for a case no shipped content has (two mix cards on one lane drawing one dry store); there the
+  second pauses too and the inflow waits for the hourly resume, so throughput over time is unchanged.
+- Yielding across lanes or across mixes: a person's shares are their own time (THE TOWN'S MIX); the player's time is
+  never handed to the town nor back.
+- Proportion over running shares (a waiting or held receiver getting nothing): every sibling's requires turning or
+  hold settling would move every other card's share, so the yield would chatter at instants of its own.
+- One rounding per receiver (floor of the summed gain): its gain could not be split among several givers in whole
+  numbers that sum, so explain could not name each source exactly.
+- Storing the yield or the spent set in the save: a Save field for what the save at an instant already says, and it
+  could disagree with the stores after a rebase.
+- Counting a trigger or answer that will add to the store as a maker: every season pool has one, so nothing would
+  ever be spent.
+
+KNOWN GAPS (spent)
+- A maker whose input store holds less than one completion's input but more than 0 keeps its store out of S, so a
+  card paused on that store reads PAUSED, not SPENT, and starves its line; its share yields either way. Interim: as
+  that. Decided by: the first content where a pool's last part is smaller than one input.
+- A standing consumer paused on a spent store still makes its line starved (invariant 41 amends only spent cards).
+  Decided by: the first season pool a standing action costs whose starved line is seen after the season's end.
+
+QUESTIONS (spent; asked while the interface was built against, each answered here)
+- Invariant 19, a spent card during a hands tap: SPENT. It holds a Pause, so it is not among the mix actions "not
+  paused" that 19 makes YIELDED, and SPENT comes before YIELDED in the longest-lasting order.
+- Invariant 19, a receiver's share_bp during a tap: its effective share. The yield reads saved shares whatever the
+  receivers' Runs, so a tap moves nothing: "its share unchanged" is unchanged by the tap, the effective share before
+  and after.
+- The resume level of a Pause made while a card receives a gain: one hour of its cost at its saved share, not its
+  effective one. A Pause is saved, and a level read off the yield would write the yield into the save (invariant 140);
+  the resume level is then the dry rule's own, whether or not the store is spent. The dry rule still reads effective
+  shares to choose what to pause.
+- View.completed and retired makers: unchanged by this part. It lists the unlocked cards that are completed, and a
+  retired card counts as completed (counts.is_completed), so a retired maker is listed there as before; it is no maker.
+- Answers as makers: an answer (an AnswerDef's outcome) is never a maker, whatever stores its outcome adds, nor is a
+  trigger. A card an answer queues, installs or starts is a maker by the card rule alone (unlocked, neither completed
+  nor retired, the store among its makes), as any card is.
+- A card's makes and takes include its fight's lines: its wounds and tallies are makes (cardsides.card_makes), its
+  loses are takes. Its finished's stores count as makes.
+- Existing contract tests that asserted PAUSED, or a starved line, for a card paused on a store with no maker in play
+  (test_dry, test_explain, test_banked_trip_contract) read SPENT and not starved now, per invariants 133 and 41 as
+  amended; a test whose share check read the saved share reads saved plus `gained`.
+
