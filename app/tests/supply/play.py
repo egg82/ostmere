@@ -1,55 +1,17 @@
-"""The whenever player on the fixture outpost: the visits it makes, the moves it makes in each (the gatherer first,
-then its sinks: tests/dayone/sinks.py), and the log of every verb it sent, for the 2 AM replay (dayone/parity.py)."""
-from dataclasses import dataclass, field
+"""The whenever player on the fixture outpost: the banked route (tests/banked/play.py) with one move of the chapter's
+own, queueing every stage of the build at once, since the sinks queue a comfort for its next completion only."""
 from typing import Unpack
 
-from ashfall_app.engine import (
-    BP, AtLeast, CardCount, CardShare, Mix, MixId, QueueEntry, Rules, Save, SaveMix, SetQueue, SwitchMix, TapCard, Verb, View,
-    advance, decide, new_save, view,
-)
+from ashfall_app.engine import AtLeast, CardCount, QueueEntry, Save, SetQueue, TapCard, Verb, View
+from tests.banked.play import Played, Visit, route
 from tests.dayone import sinks
 from tests.supply.chapter import BUILD, CHAPTER, GATHER, STAGES, Knobs, rules
 
-Visit = tuple[int, int]
-MOVES_PER_VISIT = 20
-
-
-@dataclass
-class Played:
-    save: Save
-    log: list[tuple[int, Verb]] = field(default_factory=lambda: [])
+__all__ = ["Played", "play"]
 
 
 def play(visits: tuple[Visit, ...], knobs: sinks.SinkKnobs, until: int, **kw: Unpack[Knobs]) -> Played:
-    """The route from a new save through `visits` (start, end), then on with nobody deciding to `until`; each visit's
-    moves are made at its start and again at its end, one after another until the view shows nothing left to do."""
-    r = rules(**kw)
-    p = Played(new_save(r))
-    for start, end in (v for v in visits if v[0] <= until):
-        for at in (start, min(end, until)):
-            p.save = advance(p.save, r, at)
-            _settle(p, r, at, knobs)
-    p.save = advance(p.save, r, until)
-    return p
-
-
-def _settle(p: Played, r: Rules, at: int, knobs: sinks.SinkKnobs) -> None:
-    for _ in range(MOVES_PER_VISIT):
-        m = _gather(p.save) or _stages(view(p.save, r), p.save) or sinks.move(view(p.save, r), r, p.save, CHAPTER, knobs)
-        if m is None:
-            return
-        for verb in m[1]:
-            p.save = decide(p.save, r, at, verb)
-            p.log.append((at, verb))
-    raise AssertionError("a visit never settled")
-
-
-def _gather(save: Save) -> tuple[str, tuple[Verb, ...]] | None:
-    """The first move: the gatherer alone in the mix."""
-    if save.active is not None:
-        return None
-    mix = Mix(MixId("gather_only"), (CardShare(GATHER, BP),))
-    return "decision", (SaveMix(mix), SwitchMix(mix.id))
+    return route(rules(**kw), visits, knobs, until, CHAPTER, GATHER, _stages)
 
 
 def _stages(v: View, save: Save) -> tuple[str, tuple[Verb, ...]] | None:
