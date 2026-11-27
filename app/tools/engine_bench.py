@@ -24,7 +24,10 @@ from fastapi.testclient import TestClient
 from ashfall_app.api.convert import condition, mix, order_verb
 from ashfall_app.engine import SaveMix, SetOrders, SetQueue, SwitchMix, TapCard, Verb
 from ashfall_app.main import create_app
-from tests.rules.play.playthrough import Player, opening_rules
+try:
+    from tests.rules.play.playthrough import Player, opening_rules
+except ModuleNotFoundError:  # bench_ab copies this file into a base tree from before the opening/ -> rules/ move
+    from tests.opening.playthrough import Player, opening_rules  # type: ignore[no-redef]
 CARDS = Path(__file__).parent.parent / "tests" / "cards_contract"
 sys.path.insert(0, str(CARDS))  # the contract tests' own imports
 sys.path.insert(0, str(CARDS / "views"))
