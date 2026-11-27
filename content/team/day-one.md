@@ -2,7 +2,7 @@
 
 Spoilers: this file is under `content/` and never shown to the owner. It picks up where `opening-v2.md` ends (story dusk,
 day 1) and runs through the night and story day 2 to B3. Its data twin is `beats.yaml`'s `day_one:` list (ids, gates,
-shape fields, checked by `team/flatcheck.py`); its canon is C-promise-16 and C-beat-68 to C-beat-78 in `canon.jsonl`;
+shape fields, checked by `team/flatcheck.py`); its canon is C-promise-16 and C-beat-68 to C-beat-78 in `canon/`;
 its decisions are D-57 to D-63. **Every number below is provisional**: the simulator's routes set them, and the line
 state lists are generated from those routes, not written by hand. Schema, engine and page work come in later steps;
 this file only says what they must carry.

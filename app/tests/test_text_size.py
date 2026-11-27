@@ -46,7 +46,7 @@ def counted() -> Ledger:
 
 def test_the_gate_sees_the_text():
     names = {p.name for p in files()}
-    assert len(names) > 100 and {"engineering.md", "game.css", "canon.jsonl"} <= names, "the gate would pass on (nearly) nothing"
+    assert len(names) > 100 and {"engineering.md", "game.css", "beat.jsonl"} <= names, "the gate would pass on (nearly) nothing"
 
 
 def test_the_held_ledger_is_what_the_text_is():
@@ -57,7 +57,7 @@ def test_the_held_ledger_is_what_the_text_is():
 
 
 def test_what_is_wanted():
-    assert wanted("docs/a.md") and wanted("x/y.css") and wanted("a.txt") and wanted("content/canon.jsonl")
+    assert wanted("docs/a.md") and wanted("x/y.css") and wanted("a.txt") and wanted("content/canon/beat.jsonl")
     assert not wanted("docs/research/x/notes.jsonl")
     assert not wanted("app/client/generated/openapi.json")
     assert not wanted("app/tests/fixtures/ci_health/runs.jsonl") and not wanted("app/tests/fixtures/ci_health/log.txt")
