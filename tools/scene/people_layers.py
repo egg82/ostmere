@@ -47,7 +47,7 @@ HAULED_AT: Spot = (410, 222)
 RACKS: Spot = (218, 268)
 STONE: Spot = (BY_FIRE[0] - 10, BY_FIRE[1] + 8)
 WOOD_EDGE: Spot = (704, 266)
-HEARTH_WATCH: Spot = (WATCH[0] - 0.65 * T, WATCH[1] + 3.2 * T)
+HEARTH_WATCH: Spot = (WATCH[0] - 0.65 * T, WATCH[1] + 3.0 * T)
 """Where the hearth crew's watcher keeps the watch fire: its west side, below the others' seats (`dayfour_poses.N2_WATCH`)."""
 STRANGER_IN: Spot = (372, 160)
 NAMING_AT: Spot = (STRANGER_IN[0] - 26, STRANGER_IN[1] + 6)
