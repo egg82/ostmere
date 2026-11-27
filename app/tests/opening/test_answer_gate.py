@@ -49,7 +49,7 @@ def test_the_arrival_offers_pass_and_the_held_ones_fail(content: Opening):
     failing = set(unlasting_offers(content))
     assert not failing & {"o_stay", "o_pair", "o_family", "o_cart"}
     assert failing == {"o_book"}, "an offer left on the held list, or a new one: an echo or a difference is missing"
-    assert untallied_kinds(content) == ["work"]
+    assert untallied_kinds(content) == []
 
 
 def with_outcomes(o: Opening, offer: str, outcome: OutcomeEntry) -> Opening:
@@ -82,7 +82,7 @@ def test_a_role_with_no_tally_is_found_and_the_tally_alone_separates_the_answers
                                         "offers": [x for x in content.offers if not x.tests]})
     assert not {"o_pair", "o_family"} & set(unlasting_offers(unread))
     bare = without_tally(unread, "arrival")
-    assert untallied_kinds(bare) == ["arrival", "work"]
+    assert untallied_kinds(bare) == ["arrival"]
     assert {"o_pair", "o_family"} <= set(unlasting_offers(bare))
 
 
@@ -108,7 +108,7 @@ def test_each_answer_adds_one_to_its_roles_tally_and_a_save_that_answered_before
     new = to_rules(content)
     ids = {"tally_o_stay_room": "own_hands", "tally_o_stay_his": "left_to_them", "tally_o_pair_room": "own_hands",
            "tally_o_pair_hers": "left_to_them", "tally_o_family_room": "own_hands", "tally_o_family_theirs": "left_to_them"}
-    assert {str(t.id) for t in new.triggers if str(t.id).startswith("tally_")} == set(ids)
+    assert {str(t.id) for t in new.triggers if str(t.id).startswith(("tally_o_stay", "tally_o_pair", "tally_o_family"))} == set(ids)
     old = replace(new, triggers=tuple(t for t in new.triggers if str(t.id) not in ids),
                   stores=tuple(s for s in new.stores if str(s.id) not in set(ids.values())))
     s = new_save(old)
