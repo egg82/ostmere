@@ -1,4 +1,4 @@
-// The scene's grade on the story's clock (scene/scene.ts, pickGrade; tools/scene/grades.py, pick): the last grade whose
+// The scene's grade on the story's clock (scene/scene.ts, pickGrade; tools/scene/frame/grades.py, pick): the last grade whose
 // `when` holds wins, so the end's dusk, pinned by ended_at, gives way to the night and the night to the day.
 import { Q } from "../fixtures/content";
 import { dayOneStep } from "../fixtures/dayone";

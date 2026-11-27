@@ -111,7 +111,7 @@ use that teaches it, and every number can show where it comes from (some of Orb'
   until it arrives (an empty band reads as broken), except where its arrival would move what is under a finger, where
   its room is kept from the start; once drawn, a part stays. In the first five minutes at most one
   Ashfall-specific mechanic is on screen (the mix); the others follow, spaced out. The engine's timeline is not moved
-  for it: what the page draws is the lever. Held by `tests/dayone/test_dayone_reveal.py`.
+  for it: what the page draws is the lever. Held by `tests/dayone/human/test_dayone_reveal.py`.
 - **Taught by need, and needed again.** A system is introduced when the world gives you a reason to use it (the candles
   run low, so you meet the ledger line; wolves come, so you meet orders), never by a tutorial screen, as habits does.
   Not even a spotlight tour that forces the real click, as Idle Awakening has: if a point ever proves
@@ -124,7 +124,7 @@ use that teaches it, and every number can show where it comes from (some of Orb'
   they would wait with the camp to run). The timer, the new control or the changed number is what the note points at,
   as a lesson step on that very element, and it starts when that element first shows; a card or line that arrives
   before its proof is moved to the proof's moment, not shortened. A note whose proof never shows is cut.
-- Every skill is paced to one shared target, which the simulator reports per skill (`tests/dayone/growth.py`,
+- Every skill is paced to one shared target, which the simulator reports per skill (`tests/dayone/pacing/growth.py`,
   `climb_hours`): woodcutting's 900 XP an hour at a full share, under the prestige floor (`opening/prestige.py`,
   `check_phase_spans`), so how fast a skill climbs on a route is the share of the hands the player gives it, not which
   skill it is. The slow skills' methods sit below it where raising them turns an invariant red or shows in a readout; each skill's reason,
@@ -203,7 +203,7 @@ work that takes stores (trips, comforts, arrivals: Cards and Offers), sized so a
 
 Pacing curve: an A/B target, the simulator running two curves side by side. One curve for every skill, its steps never
 shrinking past the shipped ones; a level's pay speeds its skill's work (more made, the same XP), so time per level
-grows with the curve and the loop stays tame (`app/tests/dayone/growth.py`).
+grows with the curve and the loop stays tame (`app/tests/dayone/pacing/growth.py`).
 
 Forecast: `app/ashfall_app/engine/forecast.py`, sent when the page asks (a new or opened save, an advance after its plan
 changed) and kept across plain advances, so the page draws only times that come true (contract/forecast.txt, "Forecast").

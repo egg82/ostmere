@@ -5,7 +5,7 @@ each with its source. Part B (separate) is a proposal for how the simulator uses
 
 Part A, the evidence, is held in the `game-design` skill, `references/playtesting.md`, "Numbers for modelling a
 human-paced player": sources, labels, and what is unverified. Below are only the figures Part B and
-`app/tests/dayone/human_thresholds.toml` use, and what the skill does not hold. The headline gap is there too: no
+`app/tests/dayone/human/human_thresholds.toml` use, and what the skill does not hold. The headline gap is there too: no
 source gives "N minutes without a meaningful event in an idle game, X% leave", so a drift threshold is a design choice
 anchored to a figure and labelled as such. Every session and retention benchmark is from mobile or store-wide games
 with push notifications, daily rewards and offline caps, which Ostmere bans ("Fun, but never vying for attention"), so

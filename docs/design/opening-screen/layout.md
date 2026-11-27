@@ -37,7 +37,7 @@ editor takes the panel's place. Town is a view of its own (below): it takes the 
 Once the stool is built the figure does its jobs (knap, roast, read) sat on it, facing the fire; before, it kneels at
 the fire's left. The scene manifest says so with an all-of condition (`running:read_by_fire&feature:stool`).
 
-A trip is away from the scene like any job that takes the figure off the stool: its card id is listed in `tools/scene/trips.py`,
+A trip is away from the scene like any job that takes the figure off the stool: its card id is listed in `tools/scene/frame/trips.py`,
 so the seated figure gives way while the hands tap it and for its share of each cycle while the mix runs it. Its completions go
 to the chronicle alone and its finds to the chronicle's Finds, as an uncapped card's and a trigger's lines already do.
 
