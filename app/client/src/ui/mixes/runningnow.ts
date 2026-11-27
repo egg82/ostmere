@@ -5,8 +5,8 @@
 // cards' room to scroll. One per lane: the hands strip
 // has one under its bar, each person of the town one under theirs. The numbers are the view's; it adds none.
 import type { View } from "../../api/types";
-import { type RunningPart, runningNow } from "../../game/spent";
-import { UI } from "../../game/text";
+import { type RunningPart, runningNow } from "../../game/mixes/spent";
+import { UI } from "../../game/page/text";
 import { el } from "../dom";
 import type { PartContext } from "../part";
 

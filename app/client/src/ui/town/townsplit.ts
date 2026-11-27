@@ -3,8 +3,8 @@
 // is never cut off on a phone. While a one-off holds the person's lane, the bar is that card alone (heldSplit), as the hands
 // strip draws a tap (handsheld.ts).
 import type { View } from "../../api/types";
-import { UI } from "../../game/text";
-import { personOf } from "../../game/town";
+import { UI } from "../../game/page/text";
+import { personOf } from "../../game/town/town";
 import { el } from "../dom";
 import type { PartContext } from "../part";
 

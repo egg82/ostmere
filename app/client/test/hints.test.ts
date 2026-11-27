@@ -4,10 +4,10 @@
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Order, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { chipCards } from "../src/game/cues";
-import { cardHints, chipHints, hintedCards, secondMixCard } from "../src/game/hints";
-import { FIRST_MIX, FIRST_RULE, SECOND_MIX } from "../src/game/lessons";
+import { Catalog } from "../src/game/page/catalog";
+import { chipCards } from "../src/game/ledger/cues";
+import { cardHints, chipHints, hintedCards, secondMixCard } from "../src/game/hands/hints";
+import { FIRST_MIX, FIRST_RULE, SECOND_MIX } from "../src/game/lessons/lessons";
 import { keepsOf, NEW_FLAT } from "./kept";
 
 function expect(label: string, got: unknown, want: unknown): void {

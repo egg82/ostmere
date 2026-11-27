@@ -5,8 +5,8 @@ import { FakeEvent, fakeDocument, install, type FakeEl } from "./fake-dom";
 import { testContext } from "./context";
 import { dayOneStep } from "../fixtures/dayone";
 import { fixtureContent } from "../fixtures/content";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
 import { FeedbackSheet } from "../src/ui/settings/feedback";
 import { Screen } from "../src/ui/screen";
 

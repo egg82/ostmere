@@ -1,9 +1,9 @@
 // What every part of the game screen is: redrawn from each new View, and sampled every frame in between.
 import type { Condition, Decision, LogLine, MixRows, Repeats, RuleRun, View } from "../api/types";
-import type { Catalog } from "../game/catalog";
-import type { Keeps } from "../game/keeps";
-import type { Subject } from "../game/lessons";
-import type { HandStreak } from "../game/stall";
+import type { Catalog } from "../game/page/catalog";
+import type { Keeps } from "../game/account/keeps";
+import type { Subject } from "../game/lessons/lessons";
+import type { HandStreak } from "../game/cards/stall";
 import type { OrderFires } from "./cards/fires";
 import type { Glow } from "./feedback/fresh";
 import type { LaneTarget } from "./condition/laneedit";

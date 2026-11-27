@@ -1,7 +1,7 @@
 import type { View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { glowTarget } from "../../game/cues";
-import { inUse } from "../../game/marks";
+import type { Catalog } from "../../game/page/catalog";
+import { glowTarget } from "../../game/ledger/cues";
+import { inUse } from "../../game/lessons/marks";
 import type { Glow } from "../feedback/fresh";
 
 /** The glow goes on a card the content marks, the first time it is ready with its lane free, while nothing else

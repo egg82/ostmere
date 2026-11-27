@@ -2,7 +2,7 @@
 // back.ts turns the back gesture into closing the top layer). A rule's editor returns to what opened it: the person's
 // page, or the tab the player was on; opened from the Rules list, it returns to the list.
 import type { Condition, View } from "../api/types";
-import type { Keeps } from "../game/keeps";
+import type { Keeps } from "../game/account/keeps";
 import { Layer } from "./back";
 import type { Book } from "./book/book";
 import { revealBelow } from "./dom";

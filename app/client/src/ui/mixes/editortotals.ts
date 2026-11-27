@@ -1,8 +1,8 @@
 // The mix editor's live totals (editor.ts): how long the mix runs, now → after. "after" is the engine's own dry run of
 // the edit, null until it lands. The stores' rates are storetimes.ts. Rates are facts, never a verdict.
 import type { View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { UI } from "../../game/page/text";
 import { el } from "../dom";
 
 /** The table's rows, or none when the edit does not change how long the mix runs. `from` is the saved mix being edited (null for a new

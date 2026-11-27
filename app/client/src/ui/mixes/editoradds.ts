@@ -2,11 +2,11 @@
 // with every unlocked card. A tap opens the list in place and a second tap closes it; a pick leaves it open, so several
 // cards can join in a row. A lesson step pointing at a chip inside opens it (the "unfold" event, ui/lessons/lessons.ts).
 import type { View, Mix } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import type { NewMarks } from "../../game/marks";
-import { inSectionOrder } from "../../game/cardsections";
-import { holdsCard } from "../../game/mix";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import type { NewMarks } from "../../game/lessons/marks";
+import { inSectionOrder } from "../../game/cards/cardsections";
+import { holdsCard } from "../../game/mixes/mix";
+import { UI } from "../../game/page/text";
 import { acted, el, setText } from "../dom";
 import { dragIn } from "./editordrag";
 import { markNew } from "../feedback/fresh";

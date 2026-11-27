@@ -4,10 +4,10 @@
 import { fixtureContent, Q, TIRED } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Decision } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { chipCards, offeredCard } from "../src/game/cues";
+import { Catalog } from "../src/game/page/catalog";
+import { chipCards, offeredCard } from "../src/game/ledger/cues";
 import { ChipOffer } from "../src/ui/story/chipoffer";
-import { FIRST_MIX } from "../src/game/lessons";
+import { FIRST_MIX } from "../src/game/lessons/lessons";
 import type { PartContext } from "../src/ui/part";
 import { keepsOf } from "./kept";
 import { TAUGHT } from "./context";

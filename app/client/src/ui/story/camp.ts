@@ -9,8 +9,8 @@
 // with it, already pointing at the next; a level landing bursts on it (ui/feedback/ladder.ts). Under the level, a story beat's
 // store with no line yet (ui/story/goals.ts): the box shows for one alone before the first level.
 import type { CampLevel, LedgerLine, View } from "../../api/types";
-import { sample } from "../../game/clock";
-import { UI } from "../../game/text";
+import { sample } from "../../game/page/clock";
+import { UI } from "../../game/page/text";
 import { el, setText } from "../dom";
 import { GoalRows } from "./goals";
 import { play } from "../feedback/ladder";

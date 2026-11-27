@@ -3,10 +3,10 @@
 // has: its words, then how many times it came on, its last start and, once it has let go since, its last let-go, each
 // with the store's level then (never a chip's: its store is never a number) and how long ago by the frame's clock.
 import type { Order, RuleRun, View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { chipOf, ruleWords, storeRule } from "../../game/orders";
-import { unplacedKey } from "../../game/nextrow";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { chipOf, ruleWords, storeRule } from "../../game/rules/orders";
+import { unplacedKey } from "../../game/rules/nextrow";
+import { UI } from "../../game/page/text";
 import { el, setText } from "../dom";
 import { madeFact, stintFacts, stintLine } from "../next/stintlately";
 

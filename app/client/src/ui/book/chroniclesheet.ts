@@ -3,13 +3,13 @@
 // return's "Since you left" chapter (ui/book/chapter.ts) and one stretch per earlier visit, folded to a line of counts (the
 // newest open when there is no chapter). Lines run oldest first within each. Each line carries its cause beneath it.
 // Under Story, a stretch ends with how many entries it holds of each other filter, and each count opens that filter.
-import { agoWords } from "../../game/ago";
+import { agoWords } from "../../game/account/ago";
 import type { View, Visit } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { added, filtersOf, held, inStrip, stretches, tally, type Entry, type Filter, type Stretch } from "../../game/chronicle";
-import { awayTitle, filterCount, filterLabel } from "../../game/chronwords";
-import type { Keeps } from "../../game/keeps";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { added, filtersOf, held, inStrip, stretches, tally, type Entry, type Filter, type Stretch } from "../../game/book/chronicle";
+import { awayTitle, filterCount, filterLabel } from "../../game/book/chronwords";
+import type { Keeps } from "../../game/account/keeps";
+import { UI } from "../../game/page/text";
 import type { BookPage } from "./book";
 import { chapterNode, type ChapterView } from "./chapter";
 import { el } from "../dom";

@@ -1,9 +1,9 @@
 // The condition editor's pressed marks (condition.ts): which Do and When buttons show chosen, and each store's amount.
 import type { ChipInfo, View } from "../../api/types";
-import { sample } from "../../game/clock";
-import type { Catalog } from "../../game/catalog";
-import { storeItems, type DoChoice } from "../../game/ruleoffers";
-import type { Test } from "../../game/storerule";
+import { sample } from "../../game/page/clock";
+import type { Catalog } from "../../game/page/catalog";
+import { storeItems, type DoChoice } from "../../game/condition/ruleoffers";
+import type { Test } from "../../game/condition/storerule";
 import { setText } from "../dom";
 
 export const sameChoice = (a: DoChoice | null, b: DoChoice): boolean => JSON.stringify(a) === JSON.stringify(b);

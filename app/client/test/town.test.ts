@@ -6,11 +6,11 @@ import { type FakeEl, install } from "./fake-dom";
 import { dayTwoStep } from "../fixtures/daytwo";
 import { townStep } from "../fixtures/town";
 import type { Card, Mix, View } from "../src/api/types";
-import { panelView } from "../src/game/lanes";
-import { Catalog } from "../src/game/catalog";
+import { panelView } from "../src/game/town/lanes";
+import { Catalog } from "../src/game/page/catalog";
 import { fixtureContent } from "../fixtures/content";
 import { pageRig, savedMix, shareOf, texts } from "./personrig";
-import { isTownMix, townMixToEdit } from "../src/game/town";
+import { isTownMix, townMixToEdit } from "../src/game/town/town";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

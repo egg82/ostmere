@@ -6,13 +6,13 @@
 // free); the strip places its offers' glows, the Rules tab's label takes it once a rule has come on and let go until the
 // tab is opened, and a running lesson's step takes it (lessons.ts).
 import type { Decision, JournalDay, MixRows, Step, View } from "../api/types";
-import type { Catalog } from "../game/catalog";
-import { NewMarks } from "../game/marks";
-import type { Keeps } from "../game/keeps";
-import type { Past } from "../game/chronicle";
-import { mixRules, ruleLetGo, ruleRunLetGo, rulesTabDrawn, taskRules } from "../game/orders";
-import { readingMs } from "../game/reading";
-import { HandStreak } from "../game/stall";
+import type { Catalog } from "../game/page/catalog";
+import { NewMarks } from "../game/lessons/marks";
+import type { Keeps } from "../game/account/keeps";
+import type { Past } from "../game/book/chronicle";
+import { mixRules, ruleLetGo, ruleRunLetGo, rulesTabDrawn, taskRules } from "../game/rules/orders";
+import { readingMs } from "../game/story/reading";
+import { HandStreak } from "../game/cards/stall";
 import { Banner } from "./story/banner";
 import { CardGlow } from "./cards/cardglow";
 import { Cards } from "./cards/cards";

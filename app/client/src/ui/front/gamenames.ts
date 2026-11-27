@@ -1,7 +1,7 @@
 // How a save is named on the front page: "Game 3", "Camp level 4", "Last played 3 hours ago".
 import type { SaveInfo } from "../../api/types";
-import { agoWords } from "../../game/ago";
-import { UI, type Text } from "../../game/text";
+import { agoWords } from "../../game/account/ago";
+import { UI, type Text } from "../../game/page/text";
 
 export function gameName(text: Text, s: SaveInfo): string {
   return s.number === null ? text.get(UI.gameUnnumbered) : text.fill(UI.gameName, { number: String(s.number) });

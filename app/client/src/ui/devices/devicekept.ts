@@ -4,7 +4,7 @@
 // other account. The sheet is held open on it (devices.ts), as closing it would leave the page drawing games of an
 // account this browser has left.
 import type { KeptGames } from "../../api/types";
-import { UI } from "../../game/text";
+import { UI } from "../../game/page/text";
 import { el } from "../dom";
 import type { DevicesContext } from "./devices";
 import { wordsForm } from "./wordsform";

@@ -3,9 +3,9 @@
 // bar, with the bar's "▸ something new", never what. While the wait line is up its "something new" is the story's next
 // step, so these rows carry no marker of their own: two of them would read as the same step.
 import type { Goal, View } from "../../api/types";
-import { sample } from "../../game/clock";
-import { storyMarks } from "../../game/story";
-import { UI } from "../../game/text";
+import { sample } from "../../game/page/clock";
+import { storyMarks } from "../../game/story/story";
+import { UI } from "../../game/page/text";
 import { el, setText } from "../dom";
 import type { PartContext } from "../part";
 

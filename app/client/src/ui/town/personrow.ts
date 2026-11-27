@@ -2,8 +2,8 @@
 // face and who they are, what they work now and the bar of that card. A person who has joined adds their split
 // (ui/town/townstrip.ts); a lane run by rules adds its Change (ui/town/lanerows.ts), each before the bar.
 import type { View } from "../../api/types";
-import { sample } from "../../game/clock";
-import { UI } from "../../game/text";
+import { sample } from "../../game/page/clock";
+import { UI } from "../../game/page/text";
 import { face } from "../asks/asknode";
 import { el, setText } from "../dom";
 import type { PartContext } from "../part";

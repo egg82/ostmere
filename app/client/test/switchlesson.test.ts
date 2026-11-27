@@ -6,9 +6,9 @@ import { fakeDocument, FakeEvent, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { dayOneStep } from "../fixtures/dayone";
 import type { Decision, Mix, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import type { Keeps } from "../src/game/keeps";
-import { CLOCK, FIRST_MIX, FIRST_RULE, SWITCH_MIX } from "../src/game/lessons";
+import { Catalog } from "../src/game/page/catalog";
+import type { Keeps } from "../src/game/account/keeps";
+import { CLOCK, FIRST_MIX, FIRST_RULE, SWITCH_MIX } from "../src/game/lessons/lessons";
 import { Screen } from "../src/ui/screen";
 import { keepsOf, NEW_FLAT } from "./kept";
 

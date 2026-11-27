@@ -17,14 +17,14 @@
 // mix greys (a task in it retired or completed), Edit takes the glow until the editor is opened. While the queue holds a
 // tap, "next: {task}" sits in whichever row is showing.
 import type { Mix, View } from "../../api/types";
-import { apportion, firstMixOffer, runningMix, withShares } from "../../game/mix";
-import { handsRule, ruleRunning } from "../../game/orders";
-import { editShown, mixesShown, runsShown, stripShown } from "../../game/shown";
-import { nextCard } from "../../game/queue";
-import { handsHolder, type Holder } from "../../game/holder";
-import { spentNote } from "../../game/spent";
-import { FIRST_MIX, guided } from "../../game/lessons";
-import { UI } from "../../game/text";
+import { apportion, firstMixOffer, runningMix, withShares } from "../../game/mixes/mix";
+import { handsRule, ruleRunning } from "../../game/rules/orders";
+import { editShown, mixesShown, runsShown, stripShown } from "../../game/page/shown";
+import { nextCard } from "../../game/mixes/queue";
+import { handsHolder, type Holder } from "../../game/hands/holder";
+import { spentNote } from "../../game/mixes/spent";
+import { FIRST_MIX, guided } from "../../game/lessons/lessons";
+import { UI } from "../../game/page/text";
 import { ChipOffer } from "../story/chipoffer";
 import { LaneRows } from "../town/lanerows";
 import { PHONE } from "../layout";

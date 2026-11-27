@@ -2,7 +2,7 @@
 // group's label and its total, which a tap opens to show each kind's own line (contract/, "Ledger"). Only the lines
 // the ledger keeps with itself are folded: a line drawn with the asks (red, or full while fed) stays where it is seen.
 import type { LedgerLine } from "../../api/types";
-import { sample } from "../../game/clock";
+import { sample } from "../../game/page/clock";
 import { el, place, setText, tapFeedback } from "../dom";
 import type { PartContext } from "../part";
 

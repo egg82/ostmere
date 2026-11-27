@@ -1,13 +1,13 @@
 // The condition editor's draft and the pure choices it makes from one (condition.ts draws and sends).
 import type { ChipInfo, Condition, Order, OrderVerb, View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { actionWords, chipOf, conditionWords, handsTap, savedVerb, storeRule } from "../../game/orders";
-import { buildRule, clampRule, defaultRule, sameLevel, valid, type StoreRule } from "../../game/storerule";
-import { buildSubject, readSubject, subjectKey, type SubjectRule } from "../../game/subjectrule";
-import { UI } from "../../game/text";
-import { ruleCards, subjectChoices, whenChoices } from "../../game/ruleoffers";
-import type { RuleSide } from "../../game/ruleside";
-import { startRule } from "../../game/levelrule";
+import type { Catalog } from "../../game/page/catalog";
+import { actionWords, chipOf, conditionWords, handsTap, savedVerb, storeRule } from "../../game/rules/orders";
+import { buildRule, clampRule, defaultRule, sameLevel, valid, type StoreRule } from "../../game/condition/storerule";
+import { buildSubject, readSubject, subjectKey, type SubjectRule } from "../../game/condition/subjectrule";
+import { UI } from "../../game/page/text";
+import { ruleCards, subjectChoices, whenChoices } from "../../game/condition/ruleoffers";
+import type { RuleSide } from "../../game/rules/ruleside";
+import { startRule } from "../../game/condition/levelrule";
 import { quickTest } from "./condquick";
 
 export interface Draft {

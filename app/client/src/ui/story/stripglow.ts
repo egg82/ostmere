@@ -1,6 +1,6 @@
 // The story strip's turn in the queue: a step's lines first, and on a return the glow (game.css `.glow`) on the strip while
 // the first is held, so the eye goes there as the lines start (docs/decisions/knowledge.md, "A story line stays until it can be read").
-import { readingMs } from "../../game/reading";
+import { readingMs } from "../../game/story/reading";
 import type { Arrivals } from "../feedback/reveal";
 
 export class StripGlow {

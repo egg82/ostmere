@@ -6,10 +6,10 @@
 // opened; opening it clears the dot for good (Keeps).
 import type { GameApi } from "../../api/api";
 import type { Account, KeptGames } from "../../api/types";
-import type { Format } from "../../game/format";
-import { refusal, refusalLine, type JoinRefusal } from "../../game/joining";
-import type { Keeps } from "../../game/keeps";
-import { UI, type Text } from "../../game/text";
+import type { Format } from "../../game/page/format";
+import { refusal, refusalLine, type JoinRefusal } from "../../game/account/joining";
+import type { Keeps } from "../../game/account/keeps";
+import { UI, type Text } from "../../game/page/text";
 import { CodePart } from "./devicecode";
 import { DeviceList } from "./devicelist";
 import { KeptPart } from "./devicekept";

@@ -4,9 +4,9 @@
 import { Q, fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, LogLine, View } from "../src/api/types";
-import { awayLines } from "../src/game/awaylines";
-import { Catalog } from "../src/game/catalog";
-import { UI } from "../src/game/text";
+import { awayLines } from "../src/game/book/awaylines";
+import { Catalog } from "../src/game/page/catalog";
+import { UI } from "../src/game/page/text";
 import { SceneFacts, TURN_ROUND_S } from "../src/scene/conditions";
 import { Glow } from "../src/ui/feedback/fresh";
 import { Ledger } from "../src/ui/ledger/ledger";

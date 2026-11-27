@@ -1,5 +1,5 @@
 // A session lost on a page: reload, except a game just begun inside another site's frame (src/game/lost.ts).
-import { framed, onLost, type FrameView } from "../src/game/lost";
+import { framed, onLost, type FrameView } from "../src/game/page/lost";
 
 function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(what);

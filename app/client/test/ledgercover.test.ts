@@ -7,8 +7,8 @@ import { testContext } from "./context";
 import { fixtureContent, Q, R } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { LedgerLine, Order, OrderState, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { UI } from "../src/game/text";
+import { Catalog } from "../src/game/page/catalog";
+import { UI } from "../src/game/page/text";
 import { Ledger } from "../src/ui/ledger/ledger";
 
 install();

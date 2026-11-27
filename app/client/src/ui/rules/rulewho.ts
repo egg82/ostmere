@@ -2,10 +2,10 @@
 // can use, by name, as one picker in place of a New rule per kind. With one choice there is nothing to pick. A person is
 // offered only while their lane holds a task a rule can do: a rule on Camp does their tasks and no mix.
 import type { View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { doChoices } from "../../game/ruleoffers";
-import { people } from "../../game/town";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { doChoices } from "../../game/condition/ruleoffers";
+import { people } from "../../game/town/town";
+import { UI } from "../../game/page/text";
 import { el, tapFeedback } from "../dom";
 import type { PartContext } from "../part";
 

@@ -2,8 +2,8 @@
 // order card held back until its offered_after; the largest drain unless it is the hands' tap; the maker in play.
 import type { Card, LedgerLine, OrderCard, View } from "../src/api/types";
 import { BP, fixtureContent, Q } from "../fixtures/content";
-import { Catalog } from "../src/game/catalog";
-import { completionsOf, glowTarget, largestDrain, nudgeTarget, offeredCard } from "../src/game/cues";
+import { Catalog } from "../src/game/page/catalog";
+import { completionsOf, glowTarget, largestDrain, nudgeTarget, offeredCard } from "../src/game/ledger/cues";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (got !== want) throw new Error(`${label}: got ${String(got)}, want ${String(want)}`);

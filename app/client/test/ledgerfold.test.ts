@@ -3,7 +3,7 @@
 import { install } from "./fake-dom";
 import { fixtureStep } from "../fixtures/steps";
 import { fixtureContent } from "../fixtures/content";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import type { LedgerLine } from "../src/api/types";
 import { LedgerGroups } from "../src/ui/ledger/ledgergroups";
 import { testContext } from "./context";

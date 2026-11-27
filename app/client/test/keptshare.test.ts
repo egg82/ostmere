@@ -6,7 +6,7 @@ import { testContext } from "./context";
 import { pageRig } from "./personrig";
 import { townStep } from "../fixtures/town";
 import type { Content } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { Glow } from "../src/ui/feedback/fresh";
 import { makeRow } from "../src/ui/cards/cardrow";
 import { WhenReady } from "../src/ui/cards/whenready";

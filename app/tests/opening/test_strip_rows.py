@@ -61,7 +61,7 @@ def font(size_var: str = "t-story") -> ImageFont.FreeTypeFont:
 
 
 def strip_kinds() -> set[str]:
-    routes = re.search(r"ROUTES[^=]*=\s*\{([^}]*)\}", (CLIENT / "game" / "chronicle.ts").read_text())
+    routes = re.search(r"ROUTES[^=]*=\s*\{([^}]*)\}", (CLIENT / "game" / "book" / "chronicle.ts").read_text())
     assert routes, "chronicle.ts has no ROUTES"
     kinds = set(re.findall(r'(\w+):\s*"story"', routes.group(1)))
     assert kinds, "no kind routes to the Story filter"

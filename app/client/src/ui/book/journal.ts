@@ -7,10 +7,10 @@
 // page turned to are kept as read in one write, and the newest day turned to in another.
 import type { JournalDay, View } from "../../api/types";
 import { sing } from "../../audio/cues";
-import { joinDays } from "../../game/days";
-import { bookmarkPage, isButton, isUnread, layoutOf, numbersOf, openingPage, pagesOf, turnOf, type NumbersRow, type Page, type Reading, type Section } from "../../game/journal";
-import { wantedOf } from "../../game/pagemarks";
-import { UI } from "../../game/text";
+import { joinDays } from "../../game/book/days";
+import { bookmarkPage, isButton, isUnread, layoutOf, numbersOf, openingPage, pagesOf, turnOf, type NumbersRow, type Page, type Reading, type Section } from "../../game/book/journal";
+import { wantedOf } from "../../game/book/pagemarks";
+import { UI } from "../../game/page/text";
 import { reportError } from "../../telemetry";
 import type { BookPage } from "./book";
 import { el, tapFeedback } from "../dom";

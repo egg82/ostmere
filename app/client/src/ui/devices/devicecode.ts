@@ -1,7 +1,7 @@
 // The "Another device" sheet's first part: a transfer code, large, with its QR code on a light tile and how long it
 // still works; once it has expired, a way to make a new one. A code is made when the sheet opens for it.
 import type { TransferCode } from "../../api/types";
-import { UI } from "../../game/text";
+import { UI } from "../../game/page/text";
 import { el, setText } from "../dom";
 import type { DevicesContext } from "./devices";
 import { qrSvg } from "./qr";

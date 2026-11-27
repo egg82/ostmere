@@ -1,8 +1,8 @@
 // A ledger row a rule watches (ui/ledger/ledger.ts; docs/design/opening-screen/ledger-and-fights.md, "Ledger and rules"): the quiet mark, a
 // small button to that rule in the Rules tab (the whole row taps through to it).
 import type { View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { ruleWords } from "../../game/orders";
+import type { Catalog } from "../../game/page/catalog";
+import { ruleWords } from "../../game/rules/orders";
 import { el, tapFeedback } from "../dom";
 
 /** The mark, hidden until a rule is set on it (setRuleMark); the row `box` taps through to rule `rule()` (none while

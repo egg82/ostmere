@@ -3,7 +3,7 @@
 // it; the heading is marked only when its direction turns.
 import { install } from "./fake-dom";
 import { fixtureStep } from "../fixtures/steps";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { fixtureContent } from "../fixtures/content";
 import type { StoreRow, View } from "../src/api/types";
 import { storeRows } from "../src/ui/mixes/storetimes";

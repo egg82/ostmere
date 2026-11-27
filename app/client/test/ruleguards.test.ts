@@ -7,7 +7,7 @@ import { install } from "./fake-dom";
 import { fixtureStep } from "../fixtures/steps";
 import { BP, Q, TIRED } from "../fixtures/content";
 import type { Condition, LedgerLine, Order, OrderGuard, OrderState, View } from "../src/api/types";
-import { guardWords, ruleActions, ruleCondition } from "../src/game/guardwords";
+import { guardWords, ruleActions, ruleCondition } from "../src/game/condition/guardwords";
 import { RulesTab } from "../src/ui/rules/rules";
 import { testContext } from "./context";
 

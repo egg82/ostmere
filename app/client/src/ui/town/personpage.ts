@@ -12,12 +12,12 @@
 // A station's page (the pot on the fire, LaneInfo.station) is a lane's that never joins: a tap on a task makes it the lane's
 // one task, its always rule changed in place (game/lanes.ts, laneTask), and the task it runs is drawn pressed.
 import type { Card, View } from "../../api/types";
-import { sectioned } from "../../game/cardsections";
-import { laneTap } from "../../game/holder";
-import { isAlways, laneTask, ruledLaneOf } from "../../game/lanes";
-import { rulesFull, taskRules } from "../../game/orders";
-import { UI } from "../../game/text";
-import { members, people, soloOf } from "../../game/town";
+import { sectioned } from "../../game/cards/cardsections";
+import { laneTap } from "../../game/hands/holder";
+import { isAlways, laneTask, ruledLaneOf } from "../../game/town/lanes";
+import { rulesFull, taskRules } from "../../game/rules/orders";
+import { UI } from "../../game/page/text";
+import { members, people, soloOf } from "../../game/town/town";
 import { pickFace, tickFace } from "../cards/cardpick";
 import type { Row } from "../cards/cardrow";
 import { sectionHead } from "../condition/condrows";

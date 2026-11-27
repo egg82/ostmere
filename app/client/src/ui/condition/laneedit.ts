@@ -5,13 +5,13 @@
 // and the pinned foot with the sentence and Save. Under the tasks, the stores the chosen task makes or costs (the lane's
 // tasks, until one is chosen): held / cap, rate now and where it heads, the person page's rows (storetimes.ts).
 import type { Card, Order, View } from "../../api/types";
-import { ALWAYS, alwaysWords, laneTask } from "../../game/lanes";
-import { conditionWords } from "../../game/orders";
-import { UI } from "../../game/text";
+import { ALWAYS, alwaysWords, laneTask } from "../../game/town/lanes";
+import { conditionWords } from "../../game/rules/orders";
+import { UI } from "../../game/page/text";
 import { noteOrderSet, noteRuleChanged } from "../../telemetry";
 import { sectionHead } from "./condrows";
 import { pickRow } from "../cards/cardpick";
-import { sectioned } from "../../game/cardsections";
+import { sectioned } from "../../game/cards/cardsections";
 import { el, setText, tapFeedback } from "../dom";
 import { storeRows, touchedBy } from "../mixes/storetimes";
 import type { PartContext } from "../part";

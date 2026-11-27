@@ -7,7 +7,7 @@ import { Q, fixtureContent } from "../fixtures/content";
 import { fightsStep, withHurtChip } from "../fixtures/fights";
 import { fixtureStep } from "../fixtures/steps";
 import type { Content, FightInfo, StoreLevel, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { FightPanel } from "../src/ui/ledger/fightpanel";
 import { Story } from "../src/ui/story/story";
 

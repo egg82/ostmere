@@ -4,7 +4,7 @@
 import { Q, fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, LedgerLine } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { CardNeeds } from "../src/ui/cards/cardneeds";
 import { whenRow } from "../src/ui/condition/condrows";
 import { entryRows } from "../src/ui/mixes/editorrows";

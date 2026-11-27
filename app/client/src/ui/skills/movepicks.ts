@@ -2,7 +2,7 @@
 // has a Move button; choosing one says what it costs and offers the menu's other nodes as places for the rank to go (closing the sheet drops the move). Ranks a
 // move already parked are listed with the push they come back at. Every number is the view's.
 import type { SkillPrestige } from "../../api/types";
-import { UI } from "../../game/text";
+import { UI } from "../../game/page/text";
 import { el, tapFeedback } from "../dom";
 import type { PartContext } from "../part";
 

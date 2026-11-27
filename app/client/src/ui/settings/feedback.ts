@@ -1,7 +1,7 @@
 // The Feedback sheet, opened from a quiet button at the panel's foot: a field, a line saying what travels with the words, Send and
 // Not now. A send that reaches the server thanks the player and closes the sheet; one that does not says to try
 // later and keeps the words. Not now keeps a draft too: it is cleared only by a send.
-import { UI } from "../../game/text";
+import { UI } from "../../game/page/text";
 import { el, tapFeedback } from "../dom";
 import { openSheet } from "../back";
 import type { PartContext } from "../part";

@@ -5,10 +5,10 @@ import { FakeEl, fakeDocument, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import { ApiFailure, type GameApi } from "../src/api/api";
-import { Text as Words } from "../src/game/text";
+import { Text as Words } from "../src/game/page/text";
 import type { SaveInfo } from "../src/api/types";
 import { wireBegin, type PlayGame } from "../src/begin";
-import { NEW_SAVE } from "../src/game/keeps";
+import { NEW_SAVE } from "../src/game/account/keeps";
 
 install();
 const text = new Words(fixtureContent);

@@ -1,6 +1,6 @@
 // The line the game shows while a long absence comes back in slices (Session's catchingUp): how far through the time
 // away the server is, as a share of it, never an estimate of how long is left. Still text, no motion.
-import { UI, type Text } from "../../game/text";
+import { UI, type Text } from "../../game/page/text";
 import { el, setText } from "../dom";
 
 export class CatchingUp {

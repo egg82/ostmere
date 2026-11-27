@@ -1,7 +1,7 @@
 // The condition editor's foot (condition.ts), pinned under the choices: the watched store now (condstore.ts), the rule as
 // it reads, the note when the same rule already exists, the dry run's line, then Remove, Copy rule and Save.
 import type { Order, OrderVerb, View } from "../../api/types";
-import { UI } from "../../game/text";
+import { UI } from "../../game/page/text";
 import { DryNote } from "./conddry";
 import { watchedWords } from "./condstore";
 import { footRow } from "./condrows";

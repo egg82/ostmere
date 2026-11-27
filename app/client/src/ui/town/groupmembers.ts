@@ -3,9 +3,9 @@
 // tap. A member's own capped one-offs are tapped from their line (a group has no per-member split and no page of its own).
 // A group of a few opens its list; a bigger one is a count with the names a tap away.
 import type { View } from "../../api/types";
-import { laneOneOff, laneTap } from "../../game/holder";
-import { members, people } from "../../game/town";
-import { UI } from "../../game/text";
+import { laneOneOff, laneTap } from "../../game/hands/holder";
+import { members, people } from "../../game/town/town";
+import { UI } from "../../game/page/text";
 import { face } from "../asks/asknode";
 import { el, setText, tapFeedback } from "../dom";
 import type { PartContext } from "../part";

@@ -3,7 +3,7 @@
 // each figure it moves, before → after (game/asks.ts); then the texts the offer has where it differs from the usual
 // (waiting, expiry, permanence). Anything the content leaves out is not drawn. A tap sends answer_offer.
 import type { Offer, OfferInfo, View } from "../../api/types";
-import { answerPcts, askCause, askedBy } from "../../game/asks";
+import { answerPcts, askCause, askedBy } from "../../game/asks/asks";
 import { el, setText, tapFeedback } from "../dom";
 import type { PartContext } from "../part";
 

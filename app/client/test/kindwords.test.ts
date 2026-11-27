@@ -3,8 +3,8 @@
 import { install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import type { Content } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { answerWords } from "../src/game/lanes";
+import { Catalog } from "../src/game/page/catalog";
+import { answerWords } from "../src/game/town/lanes";
 
 install();
 

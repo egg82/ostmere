@@ -1,8 +1,8 @@
 // The condition editor's When row as the draft calls for it (condition.ts, drawWhen).
 import type { ChipInfo, View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { quickRunning, ruleCards, subjectChoices, whenChoices } from "../../game/ruleoffers";
-import type { SubjectRule } from "../../game/subjectrule";
+import type { Catalog } from "../../game/page/catalog";
+import { quickRunning, ruleCards, subjectChoices, whenChoices } from "../../game/condition/ruleoffers";
+import type { SubjectRule } from "../../game/condition/subjectrule";
 import type { Draft } from "./conditiondraft";
 import { whenRow } from "./condrows";
 import { quickRunningRows, subjectRows } from "./condsubject";

@@ -1,6 +1,6 @@
 // What an ended stint made, in Lately's facts (ui/next/stintlately.ts; contract/rule-runs.txt, "RULE RUNS", "Made"): the made fact
 // comes last, after how long the stint ran and when its goal landed: one gain, two, none, whole items rounded down.
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { fixtureContent, Q } from "../fixtures/content";
 import type { RuleRun } from "../src/api/types";
 import { stintFacts } from "../src/ui/next/stintlately";

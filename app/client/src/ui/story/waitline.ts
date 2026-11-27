@@ -4,9 +4,9 @@
 // clock, whose line carries the story mark. It names no beat. Not a card and not a control: nothing to tap or focus.
 // Gone while no story beat waits on either.
 import type { Goal, View } from "../../api/types";
-import { sample } from "../../game/clock";
-import { storyMarks } from "../../game/story";
-import { UI } from "../../game/text";
+import { sample } from "../../game/page/clock";
+import { storyMarks } from "../../game/story/story";
+import { UI } from "../../game/page/text";
 import { el, setText } from "../dom";
 import type { PartContext } from "../part";
 

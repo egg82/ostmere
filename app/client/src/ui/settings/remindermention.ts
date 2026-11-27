@@ -4,9 +4,9 @@
 // (AccountPresentation.reminder_mentioned), so taking it, ignoring it and reloading all leave it gone.
 import type { RemindersConfig } from "../../app/pageconfig";
 import type { PushCap } from "../../app/push";
-import type { Keeps } from "../../game/keeps";
-import { REMINDER_KEYS as K } from "../../game/reminderkeys";
-import type { Text } from "../../game/text";
+import type { Keeps } from "../../game/account/keeps";
+import { REMINDER_KEYS as K } from "../../game/account/reminderkeys";
+import type { Text } from "../../game/page/text";
 import { el } from "../dom";
 
 export interface Moment {

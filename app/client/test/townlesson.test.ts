@@ -5,7 +5,7 @@ import { fakeDocument, install } from "./fake-dom";
 import { testContext } from "./context";
 import { townStep } from "../fixtures/town";
 import type { View } from "../src/api/types";
-import { LESSONS, TOWN_MIX } from "../src/game/lessons";
+import { LESSONS, TOWN_MIX } from "../src/game/lessons/lessons";
 import { Glow } from "../src/ui/feedback/fresh";
 import { LaneRows } from "../src/ui/town/lanerows";
 import { Lessons } from "../src/ui/lessons/lessons";

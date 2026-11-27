@@ -6,10 +6,10 @@ import { install } from "./fake-dom";
 import { dayOneStep } from "../fixtures/dayone";
 import { fixtureContent } from "../fixtures/content";
 import type { LogLine } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { Keeps, NEW_SAVE } from "../src/game/keeps";
-import { counted, DAY_S, mentionId, mentionKey } from "../src/game/people";
-import { UI } from "../src/game/text";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps, NEW_SAVE } from "../src/game/account/keeps";
+import { counted, DAY_S, mentionId, mentionKey } from "../src/game/town/people";
+import { UI } from "../src/game/page/text";
 import { Screen } from "../src/ui/screen";
 
 install();

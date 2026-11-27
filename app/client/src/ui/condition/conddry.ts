@@ -1,8 +1,8 @@
 // The condition editor's line beside Save about the rule as Save would write it (contract/dry-rules.txt, "Dry rules"): what the
 // server says in View.order_dry from a dry run of those decisions, never kept, never blocking Save.
 import type { Order, View } from "../../api/types";
-import { newRuleAt } from "../../game/lanes";
-import { ruleDecisions, ruleExists } from "../../game/orders";
+import { newRuleAt } from "../../game/town/lanes";
+import { ruleDecisions, ruleExists } from "../../game/rules/orders";
 import { el, setText } from "../dom";
 import type { PartContext } from "../part";
 import { dryWords } from "../rules/rulewhy";

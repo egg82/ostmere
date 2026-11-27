@@ -3,13 +3,13 @@
 // Content.limits.max_or_else, none twice and none the first action, all taps of one lane or all mixes of one layer. A
 // rule holding one never opens in the simple editor, and Save keeps the guards and fallbacks the edit does not touch.
 import { fakeDocument, FakeEl, install } from "./fake-dom";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { testContext } from "./context";
 import { fixtureContent } from "../fixtures/content";
 import { guardsStep } from "../fixtures/guards";
 import { fixtureStep } from "../fixtures/steps";
 import type { Decision, Order, OrderVerb, View } from "../src/api/types";
-import { ruleExists } from "../src/game/orders";
+import { ruleExists } from "../src/game/rules/orders";
 import { RulesTab } from "../src/ui/rules/rules";
 
 install();

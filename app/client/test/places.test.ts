@@ -6,9 +6,9 @@ import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import { ApiFailure } from "../src/api/api";
 import type { SaveInfo, View } from "../src/api/types";
-import { Text } from "../src/game/text";
+import { Text } from "../src/game/page/text";
 import { Places, type Paint } from "../src/ui/front/places";
-import { NEW_SAVE } from "../src/game/keeps";
+import { NEW_SAVE } from "../src/game/account/keeps";
 
 install();
 

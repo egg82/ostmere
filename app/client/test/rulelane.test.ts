@@ -8,8 +8,8 @@ import { testContext } from "./context";
 import { fixtureContent, Q } from "../fixtures/content";
 import { dayTwoStep } from "../fixtures/daytwo";
 import type { Order, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { actionWords, ruleDecisions } from "../src/game/orders";
+import { Catalog } from "../src/game/page/catalog";
+import { actionWords, ruleDecisions } from "../src/game/rules/orders";
 import { RulesTab } from "../src/ui/rules/rules";
 import { whyOff } from "../src/ui/rules/rulewhy";
 

@@ -1,9 +1,9 @@
 // A rule's condition on the Rules tab: a button with an edit mark that opens the condition editor (a ruled lane's always
 // rule: its words, opening the lane's task editor). Never gated.
 import type { View } from "../../api/types";
-import { alwaysWords, ruledLaneOf } from "../../game/lanes";
-import { chipOf } from "../../game/orders";
-import { ruleCondition } from "../../game/guardwords";
+import { alwaysWords, ruledLaneOf } from "../../game/town/lanes";
+import { chipOf } from "../../game/rules/orders";
+import { ruleCondition } from "../../game/condition/guardwords";
 import { el, tapFeedback } from "../dom";
 import type { PartContext } from "../part";
 

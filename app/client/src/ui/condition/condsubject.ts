@@ -4,10 +4,10 @@
 // for a task's count of times done. What is offered is ruleoffers.subjectChoices's; numbers and conditions are
 // subjectrule.ts's.
 import type { View } from "../../api/types";
-import { sectioned } from "../../game/cardsections";
-import type { Catalog } from "../../game/catalog";
-import { clampSubject, defaultSubject, subjectKey, subjectName, subjectNow, subjectRange, type SubjectRule } from "../../game/subjectrule";
-import { UI } from "../../game/text";
+import { sectioned } from "../../game/cards/cardsections";
+import type { Catalog } from "../../game/page/catalog";
+import { clampSubject, defaultSubject, subjectKey, subjectName, subjectNow, subjectRange, type SubjectRule } from "../../game/condition/subjectrule";
+import { UI } from "../../game/page/text";
 import { sectionHead } from "./condrows";
 import { el, setText } from "../dom";
 import { ValueSlider } from "../valueslider";

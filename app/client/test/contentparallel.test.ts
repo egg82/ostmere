@@ -2,8 +2,8 @@
 import type { GameApi } from "../src/api/api";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
-import { Session, type SessionEvents } from "../src/game/session";
-import { NEW_SAVE } from "../src/game/keeps";
+import { Session, type SessionEvents } from "../src/game/page/session";
+import { NEW_SAVE } from "../src/game/account/keeps";
 
 function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(what);

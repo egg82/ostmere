@@ -8,8 +8,8 @@
 import { httpReminders, type Reminder, type RemindersApi } from "../../api/reminders";
 import { remindersConfig, type RemindersConfig } from "../../app/pageconfig";
 import { browserEnv, current, pushCap, subscribe, zone, type PushCap, type Subscribed } from "../../app/push";
-import { awayKey, REMINDER_KEYS as K } from "../../game/reminderkeys";
-import type { Text } from "../../game/text";
+import { awayKey, REMINDER_KEYS as K } from "../../game/account/reminderkeys";
+import type { Text } from "../../game/page/text";
 import { el } from "../dom";
 import { clock12, clock24, HourSlider, type HourWindow } from "./hourslider";
 

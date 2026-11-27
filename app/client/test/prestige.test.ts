@@ -9,10 +9,10 @@ import { testContext } from "./context";
 import { fixtureContent } from "../fixtures/content";
 import { prestigeStep, withPrestige } from "../fixtures/prestige";
 import type { SkillBar, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { PRESTIGE } from "../src/game/lessons";
-import { changeText, toppedSince } from "../src/game/prestige";
-import { UI } from "../src/game/text";
+import { Catalog } from "../src/game/page/catalog";
+import { PRESTIGE } from "../src/game/lessons/lessons";
+import { changeText, toppedSince } from "../src/game/skills/prestige";
+import { UI } from "../src/game/page/text";
 import { Skills } from "../src/ui/skills/skills";
 
 install();

@@ -6,10 +6,10 @@ import { fixtureContent } from "../fixtures/content";
 import { kindsView, withKinds } from "../fixtures/kinds";
 import { townStep } from "../fixtures/town";
 import type { CardInfo, Content, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { QUICK_RUNNING, quickRunning, subjectChoices } from "../src/game/ruleoffers";
-import { defaultRule } from "../src/game/storerule";
-import { subjectKey } from "../src/game/subjectrule";
+import { Catalog } from "../src/game/page/catalog";
+import { QUICK_RUNNING, quickRunning, subjectChoices } from "../src/game/condition/ruleoffers";
+import { defaultRule } from "../src/game/condition/storerule";
+import { subjectKey } from "../src/game/condition/subjectrule";
 import { draftWhenRow } from "../src/ui/condition/condwhen";
 import { dropStaleRunning, type Draft } from "../src/ui/condition/conditiondraft";
 

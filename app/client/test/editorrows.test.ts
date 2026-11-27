@@ -4,7 +4,7 @@ import { fakeDocument, FakeEl, FakeEvent, install, pointer } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
-import { NewMarks } from "../src/game/marks";
+import { NewMarks } from "../src/game/lessons/marks";
 import { MixEditor } from "../src/ui/mixes/editor";
 import type { PartContext } from "../src/ui/part";
 

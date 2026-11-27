@@ -1,8 +1,8 @@
 // The editors' goal rows (contract/goal-rows.txt, "Goal rows"): each goal whose time or limit a dry run changes, now → after,
 // and under it the line that binds it after the edit, as the server states it. The page computes no rate or time.
 import type { GoalRow, View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { UI } from "../../game/page/text";
 import { el } from "../dom";
 
 const key = (r: GoalRow): string => `${r.kind}|${r.store ?? ""}|${r.skill ?? ""}|${r.target}`;

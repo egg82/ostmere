@@ -6,8 +6,8 @@ import { testContext } from "./context";
 import { dayOneStep } from "../fixtures/dayone";
 import { fixtureContent } from "../fixtures/content";
 import type { Card, Mix, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { switchCue } from "../src/game/teach";
+import { Catalog } from "../src/game/page/catalog";
+import { switchCue } from "../src/game/story/teach";
 import { CardNeeds } from "../src/ui/cards/cardneeds";
 
 install();

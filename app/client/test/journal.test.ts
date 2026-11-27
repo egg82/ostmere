@@ -3,9 +3,9 @@
 // sheet closes and then one presentation write, the seeded layout, and the journal's lesson.
 import { ALL, catalog, expect, fire, KEPT, requests, rig, stepWith, text } from "./journalrig";
 import { NOTE_B, NOTES_A } from "../fixtures/journal";
-import { oddsOf } from "../src/game/fights";
-import { layoutOf } from "../src/game/journal";
-import { JOURNAL, JOURNAL_NUMBERS } from "../src/game/lessons";
+import { oddsOf } from "../src/game/ledger/fights";
+import { layoutOf } from "../src/game/book/journal";
+import { JOURNAL, JOURNAL_NUMBERS } from "../src/game/lessons/lessons";
 import { Glow } from "../src/ui/feedback/fresh";
 import { Lessons } from "../src/ui/lessons/lessons";
 import { keepsOf, NEW_FLAT, type Flat } from "./kept";

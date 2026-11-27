@@ -2,7 +2,7 @@
 // dry run changes, matched by goal, and under it the after row's binding line as the server states it.
 import { install } from "./fake-dom";
 import { fixtureStep } from "../fixtures/steps";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { fixtureContent, Q } from "../fixtures/content";
 import type { GoalRow, View } from "../src/api/types";
 import { goalRows } from "../src/ui/mixes/goaltimes";

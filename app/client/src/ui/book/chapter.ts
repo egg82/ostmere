@@ -5,10 +5,10 @@
 // or went (the lines that tell it, taken out of the lines above), then the counts of the filters no row opens. With figures kept and nothing at all to show, one line says so; with none kept (a return from before they
 // were), it says nothing, since nothing is known.
 import type { Chapter, View, Visit } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { held, tally, type Entry, type Filter } from "../../game/chronicle";
-import { awaySpan, chapterRows, filterCount, SECTION_LABEL, type ChapterSection } from "../../game/chronwords";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { held, tally, type Entry, type Filter } from "../../game/book/chronicle";
+import { awaySpan, chapterRows, filterCount, SECTION_LABEL, type ChapterSection } from "../../game/book/chronwords";
+import { UI } from "../../game/page/text";
 import { el } from "../dom";
 
 export interface ChapterView {

@@ -22,14 +22,14 @@
 // Rebuilt only when what is needed changes; store needs are sampled every frame. A failed tap marks the row that shows
 // what its blocker names (shows()).
 import type { Card, Condition, LedgerLine, Need, View } from "../../api/types";
-import { sample } from "../../game/clock";
-import { completionsOf } from "../../game/cues";
-import { UI } from "../../game/text";
-import { levelOf, needKind, opensWords, skillWords, stepWords, storeWords } from "../../game/needwords";
+import { sample } from "../../game/page/clock";
+import { completionsOf } from "../../game/ledger/cues";
+import { UI } from "../../game/page/text";
+import { levelOf, needKind, opensWords, skillWords, stepWords, storeWords } from "../../game/cards/needwords";
 import { el, setText } from "../dom";
 import { lightMakers } from "./makerlight";
-import { wastedOn } from "../../game/wasted";
-import type { Catalog } from "../../game/catalog";
+import { wastedOn } from "../../game/cards/wasted";
+import type { Catalog } from "../../game/page/catalog";
 import type { PartContext } from "../part";
 
 const MARK = "\u0001";   // where the have number goes in a need's words

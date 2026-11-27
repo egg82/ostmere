@@ -5,9 +5,9 @@ import { install } from "./fake-dom";
 import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
-import { CLOCK } from "../src/game/lessons";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
+import { CLOCK } from "../src/game/lessons/lessons";
 import { Screen } from "../src/ui/screen";
 import { keepsOf, NEW_FLAT } from "./kept";
 

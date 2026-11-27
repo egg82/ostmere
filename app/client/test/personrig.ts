@@ -2,7 +2,7 @@
 // Change of one opens, and the server's side of a decision (a save_mix lands in the view, as the engine keeps it).
 import { fakeDocument, type FakeEl } from "./fake-dom";
 import { testContext, type Recorded } from "./context";
-import type { Catalog } from "../src/game/catalog";
+import type { Catalog } from "../src/game/page/catalog";
 import type { Decision, Mix, View } from "../src/api/types";
 import { Glow } from "../src/ui/feedback/fresh";
 import { LaneRows } from "../src/ui/town/lanerows";

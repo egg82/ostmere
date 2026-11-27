@@ -1,7 +1,7 @@
 // The end keys on view.ended_at (contract/the-end.txt, "The end"): live, the end lines, and what waits on the end only once
 // they have been read; reopened, an end the page had shown is replayed only if it was under thirty game seconds ago,
 // and an end that happened while the page was shut plays like a live one.
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";

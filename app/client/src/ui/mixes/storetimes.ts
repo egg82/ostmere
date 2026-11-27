@@ -2,9 +2,9 @@
 // heading the dry run changes, net per minute now → after, and under it what it holds of its cap now (the ledger's line)
 // and where it heads. Read off view.store_rows, the same dry run as the goal rows; the page computes no rate or time.
 import type { StoreRow, View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { UI } from "../../game/text";
-import { sample } from "../../game/clock";
+import type { Catalog } from "../../game/page/catalog";
+import { UI } from "../../game/page/text";
+import { sample } from "../../game/page/clock";
 import { el } from "../dom";
 
 /** The rows, or none until the dry run answers. `afterHead` names the second column ("after", "if run"). `touched`: the

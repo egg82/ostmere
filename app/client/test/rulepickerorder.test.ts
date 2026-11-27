@@ -2,14 +2,14 @@
 // with the mixes after the cards (docs/decisions/mixes.md, "the rule editors"). The page's own section of a card is read
 // off ui/cards/cardgroups.ts, so a picker that puts a card elsewhere than the page does fails here.
 import { fakeDocument, FakeEl, install } from "./fake-dom";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { testContext } from "./context";
 import { dayOneStep } from "../fixtures/dayone";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
 import { CardGroups } from "../src/ui/cards/cardgroups";
-import { UI } from "../src/game/text";
+import { UI } from "../src/game/page/text";
 import { RulesTab } from "../src/ui/rules/rules";
 
 install();

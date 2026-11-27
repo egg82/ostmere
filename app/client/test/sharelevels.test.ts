@@ -5,8 +5,8 @@
 import { readFileSync } from "node:fs";
 import { fixtureContent, Q } from "../fixtures/content";
 import type { Condition } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { buildRule, levelWords, needsKey, readRule, ruleUntil, ruleWhen, switchForm, valid, type StoreRule } from "../src/game/storerule";
+import { Catalog } from "../src/game/page/catalog";
+import { buildRule, levelWords, needsKey, readRule, ruleUntil, ruleWhen, switchForm, valid, type StoreRule } from "../src/game/condition/storerule";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

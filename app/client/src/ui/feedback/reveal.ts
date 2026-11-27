@@ -13,7 +13,7 @@
 // in that step shows at once as ever, and a tap or key sets off every link still waiting.
 // Sound (docs/design/sound.md, "The ladder"): what arrives together is a batch, and a batch plays its highest cue once, at
 // that thing's own turn (audio/cues.ts); a tap's cascade also ticks, link by link, scheduled when it starts.
-import { ArrivalQueue, LINK_GAP_MS, LINK_PACE, LINKS, type ArrivalKind, type Link } from "../../game/arrivals";
+import { ArrivalQueue, LINK_GAP_MS, LINK_PACE, LINKS, type ArrivalKind, type Link } from "../../game/story/arrivals";
 import { isCue, pickCue, sing, tick, TICK_RATIOS, type Cue } from "../../audio/cues";
 import { markLink, reducedMotion } from "../dom";
 import { LADDER, play, type Rung } from "./ladder";

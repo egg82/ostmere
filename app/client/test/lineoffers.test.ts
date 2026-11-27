@@ -6,8 +6,8 @@ import { testContext } from "./context";
 import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Decision, LedgerLine, Order, OrderCard, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { offeredCard, risingCard, risingLine } from "../src/game/cues";
+import { Catalog } from "../src/game/page/catalog";
+import { offeredCard, risingCard, risingLine } from "../src/game/ledger/cues";
 import { Ledger } from "../src/ui/ledger/ledger";
 
 install();

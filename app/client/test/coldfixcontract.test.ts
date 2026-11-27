@@ -7,7 +7,7 @@ import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import { Q } from "../fixtures/content";
 import type { Card, Mix, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { Hands } from "../src/ui/hands/hands";
 import { SceneFacts } from "../src/scene/conditions";
 import { gradeStep, pickGrade } from "../src/scene/manifest";

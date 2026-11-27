@@ -1,8 +1,8 @@
 // One thing at a time (docs/design/opening-screen/index.md): a line's reading time; a live step's lines lead their batch,
 // each holding the next turn for its reading time; a batch sent while another waits follows it; and the reveal's line
 // and straggler paths against a stand-in DOM.
-import { ArrivalQueue, MAX_GAP_MS, MIN_GAP_MS } from "../src/game/arrivals";
-import { READING, readingMs } from "../src/game/reading";
+import { ArrivalQueue, MAX_GAP_MS, MIN_GAP_MS } from "../src/game/story/arrivals";
+import { READING, readingMs } from "../src/game/story/reading";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

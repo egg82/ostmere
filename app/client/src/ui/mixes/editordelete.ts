@@ -1,7 +1,7 @@
 // The mix editor's Delete (editor.ts): asks once, in place; a mix a rule runs, or nested in another, says so instead.
 import type { View } from "../../api/types";
-import { mixNamedBy } from "../../game/mix";
-import { UI } from "../../game/text";
+import { mixNamedBy } from "../../game/mixes/mix";
+import { UI } from "../../game/page/text";
 import { el, tapFeedback } from "../dom";
 import type { PartContext } from "../part";
 

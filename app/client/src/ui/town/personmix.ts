@@ -6,9 +6,9 @@
 // Under it, the stores the person's cards make or cost (storetimes.ts): what each holds of its cap, its rate now and where
 // it heads; while a divider is held, now → after from a dry run of the split under the finger, as the hands' editor reads.
 import type { Decision, Mix, View } from "../../api/types";
-import { laneOneOff } from "../../game/holder";
-import { UI } from "../../game/text";
-import { crewOf, dropTownCard, given, joinTownCard, soloOf, townEdit, townSaveDecisions, withTownShares } from "../../game/town";
+import { laneOneOff } from "../../game/hands/holder";
+import { UI } from "../../game/page/text";
+import { crewOf, dropTownCard, given, joinTownCard, soloOf, townEdit, townSaveDecisions, withTownShares } from "../../game/town/town";
 import { el, setText } from "../dom";
 import { MixPreview } from "../mixes/mixpreview";
 import { storeRows, touchedBy } from "../mixes/storetimes";

@@ -2,7 +2,7 @@
 // Games sheet's (ui.games.delete, delete_ask, cancel). Shared by that sheet, the front page's panel and its phone sheet.
 import type { GameApi } from "../../api/api";
 import type { NewSave } from "../../api/types";
-import { UI, type Text } from "../../game/text";
+import { UI, type Text } from "../../game/page/text";
 import { el } from "../dom";
 
 export interface DeleteSteps {

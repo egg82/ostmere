@@ -3,7 +3,7 @@
 // words, headings and drawings the page shows, and draws each mark game/pagemarks.ts places. It is redrawn when the page
 // is, when the fonts arrive and when its size changes, since a place depends on where the words lie. A manifest or an
 // image that fails to load draws no marks and is reported once.
-import { placeMarks, type Box, type MarkManifest, type Wanted } from "../../game/pagemarks";
+import { placeMarks, type Box, type MarkManifest, type Wanted } from "../../game/book/pagemarks";
 import { reportError } from "../../telemetry";
 import { el } from "../dom";
 

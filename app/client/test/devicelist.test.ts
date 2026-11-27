@@ -5,8 +5,8 @@ import { fakeDocument, install, type FakeEl } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureDevices } from "../fixtures/devices";
 import { ApiFailure, type GameApi } from "../src/api/api";
-import { dateOf } from "../src/game/format";
-import { Text } from "../src/game/text";
+import { dateOf } from "../src/game/page/format";
+import { Text } from "../src/game/page/text";
 import { DeviceList } from "../src/ui/devices/devicelist";
 import type { DevicesContext } from "../src/ui/devices/devices";
 

@@ -6,7 +6,7 @@ import { testContext } from "./context";
 import { townStep } from "../fixtures/town";
 import { fixtureContent } from "../fixtures/content";
 import type { Content, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { LaneRows } from "../src/ui/town/lanerows";
 import { PanelTabs } from "../src/ui/tabs";
 import { TownView } from "../src/ui/town/townview";

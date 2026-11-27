@@ -6,10 +6,10 @@
 // its chip is on with no rule answering it, and stays until such a rule is set (not when the chip clears), so the strip
 // moves once, on its arrival.
 import type { OrderCard, View } from "../../api/types";
-import { chipCardOpen, chipCards } from "../../game/cues";
-import { guidedRule, ruleSubject, ruleWaits } from "../../game/lessons";
-import { ruleWords } from "../../game/orders";
-import { UI } from "../../game/text";
+import { chipCardOpen, chipCards } from "../../game/ledger/cues";
+import { guidedRule, ruleSubject, ruleWaits } from "../../game/lessons/lessons";
+import { ruleWords } from "../../game/rules/orders";
+import { UI } from "../../game/page/text";
 import { noteOrderShown } from "../../telemetry";
 import { el, tapFeedback } from "../dom";
 import type { PartContext } from "../part";

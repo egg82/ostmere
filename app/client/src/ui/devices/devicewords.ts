@@ -1,6 +1,6 @@
 // The sheet's second part: recovery words. Made on the player's tap (new words, on a second tap that says the old
 // ones stop working), shown once (wordsform.ts).
-import { UI } from "../../game/text";
+import { UI } from "../../game/page/text";
 import { el, setText } from "../dom";
 import { wordsForm } from "./wordsform";
 import type { DevicesContext } from "./devices";

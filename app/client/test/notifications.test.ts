@@ -5,7 +5,7 @@ import { FakeEvent, fakeDocument, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import type { Reminder } from "../src/api/reminders";
 import type { Subscribed } from "../src/app/push";
-import { Text } from "../src/game/text";
+import { Text } from "../src/game/page/text";
 import { ReminderRow, type ReminderDeps } from "../src/ui/settings/reminders";
 
 install();

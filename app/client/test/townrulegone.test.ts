@@ -5,7 +5,7 @@ import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
 import { townStep } from "../fixtures/town";
 import type { View } from "../src/api/types";
-import type { RuleSide } from "../src/game/ruleside";
+import type { RuleSide } from "../src/game/rules/ruleside";
 import { RulesTab } from "../src/ui/rules/rules";
 
 install();

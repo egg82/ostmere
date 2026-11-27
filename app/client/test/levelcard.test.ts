@@ -7,10 +7,10 @@ import { testContext } from "./context";
 import { BP, fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { speedups } from "../src/game/levelled";
+import { Catalog } from "../src/game/page/catalog";
+import { speedups } from "../src/game/cards/levelled";
 import { Cards } from "../src/ui/cards/cards";
-import { NewMarks } from "../src/game/marks";
+import { NewMarks } from "../src/game/lessons/marks";
 
 install();
 let clock = 0;

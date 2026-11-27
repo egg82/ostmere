@@ -5,8 +5,8 @@
 // offers Undo while undo_open; an undo brings the same menu back to choose again; it also lists the picks, each with Move
 // (ui/skills/movepicks.ts). Every number is the view's.
 import type { MenuNode, SkillPrestige, View } from "../../api/types";
-import { changeText, liftedTop } from "../../game/prestige";
-import { UI } from "../../game/text";
+import { changeText, liftedTop } from "../../game/skills/prestige";
+import { UI } from "../../game/page/text";
 import { el, tapFeedback } from "../dom";
 import { openSheet } from "../back";
 import { moveLines, type Moving } from "./movepicks";

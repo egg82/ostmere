@@ -8,8 +8,8 @@ import { testContext } from "./context";
 import { Q, fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, Condition, Content, Need, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { whenWords } from "../src/game/chronwords";
+import { Catalog } from "../src/game/page/catalog";
+import { whenWords } from "../src/game/book/chronwords";
 import { CardNeeds } from "../src/ui/cards/cardneeds";
 
 install();

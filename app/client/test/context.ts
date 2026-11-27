@@ -1,9 +1,9 @@
 // A PartContext for tests that draw a part against the fake DOM (fake-dom.ts, installed first): the real catalog,
 // glow, keeps and fires, actions that record what they were asked, and arrivals that show everything at once.
 import type { Decision } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { FIRST_MIX, FIRST_RULE } from "../src/game/lessons";
-import { HandStreak } from "../src/game/stall";
+import { Catalog } from "../src/game/page/catalog";
+import { FIRST_MIX, FIRST_RULE } from "../src/game/lessons/lessons";
+import { HandStreak } from "../src/game/cards/stall";
 import { OrderFires } from "../src/ui/cards/fires";
 import { Glow } from "../src/ui/feedback/fresh";
 import type { PartContext, RuleTarget } from "../src/ui/part";

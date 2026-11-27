@@ -3,11 +3,11 @@
 // select laid over the words it reads as, so a tap opens the platform's own picker in place. The levels offer the five
 // named shares; a rule with an exact number is More options' (condlevels.ts), and any other share shows as it reads.
 import type { OrderVerb, View } from "../../api/types";
-import { sectioned } from "../../game/cardsections";
-import type { Catalog } from "../../game/catalog";
-import { doChoices, ruleCards, taskOf, whenChoices } from "../../game/ruleoffers";
-import { isShare, itemsAt, levelWords, PRESETS, sameLevel, shownAt, tryRule, type Level, type StoreRule, type Test } from "../../game/storerule";
-import { UI } from "../../game/text";
+import { sectioned } from "../../game/cards/cardsections";
+import type { Catalog } from "../../game/page/catalog";
+import { doChoices, ruleCards, taskOf, whenChoices } from "../../game/condition/ruleoffers";
+import { isShare, itemsAt, levelWords, PRESETS, sameLevel, shownAt, tryRule, type Level, type StoreRule, type Test } from "../../game/condition/storerule";
+import { UI } from "../../game/page/text";
 import type { Draft } from "./conditiondraft";
 import { el } from "../dom";
 

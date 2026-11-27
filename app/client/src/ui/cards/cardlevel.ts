@@ -1,9 +1,9 @@
 // A level on the card it speeds up (game/levelled.ts says which): for LEVEL_MS the card's foot reads "{skill} {n} ·
 // {before} → {after}", the old time set apart, on the card's ember wash (game.css, .card.levelled); then its time comes
 // back. Colour and words only, so reduced motion shows it the same.
-import type { Catalog } from "../../game/catalog";
-import type { Speedup } from "../../game/levelled";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import type { Speedup } from "../../game/cards/levelled";
+import { UI } from "../../game/page/text";
 import type { Row } from "./cardrow";
 import { el } from "../dom";
 

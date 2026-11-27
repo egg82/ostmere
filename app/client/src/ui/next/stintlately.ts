@@ -1,9 +1,9 @@
 // A stint that popped at its goal, in Lately (contract/rule-runs.txt, "Rule runs", "Ended stint"): its mix and goal as Next words
 // them, then how long it ran, when its goal landed and what the save gained while it ran. Facts the save recorded.
 import type { RuleRun, View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { mixLabel } from "../../game/orders";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { mixLabel } from "../../game/rules/orders";
+import { UI } from "../../game/page/text";
 import { untilLabel } from "./stint";
 
 /** "{mix} until {goal}", read off the entry's order: its switch and its until. */

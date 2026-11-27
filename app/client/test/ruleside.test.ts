@@ -8,8 +8,8 @@ import { fixtureStep } from "../fixtures/steps";
 import { townStep } from "../fixtures/town";
 import type { View } from "../src/api/types";
 import type { SideKept } from "../src/app/ruleside";
-import { landedSide, ruleSideOf, type RuleSide } from "../src/game/ruleside";
-import { people } from "../src/game/town";
+import { landedSide, ruleSideOf, type RuleSide } from "../src/game/rules/ruleside";
+import { people } from "../src/game/town/town";
 import { RulesTab } from "../src/ui/rules/rules";
 
 install();

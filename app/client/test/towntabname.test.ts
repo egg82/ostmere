@@ -3,8 +3,8 @@
 // town_later_labels, else ui.town.title), so it changes with the story in one place.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
-import { Catalog } from "../src/game/catalog";
-import { mixLabel } from "../src/game/orders";
+import { Catalog } from "../src/game/page/catalog";
+import { mixLabel } from "../src/game/rules/orders";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import { LaneRows } from "../src/ui/town/lanerows";

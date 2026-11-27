@@ -2,7 +2,7 @@
 // shown one carries a row of buttons, one per kind in view, the shown kind pressed and a kind at work marked. A kind not
 // yet in front of the player carries the quiet dot on its button. Which kind is picked is kept per device.
 import type { View } from "../../api/types";
-import { kindLabel, kindsByLead, shownKind, variantOf } from "../../game/variants";
+import { kindLabel, kindsByLead, shownKind, variantOf } from "../../game/cards/variants";
 import { el, tapFeedback } from "../dom";
 import { markNew } from "../feedback/fresh";
 import type { PartContext } from "../part";

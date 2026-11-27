@@ -2,9 +2,9 @@
 // offer answered, a row with that offer's question, the answer it was given, and one button per role for the offers of
 // the kind still to come, worded by the answer that offer gave under it. A tap sets the kind's rule to that role (the pressed button is the rule's role; Remove is on the rule's own row).
 import type { View } from "../../api/types";
-import { answeredKinds, givenLabelKey, kindRuleAt, kindText, roleChoices } from "../../game/kindrule";
-import { setKindRule } from "../../game/lanes";
-import { UI } from "../../game/text";
+import { answeredKinds, givenLabelKey, kindRuleAt, kindText, roleChoices } from "../../game/rules/kindrule";
+import { setKindRule } from "../../game/town/lanes";
+import { UI } from "../../game/page/text";
 import { el, tapFeedback } from "../dom";
 import type { PartContext } from "../part";
 

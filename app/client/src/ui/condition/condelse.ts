@@ -2,9 +2,9 @@
 // fallbacks as words, each with a remove, and an add that picks what to do instead. Only what the first action's lane
 // or layer allows is offered (game/elsechoices.ts), up to Content.limits.max_or_else, none twice.
 import type { OrderVerb, View } from "../../api/types";
-import { choiceVerb, elseChoices, keepElse } from "../../game/elsechoices";
-import { actionWords } from "../../game/orders";
-import { UI } from "../../game/text";
+import { choiceVerb, elseChoices, keepElse } from "../../game/condition/elsechoices";
+import { actionWords } from "../../game/rules/orders";
+import { UI } from "../../game/page/text";
 import { choiceButtons } from "./condrows";
 import { bringIntoView, el, tapFeedback } from "../dom";
 import type { PartContext } from "../part";

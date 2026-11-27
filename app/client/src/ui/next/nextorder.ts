@@ -3,8 +3,8 @@
 // (a row of several runs gives up its last) past the next row and sends the queue whole in its new order
 // (game/queue.ts, "moveQueued", "rowStep").
 import type { View } from "../../api/types";
-import { moveQueued, movableEntries, queueRows, rowStep, runsNow } from "../../game/queue";
-import { UI } from "../../game/text";
+import { moveQueued, movableEntries, queueRows, rowStep, runsNow } from "../../game/mixes/queue";
+import { UI } from "../../game/page/text";
 import { el, tapFeedback } from "../dom";
 import type { PartContext } from "../part";
 import { RuleDrag } from "../rules/ruledrag";

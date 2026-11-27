@@ -3,8 +3,8 @@
 // (docs/design/redesign.md, "Desktop frame"), a row over the cards on a landscape phone, and a phone's bottom bar with an
 // icon each (ui/partseat.ts seats it). Book (ui/book/book.ts owns its button) is a view like Town, except on a phone, where
 // it opens a sheet and the tab on stays as it was (Screen decides).
-import type { Catalog } from "../game/catalog";
-import { UI } from "../game/text";
+import type { Catalog } from "../game/page/catalog";
+import { UI } from "../game/page/text";
 import { el, tapFeedback } from "./dom";
 import { unmark } from "./feedback/fresh";
 

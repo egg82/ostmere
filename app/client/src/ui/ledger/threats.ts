@@ -2,7 +2,7 @@
 // a standing fight, drawn under the stores' lines once the `combat` feature is on: its name, its odds and strengths as
 // a card shows them, and how many it has fought and lost. It asks nothing of the player, so it is calm: no alarm hue.
 import type { Fight, StandingInfo, View } from "../../api/types";
-import { COMBAT } from "../../game/fights";
+import { COMBAT } from "../../game/ledger/fights";
 import { el, keyed } from "../dom";
 import { FightPanel } from "./fightpanel";
 import type { PartContext } from "../part";

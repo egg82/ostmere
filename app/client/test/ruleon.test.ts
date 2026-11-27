@@ -3,7 +3,7 @@
 import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
-import { FIRST_RULE, LESSONS } from "../src/game/lessons";
+import { FIRST_RULE, LESSONS } from "../src/game/lessons/lessons";
 import { RulesTab } from "../src/ui/rules/rules";
 
 install();

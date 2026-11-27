@@ -10,10 +10,10 @@
 // A new card given a new slot at its group's end (below the mix's cards, out of sight on a phone) is scrolled into
 // view once, unless a finger is on the page or just left it.
 import type { Card, View } from "../../api/types";
-import { sample } from "../../game/clock";
-import { panelView } from "../../game/lanes";
-import { keptReadyAt, waitsOnUnseen } from "../../game/ready";
-import { UI } from "../../game/text";
+import { sample } from "../../game/page/clock";
+import { panelView } from "../../game/town/lanes";
+import { keptReadyAt, waitsOnUnseen } from "../../game/cards/ready";
+import { UI } from "../../game/page/text";
 import { CardGroups } from "./cardgroups";
 import { KindPicks } from "./kindpick";
 import { barFraction, footWords, makeRow, upsideWords, waitAt, type Row } from "./cardrow";
@@ -21,14 +21,14 @@ import { el, pulse, setText } from "../dom";
 import { sing } from "../../audio/cues";
 import { completionRung, play } from "../feedback/ladder";
 import { cardHintsNow, hintCard } from "./cardhint";
-import type { NewMarks } from "../../game/marks";
+import type { NewMarks } from "../../game/lessons/marks";
 import { markNew } from "../feedback/fresh";
 import type { Part, PartContext } from "../part";
 import { sideStrength } from "../ledger/strength";
 import { WaitLine } from "../story/waitline";
 import { WhenReady } from "./whenready";
-import { storyMarks } from "../../game/story";
-import { speedups } from "../../game/levelled";
+import { storyMarks } from "../../game/story/story";
+import { speedups } from "../../game/cards/levelled";
 import { levelShown, showLevel } from "./cardlevel";
 
 /** How long a finished card stays in its slot, so the player sees it finish, before it goes to Completed. */

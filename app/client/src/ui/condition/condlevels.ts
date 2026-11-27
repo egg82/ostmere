@@ -4,9 +4,9 @@
 // between the two in place (storerule.switchForm). A new rule opens folded: what it runs and the store it watches are
 // the common choices, and the levels start at storerule.ts's defaults; a rule being changed opens with them shown. The
 // fold opens once and stays open while the editor is.
-import type { Catalog } from "../../game/catalog";
-import { isShare, levelAt, levelWords, PRESETS, SHARE_STEP, BP, switchForm, tryRule, type Level, type StoreRule, type Test } from "../../game/storerule";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { isShare, levelAt, levelWords, PRESETS, SHARE_STEP, BP, switchForm, tryRule, type Level, type StoreRule, type Test } from "../../game/condition/storerule";
+import { UI } from "../../game/page/text";
 import { el, setText, tapFeedback } from "../dom";
 import { ValueSlider } from "../valueslider";
 

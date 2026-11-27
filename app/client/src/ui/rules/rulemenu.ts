@@ -1,6 +1,6 @@
 // A rule's ≡ and the menu it opens under its row: Move up, Move down, Remove (Next's row: no Remove).
-import type { Catalog } from "../../game/catalog";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { UI } from "../../game/page/text";
 import { el, tapFeedback } from "../dom";
 
 export interface RuleMenu {

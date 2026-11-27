@@ -2,7 +2,7 @@
 // inside the bar. Used by the hands strip (slim) and the mix editor (large). Dividers drag share between their two neighbours, snapping to whole percents and
 // never below MIN_SHARE_BP, except that a segment marked idle may go to nothing, so a lone task can take the whole bar; in the editor a segment dragged off the bar is removed.
 // The bar only reports what the player did; the owner decides what to send.
-import { MIN_SHARE_BP } from "../../game/mix";
+import { MIN_SHARE_BP } from "../../game/mixes/mix";
 import { el, pulse, setText, tapFeedback } from "../dom";
 
 const SNAP_BP = 100;

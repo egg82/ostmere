@@ -1,6 +1,6 @@
 // What the Rules tab's redraw depends on.
 import type { RuleRun, View } from "../../api/types";
-import type { RuleSide } from "../../game/ruleside";
+import type { RuleSide } from "../../game/rules/ruleside";
 
 /** What a redraw depends on: a view that changes none of it leaves the tab alone (a press or a focus survives). */
 export function shape(view: View, fired: readonly string[], ruleSeen: boolean, runs: readonly RuleRun[], plan: string, side: RuleSide | null): string {

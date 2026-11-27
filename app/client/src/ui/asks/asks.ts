@@ -8,8 +8,8 @@
 // step keeps it first, and the ask waits for it (GlowWhile) until answered. A story step the content marks takes the
 // glow from it (GlowRank), so an ask left waiting never keeps that step dark.
 import type { View } from "../../api/types";
-import { openAsks } from "../../game/asks";
-import { UI } from "../../game/text";
+import { openAsks } from "../../game/asks/asks";
+import { UI } from "../../game/page/text";
 import { askNode, type AskNode } from "./asknode";
 import { AskRuns } from "./askruns";
 import { bringIntoView, el, setText, tapFeedback } from "../dom";

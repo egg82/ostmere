@@ -8,8 +8,8 @@ import { pageRig, savedMix } from "./personrig";
 import { townStep } from "../fixtures/town";
 import { fixtureContent } from "../fixtures/content";
 import type { Card, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { runnableFor, stuckOf } from "../src/game/stuck";
+import { Catalog } from "../src/game/page/catalog";
+import { runnableFor, stuckOf } from "../src/game/town/stuck";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

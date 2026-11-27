@@ -6,7 +6,7 @@ import { pageRig } from "./personrig";
 import { townStep } from "../fixtures/town";
 import { fixtureContent } from "../fixtures/content";
 import type { Content, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

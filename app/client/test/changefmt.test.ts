@@ -2,8 +2,8 @@
 // (game/format.ts, change and figures): a change that is not zero never reads as zero, and a text's slots are
 // {pct} then {pct_b} in the order served.
 import { fixtureContent } from "../fixtures/content";
-import { Format } from "../src/game/format";
-import { Text } from "../src/game/text";
+import { Format } from "../src/game/page/format";
+import { Text } from "../src/game/page/text";
 
 const format = new Format(new Text(fixtureContent), fixtureContent.scales);
 

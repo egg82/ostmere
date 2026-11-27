@@ -2,7 +2,7 @@
 // moves (goaltimes.ts), the engine's own numbers from one dry run (the rules cleared, the mix run), never kept. Never a
 // verdict.
 import type { View } from "../../api/types";
-import { UI } from "../../game/text";
+import { UI } from "../../game/page/text";
 import { el, setText } from "../dom";
 import { goalRows } from "../mixes/goaltimes";
 import type { PartContext } from "../part";

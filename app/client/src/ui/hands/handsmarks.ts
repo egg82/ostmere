@@ -2,8 +2,8 @@
 // lesson's on Mixes ▾ or Edit, and the stopped-mix lesson's on Edit. Each mark is data attributes, cleared and set anew
 // from each view.
 import type { Mix, View } from "../../api/types";
-import { SWITCH_MIX, guided } from "../../game/lessons";
-import { switchCue } from "../../game/teach";
+import { SWITCH_MIX, guided } from "../../game/lessons/lessons";
+import { switchCue } from "../../game/story/teach";
 import type { PartContext } from "../part";
 
 /** The strip's controls a mark can sit on. */

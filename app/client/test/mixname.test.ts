@@ -2,10 +2,10 @@
 // offer's one tap names it, whether it comes through the guided lesson or the Mixes list; later ones are ui.mix.new.
 import { install } from "./fake-dom";
 import { testContext } from "./context";
-import { UI } from "../src/game/text";
+import { UI } from "../src/game/page/text";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
-import { NewMarks } from "../src/game/marks";
+import { NewMarks } from "../src/game/lessons/marks";
 import { MixEditor } from "../src/ui/mixes/editor";
 import type { PartContext } from "../src/ui/part";
 

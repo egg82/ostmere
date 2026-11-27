@@ -4,8 +4,8 @@
 // from GET /api/me (the session is gone, so it lands on the front page).
 import { ApiFailure } from "../../api/api";
 import type { Device, Devices } from "../../api/types";
-import { dateOf } from "../../game/format";
-import { UI } from "../../game/text";
+import { dateOf } from "../../game/page/format";
+import { UI } from "../../game/page/text";
 import { el, setText } from "../dom";
 import type { DevicesContext } from "./devices";
 

@@ -4,14 +4,14 @@
 // (game/guardwords.ts), a rule waiting under Next names what the queue runs, and a rule with fallbacks that is on names
 // the one it runs past its first.
 import type { Order, RuleDry, View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { sample } from "../../game/clock";
-import { alwaysWords } from "../../game/lanes";
-import { actionsOf, pausedWords } from "../../game/guardwords";
-import { actionWords, chipOf, conditionWords, mixLabel, storeRule } from "../../game/orders";
-import { controllingEntry } from "../../game/queue";
-import { levelWords, needsKey, readRule } from "../../game/storerule";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { sample } from "../../game/page/clock";
+import { alwaysWords } from "../../game/town/lanes";
+import { actionsOf, pausedWords } from "../../game/condition/guardwords";
+import { actionWords, chipOf, conditionWords, mixLabel, storeRule } from "../../game/rules/orders";
+import { controllingEntry } from "../../game/mixes/queue";
+import { levelWords, needsKey, readRule } from "../../game/condition/storerule";
+import { UI } from "../../game/page/text";
 import { el, setText } from "../dom";
 
 /** The words for rule `index` at time `t`, or null when it is on or there is nothing to say: a waiting chip's rule

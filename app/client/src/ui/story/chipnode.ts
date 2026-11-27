@@ -2,9 +2,9 @@
 // adds to (Catalog.isLevel; "hurt 2"), and under it what it costs (ChipInfo.cost_key). The level follows the store's
 // served level (View.levels) as it heals.
 import type { View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { sample } from "../../game/clock";
-import { chipStore } from "../../game/ruleoffers";
+import type { Catalog } from "../../game/page/catalog";
+import { sample } from "../../game/page/clock";
+import { chipStore } from "../../game/condition/ruleoffers";
 import { el, setText } from "../dom";
 import type { PartContext } from "../part";
 

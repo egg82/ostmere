@@ -5,8 +5,8 @@ import { testContext } from "./context";
 import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Content, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { UI } from "../src/game/text";
+import { Catalog } from "../src/game/page/catalog";
+import { UI } from "../src/game/page/text";
 import { CampBar } from "../src/ui/story/camp";
 
 install();

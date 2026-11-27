@@ -4,10 +4,10 @@
 // greyed mix (it holds a retired or completed card) can't be run, only edited or deleted. New mix last. The rules
 // themselves are the Rules tab's (rules.ts).
 import type { Mix, MixRow, MixRows, View } from "../../api/types";
-import { mixesFull, mixNamedBy } from "../../game/mix";
-import { rulesUsing } from "../../game/orders";
-import { isTownMix } from "../../game/town";
-import { UI } from "../../game/text";
+import { mixesFull, mixNamedBy } from "../../game/mixes/mix";
+import { rulesUsing } from "../../game/rules/orders";
+import { isTownMix } from "../../game/town/town";
+import { UI } from "../../game/page/text";
 import { el, tapFeedback } from "../dom";
 import { openSheet } from "../back";
 import { goalLabel, goalLeft } from "./goaltimes";

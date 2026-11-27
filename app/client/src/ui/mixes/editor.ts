@@ -8,12 +8,12 @@
 // kept, so the page computes no rate; an edit still holding a retired or completed card is previewed without it, as
 // Save will need it gone. Rates are facts: nothing here says balanced, efficient or better.
 import type { Condition, Decision, Mix, View } from "../../api/types";
-import { cardShares, dropComponent, holdsCard, joinCard, mixesFull, runningMix, saveDecisions, withShares } from "../../game/mix";
-import { freeName, repointRule } from "../../game/orders";
-import { queueFull, queueStint } from "../../game/queue";
-import { UI } from "../../game/text";
+import { cardShares, dropComponent, holdsCard, joinCard, mixesFull, runningMix, saveDecisions, withShares } from "../../game/mixes/mix";
+import { freeName, repointRule } from "../../game/rules/orders";
+import { queueFull, queueStint } from "../../game/mixes/queue";
+import { UI } from "../../game/page/text";
 import { el, setText, tapFeedback } from "../dom";
-import type { NewMarks } from "../../game/marks";
+import type { NewMarks } from "../../game/lessons/marks";
 import { segmentSpecs } from "../hands/hands";
 import type { PartContext } from "../part";
 import { deleteParts } from "./editordelete";

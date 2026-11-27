@@ -4,9 +4,9 @@
 // revealed. The stamps' manifest is fetched when the page is first offered; the layout is game/maplayout.ts's, redrawn
 // when the sheet's size changes. Nothing here sends anything.
 import type { View } from "../../api/types";
-import { frameOf, placeLabels, stampBoxes, type Box, type Cell, type Frame } from "../../game/maplayout";
-import { HOME, revealed, stampPicks, type StampArt, type StampManifest } from "../../game/mapsheet";
-import { UI } from "../../game/text";
+import { frameOf, placeLabels, stampBoxes, type Box, type Cell, type Frame } from "../../game/book/maplayout";
+import { HOME, revealed, stampPicks, type StampArt, type StampManifest } from "../../game/book/mapsheet";
+import { UI } from "../../game/page/text";
 import { reportError } from "../../telemetry";
 import type { Book } from "./book";
 import { el } from "../dom";

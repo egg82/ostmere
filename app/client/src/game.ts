@@ -2,10 +2,10 @@
 // Scene inside it, and one animation frame loop sampling the view against the page's clock.
 import type { GameApi } from "./api/api";
 import type { Account } from "./api/types";
-import { Catalog } from "./game/catalog";
-import { onLost } from "./game/lost";
-import type { Keeps } from "./game/keeps";
-import { Session } from "./game/session";
+import { Catalog } from "./game/page/catalog";
+import { onLost } from "./game/page/lost";
+import type { Keeps } from "./game/account/keeps";
+import { Session } from "./game/page/session";
 import { Scene, SCENE_MANIFEST } from "./scene/scene";
 import { SelfUpdate } from "./app/selfupdate";
 import { browserStraight, type Straight } from "./app/straight";

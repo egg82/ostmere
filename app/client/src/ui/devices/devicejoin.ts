@@ -4,8 +4,8 @@
 // or join without them (MergeAsk), and only its answer sends merge or keep. On 200 the page reloads into GET /api/me,
 // after the words of the games it left behind, when it did.
 import type { JoinWay, KeptGames } from "../../api/types";
-import { askLine, joinWith } from "../../game/joining";
-import { UI } from "../../game/text";
+import { askLine, joinWith } from "../../game/account/joining";
+import { UI } from "../../game/page/text";
 import { el, setText } from "../dom";
 import type { DevicesContext } from "./devices";
 

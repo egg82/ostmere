@@ -2,10 +2,10 @@
 // strip"): a tap is drawn as one full segment in its card's hue, its legend naming the card and its time left; a rule
 // and a goal stint each say where they let go, and every holder names the mix the hands go back to.
 import type { View } from "../../api/types";
-import type { Holder } from "../../game/holder";
-import { mixLabel, ruleRunning } from "../../game/orders";
-import { stintRow } from "../../game/queue";
-import { UI } from "../../game/text";
+import type { Holder } from "../../game/hands/holder";
+import { mixLabel, ruleRunning } from "../../game/rules/orders";
+import { stintRow } from "../../game/mixes/queue";
+import { UI } from "../../game/page/text";
 import { goalLabel } from "../mixes/goaltimes";
 import type { PartContext } from "../part";
 import type { SegmentSpec } from "../mixes/sharebar";

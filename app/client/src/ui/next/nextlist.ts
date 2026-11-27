@@ -4,13 +4,13 @@
 // heading is a row among the hands rules, moved as one (game/nextrow.ts): the rules above it outrank a ready head, the
 // rules under it wait for one (contract/endpoints.txt, "Next's row"). It starts at the bottom, just above "Otherwise".
 import type { QueueEntry, View } from "../../api/types";
-import { NEXT } from "../../game/nextrow";
-import { actionWords } from "../../game/orders";
-import { entryRuns, queueRows, runsNow, unqueue } from "../../game/queue";
-import { UI } from "../../game/text";
+import { NEXT } from "../../game/rules/nextrow";
+import { actionWords } from "../../game/rules/orders";
+import { entryRuns, queueRows, runsNow, unqueue } from "../../game/mixes/queue";
+import { UI } from "../../game/page/text";
 import { el, tapFeedback } from "../dom";
 import { ruleMenu } from "../rules/rulemenu";
-import type { Catalog } from "../../game/catalog";
+import type { Catalog } from "../../game/page/catalog";
 import { stintFacts, stintWords } from "./stint";
 import type { NextOrder } from "./nextorder";
 import type { PartContext } from "../part";

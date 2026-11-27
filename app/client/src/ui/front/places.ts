@@ -4,7 +4,7 @@
 // selected game opens it; where a tap opens (the sheet) it opens that game. Drawing a picture reads the save's view (GET), and never opens the save.
 import type { GameApi } from "../../api/api";
 import type { SaveInfo, View } from "../../api/types";
-import { UI, type Text } from "../../game/text";
+import { UI, type Text } from "../../game/page/text";
 import { el } from "../dom";
 import { gameRefusal } from "./games";
 import { DELETE_WORDS, START_OVER_WORDS, deleteParts, startOver } from "./gamedelete";

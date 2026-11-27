@@ -5,7 +5,7 @@ import { fixtureContent } from "../fixtures/content";
 import { registerSound, resetSound } from "../src/audio/locator";
 import { browserSoundSwitch } from "../src/audio/mute";
 import { browserStraight } from "../src/app/straight";
-import { Text, UI } from "../src/game/text";
+import { Text, UI } from "../src/game/page/text";
 import { ReminderRow, type ReminderDeps } from "../src/ui/settings/reminders";
 import { SettingsSheet } from "../src/ui/settings/settings";
 import { soundControl } from "../src/ui/settings/soundcontrol";

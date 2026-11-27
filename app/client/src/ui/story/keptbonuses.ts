@@ -3,8 +3,8 @@
 // answer's cost is). The header keeps what changes; these only ever grow, and every figure
 // that uses them counts them whether or not the list is open.
 import type { Content } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { UI } from "../../game/page/text";
 import { el, setText, tapFeedback } from "../dom";
 import { markNew } from "../feedback/fresh";
 

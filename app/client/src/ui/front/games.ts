@@ -4,9 +4,9 @@
 // held come last, each with Restore. What a tap does to the page (switch, a new game) is the caller's (GamesActions).
 import { ApiFailure, type GameApi } from "../../api/api";
 import type { DeletedSave, Games, NewSave, SaveInfo } from "../../api/types";
-import { dateOf } from "../../game/format";
+import { dateOf } from "../../game/page/format";
 import { DELETE_WORDS, START_OVER_WORDS, deleteParts, startOver } from "./gamedelete";
-import { UI, type Text } from "../../game/text";
+import { UI, type Text } from "../../game/page/text";
 import { noteGame } from "../../telemetry";
 import { el } from "../dom";
 import { openSheet } from "../back";

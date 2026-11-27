@@ -4,8 +4,8 @@ import { install } from "./fake-dom";
 import { dayOneStep } from "../fixtures/dayone";
 import { fixtureContent } from "../fixtures/content";
 import type { LogLine } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
 import { Screen } from "../src/ui/screen";
 
 install();

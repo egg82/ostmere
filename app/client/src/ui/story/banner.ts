@@ -1,6 +1,6 @@
 // A feature's one-time hint banner.
 import type { View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
+import type { Catalog } from "../../game/page/catalog";
 import { el } from "../dom";
 import type { Arrivals } from "../feedback/reveal";
 

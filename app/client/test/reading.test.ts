@@ -1,5 +1,5 @@
 // How long a story line is held (game/reading.ts): the floor, the words rate, and the first line of a return's multiple.
-import { READING, readingMs } from "../src/game/reading";
+import { READING, readingMs } from "../src/game/story/reading";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

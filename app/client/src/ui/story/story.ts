@@ -10,15 +10,15 @@
 // each Step; their text is the content's. The aim (ui/story/aim.ts) is the story's too. ui/story/headseat.ts seats the head, the
 // aim and the strip.
 import type { JournalDay, LogLine, Mention, View } from "../../api/types";
-import { DayMentions } from "../../game/people";
-import { awayLines, pastLines, type Placement } from "../../game/awaylines";
-import { entries, lostPool, poolLine, type Window } from "../../game/fights";
-import { toppedSince } from "../../game/prestige";
-import { jobLine, newJobs } from "../../game/newjobs";
-import { readingMs } from "../../game/reading";
-import type { Catalog } from "../../game/catalog";
-import { shownChips } from "../../game/shown";
-import { UI } from "../../game/text";
+import { DayMentions } from "../../game/town/people";
+import { awayLines, pastLines, type Placement } from "../../game/book/awaylines";
+import { entries, lostPool, poolLine, type Window } from "../../game/ledger/fights";
+import { toppedSince } from "../../game/skills/prestige";
+import { jobLine, newJobs } from "../../game/town/newjobs";
+import { readingMs } from "../../game/story/reading";
+import type { Catalog } from "../../game/page/catalog";
+import { shownChips } from "../../game/page/shown";
+import { UI } from "../../game/page/text";
 import { AimLine } from "./aim";
 import { CampBar } from "./camp";
 import { bandItem, drawLevels } from "./chipnode";
@@ -28,13 +28,13 @@ import { FeedbackSheet } from "../settings/feedback";
 import { Book } from "../book/book";
 import { Journal } from "../book/journal";
 import { ChronicleSheet } from "../book/chroniclesheet";
-import { chipHints } from "../../game/hints";
+import { chipHints } from "../../game/hands/hints";
 import { markNew, unmark } from "../feedback/fresh";
 import { fitting } from "./stripfit";
 import type { Part, PartContext } from "../part";
-import { inStrip, type EntryKind, type Past } from "../../game/chronicle";
-import { causeWords } from "../../game/chronwords";
-import { ruleEntries } from "../../game/rulerows";
+import { inStrip, type EntryKind, type Past } from "../../game/book/chronicle";
+import { causeWords } from "../../game/book/chronwords";
+import { ruleEntries } from "../../game/rules/rulerows";
 
 const TOUCHES = ["pointerdown", "keydown"] as const;
 const KEEP = 200;

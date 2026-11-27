@@ -8,10 +8,10 @@ import { pageRig, type PageRig } from "./personrig";
 import { fightsStep } from "../fixtures/fights";
 import { townStep } from "../fixtures/town";
 import type { Content, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { Cards } from "../src/ui/cards/cards";
 import { Glow } from "../src/ui/feedback/fresh";
-import { NewMarks } from "../src/game/marks";
+import { NewMarks } from "../src/game/lessons/marks";
 import { fixtureContent } from "../fixtures/content";
 
 install();

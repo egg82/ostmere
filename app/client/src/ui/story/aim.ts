@@ -3,7 +3,7 @@
 // never moves the layout; when the story moves on, the new aim takes its turn after the lines that came with it
 // (ui/feedback/reveal.ts).
 import type { View } from "../../api/types";
-import { currentAim } from "../../game/shown";
+import { currentAim } from "../../game/page/shown";
 import { el, pulse, setText } from "../dom";
 import type { PartContext } from "../part";
 

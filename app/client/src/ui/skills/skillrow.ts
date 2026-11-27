@@ -11,11 +11,11 @@
 // nowhere earlier. A mastered skill at its top reads as mastered, with no control. While the last pick can be taken
 // back the foot holds Undo; while a pick is owed, Choose; with picks or parked ranks to show, Picks.
 import type { SkillBar, SkillPrestige, View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { sample } from "../../game/clock";
-import { levelAt, topAt } from "../../game/forecast";
-import { shownLevel, waitingText } from "../../game/prestige";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { sample } from "../../game/page/clock";
+import { levelAt, topAt } from "../../game/page/forecast";
+import { shownLevel, waitingText } from "../../game/skills/prestige";
+import { UI } from "../../game/page/text";
 import { el, setText, tapFeedback } from "../dom";
 import type { Actions } from "../part";
 

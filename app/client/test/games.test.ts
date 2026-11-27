@@ -7,9 +7,9 @@ import { fixtureGames } from "../fixtures/games";
 import { ApiFailure, type GameApi } from "../src/api/api";
 import type { NewSave, SaveInfo } from "../src/api/types";
 import { tabGame } from "../src/begin";
-import { Text } from "../src/game/text";
+import { Text } from "../src/game/page/text";
 import { GamesSheet } from "../src/ui/front/games";
-import { NEW_SAVE } from "../src/game/keeps";
+import { NEW_SAVE } from "../src/game/account/keeps";
 
 install();
 

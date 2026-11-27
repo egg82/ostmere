@@ -3,7 +3,7 @@
 // modal, so the scene stays in view and play goes on under it. Its one button puts it away. A page whose first view
 // already holds the feature never shows it, so nothing is kept for it.
 import type { FeatureCard as CardText, View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
+import type { Catalog } from "../../game/page/catalog";
 import { el } from "../dom";
 import type { Part } from "../part";
 import type { Arrivals } from "../feedback/reveal";

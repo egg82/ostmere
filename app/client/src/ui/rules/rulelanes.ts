@@ -3,12 +3,12 @@
 // ruled lane's always rule reads as its words alone (ui.rule.always: the task is in them); a passed-over one-off stays
 // until removed. The rules that answer an offer come last, under their own heading.
 import type { View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { isAlways, ruledLaneOf } from "../../game/lanes";
-import { ruleActions } from "../../game/guardwords";
-import { removeRule, taskRules } from "../../game/orders";
-import { ruleSideOf, type RuleSide } from "../../game/ruleside";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { isAlways, ruledLaneOf } from "../../game/town/lanes";
+import { ruleActions } from "../../game/condition/guardwords";
+import { removeRule, taskRules } from "../../game/rules/orders";
+import { ruleSideOf, type RuleSide } from "../../game/rules/ruleside";
+import { UI } from "../../game/page/text";
 import { noteOrderRemoved } from "../../telemetry";
 import { el, pulse, tapFeedback } from "../dom";
 import type { PartContext } from "../part";

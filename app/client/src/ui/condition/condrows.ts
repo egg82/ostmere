@@ -2,12 +2,12 @@
 // what it waits on (chips, then stores; the editor fills in the amounts). Each button carries its choice in data-card,
 // data-mix, data-chip or data-store, which the editor reads to mark the one pressed.
 import type { ChipInfo, Order, OrderVerb, View } from "../../api/types";
-import { sectioned } from "../../game/cardsections";
-import type { Catalog } from "../../game/catalog";
-import { ruleActions, ruleCondition } from "../../game/guardwords";
-import { actionWords, mixLabel, ruleExists } from "../../game/orders";
-import type { DoChoice } from "../../game/ruleoffers";
-import { UI } from "../../game/text";
+import { sectioned } from "../../game/cards/cardsections";
+import type { Catalog } from "../../game/page/catalog";
+import { ruleActions, ruleCondition } from "../../game/condition/guardwords";
+import { actionWords, mixLabel, ruleExists } from "../../game/rules/orders";
+import type { DoChoice } from "../../game/condition/ruleoffers";
+import { UI } from "../../game/page/text";
 import { el, setText } from "../dom";
 
 /** A section's heading, on a row of its own above its tiles; none for the hands. */

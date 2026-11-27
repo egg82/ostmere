@@ -3,14 +3,14 @@
 // tap; a store then takes one test and one level, in either form (game/guarddraft.ts builds the condition and keeps
 // its release one item past the value). Up to Content.limits.max_unless guards, none twice.
 import type { Condition, View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { guardWords } from "../../game/guardwords";
-import { buildGuard, defaultGuard, guardValid, otherForm, withTest, type Guard } from "../../game/guarddraft";
-import { sameCondition } from "../../game/orders";
-import { subjectChoices, whenChoices } from "../../game/ruleoffers";
-import { levelWords } from "../../game/storerule";
-import { buildSubject } from "../../game/subjectrule";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { guardWords } from "../../game/condition/guardwords";
+import { buildGuard, defaultGuard, guardValid, otherForm, withTest, type Guard } from "../../game/condition/guarddraft";
+import { sameCondition } from "../../game/rules/orders";
+import { subjectChoices, whenChoices } from "../../game/condition/ruleoffers";
+import { levelWords } from "../../game/condition/storerule";
+import { buildSubject } from "../../game/condition/subjectrule";
+import { UI } from "../../game/page/text";
 import { LevelRow } from "./condlevels";
 import { subjectRows } from "./condsubject";
 import { storeCap } from "./conditiondraft";

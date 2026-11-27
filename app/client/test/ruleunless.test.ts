@@ -8,7 +8,7 @@ import { fixtureContent, BP, Q } from "../fixtures/content";
 import { guardsStep } from "../fixtures/guards";
 import { fixtureStep } from "../fixtures/steps";
 import type { Condition, Decision, Order, View } from "../src/api/types";
-import { buildGuard, guardValid } from "../src/game/guarddraft";
+import { buildGuard, guardValid } from "../src/game/condition/guarddraft";
 import { RulesTab } from "../src/ui/rules/rules";
 
 install();

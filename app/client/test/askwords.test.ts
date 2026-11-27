@@ -5,8 +5,8 @@ import { install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { asksStep } from "../fixtures/asks";
 import type { Content, OfferInfo, View } from "../src/api/types";
-import { answerFigures, answerPcts, askCause, askedBy, openAsks } from "../src/game/asks";
-import { Catalog } from "../src/game/catalog";
+import { answerFigures, answerPcts, askCause, askedBy, openAsks } from "../src/game/asks/asks";
+import { Catalog } from "../src/game/page/catalog";
 
 install();
 

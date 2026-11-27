@@ -3,9 +3,9 @@
 // an id that stays the same while later Steps repeat the run.
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
-import { Catalog } from "../src/game/catalog";
-import { ruleWords } from "../src/game/orders";
-import { ruleEntries } from "../src/game/rulerows";
+import { Catalog } from "../src/game/page/catalog";
+import { ruleWords } from "../src/game/rules/orders";
+import { ruleEntries } from "../src/game/rules/rulerows";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

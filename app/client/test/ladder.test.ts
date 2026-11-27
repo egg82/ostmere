@@ -5,7 +5,7 @@ import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, View } from "../src/api/types";
-import { NewMarks } from "../src/game/marks";
+import { NewMarks } from "../src/game/lessons/marks";
 import { Cards } from "../src/ui/cards/cards";
 import { completionRung, LADDER, RUNGS, type Rung } from "../src/ui/feedback/ladder";
 

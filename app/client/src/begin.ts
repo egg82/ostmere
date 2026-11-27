@@ -9,10 +9,10 @@
 import { retryable, type GameApi } from "./api/api";
 import type { Me, SaveInfo } from "./api/types";
 import { browserStraight, type Straight } from "./app/straight";
-import type { Session } from "./game/session";
+import type { Session } from "./game/page/session";
 import { play } from "./game";
-import { joinWith, refusalLine, type Refused } from "./game/joining";
-import { Text, UI } from "./game/text";
+import { joinWith, refusalLine, type Refused } from "./game/account/joining";
+import { Text, UI } from "./game/page/text";
 import { noteBegin } from "./telemetry";
 import { dress } from "./ui/front/frontdress";
 

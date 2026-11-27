@@ -6,7 +6,7 @@ import { testContext } from "./context";
 import { dayOneStep } from "../fixtures/dayone";
 import type { Decision, View } from "../src/api/types";
 import { fixtureContent } from "../fixtures/content";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { RulesTab } from "../src/ui/rules/rules";
 
 install();

@@ -5,10 +5,10 @@
 // person has joined the town has no row of its own: the town strip (townstrip.ts) draws them, and this part holds it and
 // the person's page, whose root the screen places in the card area.
 import type { View } from "../../api/types";
-import { ruledLanes } from "../../game/lanes";
-import { type Leaver, leaversOf, withLeavers } from "../../game/leaving";
-import { groups, marked, people } from "../../game/town";
-import { UI } from "../../game/text";
+import { ruledLanes } from "../../game/town/lanes";
+import { type Leaver, leaversOf, withLeavers } from "../../game/town/leaving";
+import { groups, marked, people } from "../../game/town/town";
+import { UI } from "../../game/page/text";
 import { el, tapFeedback } from "../dom";
 import type { Part, PartContext } from "../part";
 import { dotChange, hasNewTask, laneTasks, PersonPage } from "./personpage";

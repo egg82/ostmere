@@ -3,7 +3,7 @@
 // served the line is a button, underlined as the fight's own strengths are, and a tap opens that side's strength sheet
 // (strength.ts) under it; until then, and with the `combat` feature off, it is plain text, and says nothing more.
 import type { Strength } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
+import type { Catalog } from "../../game/page/catalog";
 import { el, tapFeedback } from "../dom";
 import { strengthItems } from "../ledger/strength";
 

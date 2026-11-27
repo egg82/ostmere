@@ -4,12 +4,12 @@
 // a stint by its mix and goal, and the one that runs says when its goal lands or that it never does at today's rates,
 // and what binds it. Facts, never advice.
 import type { Condition, GoalRow, QueueEntry, View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { sample } from "../../game/clock";
-import { mixLabel } from "../../game/orders";
-import { controllingEntry, shareUntil, stintRow } from "../../game/queue";
-import { BP, levelWords, PRESETS } from "../../game/storerule";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { sample } from "../../game/page/clock";
+import { mixLabel } from "../../game/rules/orders";
+import { controllingEntry, shareUntil, stintRow } from "../../game/mixes/queue";
+import { BP, levelWords, PRESETS } from "../../game/condition/storerule";
+import { UI } from "../../game/page/text";
 import { el } from "../dom";
 import { binds, goalLabel, goalLeft } from "../mixes/goaltimes";
 

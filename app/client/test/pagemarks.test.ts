@@ -1,9 +1,9 @@
 // The journal's page marks (game/pagemarks.ts; docs/design/journal.md, "Marks on the page"): a mark is never placed over
 // a blocked box, a page asks for its wear and at most three of its days' marks, and every draw is seeded.
 import type { JournalDay } from "../src/api/types";
-import { seeded } from "../src/game/fights";
-import type { Page } from "../src/game/journal";
-import { crosses, PAGE_EVENT_MARKS, placeMarks, REPEAT_APART, REPEAT_TURN, SOFT_EDGE, wantedOf, type Box, type MarkManifest } from "../src/game/pagemarks";
+import { seeded } from "../src/game/ledger/fights";
+import type { Page } from "../src/game/book/journal";
+import { crosses, PAGE_EVENT_MARKS, placeMarks, REPEAT_APART, REPEAT_TURN, SOFT_EDGE, wantedOf, type Box, type MarkManifest } from "../src/game/book/pagemarks";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

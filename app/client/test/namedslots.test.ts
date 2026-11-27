@@ -1,7 +1,7 @@
 // A person's name slot ({<lane>}, contract/text-and-numbers.txt "Text and numbers") is filled in every text from the lane's name_key:
 // as written in a label, lowercased in a line; a slot naming no named lane is left for fill().
 import { fixtureContent } from "../fixtures/content";
-import { Text } from "../src/game/text";
+import { Text } from "../src/game/page/text";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (got !== want) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

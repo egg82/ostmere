@@ -5,7 +5,7 @@
 import type { Content, View } from "../../api/types";
 import { el, reducedMotion } from "../dom";
 import { hoursNow, daylight } from "../../scene/light";
-import { UI, type Text } from "../../game/text";
+import { UI, type Text } from "../../game/page/text";
 import { cannedView } from "./camp-views";
 import type { Pictures } from "./pictures";
 

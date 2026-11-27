@@ -2,9 +2,9 @@
 // the base first. A fight panel opens it from a strength figure (fightpanel.ts); a kept bonus's line opens the same sheet
 // for its side (bonus.ts).
 import type { Strength, View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { COMBAT, strengthRows } from "../../game/fights";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { COMBAT, strengthRows } from "../../game/ledger/fights";
+import { UI } from "../../game/page/text";
 import { el } from "../dom";
 
 /** A source id as its label: a card, skill, chip, store or feature the content names. Throws on a source none names. */

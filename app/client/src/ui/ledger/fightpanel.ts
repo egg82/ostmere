@@ -3,9 +3,9 @@
 // button that opens its entries, the base first, and what one lost fight costs. A standing fight adds its tally. The
 // card draws it beside its tap (never inside the button), the ledger under a threat's name.
 import type { Fight, FightInfo, Strength, View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { COMBAT, fightOf, oddsWords } from "../../game/fights";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { COMBAT, fightOf, oddsWords } from "../../game/ledger/fights";
+import { UI } from "../../game/page/text";
 import { el, setText, tapFeedback } from "../dom";
 import { Bonus } from "../cards/bonus";
 import { strengthItems } from "./strength";

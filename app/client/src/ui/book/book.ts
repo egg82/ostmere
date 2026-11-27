@@ -3,8 +3,8 @@
 // is the frame's (ui/partseat.ts seats it): a view in the middle and the right on a desktop or a landscape phone, like
 // Town, and a sheet from the bottom on a phone. It opens on the chronicle; a page whose button is hidden is not offered,
 // and the row shows only while more than one page is.
-import type { Catalog } from "../../game/catalog";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { UI } from "../../game/page/text";
 import { el } from "../dom";
 import { openSheet } from "../back";
 

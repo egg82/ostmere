@@ -5,7 +5,7 @@ import { FakeEvent, fakeDocument, install, pointer, type FakeEl } from "./fake-d
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
-import { NewMarks } from "../src/game/marks";
+import { NewMarks } from "../src/game/lessons/marks";
 import { MixEditor } from "../src/ui/mixes/editor";
 import { Lessons } from "../src/ui/lessons/lessons";
 import { keepsOf, NEW_FLAT } from "./kept";

@@ -2,7 +2,7 @@
 // save them (habits' showOwnKey): Save submits it, through the Credential Management API where there is one. Copy
 // says in `note` when it fails and never puts the words anywhere but here. Shared by the words part (devicewords.ts) and
 // the step after a join that left games behind (devicekept.ts).
-import { UI, type Text } from "../../game/text";
+import { UI, type Text } from "../../game/page/text";
 import { el, setText } from "../dom";
 
 export function wordsForm(t: Text, words: string, label: string, note: HTMLElement): { form: HTMLFormElement; save: HTMLButtonElement } {

@@ -7,14 +7,14 @@
 // ruleoffers.ts's; levels and ±1 conventions are storerule.ts's. A chip's rule is the chip: changing one offers only
 // what it does and Remove, never a level, so the store behind a chip is never shown as a number.
 import type { ChipInfo, Condition, Order, View } from "../../api/types";
-import { choiceVerb } from "../../game/elsechoices";
-import { actionWords, chipOf, removeRule, ruleDecisions, ruleExists, rulesFull, savedVerb } from "../../game/orders";
-import type { RuleSide } from "../../game/ruleside";
-import { startRule } from "../../game/levelrule";
-import { chosen, doChoices, storeItems, type DoChoice } from "../../game/ruleoffers";
-import { subjectKey, type SubjectRule } from "../../game/subjectrule";
-import { defaultRule, readRule, tryRule, type Level, type Test } from "../../game/storerule";
-import { UI } from "../../game/text";
+import { choiceVerb } from "../../game/condition/elsechoices";
+import { actionWords, chipOf, removeRule, ruleDecisions, ruleExists, rulesFull, savedVerb } from "../../game/rules/orders";
+import type { RuleSide } from "../../game/rules/ruleside";
+import { startRule } from "../../game/condition/levelrule";
+import { chosen, doChoices, storeItems, type DoChoice } from "../../game/condition/ruleoffers";
+import { subjectKey, type SubjectRule } from "../../game/condition/subjectrule";
+import { defaultRule, readRule, tryRule, type Level, type Test } from "../../game/condition/storerule";
+import { UI } from "../../game/page/text";
 import { noteOrderRemoved, noteOrderSet, noteRuleChanged } from "../../telemetry";
 import { draftOrder, dropStaleRunning, editDraft, headingWords, keepOffered, keptSubject, sameRule, storeCap, type Draft } from "./conditiondraft";
 import { Levels } from "./condlevels";

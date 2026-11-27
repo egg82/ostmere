@@ -1,11 +1,11 @@
 // One card's row in the card panel (cards.ts): its nodes and what the panel keeps about it between views.
 import type { Card, View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { sample } from "../../game/clock";
-import { keptReadyAt } from "../../game/ready";
+import type { Catalog } from "../../game/page/catalog";
+import { sample } from "../../game/page/clock";
+import { keptReadyAt } from "../../game/cards/ready";
 import { Bonus } from "./bonus";
 import { CardNeeds } from "./cardneeds";
-import { UI } from "../../game/text";
+import { UI } from "../../game/page/text";
 import { el, tapFeedback } from "../dom";
 import { FightPanel, seatFight } from "../ledger/fightpanel";
 import type { PartContext } from "../part";

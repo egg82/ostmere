@@ -18,21 +18,21 @@
 // stops it short first leaves no time drawn.
 // While a mix share is dragged, the lines its cards feed or draw on light up.
 import type { LedgerLine, OrderCard, View } from "../../api/types";
-import { sample } from "../../game/clock";
-import { capStore } from "../../game/caphint";
-import { dryCue, type DryCue } from "../../game/dryhint";
-import { workNeeds } from "../../game/dryneed";
-import { largestDrain, offeredCard, risingCard, risingLine } from "../../game/cues";
-import { emptyAt, fullAt } from "../../game/forecast";
-import { runningMix } from "../../game/mix";
-import { lineRule } from "../../game/cover";
-import { fullAndFed, LEDGER_FEATURE, lineJoins, redLine } from "../../game/shown";
-import { ruleFor, rulesFull, ruleWords } from "../../game/orders";
-import { CAP_RULE, DRY_STORE, guided, guidedRule, ruleSubject, ruleWaits } from "../../game/lessons";
-import { readingMs } from "../../game/reading";
-import { stalled } from "../../game/stall";
-import { storyMarks } from "../../game/story";
-import { UI } from "../../game/text";
+import { sample } from "../../game/page/clock";
+import { capStore } from "../../game/hands/caphint";
+import { dryCue, type DryCue } from "../../game/hands/dryhint";
+import { workNeeds } from "../../game/cards/dryneed";
+import { largestDrain, offeredCard, risingCard, risingLine } from "../../game/ledger/cues";
+import { emptyAt, fullAt } from "../../game/page/forecast";
+import { runningMix } from "../../game/mixes/mix";
+import { lineRule } from "../../game/ledger/cover";
+import { fullAndFed, LEDGER_FEATURE, lineJoins, redLine } from "../../game/page/shown";
+import { ruleFor, rulesFull, ruleWords } from "../../game/rules/orders";
+import { CAP_RULE, DRY_STORE, guided, guidedRule, ruleSubject, ruleWaits } from "../../game/lessons/lessons";
+import { readingMs } from "../../game/story/reading";
+import { stalled } from "../../game/cards/stall";
+import { storyMarks } from "../../game/story/story";
+import { UI } from "../../game/page/text";
 import { noteOrderShown } from "../../telemetry";
 import { el, place, pulse, rekey, setText, tapFeedback } from "../dom";
 import { markNew, unmark } from "../feedback/fresh";

@@ -2,7 +2,7 @@
 // "Sound" checkbox in Settings. Neither is made while only the Null sound is registered (audio/locator.ts).
 import { hasSound, refreshSilence } from "../../audio/locator";
 import type { SoundSwitch } from "../../audio/mute";
-import { UI, type Text } from "../../game/text";
+import { UI, type Text } from "../../game/page/text";
 import { el } from "../dom";
 
 export interface SoundControl {

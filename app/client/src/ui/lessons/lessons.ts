@@ -9,8 +9,8 @@
 // Skip, at every step, ends it; skipped or done, it is kept in the save and never comes again in it. Nothing is modal: every control stays
 // live under the note, and a lesson interrupted by a reload simply starts over the next time it may.
 import type { View } from "../../api/types";
-import { LESSONS, mayStart, outrankedBy, stepOnShow, stepsFor, type Lesson, type Subject } from "../../game/lessons";
-import { UI } from "../../game/text";
+import { LESSONS, mayStart, outrankedBy, stepOnShow, stepsFor, type Lesson, type Subject } from "../../game/lessons/lessons";
+import { UI } from "../../game/page/text";
 import { ACTED, bringIntoView, el, setText, tapFeedback } from "../dom";
 import { pickSpot } from "./lessonspot";
 import type { Part, PartContext } from "../part";

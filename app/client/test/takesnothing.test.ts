@@ -5,7 +5,7 @@ import { testContext } from "./context";
 import { fixtureContent } from "../fixtures/content";
 import { townStep } from "../fixtures/town";
 import type { Card, Content, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { CardNeeds } from "../src/ui/cards/cardneeds";
 import { pageRig } from "./personrig";
 

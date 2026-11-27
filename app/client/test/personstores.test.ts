@@ -7,7 +7,7 @@ import { testContext } from "./context";
 import { townStep } from "../fixtures/town";
 import { fixtureContent } from "../fixtures/content";
 import type { Content, Decision, StoreRow, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { LaneRows } from "../src/ui/town/lanerows";
 
 install();

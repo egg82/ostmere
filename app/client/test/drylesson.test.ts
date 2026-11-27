@@ -7,10 +7,10 @@ import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import { townStep } from "../fixtures/town";
 import type { Card, Decision, Order, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { anySelfFedMix, dryCue } from "../src/game/dryhint";
-import { Keeps } from "../src/game/keeps";
-import { DRY_STORE, FIRST_MIX, FIRST_RULE, LESSONS, mayStart } from "../src/game/lessons";
+import { Catalog } from "../src/game/page/catalog";
+import { anySelfFedMix, dryCue } from "../src/game/hands/dryhint";
+import { Keeps } from "../src/game/account/keeps";
+import { DRY_STORE, FIRST_MIX, FIRST_RULE, LESSONS, mayStart } from "../src/game/lessons/lessons";
 import { Screen } from "../src/ui/screen";
 import { keepsOf, NEW_FLAT } from "./kept";
 

@@ -4,10 +4,10 @@
 import { install, FakeEvent, fakeDocument } from "./fake-dom";
 import type { AccountPresentation } from "../src/api/types";
 import { pushCap, type PushEnv } from "../src/app/push";
-import { awayKey } from "../src/game/reminderkeys";
-import { Keeps, NEW_ACCOUNT } from "../src/game/keeps";
-import { sendable } from "../src/game/presentation";
-import { Text } from "../src/game/text";
+import { awayKey } from "../src/game/account/reminderkeys";
+import { Keeps, NEW_ACCOUNT } from "../src/game/account/keeps";
+import { sendable } from "../src/game/account/presentation";
+import { Text } from "../src/game/page/text";
 import { fixtureContent } from "../fixtures/content";
 import { el } from "../src/ui/dom";
 import { clock12, clock24, HourSlider, keyed, shaded } from "../src/ui/settings/hourslider";

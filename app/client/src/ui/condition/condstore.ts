@@ -3,7 +3,7 @@
 // (storetimes.ts) read off the view. None for a chip's rule (the store behind a chip is never a number), a count or a
 // level, or a store with no ledger line.
 import type { View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
+import type { Catalog } from "../../game/page/catalog";
 import { headingWords, heldWords } from "../mixes/storetimes";
 
 /** "Stones · 17 / 18 · -1.35/min · empty in 13m", or "" when there is nothing to state. */

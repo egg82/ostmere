@@ -9,7 +9,7 @@ import { fixtureContent } from "../fixtures/content";
 import { dayOneStep } from "../fixtures/dayone";
 import { play } from "../src/game";
 import { fakeDocument, install } from "./fake-dom";
-import { NEW_SAVE, NEW_ACCOUNT, NEW_SETTINGS } from "../src/game/keeps";
+import { NEW_SAVE, NEW_ACCOUNT, NEW_SETTINGS } from "../src/game/account/keeps";
 
 install();
 const realInterval = globalThis.setInterval;   // the page's self-update polls forever; this run clears it to end

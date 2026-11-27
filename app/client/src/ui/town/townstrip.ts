@@ -9,9 +9,9 @@
 // Each person's Change opens their page (personpage.ts), where their split is set. A lane that has joined has no row of its own any more (lanerows.ts);
 // the strip comes through the arrival queue once, then stays. It takes its numbers from the view and adds none.
 import type { View } from "../../api/types";
-import { laneOneOff } from "../../game/holder";
-import { groups, marked, members, personOf, soloOf, townJoin } from "../../game/town";
-import { UI } from "../../game/text";
+import { laneOneOff } from "../../game/hands/holder";
+import { groups, marked, members, personOf, soloOf, townJoin } from "../../game/town/town";
+import { UI } from "../../game/page/text";
 import { face } from "../asks/asknode";
 import { el, keyed, setText, tapFeedback } from "../dom";
 import type { Part, PartContext } from "../part";
@@ -19,7 +19,7 @@ import { dotChange } from "./personpage";
 import { drawBar, drawWho, personRow, type PersonRow as Row } from "./personrow";
 import { RunningNow } from "../mixes/runningnow";
 import { StuckNote } from "./stucknote";
-import { wastedOn } from "../../game/wasted";
+import { wastedOn } from "../../game/cards/wasted";
 import { splitOf, splitParts, thenSplit } from "./townsplit";
 
 /** How many members' faces a group's row stacks. */

@@ -3,8 +3,8 @@
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
-import { Catalog } from "../src/game/catalog";
-import { NewMarks } from "../src/game/marks";
+import { Catalog } from "../src/game/page/catalog";
+import { NewMarks } from "../src/game/lessons/marks";
 import { AddFold } from "../src/ui/mixes/editoradds";
 
 install();

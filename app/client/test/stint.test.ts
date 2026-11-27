@@ -3,10 +3,10 @@
 // when its goal lands, or never, with the line that binds it.
 import { install } from "./fake-dom";
 import { fixtureStep } from "../fixtures/steps";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { fixtureContent, Q } from "../fixtures/content";
 import type { Condition, GoalRow, QueueEntry, View } from "../src/api/types";
-import { controllingEntry, queueStint, shareUntil, stintRow } from "../src/game/queue";
+import { controllingEntry, queueStint, shareUntil, stintRow } from "../src/game/mixes/queue";
 import { stintFacts, stintParts, stintWords } from "../src/ui/next/stint";
 
 install();

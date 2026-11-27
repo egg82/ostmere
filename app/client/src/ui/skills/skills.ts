@@ -1,8 +1,8 @@
 // One row per unlocked skill the view lists (ui/skills/skillrow.ts draws each), and the prestige sheet its rows open
 // (ui/skills/prestigesheet.ts). A level landing bursts on the row.
 import type { View } from "../../api/types";
-import { shownLevel } from "../../game/prestige";
-import { storyMarks } from "../../game/story";
+import { shownLevel } from "../../game/skills/prestige";
+import { storyMarks } from "../../game/story/story";
 import { el, keyed } from "../dom";
 import { play } from "../feedback/ladder";
 import type { Part, PartContext } from "../part";

@@ -3,8 +3,8 @@
 // It shows the first few and a way to the rest: the page from the strip, the task faces below on the page. Hidden while
 // they have work.
 import type { View } from "../../api/types";
-import { runnableFor, stuckOf, type Stopped } from "../../game/stuck";
-import { UI } from "../../game/text";
+import { runnableFor, stuckOf, type Stopped } from "../../game/town/stuck";
+import { UI } from "../../game/page/text";
 import { el, setText, tapFeedback } from "../dom";
 import type { PartContext } from "../part";
 

@@ -5,12 +5,12 @@
 // goals it would run to (the dry run of switching to it, or the live view's when it already runs), and a goal picked
 // queues the stint at the end of Next.
 import type { Card, View } from "../../api/types";
-import { sectioned } from "../../game/cardsections";
-import { planCards, queueFull, queueStint, whenReady } from "../../game/queue";
-import { isTownMix } from "../../game/town";
-import { UI } from "../../game/text";
-import { waitWords } from "../../game/needwords";
-import { keptReadyAt } from "../../game/ready";
+import { sectioned } from "../../game/cards/cardsections";
+import { planCards, queueFull, queueStint, whenReady } from "../../game/mixes/queue";
+import { isTownMix } from "../../game/town/town";
+import { UI } from "../../game/page/text";
+import { waitWords } from "../../game/cards/needwords";
+import { keptReadyAt } from "../../game/cards/ready";
 import { el, tapFeedback } from "../dom";
 import type { PartContext } from "../part";
 import { sectionHead } from "../condition/condrows";

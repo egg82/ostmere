@@ -3,9 +3,9 @@
 import { install } from "./fake-dom";
 import { fixtureStep } from "../fixtures/steps";
 import { fixtureContent } from "../fixtures/content";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import type { Card, View } from "../src/api/types";
-import { kindLabel, kindsByLead, shownKind } from "../src/game/variants";
+import { kindLabel, kindsByLead, shownKind } from "../src/game/cards/variants";
 import { KindPicks } from "../src/ui/cards/kindpick";
 import { testContext } from "./context";
 import { Glow } from "../src/ui/feedback/fresh";

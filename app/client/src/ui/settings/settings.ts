@@ -2,7 +2,7 @@
 // device" (which holds only what moves a game between devices). Each group is headed by what its choices are bound to,
 // this device or every game; each choice is shown as the sheet opens.
 import type { Straight } from "../../app/straight";
-import { UI, type Text } from "../../game/text";
+import { UI, type Text } from "../../game/page/text";
 import { el } from "../dom";
 import { openSheet } from "../back";
 import type { ReminderRow } from "./reminders";

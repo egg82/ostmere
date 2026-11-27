@@ -1,10 +1,10 @@
 // The Rules tab's mix picker (docs/design/opening-screen/rules-tab.md, "The Rules tab"): choosing a slot's mix, every saved hands mix
 // (a town mix is set by a rule on the town; greyed ones off) with the current one marked, or a new mix.
 import type { Order, View } from "../../api/types";
-import { conditionWords, type RuleSlot as Slot } from "../../game/orders";
-import { mixesFull } from "../../game/mix";
-import { isTownMix } from "../../game/town";
-import { UI } from "../../game/text";
+import { conditionWords, type RuleSlot as Slot } from "../../game/rules/orders";
+import { mixesFull } from "../../game/mixes/mix";
+import { isTownMix } from "../../game/town/town";
+import { UI } from "../../game/page/text";
 import { el, tapFeedback } from "../dom";
 import type { PartContext } from "../part";
 

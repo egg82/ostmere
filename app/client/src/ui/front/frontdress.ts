@@ -4,7 +4,7 @@
 import type { GameApi } from "../../api/api";
 import type { Content, SaveInfo } from "../../api/types";
 import type { Straight } from "../../app/straight";
-import { Text, UI } from "../../game/text";
+import { Text, UI } from "../../game/page/text";
 import { el } from "../dom";
 import { openSheet } from "../back";
 import { emptyView } from "./camp-views";

@@ -6,8 +6,8 @@ import { FakeEvent, fakeDocument, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Decision, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { CLOCK, FIRST_MIX, FIRST_RULE, SECOND_MIX } from "../src/game/lessons";
+import { Catalog } from "../src/game/page/catalog";
+import { CLOCK, FIRST_MIX, FIRST_RULE, SECOND_MIX } from "../src/game/lessons/lessons";
 import { Screen } from "../src/ui/screen";
 import { keepsOf, NEW_FLAT, type Flat } from "./kept";
 

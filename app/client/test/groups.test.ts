@@ -4,7 +4,7 @@
 // The views are fixtures/groups.ts's: four marked people, a pooled lane "crew" and its members nan and ole.
 import { type FakeEl, install } from "./fake-dom";
 import { groupsView, withGroups } from "../fixtures/groups";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { pageRig, savedMix, shareOf, texts } from "./personrig";
 import type { View } from "../src/api/types";
 

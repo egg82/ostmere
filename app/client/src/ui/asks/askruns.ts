@@ -3,7 +3,7 @@
 // Asked again only when what the figures are read against moves (the view's rates, caps and card times); until the
 // new runs answer, the last ones stand.
 import type { View } from "../../api/types";
-import { answerFigures } from "../../game/asks";
+import { answerFigures } from "../../game/asks/asks";
 import type { PartContext } from "../part";
 
 /** What an answer's figures are read against: each store's net rate and cap, and each card's time. */

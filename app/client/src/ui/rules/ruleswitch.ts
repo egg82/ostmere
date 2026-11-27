@@ -2,9 +2,9 @@
 // list, the side shown pressed. Camp is named as the town is (ui.town.title).
 import type { SideKept } from "../../app/ruleside";
 import type { Decision, View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { landedSide, ruleSideOf, sideSwitchShown, type RuleSide } from "../../game/ruleside";
-import { UI } from "../../game/text";
+import type { Catalog } from "../../game/page/catalog";
+import { landedSide, ruleSideOf, sideSwitchShown, type RuleSide } from "../../game/rules/ruleside";
+import { UI } from "../../game/page/text";
 import { el, tapFeedback } from "../dom";
 
 export function sideSwitch(catalog: Catalog, view: View, side: RuleSide, pick: (side: RuleSide) => void): HTMLElement {

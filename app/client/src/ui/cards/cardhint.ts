@@ -1,10 +1,10 @@
 // A card's hint marks (game/hints.ts): the quiet dot where the player's mix could take a card they keep tapping, and the
 // second mix's lesson's trigger on the card it starts from (game/lessons.ts, SECOND_MIX), which stays once the dot is
 // touched, while the detection holds.
-import type { Catalog } from "../../game/catalog";
-import { cardHints, secondMixCard, sideMixCue } from "../../game/hints";
-import type { SideCue } from "../../game/sidelesson";
-import type { Keeps } from "../../game/keeps";
+import type { Catalog } from "../../game/page/catalog";
+import { cardHints, secondMixCard, sideMixCue } from "../../game/hands/hints";
+import type { SideCue } from "../../game/lessons/sidelesson";
+import type { Keeps } from "../../game/account/keeps";
 import type { RepeatedTap, View } from "../../api/types";
 import { markNew, unmark } from "../feedback/fresh";
 

@@ -6,7 +6,7 @@
 import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureContent } from "../fixtures/content";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { Story } from "../src/ui/story/story";
 
 install();

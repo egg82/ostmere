@@ -2,8 +2,8 @@
 // while is pointed at the card to tap, with the one glow, unless something else has it. Which card is the screen's
 // pick (game/cues.ts, nudgeTarget); any touch starts the wait again.
 import type { View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
-import { nudgeTarget } from "../../game/cues";
+import type { Catalog } from "../../game/page/catalog";
+import { nudgeTarget } from "../../game/ledger/cues";
 import type { Glow } from "../feedback/fresh";
 
 /** Seconds without a touch before the glow comes: a design choice, long enough that a player reading or deciding is

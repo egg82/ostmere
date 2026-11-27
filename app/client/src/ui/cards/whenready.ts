@@ -5,9 +5,9 @@
 // glow (once a page session), the queue's taught step. On a staged card a tap runs it is "Until done" instead
 // (game/untildone.ts), the hands' card panel and a person's page alike.
 import type { Card, View } from "../../api/types";
-import { canQueue, onFace, queuedCards, queueFull, whenReady } from "../../game/queue";
-import { UI } from "../../game/text";
-import { untilDone } from "../../game/untildone";
+import { canQueue, onFace, queuedCards, queueFull, whenReady } from "../../game/mixes/queue";
+import { UI } from "../../game/page/text";
+import { untilDone } from "../../game/cards/untildone";
 import { el, setText, tapFeedback } from "../dom";
 import type { PartContext } from "../part";
 

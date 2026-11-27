@@ -9,16 +9,16 @@
 // Once a second person has hands, a switch at the top, Mine | Camp (ruleswitch.ts), shows one side at a time
 // (game/ruleside.ts), kept per device (app/ruleside.ts); it follows a rule the player adds or opens.
 import type { Condition, Decision, View } from "../../api/types";
-import { mixRules, pointSlot, removeRule, rulesFull, type RuleSlot as Slot } from "../../game/orders";
-import { UI } from "../../game/text";
-import { actionsOf, ruleActions } from "../../game/guardwords";
+import { mixRules, pointSlot, removeRule, rulesFull, type RuleSlot as Slot } from "../../game/rules/orders";
+import { UI } from "../../game/page/text";
+import { actionsOf, ruleActions } from "../../game/condition/guardwords";
 import { Slider } from "./ruleslide";
 import { noteOrderRemoved, noteRuleChanged } from "../../telemetry";
 import { ConditionEditor } from "../condition/condition";
 import { Layer } from "../back";
 import { el, tapFeedback } from "../dom";
 import { LaneEditor } from "../condition/laneedit";
-import type { RuleSide } from "../../game/ruleside";
+import type { RuleSide } from "../../game/rules/ruleside";
 import { browserSide, type SideKept } from "../../app/ruleside";
 import { condButton } from "./rulecond";
 import { ruleHandle, ruleMenu } from "./rulemenu";
@@ -26,7 +26,7 @@ import { shape } from "./ruleshape";
 import { RuleSides, sideSwitch } from "./ruleswitch";
 import { whoChoices, whoPicker, type Who } from "./rulewho";
 import { nextHead, nextRows } from "../next/nextlist";
-import { NEXT, nextItems, reorderedItems, steppedItems } from "../../game/nextrow";
+import { NEXT, nextItems, reorderedItems, steppedItems } from "../../game/rules/nextrow";
 import { itemsMoved, itemsOf } from "./handsitems";
 import { NextOrder } from "../next/nextorder";
 import { StintPlan } from "../next/stintplan";

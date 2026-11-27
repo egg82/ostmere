@@ -8,11 +8,11 @@ import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import { townStep } from "../fixtures/town";
 import type { Card, Order, QueueEntry, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { tapUntil } from "../src/game/queue";
-import { untilDone } from "../src/game/untildone";
+import { Catalog } from "../src/game/page/catalog";
+import { tapUntil } from "../src/game/mixes/queue";
+import { untilDone } from "../src/game/cards/untildone";
 import { Cards } from "../src/ui/cards/cards";
-import { NewMarks } from "../src/game/marks";
+import { NewMarks } from "../src/game/lessons/marks";
 import { pageRig } from "./personrig";
 
 install();

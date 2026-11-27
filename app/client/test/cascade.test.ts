@@ -8,9 +8,9 @@ import { install } from "./fake-dom";
 import { BP, fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
-import { ArrivalQueue, LINK_GAP_MS, LINK_PACE, MAX_LINKS } from "../src/game/arrivals";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
+import { ArrivalQueue, LINK_GAP_MS, LINK_PACE, MAX_LINKS } from "../src/game/story/arrivals";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
 import { Reveal } from "../src/ui/feedback/reveal";
 import { Screen } from "../src/ui/screen";
 

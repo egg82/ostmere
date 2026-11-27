@@ -1,6 +1,6 @@
 // The end's moment on the screen: its lines, and when what waits on it may come.
 import type { View } from "../../api/types";
-import type { Catalog } from "../../game/catalog";
+import type { Catalog } from "../../game/page/catalog";
 import { noteEnd } from "../../telemetry";
 
 const READ_MS = 20000;   // what waits on the end comes this long after its lines

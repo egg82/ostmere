@@ -4,11 +4,11 @@
 import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Order, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { mixRules, ruleExists, ruleFor, ruleLetGo, ruleWords, setRule, taskRules } from "../src/game/orders";
-import { whenChoices } from "../src/game/ruleoffers";
+import { Catalog } from "../src/game/page/catalog";
+import { mixRules, ruleExists, ruleFor, ruleLetGo, ruleWords, setRule, taskRules } from "../src/game/rules/orders";
+import { whenChoices } from "../src/game/condition/ruleoffers";
 import { draftWhen } from "../src/ui/condition/conditiondraft";
-import { buildRule, clampRule, defaultRule, readRule, ruleUntil, ruleWhen, tryRule, valid, type StoreRule } from "../src/game/storerule";
+import { buildRule, clampRule, defaultRule, readRule, ruleUntil, ruleWhen, tryRule, valid, type StoreRule } from "../src/game/condition/storerule";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

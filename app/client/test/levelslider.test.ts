@@ -3,8 +3,8 @@
 // store's maximum. The arrow keys step it. Each level has its own slider, and a level the rule cannot take is not set.
 import { FakeEl, FakeEvent, fakeDocument, install, pointer } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
-import { Catalog } from "../src/game/catalog";
-import type { StoreRule } from "../src/game/storerule";
+import { Catalog } from "../src/game/page/catalog";
+import type { StoreRule } from "../src/game/condition/storerule";
 import { Levels } from "../src/ui/condition/condlevels";
 
 install();

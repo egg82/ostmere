@@ -2,8 +2,8 @@
 // hundredths of its exact quotient, not the hundredth a floating-point product lands under. Reference: integer cents,
 // floor(items * 100 / 60), shown by the same number format.
 import { fixtureContent, R } from "../fixtures/content";
-import { Format } from "../src/game/format";
-import { Text } from "../src/game/text";
+import { Format } from "../src/game/page/format";
+import { Text } from "../src/game/page/text";
 
 const format = new Format(new Text(fixtureContent), fixtureContent.scales);
 const shown = new Intl.NumberFormat(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 7, signDisplay: "exceptZero" });
