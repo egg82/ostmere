@@ -45,6 +45,14 @@ a later chapter may add another side to the entries a card already holds (`pacin
 A wounded store (one a lost fight adds to, like hurt) is a level the player sees, in whole items rounded up, never a
 cost in units; the server serves it as `View.levels`, off the ledger (`contract/fights.txt`, "FIGHTS").
 
+Chains: a threat the content marks as a group (`members` of 2 or more, fought one after another) can be reached by a
+working's chain (interface in `engine/design/`, "SPELLS", and `app/ashfall_app/api/contract/spells.txt`, "SPELLS").
+Fights stay flows: "due" is read from the standing fight's own tallies, the members of the group now under way still
+to be fought. At each completion the working resolves min(due, reach) of them in one instant, each a won fight with
+its own line, counted in a chained tally beside fought and lost; the reach is shown on the card before the tap and
+rises only, by level pays. Chance never sets the length. A link moves nothing of the fight but its chained count:
+what casting brings is the working's own lines.
+
 Expeditions: planned in `docs/design/banked-time-plan.md`; interface in `engine/design/`, "BANKED TIME". The first
 slice: a trip is an uncapped card with inputs, run in the mix on its supply store; finds are triggers on its completion
 count; a fighting trip carries a FightDef on the hands' side. No roster, destination state or runner of its own: those
