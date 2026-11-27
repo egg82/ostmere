@@ -1,7 +1,7 @@
 // The new-dot rules: a new task gets a dot; touching it, joining it to a mix, or it being at work clears it; plain
 // text never gets one (markNew is only ever called for a control).
 import { fixtureStep } from "../fixtures/steps";
-import { inUse, NewMarks } from "../src/game/marks";
+import { inUse, NewMarks } from "../src/game/lessons/marks";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

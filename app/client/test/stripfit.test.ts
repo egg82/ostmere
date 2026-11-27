@@ -3,8 +3,8 @@
 // showed with no touch after it leaves the strip entirely. A room not laid out holds just the newest.
 import { FakeEl, FakeEvent, fakeDocument, install } from "./fake-dom";
 import { testContext } from "./context";
-import { fitting } from "../src/ui/stripfit";
-import { Story } from "../src/ui/story";
+import { fitting } from "../src/ui/story/stripfit";
+import { Story } from "../src/ui/story/story";
 
 install();
 

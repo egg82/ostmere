@@ -14,8 +14,9 @@ from fastapi.responses import JSONResponse
 from fastapi.routing import APIRoute
 
 from ..db import unit
-from . import replay, requestlog, session
-from .device_routes import NO_STORE
+from . import replay, requestlog
+from .player import session
+from .player.device_routes import NO_STORE
 from .error_models import ErrorCode
 from .errors import GameError, invalid_decision
 

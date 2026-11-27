@@ -1,13 +1,13 @@
 // The condition editor's quick add (docs/design/opening-screen/rules-tab.md, "The condition editor"): with a task chosen, When
-// offers the stores relevant to it (game/relevant.ts), what it makes then what it takes, and More options every store
+// offers the stores relevant to it (game/condition/relevant.ts), what it makes then what it takes, and More options every store
 // with those first.
 import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { dayOneStep } from "../fixtures/dayone";
 import type { Decision, View } from "../src/api/types";
 import { fixtureContent } from "../fixtures/content";
-import { Catalog } from "../src/game/catalog";
-import { RulesTab } from "../src/ui/rules";
+import { Catalog } from "../src/game/page/catalog";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 

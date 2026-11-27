@@ -1,6 +1,6 @@
 // The side of the Rules page this device last showed, Mine or Camp: kept in this browser's local storage, Mine when
 // storage cannot be read or written (a private window, blocked site data).
-import type { RuleSide } from "../game/ruleside";
+import type { RuleSide } from "../game/rules/ruleside";
 
 export interface SideKept {
   get(): RuleSide;

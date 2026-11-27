@@ -47,7 +47,7 @@ Each part is tagged on the page with the competing design it came from.
   first place. **The journal pages are kept exactly as they are:** the parchment, the handwriting, the drawings
   (owner, 2026-11-14: marks from the days are added, `journal.md`, "Marks on the page").
   They are the lore and story layer and the one deliberate exception to the quiet look (the only light surface,
-  like a book opened by the fire). The page never draws one; the build keeps `ui/journal.ts`'s rendering.
+  like a book opened by the fire). The page never draws one; the build keeps `ui/book/journal.ts`'s rendering.
 - **Asks.** A list, one shown at a fixed height, with a count of the rest. Each ask shows who asks, "↳" what led
   to it, and each answer as before → after figures.
 - **Ledger.** Grouped into yours, town, outposts and threats, each group appearing when its first row does. A row

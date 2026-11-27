@@ -1,7 +1,7 @@
 """View.levels (contract/fights.txt, "FIGHTS", "read a level"): each store a lost fight adds to, as its segment, so the page
 can draw its level though the store has no ledger line. Judged on the opening's own rules and a save holding hurt."""
-from ashfall_app.api.levels import levels
-from ashfall_app.api.scenestores import scene_stores
+from ashfall_app.api.goals.levels import levels
+from ashfall_app.api.world.scenestores import scene_stores
 from ashfall_app.engine import QUANTITY_SCALE as Q, StoreId
 from ashfall_app.engine import view as engine_view
 from tests.shipped_ruleset import ShippedRuleset

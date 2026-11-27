@@ -67,7 +67,7 @@ to the chronicle alone and its finds to the chronicle's Finds, as an uncapped ca
 
 Read in the top half, touch in the bottom. Only the strip and the mix's bar stay pinned while the panel scrolls under
 them, so the newest lines and what the hands run stay on screen while the thumb is on a card. The head and the aim sit
-above the strip in the stage and scroll away with the page, back at its top (`ui/headseat.ts` measures the stage and the
+above the strip in the stage and scroll away with the page, back at its top (`ui/story/headseat.ts` measures the stage and the
 strip, `--scene-vh` and `--stage-pin`; the stage is sticky at the strip's height less its own). The art is the Town tab's:
 on Tasks the cards get its room. It covers a room of `--scene-h` edge to edge, cut top and bottom around what the view
 shows (`scene/crop.ts`, the front page's placement at a cover scale); the strip is three rows (above), and the head keeps

@@ -117,7 +117,7 @@ is why something still works, that is a fact of the world with its own rules, ne
 
 **Creatures follow from biology**: how a thing lives, reproduces, evolved or was made, what it eats and what
 eats it, and its anatomy follows from those answers, the same honesty as the sunless world. Principles in
-`docs/research/creature-design.md`; the creatures themselves are in `content/`.
+`docs/research/art/creature-design.md`; the creatures themselves are in `content/`.
 
 **Magic has rules; the eldritch is never fully explained** (cosmic horror rarely is). Magic is the science you
 rediscover and can master; what lies past it (the wrongness, anything god-sized) stays partly unknowable on purpose.
@@ -150,11 +150,11 @@ Triggers: deterministic, so what a level or a count earns shows the moment it is
 triggers are the engine firing it. The end is one too, with its time kept (`Save.ended_at`; `engine/design/`, "The
 end"). What the next beat waits on is a query over them: the pending triggers with when each lands
 (`app/ashfall_app/engine/pending.py`), read against the content's goals (`app/ashfall_app/opening/goals.py`) into the
-view's goals (`app/ashfall_app/api/goals.py`), which the page marks (`app/client/src/game/story.ts`, the wait line
-`app/client/src/ui/waitline.ts`). Each store and level goal, and each skill's next level, also gets when it lands at
-the rates as set, a tap of the hands set aside, and the dry store that binds it (`app/ashfall_app/api/goalrows.py`,
-`app/ashfall_app/api/setrates.py`), which the mix and condition editors list for an edit
-(`app/client/src/ui/goaltimes.ts`). "The player set a rule on a ruled lane" is one: the LaneRules subject, fired at
+view's goals (`app/ashfall_app/api/goals/goals.py`), which the page marks (`app/client/src/game/story/story.ts`, the wait line
+`app/client/src/ui/story/waitline.ts`). Each store and level goal, and each skill's next level, also gets when it lands at
+the rates as set, a tap of the hands set aside, and the dry store that binds it (`app/ashfall_app/api/goals/goalrows.py`,
+`app/ashfall_app/api/rules/setrates.py`), which the mix and condition editors list for an edit
+(`app/client/src/ui/mixes/goaltimes.ts`). "The player set a rule on a ruled lane" is one: the LaneRules subject, fired at
 the decision that sets it (`engine/design/`, "Lane rules"). A later prestige phase's level pays are one table per
 skill, keyed by the level within the phase, which the merge expands into ordinary triggers
 (`app/ashfall_app/opening/phase_pays.py`).
@@ -163,7 +163,7 @@ Unlocks: the client never decides what exists. A person joining the town is one 
 outcome part that adds the joined unlock and turns the lane's always task into its share), and a person leaving
 another (`app/ashfall_app/engine/leaves.py`: the left unlock, from which `app/ashfall_app/engine/gone.py` derives the
 lane's cards out of play and the standings it stops). The page decides when an unlocked part is first drawn, from the
-view, the content and what the account keeps (`app/client/src/game/shown.ts`; `decisions.md`, "The screen arrives
+view, the content and what the account keeps (`app/client/src/game/page/shown.ts`; `decisions.md`, "The screen arrives
 when it means something"). Features (the ledger, the craft list) are page parts the engine only switches on. Facts
 that only grow live here too: a card retired, an offer shown, answered, and by which answer, a person joined or left.
 The stated aim is read off this set the same way: each aim in the content names the unlock it starts at, and the page
@@ -176,7 +176,7 @@ offer's optional kind lets one rule answer every offer of it by role (`engine/de
 An offer may name who asks (`askers`, ruled lanes) and carry three texts for where it differs from the usual
 (`waiting_key`, `expiry_key`, `permanence_key`), each optional and drawn only when given; the content refuses an
 `expiry_key` until offers can expire (`engine/design/`, KNOWN GAPS). What led to an offer is served with it, its
-gate, none where the page cannot word it; an earlier answer it requires only sequences it and is no cause (`app/ashfall_app/api/line_causes.py`). The page
+gate, none where the page cannot word it; an earlier answer it requires only sequences it and is no cause (`app/ashfall_app/api/world/line_causes.py`). The page
 draws open offers as one list (`docs/design/opening-screen/asks-and-cards.md`, "Asks").
 Interface: `engine/design/`, "Offers", and `app/ashfall_app/api/contract/offers.txt`, "OFFERS". Built:
 `app/ashfall_app/engine/offerstate.py` (where an offer stands), `app/ashfall_app/engine/answering.py` (an answer

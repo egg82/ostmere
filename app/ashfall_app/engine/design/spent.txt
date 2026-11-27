@@ -1,7 +1,7 @@
 SPENT (a paused mix card's share yields to the rest of its mix until its Pause lifts, whether or not anything can
 make its store again: docs/design/week-three-plan.md, item 1, and docs/decisions.md, "A mix keeps going without a dry
 store"; blind tests from this part and api/contract/ alone, item 2, against
-app/tests/engine_contract/MUTANTS_spent.txt). Where this part and an entry above disagree, this part holds; it replaces
+app/tests/engine_contract/spent/MUTANTS_spent.txt). Where this part and an entry above disagree, this part holds; it replaces
 CHOICES "Shares" ("the engine never redistributes a share") and "Running dry" ("its share idles") for every mix card
 that holds a Pause, and amends invariant 41. Examples name ids only; which stores are pools, and when a season refills
 them, is content's.

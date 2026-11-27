@@ -1,4 +1,4 @@
-// A short window (docs/research/a11y-audit.md, §6): the condition editor keeps its Remove, Copy rule and Save row on
+// A short window (docs/research/design/a11y-audit.md, §6): the condition editor keeps its Remove, Copy rule and Save row on
 // screen and gives the choices the room the foot's lines took, and the lesson note is small enough to dock in the band above
 // an open editor. Layout is CSS, which fake-dom cannot draw (no container or media queries), so this reads the rules; the
 // measured result is in the branch's before/after renders (the pull request).

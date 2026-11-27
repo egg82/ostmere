@@ -1,7 +1,7 @@
 // A find's amount ({found}, contract/text-and-numbers.txt "Text and numbers") is filled in the line its FindInfo names, from the served
 // quantity in whole items; the same slot in any other text is left as written.
 import { fixtureContent } from "../fixtures/content";
-import { Text } from "../src/game/text";
+import { Text } from "../src/game/page/text";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (got !== want) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

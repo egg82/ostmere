@@ -1,4 +1,4 @@
-// The front page's list of games (ui/places.ts): every game newest first and New game last, left out when the account is
+// The front page's list of games (ui/front/places.ts): every game newest first and New game last, left out when the account is
 // full; the newest selected at the start; a tap selects, a second tap on the selected row opens; on a phone a tap opens;
 // a game with no camp level says nothing of one; a view that fails is a plain dark frame, never the empty camp.
 import { FakeEl, fakeDocument, install } from "./fake-dom";
@@ -6,9 +6,9 @@ import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import { ApiFailure } from "../src/api/api";
 import type { SaveInfo, View } from "../src/api/types";
-import { Text } from "../src/game/text";
-import { Places, type Paint } from "../src/ui/places";
-import { NEW_SAVE } from "../src/game/keeps";
+import { Text } from "../src/game/page/text";
+import { Places, type Paint } from "../src/ui/front/places";
+import { NEW_SAVE } from "../src/game/account/keeps";
 
 install();
 

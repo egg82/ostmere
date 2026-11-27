@@ -16,6 +16,6 @@ chapter end      things  people keeping their own split | groups (members) | siz
   day_nineteen        4  n1 n3 | g_field(n2 n5 n7 n9 n12) g_hearth(n4 n6 n8 n10) | 5 4 | x5 x4 | spread 20%
   day_twenty_two      5  n1 n3 n13 | g_field(n2 n5 n7 n9 n12) g_hearth(n4 n6 n8 n10) | 5 4 | x5 x4 | spread 20%
   day_twenty_three    6  n1 n3 n13 | g_field(n2 n5 n7 n9 n12) g_hearth(n4 n6 n8 n10) g_road(n14 n15) | 5 4 2 | x5 x4 x2 | spread 60%
-  day_twenty_five     7  n1 n3 n13 n23 | g_field(n2 n5 n7 n9 n12) g_hearth(n4 n6 n8 n10 n19 n21) g_road(n14 n15 n16 n17 n18 n20 n22) | 5 6 7 | x5 x6 x7 | spread 28%
-  prestige            7  n1 n3 n13 n23 | g_field(n2 n5 n7 n9 n12) g_hearth(n4 n6 n8 n10 n19 n21) g_road(n14 n15 n16 n17 n18 n20 n22) | 5 6 7 | x5 x6 x7 | spread 28%
-  phase_pays          7  n1 n3 n13 n23 | g_field(n2 n5 n7 n9 n12) g_hearth(n4 n6 n8 n10 n19 n21) g_road(n14 n15 n16 n17 n18 n20 n22) | 5 6 7 | x5 x6 x7 | spread 28%
+  day_twenty_five     7  n1 n3 n13 n23 | g_field(n2 n5 n7 n9 n12) g_hearth(n4 n6 n8 n10) g_road(n14 n15 n16 n17 n18 n19 n20 n21 n22) | 5 4 9 | x5 x4 x9 | spread 55%
+  prestige            7  n1 n3 n13 n23 | g_field(n2 n5 n7 n9 n12) g_hearth(n4 n6 n8 n10) g_road(n14 n15 n16 n17 n18 n19 n20 n21 n22) | 5 4 9 | x5 x4 x9 | spread 55%
+  phase_pays          7  n1 n3 n13 n23 | g_field(n2 n5 n7 n9 n12) g_hearth(n4 n6 n8 n10) g_road(n14 n15 n16 n17 n18 n19 n20 n21 n22) | 5 4 9 | x5 x4 x9 | spread 55%

@@ -1,10 +1,10 @@
-// The ledger's groups (docs/design/redesign.md, "Ledger"; ui/ledger.ts): the player's stores under Yours, the threats at
+// The ledger's groups (docs/design/redesign.md, "Ledger"; ui/ledger/ledger.ts): the player's stores under Yours, the threats at
 // them under Threats, each label drawn only while its group has a row, and the labels in that order.
 import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fightsStep } from "../fixtures/fights";
 import { fixtureStep } from "../fixtures/steps";
-import { Ledger } from "../src/ui/ledger";
+import { Ledger } from "../src/ui/ledger/ledger";
 import { keepsOf, NEW_FLAT } from "./kept";
 
 install();

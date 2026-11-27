@@ -1,6 +1,6 @@
 # Creatures
 
-Principles: `docs/research/creature-design.md`. Premise: `world.md`. Each region asks a different question of the
+Principles: `docs/research/art/creature-design.md`. Premise: `world.md`. Each region asks a different question of the
 survivor, by **kind** not size (R1 hunger, R2 stealth and silence, R3 heat and machines, R4 the hollowed and the
 Unpaid, R5 cold and the unknowable).
 

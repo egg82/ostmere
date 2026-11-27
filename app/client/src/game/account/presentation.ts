@@ -1,0 +1,60 @@
+// What the page keeps only grows (contract/endpoints.txt, AccountPresentation and SavePresentation), so two copies of it join by union: flags OR
+// together, a list is the first's entries then the second's that are new, of two chapters the later return's, and of two
+// newest days read the later. The
+// server does the same on every write; the page does it to take the server's answer without losing a keep made while
+// that write was in flight.
+import type { AccountPresentation, Chapter, SavePresentation } from "../../api/types";
+import { MAX_VISITS } from "../book/chronicle";
+
+function union<T>(own: T[], more: T[], name: (item: T) => string): T[] {
+  const seen = new Set(own.map(name));
+  return [...own, ...more.filter((item) => !seen.has(name(item)) && seen.add(name(item)))];
+}
+
+const names = (own: string[], more: string[]): string[] => union(own, more, (n) => n);
+
+export function mergePresentation(own: AccountPresentation, more: AccountPresentation): AccountPresentation {
+  return {
+    rules_opened: own.rules_opened || more.rules_opened,
+    devices_opened: own.devices_opened || more.devices_opened,
+    reminder_mentioned: (own.reminder_mentioned ?? false) || (more.reminder_mentioned ?? false),
+    ledger_lines: names(own.ledger_lines, more.ledger_lines),
+    mix_stopped: names(own.mix_stopped, more.mix_stopped),
+    switch_offered: union(own.switch_offered, more.switch_offered, (s) => JSON.stringify([s.chip, s.mix_id])),
+    journal_read: names(own.journal_read, more.journal_read),
+  };
+}
+
+export function mergeSavePresentation(own: SavePresentation, more: SavePresentation): SavePresentation {
+  return {
+    rule_seen: own.rule_seen || more.rule_seen,
+    mix_offered: names(own.mix_offered, more.mix_offered),
+    lines_touched: names(own.lines_touched ?? [], more.lines_touched ?? []),
+    lane_tasks_seen: names(own.lane_tasks_seen ?? [], more.lane_tasks_seen ?? []),
+    lessons: names(own.lessons, more.lessons),
+    lesson_ends: union(own.lesson_ends, more.lesson_ends, (e) => e.lesson),
+    visits: union(own.visits ?? [], more.visits ?? [], (v) => String(v.left)).slice(-MAX_VISITS),   // an older pod answers none
+    chapter: later(own.chapter ?? null, more.chapter ?? null),
+    newest_day_read: higher(own.newest_day_read ?? null, more.newest_day_read ?? null),
+  };
+}
+
+const higher = (own: number | null, more: number | null): number | null => (more !== null && (own === null || more > own) ? more : own);
+
+const later = (own: Chapter | null, more: Chapter | null): Chapter | null => (more !== null && (own === null || more.left > own.left) ? more : own);
+
+/** What a save's write sends: `lines_touched`, `lane_tasks_seen`, `visits`, `chapter` and `newest_day_read` only once one is kept, since a build from before
+ * them refuses a body naming it. */
+export function sendableSave(p: SavePresentation): SavePresentation {
+  const { lines_touched: touched, lane_tasks_seen: tasks, visits, chapter, newest_day_read: day, ...older } = p;
+  return { ...older, ...((touched ?? []).length > 0 ? { lines_touched: touched } : {}), ...((tasks ?? []).length > 0 ? { lane_tasks_seen: tasks } : {}), ...((visits ?? []).length > 0 ? { visits } : {}), ...(chapter ? { chapter } : {}),
+    ...(day !== null && day !== undefined ? { newest_day_read: day } : {}) } as SavePresentation;
+}
+
+/** What a write sends: `reminder_mentioned` only once it is set, since a build from before reminders refuses a body
+ * naming it (its model forbids extra fields), and a page from this build still talks to one while a deploy rolls. */
+export function sendable(p: AccountPresentation): AccountPresentation {
+  if (p.reminder_mentioned) return p;
+  const { reminder_mentioned: _unset, ...older } = p;
+  return older as AccountPresentation;
+}

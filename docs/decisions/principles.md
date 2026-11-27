@@ -74,7 +74,7 @@ feeling they must babysit it, staying up at 2 AM for a timer to set up the next 
   lesson is kept once, skippable; its line is UI voice ("The UI speaks plainly, in numbers", below), and its note never covers the card the countdown is on. The edge of the written content has one end card (`end_card` in `opening.toml`), which the loader puts on the last shipped chapter's `end_feature`. The dusk card
   that said this at the end, minutes before any countdown, is retired: the player had nothing on screen to tie it to.
   Why: a reviewer took the wait after dusk for the end of the game and left
-  (`docs/research/galaxy-review.md`).
+  (`docs/research/design/galaxy-review.md`).
 - **The quiet stretch before the end shows the light going** (2026-10-18, after a cold tester left 13 s into it, 25 s
   before the end). The last step's lines keep the evening to themselves, since end lines that follow at once read as
   rushed; but the stretch is never a still screen: the scene moves into its dusk grade over the evening, so a player

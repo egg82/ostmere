@@ -1,10 +1,10 @@
-GOAL ROWS (docs/design/worth-a-change.md, "The payoff, shown before and after"; docs/research/fun-from-choice.md, proposal 1)
+GOAL ROWS (docs/design/worth-a-change.md, "The payoff, shown before and after"; docs/research/design/fun-from-choice.md, proposal 1)
   view.goal_rows is each goal a mix can move: every store and level goal of view.goals, in that order, then each skill
   in view.skills whose next_level_xp is set, at its next shown level (level + 1), skipping one a story level goal
   already holds. A card's count and the clock are never rows, nor is a skill at its top: no next level, and a story
   level goal no XP in the skill's phase reaches. Each row is read at the rates as set: the engine's own
   shares and lines with a tap of the hands set aside, so the hands' mix runs at its shares and a card that yielded to
-  the tap runs in full (app/ashfall_app/api/setrates.py). Rates are read at view.at; nothing projects an input running
+  the tap runs in full (app/ashfall_app/api/rules/setrates.py). Rates are read at view.at; nothing projects an input running
   dry later, an order taking the hands, or a level speeding the work.
   - lands_at: view.at plus what is left over per_hour, rounded up; view.at when already met; null when per_hour is not
     above 0 or a store goal's target is over its LedgerLine.cap.

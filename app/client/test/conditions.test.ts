@@ -98,8 +98,8 @@ expect("chip:warm|chip:cold", AT, true);
 
 // A card's skill-level need, through the fixture's own text table.
 {
-  const { Format } = await import("../src/game/format");
-  const { Text } = await import("../src/game/text");
+  const { Format } = await import("../src/game/page/format");
+  const { Text } = await import("../src/game/page/text");
   const { fixtureContent } = await import("../fixtures/content");
   const text = new Text(fixtureContent);
   const got = new Format(text, fixtureContent.scales).needSkill("Foraging", 2, 3);

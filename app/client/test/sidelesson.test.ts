@@ -1,4 +1,4 @@
-// The side-holder's lesson (game/sidelesson.ts, SIDE_MIX; docs/design/opening-screen/lessons.md, "Lessons"): the first time a fight
+// The side-holder's lesson (game/lessons/sidelesson.ts, SIDE_MIX; docs/design/opening-screen/lessons.md, "Lessons"): the first time a fight
 // of a side is served while a card that holds that side is in play, the holder's face is the trigger. Two steps: the face, then
 // the Mixes control, whose line says both in one mix run together. Never again once done or skipped, and it starts from
 // nothing else.
@@ -6,10 +6,10 @@ import { install } from "./fake-dom";
 import { fightsStep } from "../fixtures/fights";
 import { fixtureContent } from "../fixtures/content";
 import type { Content, Decision, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
-import { FIRST_MIX, FIRST_RULE, LESSONS, mayStart, SIDE_MIX } from "../src/game/lessons";
-import { sideCue } from "../src/game/sidelesson";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
+import { FIRST_MIX, FIRST_RULE, LESSONS, mayStart, SIDE_MIX } from "../src/game/lessons/lessons";
+import { sideCue } from "../src/game/lessons/sidelesson";
 import { Screen } from "../src/ui/screen";
 import { keepsOf, NEW_FLAT } from "./kept";
 

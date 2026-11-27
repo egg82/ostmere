@@ -1,4 +1,4 @@
-"""FULL OUTPUT's implementation choices beside the contract suite (engine_contract/test_full_output.py): rebase
+"""FULL OUTPUT's implementation choices beside the contract suite (engine_contract/cards/test_full_output.py): rebase
 re-decides a full pause rather than reading one written under other rules (design/full-output.txt, "FULL OUTPUT", "Rebase")."""
 from dataclasses import replace
 

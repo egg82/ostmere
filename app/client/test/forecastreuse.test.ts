@@ -1,4 +1,4 @@
-// The page holds the forecast (contract/forecast.txt, "Forecast"; src/game/session.ts): asked for by its own call, it is drawn on
+// The page holds the forecast (contract/forecast.txt, "Forecast"; src/game/page/session.ts): asked for by its own call, it is drawn on
 // every view while the save has had no decision since; a decision since (the page's or another's) leaves the view
 // without one until the page asks again, which it does after a quiet spell, at most once a minute; one near its
 // horizon, or half its span if that is less, is asked for afresh.
@@ -6,8 +6,8 @@ import type { GameApi } from "../src/api/api";
 import type { Forecast, Step } from "../src/api/types";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
-import { Session, type SessionEvents } from "../src/game/session";
-import { NEW_SAVE, NEW_ACCOUNT, NEW_SETTINGS } from "../src/game/keeps";
+import { Session, type SessionEvents } from "../src/game/page/session";
+import { NEW_SAVE, NEW_ACCOUNT, NEW_SETTINGS } from "../src/game/account/keeps";
 
 function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(what);

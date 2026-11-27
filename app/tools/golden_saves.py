@@ -1,5 +1,5 @@
 """The golden saves (tests/saves/golden/f<FORMAT>/): checkpoints of the scripted opening, each written as an encoded
-text under this commit's rules, so a later format bump runs them through the upgrade chain (tests/saves/test_golden.py).
+text under this commit's rules, so a later format bump runs them through the upgrade chain (tests/saves/builds/test_golden.py).
 
     python tools/golden_saves.py <dir>    # write NN-seed-time.json, one encoded save each; run from app/
 """

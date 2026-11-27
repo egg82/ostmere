@@ -1,4 +1,4 @@
-// The stopped mix's lesson (game/lessons.ts, MIX_STOPPED), on the whole screen: the first running mix to grey over a done
+// The stopped mix's lesson (game/lessons/lessons.ts, MIX_STOPPED), on the whole screen: the first running mix to grey over a done
 // card marks Edit, and the lesson walks Edit, the add button of the card the content says takes its place (when it names
 // one), the editor's ✕ on the done card and Save. Without a replacement, a mix with no other card left to run is not
 // marked (its ✕ is off); a mix that is not greyed never is; kept or skipped, it never comes again.
@@ -7,9 +7,9 @@ import { fixtureContent } from "../fixtures/content";
 import type { Content } from "../src/api/types";
 import { fixtureStep } from "../fixtures/steps";
 import type { Decision, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
-import { CLOCK, FIRST_MIX, FIRST_RULE, LESSONS, MIX_STOPPED, mayStart } from "../src/game/lessons";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
+import { CLOCK, FIRST_MIX, FIRST_RULE, LESSONS, MIX_STOPPED, mayStart } from "../src/game/lessons/lessons";
 import { Screen } from "../src/ui/screen";
 import { keepsOf, NEW_FLAT } from "./kept";
 

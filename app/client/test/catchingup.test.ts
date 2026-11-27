@@ -1,12 +1,12 @@
-// A long absence comes back in slices (src/game/session.ts; contract/catching-up.txt, "Catching up"): the page asks advance at once
+// A long absence comes back in slices (src/game/page/session.ts; contract/catching-up.txt, "Catching up"): the page asks advance at once
 // until a Step reaches now, says how far each slice got, draws the slices as one return from the view the player was
 // looking at, and holds a decision until then; a decision refused as catching_up carries on and is sent once caught up.
 import { ApiFailure, type GameApi } from "../src/api/api";
 import type { Decision, LogLine, Step, View } from "../src/api/types";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
-import { Session, type SessionEvents } from "../src/game/session";
-import { NEW_SAVE } from "../src/game/keeps";
+import { Session, type SessionEvents } from "../src/game/page/session";
+import { NEW_SAVE } from "../src/game/account/keeps";
 
 function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(what);
