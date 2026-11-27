@@ -867,6 +867,7 @@ export interface components {
             /** Glows */
             glows: boolean;
             fight: components["schemas"]["FightInfo"] | null;
+            chain: components["schemas"]["ChainInfo"] | null;
             /** Replaced By */
             replaced_by: string | null;
         };
@@ -905,6 +906,28 @@ export interface components {
             lane: string;
             /** Feature */
             feature: string;
+        };
+        /**
+         * Chain
+         * @description One unlocked card with a chain that is not completed, now (contract/spells.txt, "SPELLS").
+         */
+        Chain: {
+            /** Card */
+            card: string;
+            /** Runner */
+            runner: string;
+            up_to: components["schemas"]["Strength"];
+        };
+        /**
+         * ChainInfo
+         * @description A card's chain: the standing fight whose due fights it resolves (its threat always a group), and the keys its
+         *     link lines use: link i, from 1, reads link_line_keys[min(i, n) - 1] (contract/spells.txt, "SPELLS").
+         */
+        ChainInfo: {
+            /** Runner */
+            runner: string;
+            /** Link Line Keys */
+            link_line_keys: string[];
         };
         /** Change */
         Change: {
@@ -1185,6 +1208,8 @@ export interface components {
             fought: number;
             /** Lost */
             lost: number;
+            /** Chained */
+            chained: number;
         };
         /**
          * FightInfo
@@ -2649,6 +2674,8 @@ export interface components {
             threat: string;
             /** Label Key */
             label_key: string;
+            /** Members */
+            members: number;
         };
         /** TransferCode */
         TransferCode: {
@@ -2773,6 +2800,8 @@ export interface components {
             offers: components["schemas"]["Offer"][];
             /** Fights */
             fights: components["schemas"]["Fight"][];
+            /** Chains */
+            chains: components["schemas"]["Chain"][];
             /** Goals */
             goals: components["schemas"]["Goal"][];
             /** Goal Rows */

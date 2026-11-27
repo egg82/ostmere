@@ -173,13 +173,14 @@ def _dry_resume_time(save: Save, rules: Rules, p: Pause) -> int | None:
 
 
 def _completion_events(save: Save, rules: Rules) -> list[Event]:
-    """A running capped card's work first reaches its next completion, solved off the segment as a latch is."""
+    """A running capped card's, or chain card's, work first reaches its next completion, solved off the segment as a
+    latch is (design/spells.txt, "SPELLS": a chain is a discrete effect)."""
     ix = index(rules)
     found: list[Event] = []
     for cs in save.cards:   # a card with no state has no work rising
         c = ix.cards.get(cs.card)
         seg = cs.work
-        if c is not None and c.cap is not None and seg.rate > 0:
+        if c is not None and (c.cap is not None or c.chain is not None) and seg.rate > 0:
             t = reach_time(seg, (seg.start_value // unit(c) + 1) * unit(c))
             if t is not None:
                 found.append(Event(t, EventKind.COMPLETION, ix.card_pos[c.id], c.id))

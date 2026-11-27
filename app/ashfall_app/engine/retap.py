@@ -22,8 +22,9 @@ from .work import blocker, land
 def may_repeat(card: CardDef) -> bool:
     """A card whose landing does nothing a rate would miss: uncapped (no COMPLETION), no inputs or drains (no
     threshold read at each landing), no tap line, and off the hands (a landing there lets the mix run for the
-    instant)."""
-    return card.lane != HANDS and card.cap is None and not card.inputs and not card.drains and not card.lines
+    instant), and no chain (each landing resolves one: design/spells.txt, "SPELLS")."""
+    return (card.lane != HANDS and card.cap is None and not card.inputs and not card.drains and not card.lines
+            and card.chain is None)
 
 
 def crossing(save: Save, rules: Rules) -> frozenset[LaneId]:
