@@ -202,7 +202,7 @@ KNOWN GAPS (the town's mix)
   the first wide expedition (BANKED TIME, KNOWN GAPS, "Wide expeditions": a trip card on one person's lane at a
   share already works; several people on one trip is this gap).
 - An always rule the player writes on a joined lane through the full editor: the engine accepts it and it yields that
-  person's shares for good. The page builds none for a joined lane (api/CONTRACT.txt, "The town's mix"). Decided by:
+  person's shares for good. The page builds none for a joined lane (api/contract/the-towns-mix.txt, "The town's mix"). Decided by:
   the first save seen holding one.
 - Joint projects (one card both layers work on, docs/decisions.md, "You and the town"): a card is on one lane.
   Decided by: the first joint project.

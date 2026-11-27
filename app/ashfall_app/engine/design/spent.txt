@@ -1,6 +1,6 @@
 SPENT (a paused mix card's share yields to the rest of its mix until its Pause lifts, whether or not anything can
 make its store again: docs/design/week-three-plan.md, item 1, and docs/decisions.md, "A mix keeps going without a dry
-store"; blind tests from this part and api/CONTRACT.txt alone, item 2, against
+store"; blind tests from this part and api/contract/ alone, item 2, against
 app/tests/engine_contract/MUTANTS_spent.txt). Where this part and an entry above disagree, this part holds; it replaces
 CHOICES "Shares" ("the engine never redistributes a share") and "Running dry" ("its share idles") for every mix card
 that holds a Pause, and amends invariant 41. Examples name ids only; which stores are pools, and when a season refills
@@ -94,7 +94,7 @@ CHOICES (spent)
   0), and list no gains.
 - Read model (view.py): CardView.run is SPENT for a spent card and PAUSED for another giver; CardView.share_bp stays
   its saved share; CardView gains `spent_store: StoreId | None` (the spent card's store, None unless its run is SPENT)
-  and `gained: tuple[SpentShare, ...]` (as explain's, () when none). The wire carries both (api/CONTRACT.txt,
+  and `gained: tuple[SpentShare, ...]` (as explain's, () when none). The wire carries both (api/contract/spent.txt,
   "SPENT"). A running mix's actual split is each card's share_bp plus its gained, a giver's 0; it differs from the set
   split exactly while the mix holds a giver. Starved (amends invariant 41): a runner paused on a store makes
   it starved only when it is not a spent card; a spent store has no cure in reach, and a red line all season would

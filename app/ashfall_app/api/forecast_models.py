@@ -28,7 +28,7 @@ class ForecastEmpty(BaseModel):
 
 class Forecast(BaseModel):
     """Everything that lands by `horizon_at` if the player changes nothing: orders, the queue and everything running
-    played out (engine DESIGN.txt, "Forecast"). It holds for every later view of the save until its next decision.
+    played out (engine design/, "Forecast"). It holds for every later view of the save until its next decision.
     A time past horizon_at is unknown: draw none, never a guess."""
 
     horizon_at: int

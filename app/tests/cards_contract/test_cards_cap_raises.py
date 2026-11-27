@@ -1,4 +1,4 @@
-"""Store-cap raises, written from DESIGN.txt ("Store caps", "Caps", "Retired") and Outcome's docstring alone: a Modifier
+"""Store-cap raises, written from engine/design/ ("Store caps", "Caps", "Retired") and Outcome's docstring alone: a Modifier
 aimed at StoreCap(store) changes what the store holds, adds sum and muls compound with one rounding down at the end;
 LedgerLine.cap is the cap now; it only raises, so nothing is clamped and no stock is lost; the rebuild at the instant a
 raise lands restarts a full store's makers; an Outcome's

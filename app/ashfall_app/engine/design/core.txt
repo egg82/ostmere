@@ -55,7 +55,7 @@ CHOICES (each with its reason)
   order's mix runs), unless nothing will make it ready (Never ready). A verb that changes nothing is not an error. READY falls at the first
   time a TapCard named by a true order or by the queue head, unlocked, unspent and on a free lane, turns ready
   (its Blocker's ready_at), so nothing waits on an unready project into idleness. Content and the page never build
-  an always-true condition (api/CONTRACT.txt, "a store rule"), so no order they make shadows the queue forever; the
+  an always-true condition (api/contract/the-client-may.txt, "a store rule"), so no order they make shadows the queue forever; the
   engine does not reject one (the contract suites' generators make them). A player's switch stands; while an order's
   or the queue's mix runs it sets only the mix that comes back. A queue head that is a SwitchMix changes nothing when
   applied: its mix runs while it controls (Queue mix).
@@ -165,7 +165,7 @@ CHOICES (each with its reason)
   is the route); the verb cannot act until it is unlocked. The ACTION unlock gates mix use and standing actions,
   not a project's own action. Features are page parts the engine only switches on; the feature vocabulary is the
   feature ids the opening and the outcomes unlock (Rules declares no features). The kinds entry (an EntryId) and note
-  (a NoteId) are the journal's pages and the notes written on them (api CONTRACT.txt, "JOURNAL"): ordinary kinds, held
+  (a NoteId) are the journal's pages and the notes written on them (api/contract/journal.txt, "JOURNAL"): ordinary kinds, held
   and gated like a feature, known where the rules mention them, kept by a rebase as the save had them, and never read
   by the engine beyond a gate's Unlocked. Rules.opening None means no gating
   (everything unlocked), so rules without an opening (tests, bare simulator economies) need no unlock data; the view
@@ -197,7 +197,7 @@ CHOICES (each with its reason)
 - Decision context (context.py): decide_logged's Step.context is what held at the decision's instant before the verb
   applied: the mix the hands ran, whether a TapCard's card was in it (flattened), and the chips shown. The decision
   log keeps it beside the verb, so what the player keeps doing under which state is read off the log without a replay
-  (the server's repeat offers, api/CONTRACT.txt "Repeats"). It is read off the save only, so a replay reproduces it.
+  (the server's repeat offers, api/contract/repeats.txt "Repeats"). It is read off the save only, so a replay reproduces it.
 - Forecast (forecast.py): every level-up of every skill, and every fill (reaching its cap as it stands then, from
   below) and emptying of each named store, by a given time, with nobody deciding: the save resolved instant by
   instant exactly as advance resolves it, so orders, the queue, taps ending and stores running dry all play out. A
@@ -412,7 +412,7 @@ REJECTED, AND WHY (the alternative turned down for each decision above)
 - The effective push time left to the page (work_s against explain_work): the page would simulate the speed rule;
   CardView.push_s carries it.
 - Numbers in order-card text (the voice pass's terse labels): the threshold would live twice and drift; the text is
-  a template with slots filled from the card's structured order (api/CONTRACT.txt).
+  a template with slots filled from the card's structured order (api/contract/).
 - index() and rules_digest() re-hashing a Rules tree per call is implementation, not contract (IMPL-QUESTIONS 15):
   Rules is an immutable value, so the engine may cache derived data by identity; a caller never subclasses or wraps
   Rules for speed, and the engine benchmark holds the cost.
@@ -426,7 +426,7 @@ REJECTED, AND WHY (the alternative turned down for each decision above)
   rounding would live in prose; one page-side rule over Scales with unit words in ui.* templates is checkable once.
 - The {mix} slot: content cannot know a player's mix; a raw id in text broke its own rule.
 - all_covered (with or without a minimum of lines) as the end on its own: it is true at time 0 and the threshold would
-  be a number in code. The end is the content's end feature alone (api/CONTRACT.txt, "The end"): the unlock is data
+  be a number in code. The end is the content's end feature alone (api/contract/the-end.txt, "The end"): the unlock is data
   where the moment is authored, and the content gates it on a milestone the page states.
 - The end feature AND all_covered: every line white is no milestone a player of the genre expects, the page could not
   state it as one, and getting by is enough in this story.

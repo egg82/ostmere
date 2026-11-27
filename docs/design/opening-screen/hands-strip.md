@@ -43,7 +43,7 @@ joined, their split of the town's mix as a share bar (`ui/personmix.ts`); their 
 face (`ui/cardpick.ts`, a lane's crafts in their section after the rest), a tap on one joining it to their time or taking it
 out, a divider setting the split, each change sent as it is made with no Save; then the rules that tap their cards, each a
 button into the Rules tab. A capped card, a one-off, is never in the town's mix (a mix greyed by a finished build would idle the
-person: `engine/DESIGN.txt`, "THE TOWN'S MIX"); a tap on it has the person do its next completion, as a tap on one of
+person: `engine/design/`, "THE TOWN'S MIX"); a tap on it has the person do its next completion, as a tap on one of
 yours does, with no rule made, and then they go back to their mix. While it runs the card
 counts down and fills its bar as a Tasks card does, and their split bar, on the page and on their Town row, is that card
 alone with its time left and "then {their split}", as the hands strip draws a tap. Every person's row, joined or not, has its own Change, and a quiet dot on it marks a task not

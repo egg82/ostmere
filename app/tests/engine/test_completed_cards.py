@@ -1,4 +1,4 @@
-"""counts.completed_cards against the per-card rule it reads in one pass (DESIGN.txt, "Caps", "Retired"): a capped card
+"""counts.completed_cards against the per-card rule it reads in one pass (design/cards.txt, "Caps", "Retired"): a capped card
 at its effective cap, a retired one, never one under its raised cap, an uncapped one, or a capped one with no state."""
 from dataclasses import replace
 

@@ -1,4 +1,4 @@
-"""Validation of fights (DESIGN.txt, "FIGHTS", "CHOICES"), each refusal paired with the valid control."""
+"""Validation of fights (engine/design/, "FIGHTS", "CHOICES"), each refusal paired with the valid control."""
 from collections.abc import Callable
 from dataclasses import replace
 from typing import Any

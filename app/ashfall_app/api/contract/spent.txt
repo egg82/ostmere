@@ -1,6 +1,6 @@
 SPENT
   A mix card stopped on a dry store gives its share to the other cards of the same running mix on the same lane, in
-  proportion to their own shares, until it starts again (engine DESIGN.txt, "SPENT"): a store something in play can
+  proportion to their own shares, until it starts again (engine design/spent.txt, "SPENT"): a store something in play can
   refill takes it back when the store reaches an hour of the card's cost, and a store nothing in play can make again
   (a pool after its season) when an outcome refills it. Both are the same yield; they differ in what brings the card
   back. The share the player set never changes on its own.

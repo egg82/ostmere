@@ -199,7 +199,7 @@ How these engine parts behave today, moved from their rows in `systems.md`.
 
 Stores and caps: finite everywhere. Past a cap, production is lost on purpose; where it should go instead is sinks,
 work that takes stores (trips, comforts, arrivals: Cards and Offers), sized so a day's absence loses at most half
-(`docs/design/banked-time-plan.md`; engine `DESIGN.txt`, "BANKED TIME").
+(`docs/design/banked-time-plan.md`; `engine/design/`, "BANKED TIME").
 
 Pacing curve: an A/B target, the simulator running two curves side by side. One curve for every skill, its steps never
 shrinking past the shipped ones; a level's pay speeds its skill's work (more made, the same XP), so time per level

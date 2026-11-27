@@ -384,7 +384,7 @@ def kinds_st(draw: DrawFn):
 
 
 def _can_run(s: Save, rules: Rules, c: CardId) -> bool:
-    """A tap of c can start and run at s.time: no Pause on it and every store it costs above 0 (DESIGN.txt, "Inputs
+    """A tap of c can start and run at s.time: no Pause on it and every store it costs above 0 (engine/design/, "Inputs
     against a dry store": a tap on a dry cost store pauses at once and ends, as a player's own tap would)."""
     costs = next(cd.costs for cd in rules.cards if cd.id == c)
     return (all(p.runner != c for p in s.pauses)

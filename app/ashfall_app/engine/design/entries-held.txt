@@ -1,5 +1,5 @@
 ENTRIES HELD WHILE A CARD RUNS (a watch or a guard raising a side while it works: docs/design/week-two-plan.md, item 2;
-blind tests from this part and api/CONTRACT.txt alone, item 3, against app/tests/engine_contract/MUTANTS_held.txt).
+blind tests from this part and api/contract/ alone, item 3, against app/tests/engine_contract/MUTANTS_held.txt).
 Where this part and an entry above disagree, this part holds. Examples name ids only; which cards, sides and amounts
 is content's.
 
@@ -106,7 +106,7 @@ CHOICES (entries held while a card runs)
 - View: View gains `held: tuple[HeldView, ...]`, HeldView(card: CardId, share_bp: int, entries: tuple[Modifier,
   ...]), one per card with h(c) > 0 in rules.cards order, share_bp = h(c), entries as held in the stack; exported.
   explain_strength (and so FightView.power) lists the held entries among its adds with their "held:" source. The
-  wire (api/CONTRACT.txt, "FIGHTS") serves a held entry in Strength.sources with the card id as its source and
+  wire (api/contract/fights.txt, "FIGHTS") serves a held entry in Strength.sources with the card id as its source and
   share_bp set to h(c), so the strength sheet (plan item 9) draws its source label and share; every other entry has
   share_bp null. A side is served only inside a Fight, as today. Strength.sources' order: the base, then the add_bp
   entries in stack order (the save's modifiers, then the shown chips' effects, then the held entries by rules.cards

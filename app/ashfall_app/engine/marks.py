@@ -1,5 +1,5 @@
 """What a Mark does to a save: a joined person's mark is set or cleared, and never a share removed. Semantics:
-DESIGN.txt, "GROUPS (pooled lanes)", "Mark"."""
+design/groups.txt, "GROUPS (pooled lanes)", "Mark"."""
 from dataclasses import replace
 
 from .cards import Mark

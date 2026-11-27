@@ -1,7 +1,7 @@
-"""A tap on the hands runs at the speed it had at its start (DESIGN.txt, "Speed"): a chip that shows or clears during
+"""A tap on the hands runs at the speed it had at its start (design/core.txt, "Speed"): a chip that shows or clears during
 it, or a speed entry an outcome adds, leaves the tap's lines alone and applies from its end; the mix runs under the
 live stack throughout, and the time shown before the tap is the time it takes. The queue's head waits while a chip's
-rule cures it (DESIGN.txt, "Order mix")."""
+rule cures it (design/cards.txt, "Order mix")."""
 from ashfall_app.engine import (
     BP, HANDS, AfterTime, AtLeast, AtMost, CardCount, CardDef, CardId, ChipDef, ChipId, Flow, LaneId, LaneSpeed,
     LineKey, MixId, Order, Outcome, QueueEntry, SetOrders, SetQueue, StandingDef, StoreDef, StoreId, StoreValue,

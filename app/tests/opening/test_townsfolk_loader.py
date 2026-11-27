@@ -1,6 +1,6 @@
 """The loader's day-two entries on a test chapter (fixtures/townsfolk.toml) merged after the shipped ones: a ruled lane
 with later labels, its cards filling the camp store, and each rule failing on a file built to break it (engine
-DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS", "Content")."""
+design/townsfolk.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS", "Content")."""
 from functools import cache
 from pathlib import Path
 

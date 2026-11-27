@@ -73,7 +73,7 @@ CHOICES (fractions at the loader)
 - ConditionEntry.every (>= 1, default 1): one divisor for value and release alike: value units(value) / every, release
   units(release) / every (release defaulting to value, as before), each refused unless exact. Only on a store subject
   with at_least or at_most: refused on after_time and on every other subject, lane rules and running included (a
-  level, a count or an unlock has no fraction). Refused on an order card's `when`: a rule's levels are worded and edited in whole items (api/CONTRACT.txt,
+  level, a count or an unlock has no fraction). Refused on an order card's `when`: a rule's levels are worded and edited in whole items (api/contract/,
   {n} and {m}), so a chip whose `when` has `every` has no order card (a chip's card must carry the chip's own `when`).
   Every loader reader of a store threshold (checks.py's comparisons with a cap, makers.py, refs.py's band check) reads
   it in quantity units through one helper, so none takes the written integer for whole items.

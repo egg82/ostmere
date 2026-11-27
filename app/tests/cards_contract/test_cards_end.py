@@ -1,4 +1,4 @@
-"""The end (DESIGN.txt, "The end", invariants 45-46): Save.ended_at is set at the first resolved instant where
+"""The end (design/end.txt, "The end", invariants 45-46): Save.ended_at is set at the first resolved instant where
 rules.end is unlocked, never before, and once set it never changes; the view serves it;
 it round-trips through the codec; rules naming an unknown end feature are invalid."""
 from dataclasses import replace

@@ -1,5 +1,5 @@
 """A group's crew at run time: who is in a pooled lane, who of them is free, and a group card's share times its crew
-(DESIGN.txt, "GROUPS (pooled lanes)", "How a group's split runs"). mixruns._town_entries is the one reader."""
+(design/groups.txt, "GROUPS (pooled lanes)", "How a group's split runs"). mixruns._town_entries is the one reader."""
 from dataclasses import dataclass
 
 from .gone import is_left

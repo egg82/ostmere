@@ -51,7 +51,7 @@ CHOICES (full output)
 - Run: a full-paused card reads PAUSED with `store` its Pause's store, and gives its share as any giver. It is never
   SPENT: spent.spend reads only pauses on a store the card takes. Its line is never starved (a full store is not 0).
 - View: CardView.full_store is the Pause's store while the card's run is PAUSED on a store it makes, None otherwise;
-  the card face words it (api CONTRACT.txt, "FULL OUTPUT"), since a full pause is no blocker and draws no need row.
+  the card face words it (api/contract/full-output.txt, "FULL OUTPUT"), since a full pause is no blocker and draws no need row.
 - Read model: every outcome store of a full-paused card reads covered (coverage.covered), since the card resumes as
   the store falls: the band down to the resume level is a store being drawn as planned, not one that needs the
   player, so its falling line is white.

@@ -29,7 +29,7 @@ CHOICES (share levels)
   and under, "until empty" lets go once the store shows 0, and "full" is reached at C, the cap's whole items, which
   the store always can reach. A quarter of a 10-item cap holds an at_most at 2 and under and an at_least at 3 and
   over: each is exactly true of the amount the page shows. An amount level keeps today's reading, the page's "under
-  n" and "until under m" numbering included (api CONTRACT.txt, "a store rule").
+  n" and "until under m" numbering included (api/contract/the-client-may.txt, "a store rule").
 - Rounding to whole items, not to the exact cap: the page shows whole items and words a share without a number, so
   a level crossed between two shown amounts would come on at an amount that reads as the wrong side of it; and a cap
   raised by a multiplier need not be whole items, so the exact cap could be a fraction of an item above the full the

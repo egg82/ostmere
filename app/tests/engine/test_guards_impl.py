@@ -1,4 +1,4 @@
-"""Rule guards (engine DESIGN.txt, "RULE GUARDS"): unit tests written beside the implementation, to develop it. The
+"""Rule guards (engine design/rule-guards.txt, "RULE GUARDS"): unit tests written beside the implementation, to develop it. The
 contract tests of docs/design/rule-guards.md's statements are written blind elsewhere."""
 import pytest
 

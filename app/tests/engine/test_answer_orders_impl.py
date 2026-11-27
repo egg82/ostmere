@@ -1,4 +1,4 @@
-"""Answering an offer as an order or a queue entry (engine DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS",
+"""Answering an offer as an order or a queue entry (engine design/townsfolk.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS",
 "Evaluation applies every verb", "Dead", "Evaluation after a cascade", invariants 57, 61 and 62): an answer order acts
 at the first instant it can, before tap orders; one that cannot act changes nothing; an answered offer's order is
 passed over and its queue entry settles."""

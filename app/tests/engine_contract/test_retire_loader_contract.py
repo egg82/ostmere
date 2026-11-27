@@ -1,4 +1,4 @@
-"""Retired chores at the loader (engine DESIGN.txt, "Retired chores", "Content (the loader)", invariant 146). Written
+"""Retired chores at the loader (engine design/townsfolk.txt, "Retired chores", "Content (the loader)", invariant 146). Written
 blind from that part and the loader's public functions; the `kills` marker names the rows of MUTANTS_leaves.txt each
 test must turn red for. fixtures/chores_chapter.toml is merged onto the opening alone: a season opens a standing action
 that fills t_pool and a chip on it; t_scoop drains the pool (the chore's cure), t_other is a plain card."""

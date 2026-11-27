@@ -1,4 +1,4 @@
-"""The kinds a fight's strengths are read for: who fights and what they fight (DESIGN.txt, "FIGHTS")."""
+"""The kinds a fight's strengths are read for: who fights and what they fight (design/fights.txt, "FIGHTS")."""
 from dataclasses import dataclass
 
 from .ids import SideId, ThreatId

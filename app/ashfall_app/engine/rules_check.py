@@ -1,4 +1,4 @@
-"""What makes the rules' lanes, cards, chips, triggers and opening valid (DESIGN.txt, "Validation of cards"), and the
+"""What makes the rules' lanes, cards, chips, triggers and opening valid (design/cards.txt, "Validation of cards"), and the
 vocabulary check conditions share with the player's verbs. validate_rules (rules.py) calls it.
 """
 from typing import TYPE_CHECKING
@@ -40,7 +40,7 @@ def condition_problem(rules: "Rules", cond: Condition, in_rules: bool = False) -
 
 
 def is_lane_rules(cond: Condition) -> bool:
-    """Whether `cond` reads LaneRules, which only a trigger's `when` may (DESIGN.txt, "Lane rules")."""
+    """Whether `cond` reads LaneRules, which only a trigger's `when` may (engine/design/, "Lane rules")."""
     return not isinstance(cond, AfterTime) and isinstance(cond.subject, LaneRules)
 
 
@@ -63,7 +63,7 @@ def subject_problem(rules: "Rules", subject: Subject) -> str | None:
 
 
 def check_parts(rules: "Rules") -> None:
-    """Raise InvalidRulesError for any constraint on lanes, cards, chips, triggers and the opening (DESIGN.txt,
+    """Raise InvalidRulesError for any constraint on lanes, cards, chips, triggers and the opening (design/cards.txt,
     "Validation of cards")."""
     _check_ids(rules)
     check_groups(rules)
@@ -97,7 +97,7 @@ def check_parts(rules: "Rules") -> None:
 
 def _check_offers(rules: "Rules") -> None:
     """Offer ids unique, answer ids unique across every offer, two or more answers each, and each answer's outcome
-    valid as one that may install rules and queue one-offs (DESIGN.txt, "Offers")."""
+    valid as one that may install rules and queue one-offs (design/townsfolk.txt, "Offers")."""
     offers = [o.id for o in rules.offers]
     answers = [a.id for o in rules.offers for a in o.answers]
     _require(len(set(offers)) == len(offers), "duplicate offer id")
@@ -111,7 +111,7 @@ def _check_offers(rules: "Rules") -> None:
 
 def _check_kinds(rules: "Rules") -> None:
     """A kinded offer has a distinct role on every answer, an unkinded one none, and every offer of a kind has the same
-    set of roles (DESIGN.txt, "OFFER KINDS")."""
+    set of roles (design/offer-kinds.txt, "OFFER KINDS")."""
     roles: dict[str, frozenset[str]] = {}
     for o in rules.offers:
         have = [a.role for a in o.answers]
@@ -202,8 +202,8 @@ def _check_outcome(
     rules: "Rules", o: Outcome, where: str, installs: bool = False, queues: bool = False, trigger: TriggerId | None = None,
 ) -> None:
     """`installs`: a trigger's or an answer's outcome, which may install rules; `queues`: an answer's, which may also
-    queue hands one-offs (DESIGN.txt, "Installs land once"); `trigger`: the trigger whose outcome it is, the only source
-    that may raise a ThreatStrength (DESIGN.txt, "FIGHTS")."""
+    queue hands one-offs (design/townsfolk.txt, "Installs land once"); `trigger`: the trigger whose outcome it is, the only source
+    that may raise a ThreatStrength (design/fights.txt, "FIGHTS")."""
     capped, ruled, lanes = derived(rules, "_outcome_ground", _outcome_ground)
     _require(installs or not o.orders, f"{where}: only a trigger's or an answer's outcome installs a rule")
     _require(all(lanes.get(i.card) in ruled for i in o.orders), f"{where}: an installed rule taps a card on a ruled lane")

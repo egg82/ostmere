@@ -12,7 +12,7 @@ curve_items = [36630, 54980, 82510, 123810, 185760]
 
 # ---------- her lane ----------
 
-# The first person who works for the camp: a lane run by the player's rules (engine DESIGN.txt, "Ruled lane"). "She"
+# The first person who works for the camp: a lane run by the player's rules (engine design/townsfolk.txt, "Ruled lane"). "She"
 # until she gives her name at the stool (J1).
 [[lanes]]
 id = "n1"
@@ -25,7 +25,7 @@ name_key = "name_n1"
 # Her versions of the gathering cards: the hands cards' takes and makes at base rate, no skill and no XP, and camp items
 # at the hands' rate (the loader adds the camp flow to a ruled lane's cards). Her own knife, so cutting needs no edge.
 # Each also counts her first finished task (n1_worked), whatever the player set her to first.
-# Her task repeats as a rate and lands only when her rules change it (engine DESIGN.txt, "REPEATING TAPS"). Each lump at most half its
+# Her task repeats as a rate and lands only when her rules change it (engine design/repeating-taps.txt, "REPEATING TAPS"). Each lump at most half its
 # store's smallest cap from B3 on (roots 24, damp wood and stones 18), work_s a multiple of 6 so the shelter's 1.2
 # divides it, each lump (n1_worked's too) a whole rate at 1.0 and 1.2,
 # and her first forage done within V1's 60 s.
@@ -114,7 +114,7 @@ when = { test = "at_least", subject_kind = "lane_rules", id = "n1", value = 1 }
 outcome = { line_keys = ["l_her_rule"] }
 
 # Her first rule, taught by need (D-85 as D-91 re-authors it): a full roots line cannot carry it, since an at_least card taps a
-# card that spends its store and none of her cards takes roots (engine DESIGN.txt, KNOWN GAPS of "TOWNSFOLK"). So it is
+# card that spends its store and none of her cards takes roots (engine design/, KNOWN GAPS of "TOWNSFOLK"). So it is
 # the falling damp wood line's: the rack draws it down, she cuts wood to keep it up. One card for both of D-85's moments
 # (a second on the same store and test would be answered by the first). Release under the cap it has for certain at B3.
 [[order_cards]]
@@ -285,7 +285,7 @@ modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", ki
 # ---------- the offer and the walk ----------
 
 # O-cart, once she has a roof; it never expires (B4 waits on it). Either answer takes the same walk and brings nothing
-# back. Each answer's work is a one-off its outcome sets, never a start (engine DESIGN.txt, "Content"): the hands' a
+# back. Each answer's work is a one-off its outcome sets, never a start (engine design/, "Content"): the hands' a
 # queued When ready entry, hers a rule above her task.
 [[offers]]
 id = "o_cart"
@@ -396,7 +396,7 @@ modifiers = [
 ]
 
 # Held at a "?" until B4 lifts it: the catch holds half again (9 to 13). Either answer's walk lifts it (the offer makes
-# them alternatives: engine DESIGN.txt, "THE CAMP").
+# them alternatives: engine design/camp.txt, "THE CAMP").
 [[camp_levels]]
 at_items = 150000
 pays_key = "pays_unknown"

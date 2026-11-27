@@ -1,4 +1,4 @@
-"""The kind's answer verb AnswerKind (engine DESIGN.txt, "OFFER KINDS", invariants 98-105). Written from the interface
+"""The kind's answer verb AnswerKind (engine design/offer-kinds.txt, "OFFER KINDS", invariants 98-105). Written from the interface
 text only. Each test names its invariant; the bodies exercise the engine's public entry points on town_world's world
 with kind_world's offers (one, two, three of the arrival kind, two listing its answers the other way round; stranger of
 another kind with the same role names; ask with no kind)."""

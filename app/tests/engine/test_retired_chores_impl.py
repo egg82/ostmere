@@ -1,4 +1,4 @@
-"""Retired chores (engine DESIGN.txt, "Retired chores"): unit tests written beside the implementation. The contract
+"""Retired chores (engine design/townsfolk.txt, "Retired chores"): unit tests written beside the implementation. The contract
 tests of invariants 142 to 147 are written blind elsewhere."""
 import pytest
 

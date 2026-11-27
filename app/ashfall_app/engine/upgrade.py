@@ -1,6 +1,6 @@
 """Format upgrades: one function per old FORMAT, chained on the envelope's JSON before anything is decoded.
 
-Semantics: DESIGN.txt, "FORMAT is 6", "Codec" in part "TOWNSFOLK, INSTALLED RULES AND OFFERS" (FORMAT 7), and
+Semantics: engine/design/, "FORMAT is 6", "Codec" in part "TOWNSFOLK, INSTALLED RULES AND OFFERS" (FORMAT 7), and
 "Speed" (FORMAT 8), "Codec" (FORMAT 9) and "Chips" (FORMAT 10). UPGRADES[f] turns an envelope of format f into one of format f + 1. Every format
 from OLDEST_FORMAT below FORMAT has an entry (tests/engine/test_rebase_impl.py checks it).
 """
@@ -54,7 +54,7 @@ def _no_offers(envelope: Json) -> Json:
 
 def _no_kept_speed(envelope: Json) -> Json:
     """Format 7 to 8: each LaneState gains speed, None, so a tap a format 7 save began reads the live stack to its end,
-    as it did when it began (DESIGN.txt, "Speed")."""
+    as it did when it began (design/core.txt, "Speed")."""
     if not isinstance(envelope, dict) or not isinstance(save := envelope.get("save"), dict) \
             or not isinstance(lanes := save.get("lanes"), list):
         raise StateFormatError("not a format 7 save envelope")

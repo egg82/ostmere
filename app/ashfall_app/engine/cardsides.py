@@ -17,10 +17,10 @@ def card_costs(card: CardDef) -> frozenset[StoreId]:
 
 def outcome_stores(card: CardDef) -> tuple[StoreId, ...]:
     """The stores a completion of the card pays, in declaration order: its outcome's per-completion amounts, never its
-    flow makes nor its fight's tallies (DESIGN.txt, "FULL OUTPUT")."""
+    flow makes nor its fight's tallies (design/full-output.txt, "FULL OUTPUT")."""
     return tuple(dict.fromkeys(a.store for a in card.outcome.stores))
 
 
 def fillable(card: CardDef) -> bool:
-    """The full rule applies: inputs, an outcome store, and no cap (DESIGN.txt, "FULL OUTPUT", "Fillable card")."""
+    """The full rule applies: inputs, an outcome store, and no cap (design/full-output.txt, "FULL OUTPUT", "Fillable card")."""
     return card.cap is None and bool(card.inputs) and bool(card.outcome.stores)

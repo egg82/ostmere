@@ -117,7 +117,7 @@ def _moved(seg: Segment, t: int) -> Segment:
 def _store_motion(save: Save, rules: Rules, d: StoreDef, v: int, flow: int, terms: Terms,
                   work: Callable[[CardId], Segment]) -> Segment:
     """_store_segment of the store's `terms` moving under `work`; a store with no flow and no lump line is still, and so
-    is one at 0 whose drains are forgiven (DESIGN.txt, "DRAINS")."""
+    is one at 0 whose drains are forgiven (design/drains.txt, "DRAINS")."""
     moving = moving_lumps(terms, work) if terms[1] else (terms[0], ())
     if (flow == 0 and not moving[1]) or (v == 0 and forgiven(rules, d.id, flow, terms, work)):
         return Segment(save.time, v, 0)

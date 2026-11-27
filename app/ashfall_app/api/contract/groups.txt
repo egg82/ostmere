@@ -1,4 +1,4 @@
-GROUPS (engine DESIGN.txt, "GROUPS (pooled lanes)")
+GROUPS (engine design/groups.txt, "GROUPS (pooled lanes)")
   Many people may do the same work under one split. A group is a pooled lane: LaneInfo.pooled is true, its label_key
   is the group's name, and it has no name_key and no told. It never joins, never leaves and is never tapped (a
   tap_card of one of its cards is 422 invalid_decision). A person's LaneInfo.group names the pooled lane that is their

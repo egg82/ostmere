@@ -1,4 +1,4 @@
-"""A card's lump lines, and what moves a store: its flows plus each lump paid by its card's work (DESIGN.txt, "Rate
+"""A card's lump lines, and what moves a store: its flows plus each lump paid by its card's work (engine/design/, "Rate
 form"; motion.store_segment puts them together).
 
 Below rates in the import order: it reads the rules, the effective stack and the cards' work, never what runs.
@@ -40,7 +40,7 @@ def has_lump(card: CardDef, ref: RateRef) -> bool:
 
 def base_of(rules: Rules, ref: RateRef) -> tuple[int, int]:
     """(base, base_den) of a line at a 100% share: a flow's per_hour over 1; a card's lump line, the lump's quantity
-    over work_s. Validation keeps a flow and a lump off one store of one card (DESIGN.txt, "Rate form")."""
+    over work_s. Validation keeps a flow and a lump off one store of one card (design/cards.txt, "Rate form")."""
     ix = index(rules)
     card = ix.cards.get(CardId(ref.runner))
     if card is None:
@@ -148,7 +148,7 @@ def _signed(card: CardDef, ref: RateRef, aimed: dict[Target, tuple[Modifier, ...
 
 
 def drainers(rules: Rules, store: StoreId) -> frozenset[CardId]:
-    """The cards with a drain on `store` (DESIGN.txt, "DRAINS")."""
+    """The cards with a drain on `store` (design/drains.txt, "DRAINS")."""
     return derived(rules, "_drainers", _all_drainers).get(store, frozenset())
 
 

@@ -30,7 +30,7 @@ from .work import apply_outcome, complete, first_shown, interrupt, land, off_sai
 
 type Emit = Callable[[int, LineKey, CardId | None], None]
 """Where a handler sends the log lines it emits, as (engine time, key, the card that wrote it or None) in emission
-order (DESIGN.txt, "Lines")."""
+order (design/core.txt, "Lines")."""
 
 
 def ignore(time: int, key: LineKey, card: CardId | None) -> None:
@@ -121,7 +121,7 @@ def _pause_until_not_dry(save: Save, rules: Rules, store: StoreId, landing: froz
     """Pause the store's consumers, last in running order first, until its net rate is >= 0, passing over a card in
     `landing` (it has finished) and the store's drains (forgiven at 0: rebuild holds the store there). A consumer reads
     its effective share, receivers of a paused card's share included; its resume level is an hour of its cost at its
-    saved share, so nothing of a yield is written into a Pause (DESIGN.txt, "SPENT"). A paused tapped
+    saved share, so nothing of a yield is written into a Pause (design/spent.txt, "SPENT"). A paused tapped
     card ends its tap at once (work.interrupt); the flag says whether one did."""
     ix = index(rules)
     interrupted, built = False, True
@@ -154,7 +154,7 @@ def _pause_until_not_dry(save: Save, rules: Rules, store: StoreId, landing: froz
 
 def _hand_back_dry_stint(save: Save, rules: Rules) -> Save:
     """A queue mix running a card that holds a Pause, one the player's own mix does not run, pops its entry: the stint's
-    card can no longer run, so the hands go back to what they were doing (DESIGN.txt, "Queue mix"), as an order's
+    card can no longer run, so the hands go back to what they were doing (design/cards.txt, "Queue mix"), as an order's
     action that cannot act yields to the next. The pop clears the pauses with the running mix."""
     i, mix = controlling_entry(save, rules), queue_mix_id(save, rules)
     if i is None or mix is None or running_mix_id(save, rules) != mix:
@@ -175,7 +175,7 @@ def _tapped_lane(save: Save, rules: Rules, runner: Runner) -> LaneId | None:
 
 
 def _resume(save: Save, rules: Rules, runner: str) -> Save:
-    """A dry pause lifts at its resume level, a full one once an outcome store has room (DESIGN.txt, "FULL OUTPUT")."""
+    """A dry pause lifts at its resume level, a full one once an outcome store has room (design/full-output.txt, "FULL OUTPUT")."""
     pause = next((p for p in save.pauses if p.runner == runner), None)
     if pause is None:
         return save

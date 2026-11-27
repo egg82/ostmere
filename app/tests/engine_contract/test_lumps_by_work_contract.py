@@ -1,4 +1,4 @@
-"""Lumps paid by work (engine DESIGN.txt, "Rate form"; CHOICES (cards), "One bar"). Written from the contract and the
+"""Lumps paid by work (engine design/cards.txt, "Rate form"; CHOICES (cards), "One bar"). Written from the contract and the
 public interface only. A card's lump (an input or an outcome store, A per completion) moves its store by
 floor(A * W(t) / K), W the card's cumulative work (the card view's bar, in work_s * BP units per completion) and
 K = work_s * BP, so the lump is whole at every completion boundary at any speed and any work_s.

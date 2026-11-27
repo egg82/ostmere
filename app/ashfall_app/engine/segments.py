@@ -36,7 +36,7 @@ class Lump:
 
 @dataclass(frozen=True)
 class LumpSegment(Segment):
-    """A store that card lumps move (DESIGN.txt, "Rate form"): value(t) = start_value + flow * (t - start)
+    """A store that card lumps move (design/cards.txt, "Rate form"): value(t) = start_value + flow * (t - start)
     + floor(G(t)) - floor(G(start)), G(t) = sum(num * value_at(work, t)) / den over `lumps`, held at `limit` once
     reached. `rate` is the slope at start rounded down, flow + floor(sum(num * work.rate) / den): what a reader that
     samples linearly gets, trailing the engine by under one unit per second. Never in a save: a save keeps the plain

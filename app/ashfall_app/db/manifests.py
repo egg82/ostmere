@@ -1,4 +1,4 @@
-"""Manifests (engine DESIGN.txt, "Manifest") stored once per rules digest, and a save's text with or without its own.
+"""Manifests (engine design/saves-across-releases.txt, "Manifest") stored once per rules digest, and a save's text with or without its own.
 
 A save's or snapshot's state is the engine's canonical text, either whole or `stripped` of its manifest; a stripped one
 is read `whole` again with its digest's manifest from save_manifests. A canonical envelope's keys sort format,

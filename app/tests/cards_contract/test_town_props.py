@@ -1,4 +1,4 @@
-"""Day two's invariants as properties over generated town worlds (engine DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES
+"""Day two's invariants as properties over generated town worlds (engine design/, part "TOWNSFOLK, INSTALLED RULES
 AND OFFERS", invariants 57 to 64; town_gen.py). Each save is sampled at its next few events and at offsets, carried
 forward (invariant 1). What "can act" means is read off the view: a card on the panel (unlocked, not completed) with
 no blocker and a tap time, on a free lane; an offer listed open with that answer."""

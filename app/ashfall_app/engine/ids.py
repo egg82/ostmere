@@ -20,34 +20,34 @@ ThreatId = NewType("ThreatId", str)
 FeatureId = NewType("FeatureId", str)
 """A part of the page the engine only switches on (the ledger, the craft list, the journal): unlocked, never run."""
 EntryId = NewType("EntryId", str)
-"""One page of the journal, unlocked when its first note is written; the engine only carries it (DESIGN.txt, "Unlocks")."""
+"""One page of the journal, unlocked when its first note is written; the engine only carries it (design/core.txt, "Unlocks")."""
 NoteId = NewType("NoteId", str)
 """One note written on a journal page, unlocked when its gate holds; as EntryId."""
 OfferId = NewType("OfferId", str)
-"""Someone asking the player something, with two or more answers (DESIGN.txt, "Offers")."""
+"""Someone asking the player something, with two or more answers (design/townsfolk.txt, "Offers")."""
 AnswerId = NewType("AnswerId", str)
 """One answer of one offer; unique across every offer."""
 KindId = NewType("KindId", str)
-"""A group of offers that ask the same question; an AnswerKind names it (DESIGN.txt, "OFFER KINDS")."""
+"""A group of offers that ask the same question; an AnswerKind names it (design/offer-kinds.txt, "OFFER KINDS")."""
 RoleId = NewType("RoleId", str)
 """What an answer means within its offer's kind: the same in every offer of the kind."""
 NodeId = NewType("NodeId", str)
 """One node of a skill's prestige track: a bonus each click puts one rank into (nodes.NodeDef)."""
 LineKey = NewType("LineKey", str)
-"""A content key for one log line. The engine emits keys and never text (DESIGN.txt, "Lines")."""
+"""A content key for one log line. The engine emits keys and never text (design/core.txt, "Lines")."""
 
 type Runner = ActionId | CardId
 """What a rate line belongs to: a standing action or a card (modifiers.RateRef, state.Pause)."""
 
 HANDS = LaneId("hands")
-"""The player's own time: the lane the active mix runs its cards on and taps occupy (DESIGN.txt, "Lanes")."""
+"""The player's own time: the lane the active mix runs its cards on and taps occupy (design/core.txt, "Lanes")."""
 
 TOWN_PREFIX = "town:"
-"""A MixId beginning so is the game's: only a join creates one (DESIGN.txt, "THE TOWN'S MIX", "Reserved ids")."""
+"""A MixId beginning so is the game's: only a join creates one (design/towns-mix.txt, "THE TOWN'S MIX", "Reserved ids")."""
 
 
 class IdKind(Enum):
-    """The kinds of id a save's manifest declares (DESIGN.txt, "Manifest"); rebase drops each one the new rules lack.
+    """The kinds of id a save's manifest declares (design/saves-across-releases.txt, "Manifest"); rebase drops each one the new rules lack.
     STANDING is a standing action's id (ActionId)."""
 
     STORE = "store"

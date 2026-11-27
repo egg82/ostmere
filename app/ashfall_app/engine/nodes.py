@@ -1,4 +1,4 @@
-"""Prestige as data: a skill's track of nodes and the rules numbers phases read (Type Object; DESIGN.txt, "PRESTIGE
+"""Prestige as data: a skill's track of nodes and the rules numbers phases read (Type Object; engine/design/, "PRESTIGE
 PHASES"). Content, never state: a save holds only which nodes it picked (phases.PhaseState)."""
 from dataclasses import dataclass
 

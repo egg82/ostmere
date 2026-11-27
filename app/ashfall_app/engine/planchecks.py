@@ -1,4 +1,4 @@
-"""What makes an outcome's take-aways from the player's plan valid: retired chores and leaves (DESIGN.txt, "Retired
+"""What makes an outcome's take-aways from the player's plan valid: retired chores and leaves (engine/design/, "Retired
 chores", "Validation"; "LEAVES", invariant 155). rules_check calls it for every outcome."""
 from typing import TYPE_CHECKING
 

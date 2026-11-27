@@ -1,4 +1,4 @@
-"""FORMAT 7: the manifest's offers, and UPGRADES[6], which adds them empty and changes nothing else (engine DESIGN.txt,
+"""FORMAT 7: the manifest's offers, and UPGRADES[6], which adds them empty and changes nothing else (engine design/townsfolk.txt,
 part "TOWNSFOLK, INSTALLED RULES AND OFFERS", "Codec")."""
 import json
 

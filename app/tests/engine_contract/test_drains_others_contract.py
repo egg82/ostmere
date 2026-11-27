@@ -1,4 +1,4 @@
-"""Drains, part two: forgiveness is the drain's alone, and what it does to the store's other lines (engine DESIGN.txt,
+"""Drains, part two: forgiveness is the drain's alone, and what it does to the store's other lines (engine design/drains.txt,
 "DRAINS", invariants 125-127). Written blind from that part and the public interface; the `kills` marker names the rows
 of MUTANTS_drains.txt each test must turn red for."""
 from typing import Any
@@ -109,7 +109,7 @@ def test_the_pauses_at_zero_are_those_of_the_same_save_without_the_drain_running
 @kills(10)
 def test_an_inflow_above_the_consumers_cost_keeps_it_running_while_the_drain_forgives_at_zero():
     """Invariants 126, 127: with 4 an hour coming in and the heal taking 3, n = 1 an hour is above 0 so nothing is
-    paused, though the drain (360_000 units a second) takes all of it. Above 0, x falls at n - d (DESIGN.txt, CHOICES
+    paused, though the drain (360_000 units a second) takes all of it. Above 0, x falls at n - d (engine/design/, CHOICES
     (drains), "Above 0 the store moves at n - d"), so it is still 20 * n above 0 at 20 s and reads 0 from 21 s to the
     landing, then rises at n."""
     r = world(cure(), x0=2 * Q, standing=(heal(), trickle(4)))

@@ -1,4 +1,4 @@
-"""The player's prestige verbs and why one is refused (DESIGN.txt, "PRESTIGE PHASES"). Applying them: prestige.py.
+"""The player's prestige verbs and why one is refused (design/prestige-phases.txt, "PRESTIGE PHASES"). Applying them: prestige.py.
 
 All three are by hand only: none is an orders.OrderVerb, and an Order or QueueEntry naming one is refused
 (refuse_by_hand). A click set ahead and landed while the player is away would be an auto-prestige with an extra step;
@@ -69,7 +69,7 @@ class PrestigeRefusal(Enum):
     UNKNOWN_SKILL = "unknown_skill"
     """The verb's skill is not in the rules."""
     LOCKED_SKILL = "locked_skill"
-    """The skill is not unlocked (DESIGN.txt, "Unlocks")."""
+    """The skill is not unlocked (design/core.txt, "Unlocks")."""
     NOT_AT_TOP = "not_at_top"
     """Prestige with no pick owed, and the skill's XP is below its phase's top."""
     TRACK_DONE = "track_done"

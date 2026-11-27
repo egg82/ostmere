@@ -1,4 +1,4 @@
-"""Rules for the held-entries tests (engine DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS"), from the engine's public
+"""Rules for the held-entries tests (engine design/entries-held.txt, "ENTRIES HELD WHILE A CARD RUNS"), from the engine's public
 types only. Hands cards: guard (raises HAND by 5000), wet (guard that also costs an empty store), need (requires x),
 cap (one-off that greys a mix), warm (makes f, held at its level), hunt (a fight card). Town: watch on lane la raises HAND
 by 4000 then DEF by 1000; b1 is the other person's card."""

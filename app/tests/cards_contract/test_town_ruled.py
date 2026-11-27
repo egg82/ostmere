@@ -1,4 +1,4 @@
-"""A lane run by rules (engine DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS": "Ruled lane", "The lane's
+"""A lane run by rules (engine design/townsfolk.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS": "Ruled lane", "The lane's
 task", "The queue is the hands' plan", "Lane order"; invariants 58 and 63; api/contract/a-lane-run-by-rules.txt, "A LANE RUN BY RULES").
 The player never taps a ruled lane; orders and an Outcome's start drive it exactly as an unruled lane. Its task is its
 first true rule whose card is ready, changed at its next landing. LaneBar.order names the rule whose task the lane

@@ -1,4 +1,4 @@
-"""The content file's sides and threats (engine DESIGN.txt, "FIGHTS"), as Type Objects. Beside entries.py, whose
+"""The content file's sides and threats (engine design/fights.txt, "FIGHTS"), as Type Objects. Beside entries.py, whose
 FightEntry names them."""
 from pydantic import Field
 

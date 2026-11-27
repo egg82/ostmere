@@ -1,4 +1,4 @@
-"""What held at a decision's instant before it applied, kept in the decision log beside the verb (DESIGN.txt,
+"""What held at a decision's instant before it applied, kept in the decision log beside the verb (design/core.txt,
 "Decision context"): the mix the hands ran, whether a tap's card was in it, and the chips shown. The log alone then
 says what the player keeps doing under which state, without a replay; a replay of the log reproduces each context
 exactly, since each is read off the save the replay reaches at that decision."""

@@ -1,4 +1,4 @@
-"""A bounded advance resumes exactly (engine DESIGN.txt, "Bounded advance", invariant 73): the newest golden end save,
+"""A bounded advance resumes exactly (engine design/bounded-advance.txt, "Bounded advance", invariant 73): the newest golden end save,
 advanced three game hours in slices of K instants with encode and decode between them, ends where one unbounded call
 does, with the same lines and rule changes in turn."""
 from pathlib import Path

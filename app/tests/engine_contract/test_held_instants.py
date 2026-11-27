@@ -1,4 +1,4 @@
-"""Invariants 112 and 113 (engine DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS": "Instants"): the held entries change only
+"""Invariants 112 and 113 (engine design/entries-held.txt, "ENTRIES HELD WHILE A CARD RUNS": "Instants"): the held entries change only
 at the instants where a tap, a running mix, a pause, a card's Run, the unlock set or a greying changes, so a fight's odds
 move at exactly those instants; and timing does not matter, invariant 81's shape, with a held card in the running town
 mix and a fight on its side."""

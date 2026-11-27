@@ -73,7 +73,7 @@ CHOICES (saves across releases)
 - No release lock and no renames: content may rename, remove or rewrite any id or outcome; a renamed id is a new one,
   and the save's progress under the old id is dropped. Every FORMAT bump needs an UPGRADES entry
   (tests/engine/test_rebase_impl.py). The release number that orders builds for the server's saves is the CI run
-  number: api/CONTRACT.txt, "Saves across releases and pods".
+  number: api/contract/saves-across-releases-and-pods.txt, "Saves across releases and pods".
 
 INVARIANTS (saves across releases; numbered on from 46. r, r2, r3 valid rules; s a save the engine returned under r;
 "kept" ids are those both rules declare, "gone" ids those step 3 finds)

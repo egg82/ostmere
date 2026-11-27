@@ -1,4 +1,4 @@
-"""A save's text as a format 8 or 9 encoder wrote it (engine DESIGN.txt, "Codec": FORMAT 9 dropped Mix.holds, FORMAT 10
+"""A save's text as a format 8 or 9 encoder wrote it (engine design/, "Codec": FORMAT 9 dropped Mix.holds, FORMAT 10
 made chips_seen counts), so a pin taken before either still checks today's encoding byte for byte."""
 import json
 

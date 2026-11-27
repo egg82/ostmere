@@ -1,4 +1,4 @@
-"""An offer's kind and its answers' roles (engine DESIGN.txt, "OFFER KINDS"): a role exactly where there is a kind,
+"""An offer's kind and its answers' roles (engine design/offer-kinds.txt, "OFFER KINDS"): a role exactly where there is a kind,
 distinct within an offer, and the same set across the offers of a kind; and a label per role for each kind
 (`offer_kinds`), the words of the rule that answers the kind."""
 from typing import TYPE_CHECKING

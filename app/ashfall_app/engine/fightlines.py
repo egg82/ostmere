@@ -1,4 +1,4 @@
-"""The lines a FightDef adds to its runner, as per-fight amounts (DESIGN.txt, "FIGHTS"): what a lost fight takes and
+"""The lines a FightDef adds to its runner, as per-fight amounts (design/fights.txt, "FIGHTS"): what a lost fight takes and
 what it, and every fight, adds. A leaf: it imports only card data, so rule validation and the line tables can use it."""
 from .cards import Amount, FightDef
 from .units import QUANTITY_SCALE

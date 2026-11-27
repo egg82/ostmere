@@ -2,7 +2,7 @@
 offer and an installing trigger are drawn, and scenarios playing every day-two verb on them: answers good and bad,
 taps of every lane (a ruled one refused), orders tapping any card or answering any pair, queues tapping the hands or
 the rack or answering. No player SwitchMix or SaveMix after the opening mix, so invariant 57 holds of every save
-played (DESIGN.txt, invariant 57: "decisions other than a player's SwitchMix and SaveMix")."""
+played (engine/design/, invariant 57: "decisions other than a player's SwitchMix and SaveMix")."""
 from dataclasses import dataclass
 
 from hypothesis import strategies as st

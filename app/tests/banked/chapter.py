@@ -41,7 +41,7 @@ def rules(trip_at: int = HOUR // 2, comfort_at: int = HOUR // 2, offer_at: int =
     wood store of 4 RATE-hours; the trip takes `trip_cost` (8) RATE-hours of wood per completion, more than the store holds, so in the mix it runs the store dry and waits for it to fill;
     a tappable trip costs 1; the comfort takes 3. `fights`: the trip is a fight on a side level with its threat, a standing
     raid takes wood, and a fight card (CLEAR, shown at `clear_at`, a lane of its own, 12 hours, takes 1 wood) joins the
-    comfort among the sinks. `finds`: that many finds, one at every second trip, each a trigger on AtLeast(CardCount(trip), n) adding one relic (engine DESIGN "BANKED TIME", "Finds")."""
+    comfort among the sinks. `finds`: that many finds, one at every second trip, each a trigger on AtLeast(CardCount(trip), n) adding one relic (engine design/banked-time.txt "BANKED TIME", "Finds")."""
     sk = SkillId("k0")
     cards = (CardDef(GATHER, 60, skill=sk, xp_per_hour=0, makes=(Flow(WOOD, 2 * RATE),)),
              CardDef(TRIP, HOUR, inputs=(Amount(WOOD, trip_cost * RATE * HOUR),), makes=(Flow(FOUND, RATE),)),

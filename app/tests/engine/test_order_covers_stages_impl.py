@@ -1,4 +1,4 @@
-"""One order covers every stage of a staged build (DESIGN.txt, "ORDER CARD ON A STAGED BUILD"): an at_least order on the
+"""One order covers every stage of a staged build (design/order-card-staged-build.txt, "ORDER CARD ON A STAGED BUILD"): an at_least order on the
 store the build takes taps each stage as the store allows, is passed over at the build's cap, and the player's own mix
 runs on throughout; a cure or a glowing step cuts in on a stage and the order taps the build again afterwards."""
 import pytest

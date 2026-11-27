@@ -169,7 +169,7 @@ CHOICES (cards)
   retires ends at that instant as an interrupt does (work kept, lane free). Unlocks only grow, so a retirement is
   for good, and with rules.opening None (no gating) nothing is retired. Why: retirement is a fact that only grows,
   keyed by kind and id, which is what the unlock set already is; a separate set would be state, codec and FORMAT
-  for the same thing. The page tells retired from finished by the unlock (api/CONTRACT.txt).
+  for the same thing. The page tells retired from finished by the unlock (api/contract/).
 - Starved line (LedgerLine.starved): the store is at 0 and something waits on it: a runner paused on it, or a tap a
   true order or the queue's controlling entry names, blocked by an AtLeast on its value. Shown as a problem whether
   covered or not; all_covered is false while any line is starved. Why: a dry store with a waiting order read as
@@ -180,7 +180,7 @@ CHOICES (cards)
   completion's, prorated and rounded up), View.completed (the Completed tab),
   View.greyed_mixes, View.standing (every unlocked standing action, makers and consumers, in rules order, with its
   Run), and a LaneBar per lane naming the tapped card. The page samples the bar segment and draws it modulo its
-  total; that is sampling, not a rule (api/CONTRACT.txt). CardView.by is who moves the work now: TAP while it is
+  total; that is sampling, not a rule (api/contract/). CardView.by is who moves the work now: TAP while it is
   tapped, MIX while its mix share runs (FULL),
   else None (paused, waiting, greyed or yielded: the bar holds still). CardView.completes_at is a TAP's
   next landing (the tap keeps its speed and a rule waits for it, CURE CUT-IN), None otherwise: a share claims no

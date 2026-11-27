@@ -1,5 +1,5 @@
 """A rule's latches over time: when the next of them changes, and the one that changes now. A rule's `when` latch and
-each guard's latch are separate latches, each solved as an order condition is (DESIGN.txt, "RULE GUARDS")."""
+each guard's latch are separate latches, each solved as an order condition is (design/rule-guards.txt, "RULE GUARDS")."""
 from .conditions import change_time, changes_now
 from .orders import Latch, Order, guard_latches, latch_of, when_latch
 from .rules import Rules

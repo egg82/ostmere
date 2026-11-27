@@ -31,7 +31,7 @@ def check_mixes(save: Save, rules: Rules, mixes: tuple[Mix, ...]) -> None:
     """Every saved mix, since replacing one can break another that nests it: shares in range and summing to at most
     BP (a town mix's per person), every card known and on HANDS or on a ruled lane, never both. At most MAX_MIXES mixes. The mix being saved
     also holds no locked and no completed card, and in a town mix none capped or on a lane not joined (verbs.SaveMix);
-    a new id beginning "town:" is the game's, and a saved mix keeps its layer (DESIGN.txt, "THE TOWN'S MIX", "Reserved
+    a new id beginning "town:" is the game's, and a saved mix keeps its layer (design/towns-mix.txt, "THE TOWN'S MIX", "Reserved
     ids")."""
     require(len(mixes) <= MAX_MIXES, f"a save holds at most {MAX_MIXES} mixes")
     old = {m.id for m in save.mixes}
@@ -95,7 +95,7 @@ def check_condition(rules: Rules, cond: Condition) -> None:
 
 
 def check_guards(rules: Rules, guards: tuple[Condition, ...]) -> None:
-    """An order's guards: at most MAX_GUARDS, none twice, each one SetOrders would accept as a `when` (DESIGN.txt,
+    """An order's guards: at most MAX_GUARDS, none twice, each one SetOrders would accept as a `when` (design/rule-guards.txt,
     "RULE GUARDS")."""
     require(len(guards) <= MAX_GUARDS, f"a rule holds at most {MAX_GUARDS} guards")
     require(len(set(guards)) == len(guards), "a rule holds no guard twice")
@@ -105,7 +105,7 @@ def check_guards(rules: Rules, guards: tuple[Condition, ...]) -> None:
 
 def check_actions(rules: Rules, mixes: tuple[Mix, ...], actions: tuple[OrderVerb, ...]) -> None:
     """An order's actions, each already a valid order verb: at most MAX_ACTIONS, none twice, and with fallbacks all taps
-    of cards on one lane or all mixes of one layer, never an answer (DESIGN.txt, "OR ELSE"). A tap of a card the rules
+    of cards on one lane or all mixes of one layer, never an answer (design/or-else.txt, "OR ELSE"). A tap of a card the rules
     do not declare puts no lane in the comparison."""
     require(len(actions) <= MAX_ACTIONS, f"a rule lists at most {MAX_ACTIONS} actions")
     require(len(set(actions)) == len(actions), "a rule lists no action twice")
@@ -149,14 +149,14 @@ def check_discrete(rules: Rules, subject: Unlocked | Running) -> None:
 
 def check_hand_tap(rules: Rules, verb: TapCard) -> None:
     """A player's tap: an uncapped card on a ruled lane is set by rules, never tapped by hand; a one-off (a card with a
-    cap) is tapped for one completion, as on the hands (DESIGN.txt, "Ruled lane")."""
+    cap) is tapped for one completion, as on the hands (design/townsfolk.txt, "Ruled lane")."""
     card = index(rules).cards.get(verb.card)
     require(card is None or card.cap is not None or card.lane not in index(rules).ruled, f"card {verb.card} is set by rules")
 
 
 def check_queue_verb(rules: Rules, mixes: tuple[Mix, ...], verb: OrderVerb) -> None:
-    """A queue entry: the queue is the hands' plan, so it taps no card on a ruled lane (DESIGN.txt, "Ruled lane") and
-    switches to no town mix, and answers no kind (DESIGN.txt, "OFFER KINDS")."""
+    """A queue entry: the queue is the hands' plan, so it taps no card on a ruled lane (design/townsfolk.txt, "Ruled lane") and
+    switches to no town mix, and answers no kind (design/offer-kinds.txt, "OFFER KINDS")."""
     require(not isinstance(verb, AnswerKind), "a queue entry cannot answer a kind: its head is never passed over")
     if isinstance(verb, SwitchMix):
         require(mix_layer(rules, mixes, verb.mix) is MixLayer.HANDS, f"mix {verb.mix} is the town's, not the queue's")
@@ -168,7 +168,7 @@ def check_queue_verb(rules: Rules, mixes: tuple[Mix, ...], verb: OrderVerb) -> N
 def check_order_verb(rules: Rules, mixes: tuple[Mix, ...], verb: OrderVerb) -> None:
     """A SwitchMix names a saved mix; an AnswerOffer a declared offer and one of its answers (one not shown yet is
     accepted: planning ahead); a TapCard is checked only when applied (an order may name a card that is locked today
-    and unlocked by the time it fires), and never one on a pooled lane (DESIGN.txt, "GROUPS (pooled lanes)")."""
+    and unlocked by the time it fires), and never one on a pooled lane (design/groups.txt, "GROUPS (pooled lanes)")."""
     if isinstance(verb, SwitchMix):
         check_switch(mixes, verb)
     if isinstance(verb, TapCard):

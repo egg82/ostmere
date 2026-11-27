@@ -1,4 +1,4 @@
-"""A side's or a threat's strength now: its base under the entries aimed at it (DESIGN.txt, "FIGHTS")."""
+"""A side's or a threat's strength now: its base under the entries aimed at it (design/fights.txt, "FIGHTS")."""
 from .gates import base_stack
 from .modifiers import SideStrength, ThreatStrength
 from .rules import Rules

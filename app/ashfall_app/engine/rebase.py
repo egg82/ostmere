@@ -1,6 +1,6 @@
 """Rebase: a save written under other rules, made a save under these, what the new rules lack dropped.
 
-Semantics and its seven steps: DESIGN.txt, "Rebase". Pure; only a text no encode gave fails (StateFormatError), and a
+Semantics and its seven steps: engine/design/, "Rebase". Pure; only a text no encode gave fails (StateFormatError), and a
 failed rebase is never written.
 """
 import json
@@ -31,14 +31,14 @@ from .upgrade import upgrade
 
 def rebase(text: str, rules: Rules) -> Save:
     """The save `text` holds, under `rules`: decode(text, rules) when it was written under them; otherwise upgraded,
-    what these rules lack dropped, reshaped and its instant resolved with evaluation (DESIGN.txt, "Rebase").
+    what these rules lack dropped, reshaped and its instant resolved with evaluation (engine/design/, "Rebase").
     StateFormatError for a text no encode gave."""
     return _rebased(text, rules, ignore)[1]
 
 
 def rebase_logged(text: str, rules: Rules) -> Step:
     """rebase(), plus the lines its instant emitted (all at the save's time, seq from 0), its rule changes (each
-    order's latch that the instant turned, a rule an outcome installed included: DESIGN.txt, "Rebase" in part
+    order's latch that the instant turned, a rule an outcome installed included: design/townsfolk.txt, "Rebase" in part
     "TOWNSFOLK, INSTALLED RULES AND OFFERS") and how many ids of each kind it dropped."""
     lines, emit = recorder()
     before, after, gone = _rebased(text, rules, emit)

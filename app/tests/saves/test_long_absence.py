@@ -1,4 +1,4 @@
-"""A long absence costs work in proportion to its instants (engine DESIGN.txt, "INVARIANTS" 1): the newest golden save at
+"""A long absence costs work in proportion to its instants (engine design/core.txt, "INVARIANTS" 1): the newest golden save at
 the opening's end, advanced as a returning player's is, counted rather than timed, so a busy runner cannot hide it.
 Live saves whose rules flip a mix and a chip every few minutes took minutes of CPU over 30 days, because each instant
 built every event of every save a handler made; an instant now builds the full schedule once (schedule.pending finds

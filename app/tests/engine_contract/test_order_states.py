@@ -1,4 +1,4 @@
-"""View.order_states (plan.order_states; DESIGN.txt, "Orders", "Order mix", "Greyed mix"): each order is exactly one of
+"""View.order_states (plan.order_states; engine/design/, "Orders", "Order mix", "Greyed mix"): each order is exactly one of
 on, waiting (its latch is false), outranked (a latched mix order while an earlier mix order's mix runs) or passed over
 (its verb is dead: a greyed mix, a completed card, whatever its latch). It reads the save and changes nothing, so a
 replay is the same with or without it; and the wire View carries it in order."""

@@ -1,4 +1,4 @@
-"""Pending triggers (DESIGN.txt, "Pending triggers"): every unfired trigger whose requires hold or are each an unlock an
+"""Pending triggers (design/core.txt, "Pending triggers"): every unfired trigger whose requires hold or are each an unlock an
 unfired trigger gives, with when it fires under the segments now; a require on an unlock waits for its giver; a time
 shown comes true by itself; a fired trigger, and one waiting on a require no trigger gives, is not listed."""
 from ashfall_app.engine import (

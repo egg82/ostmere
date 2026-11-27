@@ -1,4 +1,4 @@
-"""A trigger's requires (DESIGN.txt, "Triggers"): it fires at the first instant its condition and every requirement
+"""A trigger's requires (design/core.txt, "Triggers"): it fires at the first instant its condition and every requirement
 hold, each requirement on an unlock or a runner; while one is false it waits, and fires at the instant that changes."""
 import pytest
 
@@ -65,7 +65,7 @@ def test_a_continuous_condition_fires_at_its_solved_time_once_the_requirements_h
 
 
 def test_a_requirement_turned_false_at_the_same_instant_holds_it_back():
-    """b completes at 20, the instant x reaches 20: the landing comes before the trigger (DESIGN.txt, "Same instant")."""
+    """b completes at 20, the instant x reaches 20: the landing comes before the trigger (design/core.txt, "Same instant")."""
     assert fired_at(world(AtLeast(StoreValue(X), 20 * Q, 20 * Q)), [(0, A), (10, B)], 100) == []
 
 

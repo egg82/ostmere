@@ -1,4 +1,4 @@
-"""Invariants 92 and 93 (engine DESIGN.txt, "THE TOWN'S MIX": "Running town mix", "Verbs", "Rates on a joined lane",
+"""Invariants 92 and 93 (engine design/towns-mix.txt, "THE TOWN'S MIX": "Running town mix", "Verbs", "Rates on a joined lane",
 "Join"): which town mix runs is set per layer by the always rule's pushdown; a tap order on a joined lane acts as it
 would if the lane ran no shares; a repeat-eligible card tapped by an always rule and the same card at BP in the running
 town mix give the same stores, work and counts."""

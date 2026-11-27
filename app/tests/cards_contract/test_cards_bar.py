@@ -1,6 +1,6 @@
 """Invariant 34 and "One bar": a card has one cumulative work segment, advanced by a tap at a full share or by the mix
 at the card's share, never both; on HANDS a tap yields the whole mix and runs the card from wherever its bar stands to
-the next completion; the view says who runs it (DESIGN.txt, part "CARDS"; cards.CardDef, cards.LaneState, view.RunBy).
+the next completion; the view says who runs it (design/cards.txt, part "CARDS"; cards.CardDef, cards.LaneState, view.RunBy).
 """
 import pytest
 

@@ -180,7 +180,7 @@ def _check_parts(o: "Opening") -> None:
 def _check_installs(cards: dict[str, "CardEntry"], ruled: set[str], where: str, out: "OutcomeEntry", installs: bool,
                     queues: bool) -> None:
     """An outcome's installs tap cards on a ruled lane, and only a trigger's or an answer's outcome installs
-    (`installs`); only an answer's queues a one-off (`queues`), each a hands card with a cap (engine DESIGN.txt,
+    (`installs`); only an answer's queues a one-off (`queues`), each a hands card with a cap (engine design/townsfolk.txt,
     "Installs land once"). `cards` by id and the `ruled` lanes are the opening's, built once by the caller."""
     if out.orders and not installs:
         fail(where, "only a trigger's or an answer's outcome installs a rule")
@@ -200,7 +200,7 @@ def _check_installs(cards: dict[str, "CardEntry"], ruled: set[str], where: str, 
 def _check_joins(cards: dict[str, "CardEntry"], ruled: set[str], where: str, out: "OutcomeEntry", installs: bool
                  ) -> None:
     """A join names a ruled lane, a town mix id and, when it names a card, an uncapped card on that lane (on its group
-    when the join is unmarked: groups.py); only a trigger's or an answer's outcome joins (engine DESIGN.txt, "THE TOWN'S MIX", "Join")."""
+    when the join is unmarked: groups.py); only a trigger's or an answer's outcome joins (engine design/towns-mix.txt, "THE TOWN'S MIX", "Join")."""
     if out.joins and not installs:
         fail(where, "only a trigger's or an answer's outcome joins a person")
     for j in out.joins:

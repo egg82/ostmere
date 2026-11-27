@@ -1,8 +1,8 @@
 """Resolving one instant: handle events in (kind, sequence) order until none is pending, evaluating orders and the
-queue whenever a latch changed or the queue popped, and clearing pauses whenever the running mix changed (DESIGN.txt,
+queue whenever a latch changed or the queue popped, and clearing pauses whenever the running mix changed (design/cards.txt,
 "Order mix"). Once the instant's firings reach the cap, evaluation is suspended for the rest of it and a CascadeLimit
 is recorded; events still resolve. Once nothing is pending and evaluation has ended, the settle decides which lanes
-repeat their tap (retap.py, DESIGN.txt "REPEATING TAPS"), which may land one and start the loop again."""
+repeat their tap (retap.py, design/repeating-taps.txt "REPEATING TAPS"), which may land one and start the loop again."""
 from dataclasses import replace
 
 from . import retap
@@ -27,7 +27,7 @@ a save at every firing would."""
 
 
 class _Repeats:
-    """Finds an instant's chain repeating before the cap (DESIGN.txt, "Firing cap"). The loop's state at the top of an
+    """Finds an instant's chain repeating before the cap (engine/design/, "Firing cap"). The loop's state at the top of an
     iteration (the save, the work, the idle set, whether evaluation is owed, how many lines were emitted) and the
     firing count decide everything after it while the count is under the cap (held and suspended change only at the
     cap), so a state seen p firings ago runs the same p firings again until the cap: those whole periods can be
@@ -129,5 +129,5 @@ def _evaluate(save: Save, rules: Rules, emit: Emit) -> tuple[Save, int, bool]:
 
 def _moves_mix(save: Save, event: Event) -> bool:
     """A latch change of an order whose verb is a SwitchMix: it changes the running mix, and so rates, with no verb
-    applied, which is why the firing cap holds it back (DESIGN.txt, "Firing cap")."""
+    applied, which is why the firing cap holds it back (engine/design/, "Firing cap")."""
     return event.kind is EventKind.LATCH and isinstance(save.orders[event.sequence].then, SwitchMix)

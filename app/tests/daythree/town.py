@@ -1,4 +1,4 @@
-"""What a player does about the town's mix (engine DESIGN.txt, "THE TOWN'S MIX"), by kind and not by id. The default
+"""What a player does about the town's mix (engine design/towns-mix.txt, "THE TOWN'S MIX"), by kind and not by id. The default
 leaves the split a join made: the join turns each person's always task into their share, the town's own rule runs the
 mix, and nobody acts. `resplit` is the attention the default is measured against: at a visit, each joined person's whole
 time on the card of theirs that makes the most, the best split a player could set by hand. Ids come from the rules

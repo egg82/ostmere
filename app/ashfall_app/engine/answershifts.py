@@ -1,4 +1,4 @@
-"""What an open offer's answers do to the lasting changes they make (DESIGN.txt, "Answer shifts"). Reads only."""
+"""What an open offer's answers do to the lasting changes they make (design/townsfolk.txt, "Answer shifts"). Reads only."""
 from .gates import effective_stack
 from .modifiers import change_bp, total_change_bp
 from .offers import AnswerDef

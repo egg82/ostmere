@@ -36,7 +36,7 @@ CHOICES (townsfolk, installed rules, offers)
   rule) takes effect at the lane's next landing: the card running runs to its completion (no cancel, KNOWN GAPS
   above). "Always" is AfterTime(0): true from the first instant, never released (can_fall False). A rule on the lane
   below an always rule acts only while the always rule's card cannot, so the lane's default task is an always rule
-  placed after the lane's other rules, and the page builds it so (api/CONTRACT.txt, "A lane run by rules"). Of
+  placed after the lane's other rules, and the page builds it so (api/contract/a-lane-run-by-rules.txt, "A lane run by rules"). Of
   several always rules on a lane, the one that acts next is the first that is not passed over.
 - The queue is the hands' plan: SetQueue refuses (InvalidVerbError) an entry tapping a card on a ruled lane. The
   queue's head is never passed over, and a ruled lane's always rule retaps that lane at each of its landings before
@@ -90,7 +90,7 @@ CHOICES (townsfolk, installed rules, offers)
   Mix orders are unchanged. Presentation only: evaluation never reads it.
 - Installed rule: Outcome.orders, a tuple of RuleInstall(card: CardId, first: bool = False). It installs exactly one
   shape, a ruled lane's always rule, Order(AfterTime(0), TapCard(card)): a shape the page already draws, words and
-  edits (api/CONTRACT.txt, "A lane run by rules"), so whatever an install creates the player can see, change and
+  edits (api/contract/a-lane-run-by-rules.txt, "A lane run by rules"), so whatever an install creates the player can see, change and
   remove. It lands after `raises` and before `queues` and `starts` (so it sees the outcome's unlocks). Each install,
   in tuple order: if save.orders already holds an equal order, nothing; else the first=True installs go to the top
   as one block in tuple order (the first of them at index 0) and the first=False ones are appended in tuple order,

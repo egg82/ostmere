@@ -26,7 +26,7 @@ export function laneOneOff(view: View, lane: string): ReturnType<typeof laneTap>
   return tap && view.cards.some((c) => c.card === tap.card && c.cap !== null) ? tap : null;
 }
 
-/** The holder of the hands, as the engine decides it (engine DESIGN.txt, "Order mix", "Queue mix"): a hands tap
+/** The holder of the hands, as the engine decides it (engine design/cards.txt, "Order mix", "Queue mix"): a hands tap
  * yields whichever mix runs; a rule's mix runs over a stint's, and a stint's over the player's. */
 export function handsHolder(view: View): Holder {
   const tap = laneTap(view, "hands");

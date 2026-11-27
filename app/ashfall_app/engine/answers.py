@@ -1,4 +1,4 @@
-"""The verb that answers an offer. Semantics: DESIGN.txt, "AnswerOffer"; its effect: answering.py."""
+"""The verb that answers an offer. Semantics: design/townsfolk.txt, "AnswerOffer"; its effect: answering.py."""
 from dataclasses import dataclass
 
 from .ids import AnswerId, KindId, OfferId, RoleId
@@ -19,7 +19,7 @@ class AnswerOffer:
 class AnswerKind:
     """Order verb: answer the first open offer of `kind` (rules order) with its answer of `role`. It can act while an
     offer of the kind is open (shown, not answered), applies that AnswerOffer, and is never dead: it answers each later
-    offer of the kind as it shows. Not the player's (decide raises InvalidVerbError) and not a queue entry's. DESIGN.txt,
+    offer of the kind as it shows. Not the player's (decide raises InvalidVerbError) and not a queue entry's. design/offer-kinds.txt,
     "OFFER KINDS"."""
 
     kind: KindId

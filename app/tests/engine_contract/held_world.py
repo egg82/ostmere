@@ -1,4 +1,4 @@
-"""Fixture rules and readers for the held-entries contract tests (engine DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS",
+"""Fixture rules and readers for the held-entries contract tests (engine design/entries-held.txt, "ENTRIES HELD WHILE A CARD RUNS",
 invariants 110-118). Built from the engine's public names only; the new ones (WhileRunning, CardDef.while_running,
 View.held) are looked up when a fixture is built, never when a test module imports.
 

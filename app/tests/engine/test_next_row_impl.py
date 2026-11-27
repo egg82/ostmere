@@ -1,4 +1,4 @@
-"""DESIGN.txt, "Next's row": the queue is a row among the hands' rules. Rules above it outrank a ready queue entry, as
+"""design/nexts-row.txt, "Next's row": the queue is a row among the hands' rules. Rules above it outrank a ready queue entry, as
 when it sits at the bottom; rules under it wait while a ready entry has the hands and pick up again after. A ready
 entry takes the hands when the task under way ends. A head that cannot act is passed over as a row (the rules under it
 run) but still blocks the entries behind it inside the queue.

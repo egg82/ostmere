@@ -1,4 +1,4 @@
-"""Invariants 158 and 161, the directed halves (engine DESIGN.txt, "HELD SPEED ...": "The dry rule is unchanged"): each pause
+"""Invariants 158 and 161, the directed halves (engine design/held-speed.txt, "HELD SPEED ...": "The dry rule is unchanged"): each pause
 at a dry instant is picked from the stack the pauses before it leave, so a paused eater's lane speed has left before the next
 consumer is chosen; and a resume rebuilds every line on the eater's lanes at that instant, so what advance() produces from
 there on is what the entry written by hand from that instant would give."""

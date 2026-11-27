@@ -1,7 +1,7 @@
 HELD SPEED, AND ENTRIES HELD BY STANDING ACTIONS (a joiner who is fed works faster: stew earns its place as a bonus
 while fed, 2026-11-10). Where this part and ENTRIES HELD WHILE A CARD RUNS disagree, this part holds; everything
 there not named here is unchanged. Examples name ids only; which runners, lanes and amounts is content's. Blind tests
-are written from this part, that part and api/CONTRACT.txt, against app/tests/engine_contract/MUTANTS_heldspeed.txt.
+are written from this part, that part and api/contract/, against app/tests/engine_contract/MUTANTS_heldspeed.txt.
 
 FIT PASS
 - The need: while a joiner's eating (a standing action) runs, that joiner's work runs faster; while it is paused on a
@@ -50,7 +50,7 @@ CHOICES (held speed)
 - View: View.held lists standing holders too, after the cards, in rules.standing order, with share_bp BP; HeldView's
   `card` field holds the runner's id (one namespace). The wire's Strength.sources serves a standing holder's side
   entry as a card's (source the runner id, share_bp BP). A HeldSpeed entry is on no strength, so it reaches the wire
-  only through the rates and work times it changes, and through CardInfo.change_bp (CONTRACT.txt, "upside_of").
+  only through the rates and work times it changes, and through CardInfo.change_bp (contract/text-and-numbers.txt, "upside_of").
 - Codec: HeldSpeed joins the rules encoding's classes; a StandingDef's `while_running` is left out while empty, as a
   card's is, so rules that declare none keep their digest. No Save field, no manifest change, FORMAT unchanged.
 
