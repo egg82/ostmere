@@ -28,6 +28,7 @@ import daythree_layers as d3
 import daytwo_layers as d2
 import dayone_world as world
 import night
+import people_day
 import people_hall
 import people_layers
 import props
@@ -71,7 +72,7 @@ def layers(rng: random.Random) -> list[Layer]:
     walls = ruin().getchannel("A")
     every = people_layers.step_aside([*_ground_layers(rng, walls), *_player_layers(), *_people_layers(walls),
                                       *people_layers.people_layers(walls), *light_layers()])
-    return builds.retire(people_hall.at_home(every))
+    return builds.retire(people_hall.at_home(people_day.at_work(every)))
 
 
 def _ground_layers(rng: random.Random, walls: Image.Image) -> list[Layer]:

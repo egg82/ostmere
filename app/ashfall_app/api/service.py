@@ -24,7 +24,7 @@ from .world.chip_infos import chip_infos
 from .world.feature_infos import feature_info
 from .goals.goalrows import goal_rows
 from .world.storerows import store_rows
-from .rules.lane_infos import lane_infos, later_labels
+from .rules.lane_infos import cast_infos, lane_infos, later_labels
 from .world.map_infos import place_infos
 from .rules.mixrows import MixNumbers
 from .goals.levels import levels
@@ -185,7 +185,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                      for s in o.skills],
         node_infos=[cm.NodeInfo(node=n.id, skill=n.skill, label_key=n.label_key, change=cm.NodeChange(
             target=cm.NodeTarget(n.changes.target), id=n.changes.id, store=n.changes.store)) for n in o.nodes],
-        lane_infos=lane_infos(o), town_later_labels=later_labels(o.town_later_labels),
+        lane_infos=lane_infos(o), cast_infos=cast_infos(o), town_later_labels=later_labels(o.town_later_labels),
         offer_infos=_offer_infos(o),
         offer_kinds=[cm.OfferKindInfo(kind=k.kind, roles=[cm.KindRole(role=r.role, label_key=r.label_key) for r in k.roles])
                      for k in o.offer_kinds],

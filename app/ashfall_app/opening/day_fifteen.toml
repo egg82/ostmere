@@ -37,6 +37,7 @@ cap_items = 12
 
 [[cards]]
 id = "pull_beams"
+site = { no_site = "beams are pulled out of the ruin's fallen roof under the far wall stub, which is backdrop and not a layer of its own" }
 presentation = "action"
 label_key = "c_pull_beams"
 upside_key = "up_beams"
@@ -50,6 +51,7 @@ outcome = { stores = [{ store = "beams", items = 1 }] }
 # rules it out. Out at the ruin, so the field group's.
 [[town_cards]]
 id = "{lane}_pull_beams"
+site = { no_site = "beams are pulled out of the ruin's fallen roof under the far wall stub, which is backdrop and not a layer of its own" }
 twin_of = "pull_beams"
 lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"
@@ -203,6 +205,7 @@ outcome = { doings = ["n3"], line_keys = ["l_sow"], unlocks = [{ unlock_kind = "
 # six beds grow seven halves an hour; the ground she made all week two sows the first five.
 [[cards]]
 id = "n3_sow"
+site = { layer = "beds_3" }
 lane = "n3"
 presentation = "craft"
 label_key = "c_n3_sow"
@@ -292,6 +295,7 @@ offered_after = { unlock_kind = "card", id = "n3_reap" }
 
 [[cards]]
 id = "barley_stew"
+site = { layer = "fire_lit" }
 presentation = "action"
 label_key = "c_barley_stew"
 upside_key = "up_barley_stew"
@@ -314,6 +318,7 @@ group_key = "store_group_stew"
 # eater's lane never reaches (day three's pot, t_pot_on). Its eating counts the mouths already fed (t_pot_eat_family).
 [[cards]]
 id = "pot_barley_stew"
+site = { layer = "stew_pot" }
 only_player = "station"
 lane = "pot"
 presentation = "action"
@@ -347,6 +352,7 @@ outcome = { modifiers = [{ target = "rate", id = "pot_barley_stew", flow = "cost
 # The barley pot, an everyday job everyone takes (day three's pot).
 [[town_cards]]
 id = "{lane}_barley_stew"
+site = { layer = "fire_lit" }
 twin_of = "barley_stew"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
@@ -414,6 +420,7 @@ cost_key = "chip_frosted_cost"
 
 [[cards]]
 id = "cover_beds"
+site = { layer = "beds_3" }
 presentation = "action"
 label_key = "c_cover_beds"
 upside_key = "up_cover_beds"
@@ -423,6 +430,7 @@ outcome = { stores = [{ store = "beds_covered", items = 1 }] }
 
 [[cards]]
 id = "n3_cover_beds"
+site = { layer = "beds_3" }
 twin_of = "cover_beds"
 lane = "n3"
 presentation = "action"
@@ -444,6 +452,7 @@ tally = true
 # Covering the beds is everyday work, everyone's as the reaping is, at her lane's pace.
 [[town_cards]]
 id = "{lane}_cover_beds"
+site = { layer = "beds_3" }
 twin_of = "cover_beds"
 lanes = ["n1", "n2", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
@@ -504,6 +513,7 @@ base = 10
 # The hands against a herd that runs: a loss is the deer getting away, no hurt, the smoked carried out spent.
 [[cards]]
 id = "hunt_deer"
+site = { no_site = "the deer is hunted out past the wall and brought in through the gap; the hunt is not in the camp" }
 only_player = "fight"
 presentation = "action"
 label_key = "c_hunt_deer"
@@ -688,6 +698,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "stack_cordwood" }, { unlock
 
 [[cards]]
 id = "stack_cordwood"
+site = { layer = "wood_stack_3" }
 lane = "hearth"
 presentation = "action"
 label_key = "c_stack_cordwood"
@@ -700,6 +711,7 @@ outcome = { stores = [{ store = "cordwood", items = 1 }] }
 # Stacking wood is everyday work, the windbreak's kind: the same lanes.
 [[town_cards]]
 id = "{lane}_stack_cordwood"
+site = { layer = "wood_stack_3" }
 twin_of = "stack_cordwood"
 lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"

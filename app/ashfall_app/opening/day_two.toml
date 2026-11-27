@@ -17,6 +17,7 @@ curve_items = [36630, 54980, 82510, 123810, 185760]
 [[lanes]]
 id = "n1"
 lodging = { build = "hall" }
+by_day = { at_fire = "she keeps the town's tally board, which stands by the fire, and sits with it (the board is hers from B11)" }
 label_key = "lane_n1"
 ruled = true
 told = "line"
@@ -133,6 +134,7 @@ offered_after = { unlock_kind = "feature", id = "n1" }
 # here and the hands' card is. Everyday work goes to everyone the story does not rule out.
 [[town_cards]]
 id = "{lane}_weave_wattle"
+site = { no_site = "wattle is woven seated, from damp wood anywhere in the camp; no layer shows it" }
 twin_of = "weave_wattle"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"

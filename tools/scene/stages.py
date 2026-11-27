@@ -235,6 +235,7 @@ STAGES["69_watch_night"] = _NIGHT.then(_AT_WATCH | {"running:n2_guard"})
 _JOINED = {"joined:" + f"n{n}" for n in (8, 9, 10, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22)}
 STAGES["69_reaping"] = _ALL.then(_JOINED | {"running:g_field_reap", "running:g_hearth_reap"})
 STAGES["69_cooking"] = _ALL.then(_JOINED | {"running:g_road_fungus_stew", "running:g_road_fog_fish", "running:g_hearth_fungus_stew"})
+STAGES["69_crews_idle"] = _DAY.then(_JOINED | {"feature:bedesman_home"})
 STAGES["69_before_the_join"] = _ALL.then({"running:g_field_reap", "running:g_hearth_reap", "running:g_road_fungus_stew"})
 
 
@@ -246,9 +247,9 @@ def holds(cond: str | None, state: State) -> bool:
         return any(holds(c, state) for c in cond.split("|"))
     if "&" in cond:
         return all(holds(c, state) for c in cond.split("&"))
-    if cond == "dark":
+    if cond in ("dark", "day"):
         from grades import GRADES, pick
-        return bool(GRADES[pick(lambda when: holds(when, state))].get("dark"))
+        return bool(GRADES[pick(lambda when: holds(when, state))].get("dark")) == (cond == "dark")
     if cond.startswith("store:"):
         store, _, n = cond[len("store:"):].partition("@")
         lo, _, hi = (n or "1").partition("..")
@@ -280,10 +281,11 @@ CONDITIONS = {
     "left:<lane>": "the lane's person has left the town for good",
     "end:showing": "the end has happened: the end feature was unlocked with every ledger line covered (it never clears)",
     "dark": "the grade the page shows is a dusk or a night one (the manifest's grades say which, `dark`): the light going, or gone",
+    "day": "the grade the page shows is not a dusk or night one: `dark`'s opposite, for a layer that gives way by day only",
     "<a>|<b>|...": "any of the conditions holds",
     "<a>&<b>&...": "all of the conditions hold; binds tighter than |, so a&b|c is (a and b) or c",
 }
 
 
-KINDS = {"always", "project", "pushes", "running", "mix", "store", "end", "chip", "feature", "action", "answered", "answer", "joined", "left", "dark"}
+KINDS = {"always", "project", "pushes", "running", "mix", "store", "end", "chip", "feature", "action", "answered", "answer", "joined", "left", "dark", "day"}
 """The condition kinds the page knows (app/client/src/scene/conditions.ts)."""

@@ -124,6 +124,7 @@ cap_items = 24
 
 [[cards]]
 id = "shovel_road"
+site = { no_site = "the old road lies up the valley outside the palisade, and the shovelling stands nowhere in the camp; the road layers show the cut, not the clearing" }
 presentation = "action"
 label_key = "c_shovel_road"
 upside_key = "up_shovel_road"
@@ -134,6 +135,7 @@ outcome = { stores = [{ store = "cleared", items = 1 }] }
 
 [[town_cards]]
 id = "{lane}_clear_road"
+site = { no_site = "the old road lies up the valley outside the palisade, and the shovelling stands nowhere in the camp; the road layers show the cut, not the clearing" }
 twin_of = "shovel_road"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n14", "n15", "n23", "g_field", "g_hearth", "g_road"]
 presentation = "action"

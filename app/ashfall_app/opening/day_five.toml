@@ -80,6 +80,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "build_windbreak" }, { unloc
 
 [[cards]]
 id = "build_windbreak"
+site = { no_site = "the stones are stacked into a windbreak that no layer shows: the scene draws nothing for what they make" }
 lane = "hearth"
 presentation = "action"
 label_key = "c_build_windbreak"
@@ -94,6 +95,7 @@ outcome = { stores = [{ store = "windbreak", items = 6 }] }
 # unlock in day eleven.
 [[town_cards]]
 id = "{lane}_build_windbreak"
+site = { no_site = "the stones are stacked into a windbreak that no layer shows: the scene draws nothing for what they make" }
 twin_of = "build_windbreak"
 lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"
@@ -416,6 +418,7 @@ outcome = { stores = [{ store = "bay2", items = 1 }] }
 [[lanes]]
 id = "n3"
 lodging = { build = "hall" }
+by_day = { card = "n3_sow" }
 label_key = "lane_n3"
 ruled = true
 told = "line"
@@ -434,6 +437,7 @@ tied = "n4"
 [[lanes]]
 id = "n4"
 lodging = { build = "hall" }
+by_day = { at_fire = "the old man looks after the hearth crew, whose work is the fire and the pot (the crew is tied to his lane)" }
 label_key = "lane_n4"
 ruled = true
 told = "line"

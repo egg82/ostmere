@@ -657,6 +657,7 @@ tied = "n2"
 [[lanes]]
 id = "n2"
 lodging = { build = "hall" }
+by_day = { card = "n2_watch" }
 label_key = "lane_n2"
 ruled = true
 told = "line"
