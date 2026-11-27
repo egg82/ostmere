@@ -219,6 +219,7 @@ modifiers = [
 [[lanes]]
 id = "n8"
 lodging = { build = "hall" }
+by_day = { card = "n8_reap" }
 label_key = "lane_n8"
 ruled = true
 told = "line"
@@ -229,6 +230,7 @@ crews = ["g_field", "g_hearth"]
 [[lanes]]
 id = "n9"
 lodging = { build = "hall" }
+by_day = { card = "n9_reap" }
 label_key = "lane_n9"
 ruled = true
 told = "line"
@@ -239,6 +241,7 @@ crews = ["g_field", "g_hearth"]
 [[lanes]]
 id = "n10"
 lodging = { build = "hall" }
+by_day = { card = "n10_reap" }
 label_key = "lane_n10"
 ruled = true
 told = "line"
@@ -517,6 +520,7 @@ modifiers = [
 # goes to his share; nobody has to take it off (D-148).
 [[cards]]
 id = "n11_first_out"
+site = { no_site = "the old road lies up the valley outside the palisade, and the shovelling stands nowhere in the camp; the road layers show the cut, not the clearing" }
 lane = "n11"
 twin_of = "shovel_road"
 presentation = "action"
@@ -539,6 +543,7 @@ crews = ["g_hearth"]
 [[lanes]]
 id = "n12"
 lodging = { build = "hall" }
+by_day = { card = "n12_stakes" }
 label_key = "lane_n12"
 ruled = true
 told = "line"

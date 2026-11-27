@@ -212,6 +212,7 @@ modifiers = [
 [[lanes]]
 id = "n16"
 lodging = { build = "hall" }
+by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n16"
 ruled = true
 told = "line"
@@ -220,6 +221,7 @@ group = "g_road"
 [[lanes]]
 id = "n17"
 lodging = { build = "hall" }
+by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n17"
 ruled = true
 told = "line"
@@ -228,6 +230,7 @@ group = "g_road"
 [[lanes]]
 id = "n18"
 lodging = { build = "hall" }
+by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n18"
 ruled = true
 told = "line"
@@ -236,6 +239,7 @@ group = "g_road"
 [[lanes]]
 id = "n19"
 lodging = { build = "hall" }
+by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n19"
 ruled = true
 told = "line"
@@ -407,6 +411,7 @@ modifiers = [
 [[lanes]]
 id = "n20"
 lodging = { build = "hall" }
+by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n20"
 ruled = true
 told = "mention"
@@ -415,6 +420,7 @@ group = "g_road"
 [[lanes]]
 id = "n21"
 lodging = { build = "hall" }
+by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n21"
 ruled = true
 told = "mention"
@@ -423,6 +429,7 @@ group = "g_road"
 [[lanes]]
 id = "n22"
 lodging = { build = "hall" }
+by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n22"
 ruled = true
 told = "mention"

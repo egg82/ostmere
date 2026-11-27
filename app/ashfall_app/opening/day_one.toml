@@ -872,6 +872,7 @@ cap_items = 24
 
 [[cards]]
 id = "weave_wattle"
+site = { no_site = "wattle is woven seated, from damp wood anywhere in the camp; no layer shows it" }
 presentation = "action"
 label_key = "c_weave_wattle"
 upside_key = "up_weave_wattle"

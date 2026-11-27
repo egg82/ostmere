@@ -175,6 +175,7 @@ modifiers = [
 [[lanes]]
 id = "n14"
 lodging = { build = "hall" }
+by_day = { card = "n14_fungus_stew" }
 label_key = "lane_n14"
 ruled = true
 told = "line"
@@ -185,6 +186,7 @@ group = "g_road"
 [[lanes]]
 id = "n15"
 lodging = { build = "hall" }
+by_day = { card = "n15_wash_meat" }
 label_key = "lane_n15"
 ruled = true
 told = "line"
