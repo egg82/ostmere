@@ -1,4 +1,4 @@
-"""Offers answered by the player (engine DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS", "Offers",
+"""Offers answered by the player (engine design/townsfolk.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS", "Offers",
 "AnswerOffer", "Queued one-off", "Read model", invariants 61, 64, 66 and 67): a trigger shows the offer, an answer
 closes it with its two unlocks, lands its outcome and evaluates at once, and the view lists it."""
 from collections.abc import Callable

@@ -55,10 +55,10 @@ JOURNAL
       numbers). A note writes its numbers as words ("two dozen"); the exact numbers are served and drawn below it.
     - entry and note ids are content ids like any other, and content may rename or remove one: a save keeps the unlock
       it had (no manifest declares them), and the trigger the loader made for a removed note is dropped with it (engine
-      DESIGN.txt, "Rebase").
+      engine/design/, "Rebase").
 
   Engine: UnlockKind gains entry (its id an EntryId) and note (a NoteId), ordinary kinds (not PRESENT_ONLY); engine
-  DESIGN.txt, "Unlocks", lists them. The engine never reads them. Gates read
+  design/core.txt, "Unlocks", lists them. The engine never reads them. Gates read
   them as any unlock (subject "unlocked" with unlock_kind entry or note), so a gate on several entries is one Unlocked
   condition each, and no count store mirrors them.
 

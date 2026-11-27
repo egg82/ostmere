@@ -1,0 +1,436 @@
+ENGINE: the single home of its semantics, and the invariants contract tests check. Contract: docs/systems.md,
+"The engine". Code docstrings summarise and point here by the lead word of a CHOICES entry.
+
+CHOICES (each with its reason)
+- Time: integer seconds since the save began. Rates: fixed-point per hour, 1000 = one item/h, because the ledger
+  reads per hour. Quantities: 3_600_000 = one item, so a rate r moves a quantity exactly r per second and
+  value = v0 + r*dt needs no division; splitting a span cannot round differently, by construction. That holds for a
+  store moved by flows alone. A store that card lumps move (CARDS, "Rate form") adds floor(G(t)) - floor(G(t0)), G
+  the exact rational its lumps have paid by each card's work: one floor per store, and still nothing to split
+  differently, since G is read off the work segments, which are integers in the save.
+- Event times: exact ceiling division; the final partial second's overshoot is clamped, so values stay in [0, cap].
+  A store that lumps move is one ceiling division per stretch between the times its cards' work stops (a tap's
+  landing, a cap): each such time is an event already, and within a stretch the value is monotone.
+- Rate formula (modifiers.py): additive basis points sum, then multipliers compound, one rounding at the end: down
+  for makes and XP, up for costs. Additive sum floors at 0. Why: "+10% twice is +20%" is what a reader expects of
+  sources of one kind, compounding is what separate kinds do, and rounding never favours the player.
+- Shares: basis points, sum <= 100%, remainder idle and shown. Forcing 100% makes editing awkward, and idle share
+  is honest; the engine never redistributes a share with no source (a hidden redistribution is a number with no
+  source). A paused mix card's share goes to the rest of its mix, each gain sourced (SPENT).
+- Nested mix share: compositional. A saved mix flattens to its effective per-action shares (repeats summed),
+  and an outer mix scales that flattened result once: floor(outer * flattened / 10_000), then sums repeats.
+  Order is depth-first, first position. Why: what the page shows for an inner mix is exactly what nesting scales.
+- Cap: the store stops at cap, overflow is lost, the makers keep running. Pausing at a cap would hide the event
+  and stall XP; the waste is a visible fact for an order (docs: hitting a cap is an order's job).
+- Store caps: a Modifier aimed at StoreCap(store) changes what the store holds, combined as rates are (adds sum, muls
+  compound) and rounded down; LedgerLine.cap is the cap now. It may only raise (validation: add_bp >= 0, mul_bp >=
+  BP), so no store is ever above its cap and nothing is clamped when one lands; the rebuild at that instant restarts
+  a full store's makers. Why: "stores hold half again" is
+  a level's visible bonus (the opening's Camp), and a cap is one number with sources, which is what the stack is.
+  Only the save's stack aims at a cap: a chip's effects are refused if they do (InvalidRulesError), since a chip is
+  counted only while shown. The starting stack passed to new_save is refused (InvalidVerbError) for a lowering cap
+  entry, as every rules placement is. An outcome's raise lands at each completion of a card with a cap above 1, like
+  any outcome modifier (the stack is appended to for good; `finished` lands once). fills_at of a full store is
+  reach_time's answer, the start of its segment, which a sample carries forward to the sample's time.
+- Running dry, no order: consumers pause last-in-mix first until the store's net >= 0; each resumes when the
+  store refills to one hour of its cost (or the cap). A paused action makes, costs and trains nothing; a paused
+  mix card's share goes to the rest of its mix until it resumes (SPENT). A change of the running mix (CARDS, "Order mix"), or SaveMix of it, clears the pauses on every store a card of the old or the new running mixes makes or
+  costs (re-pausing at once if still dry, in the new mix's order); a pause on any other store stands until its
+  RESUME, since nothing the change moves reaches that store. Mix order is priority the player already wrote; the hour
+  is hysteresis, so dry never chatters at one instant. The rest of the mix keeps running, as the docs ask. Why: a
+  store held empty for good (a clock run out) would otherwise pause its consumers again at every mix change, much of
+  a catch-up's time on a save whose rules switch mixes often, and a refilling store's consumer would restart below
+  its hour at a switch that moves nothing on that store.
+- Orders: latched conditions with an explicit release (hysteresis). Evaluation runs once at any instant where a
+  latch changes, the queue pops, a project lands (every TAP_DONE: a push, a completion), a
+  trigger fires or a READY event falls, and right after SetOrders or SetQueue; never after a player's SwitchMix,
+  SaveMix or TapCard, except a SwitchMix or SaveMix that clears the Pause of a card a true order or the queue head
+  names (Running dry): that card turned ready at the decision's instant, which is READY's own instant, and waiting for
+  the next unrelated instant would let a player acting on every timer start it sooner (the 2 AM test). It applies the TapCard of the first order that is true and can act; else, when no order's mix
+  runs (CARDS, "Order mix"), the queue head's verb; else nothing. A TapCard can act when its project is unlocked,
+  not a spent one-off, ready, and its lane free. An order's SwitchMix is never applied as a verb: while its latch is
+  true its mix runs over the player's (Order mix). An order that cannot act is passed over, as a gambit with no
+  target is, so order sequence is priority among orders of one kind that can act; a tap order and a mix order never
+  compete. The queue head is never passed over (the queue is the plan: it waits, also while an order taps or an
+  order's mix runs), unless nothing will make it ready (Never ready). A verb that changes nothing is not an error. READY falls at the first
+  time a TapCard named by a true order or by the queue head, unlocked, unspent and on a free lane, turns ready
+  (its Blocker's ready_at), so nothing waits on an unready project into idleness. Content and the page never build
+  an always-true condition (api/contract/the-client-may.txt, "a store rule"), so no order they make shadows the queue forever; the
+  engine does not reject one (the contract suites' generators make them). A player's switch stands; while an order's
+  or the queue's mix runs it sets only the mix that comes back. A queue head that is a SwitchMix changes nothing when
+  applied: its mix runs while it controls (Queue mix).
+- Same instant: (time, kind, sequence); kinds STORE_LIMIT < RESUME < TAP_DONE < LEVEL_UP < CHIP < TRIGGER <
+  LATCH < QUEUE_POP < READY; sequence is the subject's index in rules (stores, actions, lanes with HANDS first,
+  skills, chips, triggers, projects for READY) or in save.orders. Landings come before latches so an order sees what a project made. Each event is applied, then every
+  rate is recomputed (then pauses), which may raise more events at that instant.
+- Firing cap: each event processed and each verb applied by orders or the queue is one firing. When an
+  instant's firings reach max_firings_per_instant, evaluation is suspended for the rest of it (latches, but for a
+  mix order's below, and queue pops still update, remaining events still resolve, no verb is applied), save.cascade_count goes up by one,
+  save.last_cascade becomes CascadeLimit(instant, count), and time moves on; evaluation resumes at the next
+  instant that evaluates. An instant counts as a cascade once its firings reach the cap, whether or not a verb was
+  still waiting: the cap bounds work per instant, it does not judge it. Past the cap, the latch change of an order
+  whose verb is a SwitchMix waits too (it is not handled and is no firing): it changes the running mix, and so rates,
+  with no verb applied, so latches on a Running subject could otherwise chain forever (CARDS, "Order mix"); it is
+  seen at the next instant where something else fires, as a discrete subject is, and the instant it waited at
+  counts as a cascade.
+  A caller logs a cascade by comparing counts; nothing on the save grows unbounded.
+  Deterministic, pure, never a stuck save. A player's decide() starts a fresh count, even at an instant that
+  already hit the cap: the cap stops chains, not the player.
+- Lanes: work happens on lanes, one project at a time each. HANDS is the player's own time and always exists; the
+  running mix runs on it. A project on HANDS (a tap) takes the whole of the player's time while it runs: every mix
+  action's Run is YIELDED (0/1, share kept and shown) and the mix carries on unchanged when it lands. Why: tapping
+  trades mix time one for one, so attention earns nothing (the 2 AM test) and nothing finishes into idleness; a share
+  reserved for taps would idle whenever nobody taps. Other lanes (Rules.lanes) never touch the player's time. A share of the player's time (the
+  split panel's dividers) is a mix action, never a lane: work that should share the player's time is an ordinary
+  ActionDef in a mix, and work that runs on its own (a drying rack) is a lane project shown as its bar beside them.
+  A tap and a continuous action doing the same kind of work are two ActionDefs (Type Object): one project's action,
+  one mix action.
+- Projects: inputs are taken at the first push's start and only the first push needs them; requires must hold at
+  every push's start. The outcome lands when the last push's work is done, and between them only the project's
+  action (if any) runs, at a full share on its lane: its flows and XP are ordinary rates, so skills train while
+  tapping exactly as in a mix. The action is part of the project: it needs no ACTION unlock of its own. A one-off
+  (repeatable False) cannot start again once complete. One-off narrative actions, gathering by hand and crafting
+  recipes are all projects; TapCard is the one verb for tap, craft and next push, and an order or the queue can
+  apply it (OrderVerb). A landing, in order: the push ends and emits its line, the lane is freed (and any pause of
+  the project's action is dropped), the outcome applies if it was the last push (so an outcome may start a project
+  on the lane that just landed, except HANDS, see Validation), then orders and the queue evaluate. So "keep doing
+  this until" is a queue entry and "refill when low" is an order; the controlling verb is re-applied at each
+  landing, which is how a next push starts by itself.
+- Pushes: a project of n pushes needs n starts; progress between pushes is kept on the save (CardState) and the lane
+  is free between them. Each push ends with its own line.
+- Failed tap: the player may tap a project whose inputs or requires are unmet (or that a Pause holds). It takes no
+  time and changes nothing: no lane is occupied, the mix keeps running, nothing is consumed and no line is emitted.
+  Unready is known at the tap, never by chance: the same save and verb
+  always fail or succeed alike. An order, the queue or an Outcome never starts an unready project,
+  a busy lane or a locked one: it changes nothing (a verb that changes nothing is not an error).
+- Work: a push needs work_s * BP work units; it fills at BP per second at full speed, through modified_rate with
+  base BP, share BP, the stack aimed at its WorkRef and its lane's LaneSpeed, and the Run of its action (a paused
+  action pauses the work). Rounded down, like makes.
+- Speed: a LaneSpeed modifier joins the stack of every line on that lane (mix actions on HANDS, project actions,
+  work); a WorkRef modifier only that project's work. "Tired halves bar speed" is one MUL_BP 5_000 on LaneSpeed(HANDS).
+  A tap on HANDS runs at the speed it had at its start: the effective stack's entries aimed at LaneSpeed(HANDS) or at
+  its card's WorkRef, chips' and the save's alike, are kept on its LaneState (speed) as it starts, and its lines read
+  them in place of the live ones until it lands or is interrupted (Run.speed carries them to the rate formula). A chip
+  that shows or clears meanwhile, or an entry an Outcome adds, reaches it only from its end; the mix it yields and
+  every other lane read the live stack. Entries aimed at a line's own RateRef, and lump amounts, stay live: they change
+  what a completion yields, not how long it takes. Why: a bad state's cost runs only while its cure can, and a HANDS
+  tap yields the mix that holds the cure, so the cost is settled at the start, where the player can cure it first and
+  the time shown is the time it takes (docs/decisions.md, "A bad state costs something small"). The queue's head
+  waits while a rule's mix runs (Order mix), so a chip's rule cures it before a queued tap starts. Other lanes stay
+  live: a repeating tap there is a rate with no start per completion, so a kept speed would part it from the same
+  taps landed one by one. FORMAT 8 adds LaneState.speed; UPGRADES[7] sets it None on every lane, and a tap whose speed
+  is None reads the live stack to its end, as a format 7 save's tap did when it began.
+- Standing: an ActionDef with standing True runs at a full share whenever unlocked, outside the mix and every lane
+  (a fire burning, a body getting hungry). Running dry pauses consumers in this order, last first: standing actions
+  in rules order, then HANDS (its project's action, or the mix in mix order), then other lanes in rules order. An
+  unlocked standing action runs from the save's first instant (see Instant 0).
+- Instant 0: new_save resolves time 0 like any instant, so a trigger already true has fired, a chip already true is
+  latched, standing actions run and anything dry is paused in the save it returns. Its lines are not returned (it
+  has no logged form): what the page says at time 0 is content, and what is true then is in the view.
+- Explain: share_bp is the effective share the line runs at: from the running mix for a mix action, BP for an
+  unlocked standing action and for a project's action while its project runs ready, 0 otherwise. An Explanation's
+  adds and muls hold every entry that applies to the line (aimed at its ref, or at its lane's LaneSpeed), each
+  retargeted at the Explanation's ref with its source kept, so the formula recomputes per_hour from the
+  Explanation's own fields (modified_rate does it for a RateRef; a WorkRef's work rounds down, as makes do).
+- Chips: a chip is a latched condition (the order vocabulary, hysteresis and all) shown while it is unlocked and
+  its latch is true; while shown, its effects join every stack after save.modifiers, sourced by the chip's id. A
+  chip is not a store: the store it reads (warmth, fullness, energy) is ordinary, and "the chip clears" is the store
+  moving, so no part of the engine sets a chip directly. Why: the smallest model that reuses latches and modifiers.
+  A chip's latch is kept whether or not it is unlocked. on_line is emitted the first time it becomes shown in the
+  save, whichever of its latch rising and its unlock came second (at an Outcome that unlocks it, after the Outcome's
+  lines), and never again: Save.chips_seen[i] records that chip i has shown (time 0 included, whose lines are not
+  returned) and never resets. Why: a chip can clear and show again every cycle while the player is away, and the line
+  says something once. Each time it stops being shown (its latch releasing, since unlocks only grow), one of its
+  off_lines: the k-th draw of a shuffle bag over them keyed by the chip (engine/rotation.py, the page's own draw for a
+  fight's pool), k the off lines it has said, which chips_seen[i] counts above its 1. Each line comes once a round
+  and none twice in a row. Why: a chip that clears every cycle says its off line every cycle, and one line said
+  fifteen times reads as a stuck record; a count in the save keeps the turns exact across saves and devices.
+- Triggers: content gates. Each fires once per save, at the first instant its condition is true, applying an
+  Outcome. A find "earned" at a level or a count is a trigger: deterministic, so it shows the moment it is earned.
+  Its requires (none by default) must also hold then, each on an Unlocked or Running subject: discrete, so no rise
+  time is solved for them; while one is false the trigger has no event, and the pending check at the instant it
+  changes sees it (one craft built and the other not, when a card starts). The conjunction is the
+  trigger's alone, never the order vocabulary's, so no latch or order watches it.
+- Pending triggers (pending.py): what the page states as the next step. Each unfired trigger whose requires hold, or
+  whose unmet requires are each an unlock some unfired trigger gives, with `at`, when it fires under the segments now:
+  its event's time where it has one, else the latest of its condition's rise time and, per unmet require, the earliest
+  `at` of the triggers giving that unlock (None when any is unknown); and `held`, every require holds now. Like
+  next_event, `at` holds until the next event.
+- Conditions: subjects StoreValue and SkillLevel are solved from segments; CardCount, Unlocked, Running and
+  LaneRules are discrete: they change only at instants where something else fires, so the pending check at that instant sees them
+  (change_time returns None for them otherwise).
+- Unlocks: what the player can see and use is the save's unlock set (ids by kind: action, project, skill, store,
+  chip, feature); it only grows, by Outcomes. A player verb naming a locked id raises InvalidVerbError: TapCard
+  of a locked project, SaveMix with a locked action. SetOrders and SetQueue accept a locked project (planning ahead
+  is the route); the verb cannot act until it is unlocked. The ACTION unlock gates mix use and standing actions,
+  not a project's own action. Features are page parts the engine only switches on; the feature vocabulary is the
+  feature ids the opening and the outcomes unlock (Rules declares no features). The kinds entry (an EntryId) and note
+  (a NoteId) are the journal's pages and the notes written on them (api/contract/journal.txt, "JOURNAL"): ordinary kinds, held
+  and gated like a feature, known where the rules mention them, kept by a rebase as the save had them, and never read
+  by the engine beyond a gate's Unlocked. Rules.opening None means no gating
+  (everything unlocked), so rules without an opening (tests, bare simulator economies) need no unlock data; the view
+  then reports the effective set (View.unlocked).
+- Lines: log lines are content keys emitted by projects (push, failed tap), outcomes, and chips turning on or off; the
+  engine never holds text. A line names the card that wrote it (its completion, tap or failed tap, however the
+  card was run; none for chips and triggers), so a page can show it where that card is. They are not stored on the save, which would grow without bound and break the split;
+  advance_logged and decide_logged return them beside the save. seq numbers the lines of one instant within one
+  call, from 0, in emission order; in decide_logged the decision's lines continue the numbering of the advance's
+  lines at that instant, and Step.failed names the card of a failed tap (None otherwise). Two calls may each number lines at one instant (an advance_logged to t, then a
+  decide_logged at t), so (time, seq) is unique within one Step, and a later Step's lines all follow an earlier one's.
+- Rule changes (rulelog.py): advance_logged and decide_logged also return each order's latch turning true or false on
+  the way, after each instant and after the decision's, with the amount of the store its condition reads (None for a
+  condition on no store). Orders have no id, so an order is matched across the change by equality: one that only moved
+  keeps its latch history, an edited one is another order. A SetOrders matches the same way: an order equal to one in
+  the old list keeps that order's latch (the first equal one's, so copies of one order all take one latch), so a rule
+  moved or kept while its store sits inside its band stays on; a new or edited order is latched afresh from its
+  threshold alone (latch_now), and its band plays no part until it has come on. A latch that rises and
+  falls inside one instant is not reported. Like lines, they are not stored on the save.
+- Stint changes (rulelog.py): a goal stint is reported as an order, Order(entry.until, entry.verb), in the same list: `on`
+  when its entry comes to control (the first queue entry not dead is a SwitchMix it was not before), and `on` False with
+  ended STINT when a SwitchMix entry has left the queue and its `until` holds in the saved after. A removal while its
+  `until` does not hold, and a stint that holds as it is queued, report nothing; one whose until held as it came to
+  control is reported ended with no start. A player's SetQueue that removes a stint whose goal already holds reports it
+  as landed. A stint the game handed back (Queue mix, "Dry stint") reports `on` False with ended DRY: an entry that
+  left the queue in an advance, its `until` not holding. A stint's start and its landing carry `levels`: the amount then of each store its mix's cards make (their
+  makes and outcome stores, at a share above 0), so what the save gained in those stores while it ran is the
+  difference, read by whoever keeps the two (saves/ruleruns.py).
+- Decision context (context.py): decide_logged's Step.context is what held at the decision's instant before the verb
+  applied: the mix the hands ran, whether a TapCard's card was in it (flattened), and the chips shown. The decision
+  log keeps it beside the verb, so what the player keeps doing under which state is read off the log without a replay
+  (the server's repeat offers, api/contract/repeats.txt "Repeats"). It is read off the save only, so a replay reproduces it.
+- Forecast (forecast.py): every level-up of every skill, and every fill (reaching its cap as it stands then, from
+  below) and emptying of each named store, by a given time, with nobody deciding: the save resolved instant by
+  instant exactly as advance resolves it, so orders, the queue, taps ending and stores running dry all play out. A
+  view's next_level_at, fills_at and empties_at hold only under the current segments, so a page drawing a time the
+  player can trust draws the forecast's. It is the save's own future while nobody decides, so a forecast made
+  earlier on the same path lists the same times. Bounded by `until`, MAX_INSTANTS and an optional stop asked before each
+  instant (then `until` is where it stopped); past it nothing is listed, never estimated. Read only: it returns no save.
+  Kept path: a Forecast carries the instants it resolved (ForecastPath), and a later forecast handed it (`kept`) takes
+  those after its own save instead of resolving them, when its save is on that path: the last of them at or before its
+  time, shifted to it, equals it. The answer is the same as without `kept`; MAX_INSTANTS counts the taken instants, and
+  stop is asked only before the ones it resolves. Why: the page forecasts every minute, and on a busy save each forecast
+  resolved hundreds of instants the last one had.
+  Hands free (handsfree.py, docs/design/reminders.md "The hands-free notice"): hands_free_at is the first instant
+  the player's work stops holding the hands, after the forecast began with it holding them; None when it began free
+  or they are not free by `until`. The player's work holds them while save.queue holds an entry (a goal stint
+  included, and a dead entry, which is still the plan) or HANDS runs a tap the player started, by their own TapCard
+  or by a queue entry; a tap an order or an outcome started, and the mix, do not hold them. No save field says who
+  started the tap HANDS runs, so where the forecast begins it is the player's unless an order that is on taps that
+  card (plan.lane_order); a tap starting inside the forecast (the card changed, or HANDS' TAP_DONE arrived at that
+  instant) is the queue's when an entry before or after the instant taps its card and no order that is on does,
+  since evaluation applies an order's tap before the queue's, and a running tap keeps what it was when it started.
+  So a rule's tap that runs on after its rule let go is still the rule's inside a forecast, but reads as the player's
+  where one begins: unlike the other kinds, hands_free_at can depend on where the forecast begins.
+- Read model (view.py): ledger lines, bars, project cards with their first blocker and when it clears, chips shown
+  (and chips_seen, read off Save.chips_seen) and the unlock set are derived from the save at its time and never stored. Ledger: net_per_hour is the sum of the
+  contributions, unclamped, so overflow at a cap shows; falling is the segment's rate < 0 (what the store actually
+  does, so a held or capped line is never falling); empties_at is reach_time(segment, 0) when falling or at 0,
+  fills_at reach_time(segment, cap) when rising or at the cap, else None. covered is a fact on every line: the verb
+  of some order (latched or not) or of the queue head makes its store, where a TapCard makes what its outcome
+  adds, what its action makes, and what any project its outcome starts makes (followed through Outcome.starts); a
+  SwitchMix makes what its flattened mix makes; a dead verb (a switch to a greyed mix, a tap of a completed card)
+  makes nothing, since it cannot act. all_covered: no line is falling uncovered. View.running_mix is the running mix
+  (CARDS, "Order mix"), View.mix_order the index of the order whose mix it is (None while the player's own runs),
+  View.orders_on the latches (orders_on[i]: orders[i]'s condition holds now), View.order_states where each order
+  stands (plan.order_states: passed over when its verb is dead, else waiting while its latch is false, else outranked
+  for a mix order that is not mix_order, else on). ActionBar: every action
+  in the running set (shares from the mix, standing, lane actions) with its Run, yielded and paused ones included;
+  a mix action both paused and yielded reads PAUSED (the pause outlives the tap). Project card: blocker is the
+  project's own first unmet precondition (inputs on the first push only, then requires), and its ready_at is when the last
+  unmet one holds; a busy lane is not a blocker, it is the lane's LaneBar. ready_at counts current segments and the lumps of pushes already running (a
+  landing's outcome stores at its completes_at), and nothing an order, the queue or the player might do. push_s is
+  the seconds one push would take started now. needs lists the stores the next push
+  needs (its inputs on the first push, then each AtLeast on a store's value, one entry per store at the larger
+  quantity) with that store's segment, locked stores included, so a card shows what it takes before a tap and
+  why a tap would fail. A spent one-off keeps its card,
+  marked done. Lanes: HANDS always, another lane once a project on it is unlocked, free ones included.
+- Codec: the save travels as canonical JSON text (sorted keys, no whitespace) carrying FORMAT, the rules digest and
+  the manifest (part SAVES ACROSS RELEASES). The server stores the text as the save (saves.state); a rules
+  change between requests is detected, never run against the wrong rules: decode refuses it and rebase (below) is the
+  one way a save crosses rules. decode accepts exactly the texts encode gives for some Save under these rules (it
+  re-encodes and compares) and raises StateFormatError for anything else: truncated, reformatted, another FORMAT,
+  other rules, unknown fields. No checksum: the page never edits the text, an unkeyed hash stops no deliberate edit,
+  and transport already checks bytes. An edit that is itself the encoding of some Save decodes; the engine's
+  behaviour on a save it did not produce is unspecified, as on invalid rules. If a page-held save ever needs
+  tamper resistance, that is a keyed MAC added by the server outside the engine (the key is configuration).
+  A player's verb is a Command the server's decision log keeps: verb_to_json gives it in the codec's form and
+  verb_from_json reads exactly those back, and a SaveMix logged before FORMAT 9 as the same verb without its empty
+  holds (StateFormatError for anything else).
+- Validation of the new parts (stage 2, InvalidRulesError): unique ids per kind, and no declared lane is HANDS;
+  every project's lane is HANDS or declared; work_s >= 1, pushes >= 1, push_lines empty or one per push; amounts > 0
+  and on known stores; a project's action is a known action, not standing, and not the action of a project on another
+  lane (running state is keyed by action; projects on one lane may share one); chip effects sourced by the chip;
+  every id in opening, outcomes and conditions known (an Unlocked condition's feature must be in the feature
+  vocabulary); no outcome starts a project on HANDS while HANDS is the lane landing it (a tap must not chain the
+  player's time without the player). SaveMix (InvalidVerbError, since mixes are the save's) rejects a standing
+  action, a project's action and a locked action.
+- XP is a segment capped at the curve's last threshold (finite, like everything); levels are derived.
+- Canonical saves: every segment starts at save.time and tuples follow rules order, so equality means sameness.
+
+KNOWN GAPS (stage 2 or later, each named where a test will need it)
+- No cancel: a started project runs to its end. A cancel verb would need an order too, and refund rules.
+- An Outcome start on a busy lane changes nothing, so content that lays work onto another lane gates its project with
+  a Running or CardCount condition; a reserved slot is deferred.
+- (Closed, day one.) READY and a discrete requires: no requires turns true at an instant that does not evaluate. Since
+  CARDS, CardCount is solved off the work segment (a blocker's ready_at, so READY falls at the count); a requires may
+  not read Running (validation); Unlocked changes only when an Outcome lands, which is a COMPLETION, a TAP_DONE or a
+  TRIGGER, each of which evaluates. tests/engine/test_dayone_questions.py holds each case, a queued card starting at
+  the instant the last of its requires holds.
+
+INVARIANTS (testable properties; r = valid rules, s = any save the engine returned)
+ 1. Split: advance(advance(s, r, t1), r, t2) == advance(s, r, t2) for s.time <= t1 <= t2; also with t1 drawn
+    from event times, event times +/- 1, and many split points chained.
+ 2. Idempotent now: advance(s, r, s.time) == s.
+ 3. Decide advances first: decide(s, r, t, v) == decide(advance(s, r, t), r, t, v).
+ 4. Reading writes nothing: value/xp/level/segment/next_event/explain leave s equal to a copy taken before.
+ 5. value(s, r, x, t) == the store's value read off advance(s, r, t), for all t >= s.time.
+ 6. Between events values are read off the segment: for s.time <= t <= next_event(s).time,
+    value(s, r, x, t) == value_at(segment(s, r, x), t), linear for a store moved by flows alone and linear in a
+    rational with one floor for a store that lumps move; and next_event(s).time > s.time.
+ 7. Bounds: 0 <= value <= cap at every integer t; 0 <= xp <= last threshold; levels never decrease.
+ 8. Exact event times: a store with value v and rate -k (no other event first) reaches 0 at s.time + ceil(v/k),
+    and is still above 0 one second earlier; for a store that lumps move, reach_time(segment, x) is the first second
+    value_at reaches x, solved piecewise between the times its cards' work stops.
+ 9. Canonical: every segment.start == s.time; len(s.latches) == len(s.orders); stores/skills in rules order.
+10. Explain: segment rate == sum(MAKE per_hour) - sum(COST per_hour) for a store not at a limit and moved by flows
+    alone; for one that lumps move, the segment's exact slope differs from that sum by under one unit per lump line
+    (a lump line's per_hour is its display rate; segment.rate is the exact slope rounded down); every
+    Explanation's per_hour == the formula on its own fields (modified_rate(e.ref, e.base_per_hour, e.share_bp,
+    e.adds + e.muls, e.run) for a RateRef; rounded down for a WorkRef), LaneSpeed entries included, retargeted.
+11. Rounding: makes/XP never above the exact rational, costs never below; a non-zero cost never rounds to 0. For lump
+    lines it holds per store: the store is never above the exact rational its lumps and flows give, by under one unit.
+12. Same-instant order: events at one time resolve sorted by (kind, sequence); swapping rules' tuple order
+    changes only the tiebreak, never what fires at other times.
+13. Cascade cap: orders that chain past max_firings_per_instant at instant T never raise; the result's
+    last_cascade has time T and cascade_count rose by one, no verb is applied and no SwitchMix order's latch changes
+    after the cap at T, s.time can advance past T, and invariant 1 still holds across T. A decide() at T after the cap starts a fresh count: it
+    applies its verb and may evaluate again.
+14. Hysteresis: with release < value, an order cannot fire twice before its subject crosses the band twice.
+15. (Retired with Hold: docs/decisions.md, "No hold on a line".)
+16. Dry: no store is ever negative; a paused action contributes 0 to every rate.
+17. Validation: each documented invalid verb raises InvalidVerbError; each invalid rule shape InvalidRulesError.
+18. Purity: the engine package imports only the stdlib and itself (an import test).
+19. Hands yield: while HANDS runs a project, every mix action not paused explains with Run
+    YIELDED, every one with per_hour 0 and its share unchanged; once it lands, every mix line's per_hour equals what it was before the start (nothing else
+    changed), and pauses are untouched.
+20. One per lane: a lane holds at most one project. A player TapCard on a busy lane (but a cut-in, 108), a locked or unknown
+    project, or a completed one-off raises InvalidVerbError and returns nothing; the same verb from an order, the
+    queue or an Outcome returns a save equal to the one it was given.
+21. Inputs then outcome: a ready start lowers each input store by exactly its amount at that instant; with constant
+    speed k the push lands at start + ceil(work_s * BP / k); the outcome's store deltas appear at that instant and
+    no earlier; inputs are taken once per project, not per push.
+22. Failed tap: decide_logged(s, r, t, TapCard(p)) by the player, p unready at t (and tappable, speed above 0), has
+    save == advance(s, r, t), lines those of advance_logged(s, r, t) and no more, and failed == p;
+    a ready tap's failed is None; deciding it twice from equal saves gives equal results.
+23. No doomed orders: an order or queue entry naming an unready project changes nothing when evaluated; an order
+    that cannot act is passed over for the next true one that can; a true order's or the queue head's TapCard
+    that is unready on a free lane starts at its blocker's ready_at when nothing else intervenes (READY).
+24. Landing evaluates: every landing at T (a push, a completion) and every trigger firing makes
+    orders and the queue evaluate at T; a player's TapCard does not; with an order "store below x:
+    start p" latched true, p starts again at each landing until the latch releases. Landings and starts by orders
+    count toward the firing cap, and invariant 13 holds with projects in the chain.
+25. Logged split: advance_logged(s, r, t).save == advance(s, r, t); the lines of s->t1 followed by those of t1->t2
+    equal the lines of s->t2; decide_logged likewise equals decide.
+26. Keys only: every emitted line key appears in rules (a push, failed, outcome or chip line).
+27. Unlocks grow: s.unlocked of a later save contains every unlock of an earlier one; with rules.opening None every
+    verb valid before projects existed stays valid and no Unlocked condition is false for a known id.
+28. Chips: a chip shows iff unlocked and latched; while shown, explain() of every line its effects target lists
+    them with source == the chip's id; once hidden they are absent. A HANDS tap's speed entries are those of its
+    start instead (Speed). Hysteresis as in 14. Its on_line is emitted only
+    at the first instant it shows in the save, and not at all if that is time 0. Across its hides while unlocked, its
+    off lines come each once in every run of len(off_lines), and never the same twice in a row.
+29. Triggers fire once: each fires at most once per save, at the first instant its condition is true, and its
+    outcome lands exactly once even if the condition falls and rises again.
+30. Codec: decode(encode(s, r), r) == s; encode(s1, r) == encode(s2, r) iff s1 == s2; decode of any text that is
+    not encode(s', r) for some Save s' (truncated, reformatted, reordered keys, another FORMAT, other rules, unknown
+    classes or fields) raises StateFormatError.
+31. View reads only: view(s, r) leaves s equal to a copy; each ledger line's empties_at == reach_time(segment, 0)
+    when falling or at 0; a card's blocker is None iff a player start now, on a free lane, would not fail;
+    blocker.ready_at equals the latest time any of the card's unmet preconditions first holds under the current segments and
+    the landings already running, None if one never does (advance to it and the card is ready, if no order, queue entry
+    or player acted first); push_s equals
+    the time a ready start now takes to land.
+32. Pushes: n starts land n push lines and one outcome; the outcome lands after the nth and never before.
+33. Standing: an unlocked standing action contributes at a full share whatever the mix or the hands do, and is
+    paused only by running dry.
+
+REJECTED, AND WHY (the alternative turned down for each decision above)
+- Instant 0 left unresolved until the first decide or advance: a new save would break "every event at or before
+  time is resolved", and the first view would show a trigger earned and a fire burning as not yet so.
+- Every push needing its inputs present: a hidden condition that takes nothing; a per-push cost is a requires.
+- The lane still busy when the outcome starts a project on it: a rack that should refill itself would idle.
+- share 0 in explain() for standing and project actions: invariant 10's sum would stop matching the segment.
+- Declared features (a Rules field): a type change for ids the engine only switches on; the vocabulary the opening
+  and outcomes already name catches a typo in a condition, the only place a feature id can be wrong unseen.
+- Project or standing actions as mix lines: one action would run in two places at once, keyed once. The split
+  panel's shares are mix actions; a tap's action and a continuous one are two ActionDefs.
+- Unknown the card's lines, a declared HANDS, one action on two lanes' projects: accepted rules that crash later.
+- Requiring the ACTION unlock for a project's action: an unlocked tap that makes nothing over a missed unlock line.
+- Rejecting locked projects in SetOrders and SetQueue: planning ahead is the route, and the verb cannot act anyway.
+- Only completions evaluating: a multi-push project would leave its lane idle until some latch moved.
+- A player's TapCard evaluating: every tap would undo the player's own manual switch made a moment before.
+- Passing over the queue head that cannot act, like an order: the queue is the plan, and skipping reorders it. (Only a
+  head with no ready time is passed over: Never ready.)
+- When ready holding a staged card to its cap (one entry for every remaining stage), with or without a later stage
+  stepping aside for ready entries behind it: played on the week-one routes, typical's B5 and B6 landed a visit later
+  (83.2 to 86.4 h, 103.0 to 112.2 h; stepping aside changed neither), and eight visits of days four to six were left
+  with nothing to decide, the next stage's When ready having been their decision. A step-aside alone moved the
+  whenever player's week so far that the 2 AM test went from 34 differences to 69.
+- No READY event (content gating every queued craft on its inputs): a queue that waits on wood would stall for good,
+  which is "finishing into idleness".
+- An unpassable first true order (the opening's GAPS 4 as it stood): order sequence would carry meaning the page
+  must reproduce by hand; gambits skip an entry with no target, and so do orders here.
+- seq continued across calls (a counter on the save): state that grows for a display order the Step already gives.
+- A sha256 sum in the codec: an unkeyed hash stops no deliberate edit and transport checks bytes; re-encoding and
+  comparing already rejects everything that is not some save's exact text. A keyed MAC, if ever needed, is the
+  server's.
+- View.unlocked empty with opening None: the page would show nothing, or learn "None means all", deciding visibility.
+- A different release for an input blocker: the lump is a plain threshold, release == quantity.
+- A chip's StoreCap, kept (the stock stays above a cap that fell and the store simply does not fill): no content
+  aims a chip at a cap, and a cap that comes and goes with a latch is a store over its cap, the state "no store is
+  ever above its cap" rules out. Refused in validation instead; a level or outcome raises for good.
+- An outcome's cap raise counted once per source: the stack is appended to for good and every outcome modifier
+  lands at each completion, so one rule serves rates, work and caps alike.
+- A lowering StoreCap in new_save's stack accepted unchecked: the starting stack is the one place a store could
+  start above its cap, and the same entry is refused in every rules placement.
+- fills_at None, or the time the store filled, for a full store with rate 0: None reads "never fills" (the rejected
+  reading below), and the fill time is not kept by a carried-forward segment; the segment's start is the existing rule.
+- A busy lane as a card's blocker: not a condition the engine solves, and every hands card would read "blocked"
+  during each tap, hiding the precondition the player can act on; the LaneBar shows it with completes_at.
+- Yielded and paused actions left out of ActionBar: their shares would vanish from the panel that edits them.
+- YIELDED over PAUSED for an action both: the tap ends soon, the pause outlives it and is the one to fix.
+- Clamped net and fills_at None at a cap: the overflow the docs want visible would read as 0, a full store as
+  "never fills". falling from net rather than the segment: a held line's rounding residue would read as falling.
+- A count of cascades only when a verb was withheld: it would need evaluation to run past the cap to know.
+- A failed tap as a timed attempt (a bar running for a ready tap's time, the mix yielded meanwhile): the bar read as
+  progress, so tapping an unready card again and again looked like it was working (a failed tap takes no
+  time, pulses red and marks what is missing, docs/decisions.md).
+- covered ignoring Outcome.starts: a hands step that starts a rack project could not cover what the rack makes, so
+  content would drop the step or the order would skip it (an order doing for free what a tap pays for).
+- ready_at from segments only: a "needs dry wood" countdown would be None while the wood is visibly drying; the
+  page may not compute it from the LaneBar (it would be simulating).
+- The effective push time left to the page (work_s against explain_work): the page would simulate the speed rule;
+  CardView.push_s carries it.
+- Numbers in order-card text (the voice pass's terse labels): the threshold would live twice and drift; the text is
+  a template with slots filled from the card's structured order (api/contract/).
+- index() and rules_digest() re-hashing a Rules tree per call is implementation, not contract (IMPL-QUESTIONS 15):
+  Rules is an immutable value, so the engine may cache derived data by identity; a caller never subclasses or wraps
+  Rules for speed, and the engine benchmark holds the cost.
+- No card for a spent one-off: the page would infer "done" from a card vanishing, deciding state from an absence.
+- Every lane in the view, or lanes only while busy: the first would show a rack before anything uses it, the second
+  would hide a free rack the player is meant to fill; visibility follows the lane's first unlocked project.
+- SkillBar's bounds left to the page from a served curve: level_for would exist twice; the server sends both ends.
+- "runs N h" from the page taking the earliest empties_at: choosing which lines count is a rule, so the server does.
+- A label on Mix, or a content key per mix: a mix is the player's, so its id is the player's name; one field, no copy.
+- Durations, rates and amounts as per-number templates in content: every number would need its own key, and the
+  rounding would live in prose; one page-side rule over Scales with unit words in ui.* templates is checkable once.
+- The {mix} slot: content cannot know a player's mix; a raw id in text broke its own rule.
+- all_covered (with or without a minimum of lines) as the end on its own: it is true at time 0 and the threshold would
+  be a number in code. The end is the content's end feature alone (api/contract/the-end.txt, "The end"): the unlock is data
+  where the moment is authored, and the content gates it on a milestone the page states.
+- The end feature AND all_covered: every line white is no milestone a player of the genre expects, the page could not
+  state it as one, and getting by is enough in this story.
+- A count trigger for the end feature (the fourth forage): a player tapping ahead reached it before the last order
+  was needed. A conjunction condition type, so one trigger could wait for both: more engine than this needs; the
+  engine checks the two facts itself and records when they first hold (THE END, below).
+

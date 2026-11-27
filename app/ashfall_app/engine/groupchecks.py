@@ -1,4 +1,4 @@
-"""What makes pooled lanes, groups, marks and unmarked joins valid (DESIGN.txt, "GROUPS (pooled lanes)", "Validation").
+"""What makes pooled lanes, groups, marks and unmarked joins valid (design/groups.txt, "GROUPS (pooled lanes)", "Validation").
 rules_check calls it for the lanes and for every outcome."""
 from typing import TYPE_CHECKING
 
@@ -50,7 +50,7 @@ def check_group_outcome(rules: "Rules", o: Outcome, where: str, once_only: bool)
 def join_problem(rules: "Rules", j: Join) -> str | None:
     """Why `j` cannot be a join, or None: its lane is a declared ruled lane that is no pooled lane, its mix id a town
     one, its card (if any) an uncapped card on that lane, or on the lane's group when the join is unmarked, which needs
-    one (DESIGN.txt, "THE TOWN'S MIX", invariant 96; "GROUPS (pooled lanes)")."""
+    one (engine/design/, "THE TOWN'S MIX", invariant 96; "GROUPS (pooled lanes)")."""
     lanes = {d.id: d for d in rules.lanes}
     if j.lane not in lanes or not lanes[j.lane].ruled or lanes[j.lane].pooled:
         return "lane is not a declared ruled lane that is a person"

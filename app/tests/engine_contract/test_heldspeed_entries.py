@@ -1,4 +1,4 @@
-"""Invariant 156 (engine DESIGN.txt, "HELD SPEED, AND ENTRIES HELD BY STANDING ACTIONS": "The entries"): a standing action
+"""Invariant 156 (engine design/held-speed.txt, "HELD SPEED, AND ENTRIES HELD BY STANDING ACTIONS": "The entries"): a standing action
 holds, per entry, exactly one Modifier(target, ADD_BP, amount_bp, "held:" + id) while it is unlocked, not stopped by a
 leave and not paused, and none otherwise; the target is LaneSpeed(lane) for a HeldSpeed and SideStrength(side) for a
 WhileRunning, in declaration order, runners in rules order. The paused case is test_heldspeed_dry.py."""

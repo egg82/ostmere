@@ -1,4 +1,4 @@
-"""The first helper's join to the town's mix (engine DESIGN.txt, "THE TOWN'S MIX"), blind to the chapter's trigger: when
+"""The first helper's join to the town's mix (engine design/towns-mix.txt, "THE TOWN'S MIX"), blind to the chapter's trigger: when
 the bay is done, and the trigger that brings the second helper to `town:camp` lands, the first helper joins it at the
 same instant on the card her always rule tapped, at the whole share, changing nothing she does and not moving the
 arrivals tally. Read off the typical route's saves either side of the second the bay reaches 1."""

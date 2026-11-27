@@ -33,7 +33,7 @@
 # Shape fields (docs/research/flat-story.md; checked by content/team/flatcheck.py):
 #   turn: up|down                    which way the beat leaves the player's situation
 #   outcome: yes|yes_but|no|no_and   only where something is attempted (quoted: YAML 1.1 reads bare yes/no as booleans)
-#   opens / advances / pays: [C-promise-n]   ids in canon.jsonl, area promise
+#   opens / advances / pays: [C-promise-n]   ids in canon/, area promise
 #   cost: none|time|people|stores|option|trust
 #   moves: [PC, N-ids]               whose state changes
 #   thread: {id, at: start|middle|end}

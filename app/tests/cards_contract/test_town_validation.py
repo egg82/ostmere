@@ -1,4 +1,4 @@
-"""Validation of day two's rules (engine DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS": "Validation",
+"""Validation of day two's rules (engine design/, part "TOWNSFOLK, INSTALLED RULES AND OFFERS": "Validation",
 "Installs land once", "Queued one-off", "Offers"; invariant 67; invariant 27 as amended). InvalidRulesError for: a
 RuleInstall of a card off a ruled lane, Outcome.orders outside a trigger's or an answer's outcome, Outcome.queues
 outside an answer's outcome or naming a card off HANDS or uncapped, an ANSWERED or ANSWER unlock in any Outcome.unlocks

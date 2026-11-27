@@ -109,7 +109,7 @@ LOSS LINES
     from; ui/fightpanel.ts FightPanel(catalog, info), whose .fight-loss node holds the on-loss line.
 
   Rejected, and why:
-  - An event or timer in the engine per lost fight: an instant per fight (engine DESIGN.txt, "FIGHTS", REJECTED).
+  - An event or timer in the engine per lost fight: an instant per fight (engine design/fights.txt, "FIGHTS", REJECTED).
   - A loss that takes stores or levels beyond the attempt's inputs, or adds a wounded store: the content's guardrail,
     held by the loader's loses and wounds refusal.
   - Telling keyed on the card's id or name: no behaviour from names; the fields say it.

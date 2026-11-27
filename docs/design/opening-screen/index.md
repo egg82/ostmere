@@ -1,6 +1,6 @@
 # The opening's screen
 
-The page the first fifteen minutes run on, under the every-card-mixable engine (engine `DESIGN.txt`, "CARDS"). Rules
+The page the first fifteen minutes run on, under the every-card-mixable engine (`engine/design/`, "CARDS"). Rules
 it answers to: `decisions.md`, "Shown in the design, not claimed", "What can be tapped looks tappable", "Tapping never
 moves the layout", "The screen arrives when it means something", "Taught by need", the mix section and "Warm means
 yours". What the opening contains is in

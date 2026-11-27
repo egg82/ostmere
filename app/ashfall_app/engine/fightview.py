@@ -1,4 +1,4 @@
-"""The read model's fights: one FightView per unlocked fight runner (DESIGN.txt, "FIGHTS", "View")."""
+"""The read model's fights: one FightView per unlocked fight runner (design/fights.txt, "FIGHTS", "View")."""
 from dataclasses import dataclass
 
 from .counts import completions

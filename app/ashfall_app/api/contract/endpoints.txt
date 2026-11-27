@@ -84,10 +84,10 @@ ENDPOINTS
   runs on when it lets go, so the instant settles. Every other `running` condition is 422 invalid_decision: a queue
   entry's, a mix switch's or an answer's, a hands tap's, a rule tapping on two lanes, a watched card on the rule's own
   lane, or a standing action watched. Why: two mix orders on a running card flip each other forever within one instant
-  (engine DESIGN.txt, "Order mix"). A view carries `running` subjects, in blockers, rules and saves.
+  (engine design/cards.txt, "Order mix"). A view carries `running` subjects, in blockers, rules and saves.
   Share levels: at_least and at_most carry value_of_cap and release_of_cap (bool, false when left out, always
   served). True says that level is basis points, 0..10000, of the watched store's cap at the moment the condition is
-  read, not a quantity, so the rule keeps up as the cap grows (engine DESIGN.txt, "SHARE LEVELS": the store's whole
+  read, not a quantity, so the rule keeps up as the cap grows (engine design/share-levels.txt, "SHARE LEVELS": the store's whole
   items are compared with the exact share of the cap's whole items, and a band of one item is kept). Only an order's
   `when` and a queue entry's `until` on a store_value hold one; set_orders or set_queue with a share level on any
   other subject, outside 0..10000, or with two share levels on the wrong side of each other is 422 invalid_decision.
@@ -112,7 +112,7 @@ ENDPOINTS
   with none set (Next at the bottom, as in every save from before it); rules under it wait while the controlling
   entry can act or its goal stint runs, and act again when it pops. An entry that cannot act holds nothing, so the
   rules under Next run, while the entries behind it in the queue still wait. order_states[i] is `behind_next` for a
-  hands rule under Next whose condition holds while the queue has the hands (engine DESIGN.txt, "NEXT'S ROW").
+  hands rule under Next whose condition holds while the queue has the hands (engine design/nexts-row.txt, "NEXT'S ROW").
   SaveInfo {save_id, number, decisions, game_time, ended_at, started_at, played_at, camp_level}: game_time is the
   save's game time when last written; the rest are in GAMES ON ONE ACCOUNT. A save id is the account's own: any other
   answers 404 not_found, exactly as a save that does not exist, and so does a deleted save.

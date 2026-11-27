@@ -1,4 +1,4 @@
-"""When the hands come free of the player's work, as a forecast sees it (DESIGN.txt, "Forecast", "Hands free").
+"""When the hands come free of the player's work, as a forecast sees it (engine/design/, "Forecast", "Hands free").
 
 The player's work holds the hands while the queue holds an entry (a goal stint's included) or HANDS runs a tap the
 player started: by their own TapCard or by a queue entry. A tap an order or an outcome started, the mix and Rest are

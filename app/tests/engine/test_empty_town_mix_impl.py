@@ -1,4 +1,4 @@
-"""A town mix left with no card never takes the hands (engine DESIGN.txt, "THE TOWN'S MIX", "Layer"; "LEAVES", step 4:
+"""A town mix left with no card never takes the hands (engine design/, "THE TOWN'S MIX", "Layer"; "LEAVES", step 4:
 its rule stays and runs nothing): the town's always rule does not switch the hands to the game's town mix, whether a
 leave emptied it or a join made it with no share card. One the player named is the same."""
 from dataclasses import replace

@@ -1,4 +1,4 @@
-"""Invariants 94, 95 and 97 (engine DESIGN.txt, "THE TOWN'S MIX": "Join", "Why the uncapped always rule becomes the
+"""Invariants 94, 95 and 97 (engine design/towns-mix.txt, "THE TOWN'S MIX": "Join", "Why the uncapped always rule becomes the
 share", "Rebase"). A join converts a person's uncapped always rule into a share without changing what the person does;
 it lands once; a save past a join's trigger gets the same result through a rebase."""
 from dataclasses import replace

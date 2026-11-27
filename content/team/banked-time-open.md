@@ -1,13 +1,13 @@
 # Banked time: measurements and content calls
 
 Spoilers: under `content/`, never shown to the owner. Ids and numbers only, no lines. The design is
-`docs/design/banked-time-plan.md` and engine `DESIGN.txt`, "BANKED TIME"; this file holds what they cannot name.
+`docs/design/banked-time-plan.md` and `engine/design/`, "BANKED TIME"; this file holds what they cannot name.
 
 ## Measured: production lost to caps
 
 Seed 0, `day_two.toml` at `5f2b4c1`, the day-two routes (`tests.daytwo.routes.day2`), each running store sampled
 every 15 game minutes; lost = the ledger's unclamped net while the store is at its cap. XP still trains at a cap
-(engine `DESIGN.txt`, "Cap"), so this is materials only. Probe: a scratch script outside the repo; plan item 1 makes it a report column.
+(`engine/design/`, "Cap"), so this is materials only. Probe: a scratch script outside the repo; plan item 1 makes it a report column.
 
 Day two as played (B3 to the route's last decision), share of each store's making lost:
 

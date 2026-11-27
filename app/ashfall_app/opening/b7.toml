@@ -267,7 +267,7 @@ upside_key = "up_poultice"
 work_s = 60
 inputs = [{ store = "clay", items = 2 }, { store = "roots", items = 6 }]
 # Takes up to a whole stack of hurt, forgiven past what is there: one tap clears any level, and it can be tapped
-# whenever the chip shows (engine DESIGN.txt, "DRAINS").
+# whenever the chip shows (engine design/drains.txt, "DRAINS").
 drains = [{ store = "hurt", items = 3 }]
 
 # The first poultice's line: an uncapped card's outcome holds stores only.
@@ -287,7 +287,7 @@ id = "hurt"
 label_key = "chip_hurt"
 tone = "hurt"
 # Shows from a quarter hurt, the level the heal resumes at after pausing at 0, so it never shows with nothing healing
-# (engine DESIGN.txt, "DRAINS", KNOWN GAPS).
+# (engine design/drains.txt, "DRAINS", KNOWN GAPS).
 when = { test = "at_least", subject_kind = "store", id = "hurt", value = 1, every = 4 }
 effects = [
   { target = "lane", id = "hands", kind = "mul_bp", amount_bp = 8500, source = "hurt" },

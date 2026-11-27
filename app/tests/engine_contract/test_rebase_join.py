@@ -1,4 +1,4 @@
-"""Rebase step 6 lands a join (engine DESIGN.txt, "THE TOWN'S MIX", "Rebase"; invariant 97): a save written before the
+"""Rebase step 6 lands a join (engine design/towns-mix.txt, "THE TOWN'S MIX", "Rebase"; invariant 97): a save written before the
 join's rules, loaded under rules whose trigger joins and is already true, comes out joined with its first person's
 rules as the town's standing orders and its stores unchanged."""
 from ashfall_app.engine import (

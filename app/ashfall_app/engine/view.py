@@ -1,6 +1,6 @@
 """The read model: everything a client needs to draw a save, derived and never stored. Reading writes nothing.
 
-The client samples these segments against its clock until `next_event`; it never simulates. Semantics: DESIGN.txt,
+The client samples these segments against its clock until `next_event`; it never simulates. Semantics: engine/design/,
 "Read model" and part "CARDS", "Card panel".
 """
 from dataclasses import dataclass, field
@@ -70,7 +70,7 @@ class View:
     chips_seen: tuple[ChipId, ...]
     """Chips shown at any time in the save (Save.chips_seen), now included, in rules.chips order."""
     unlocked: tuple[Unlock, ...]
-    """The effective unlock set, sorted by unlock_key (DESIGN.txt, "Unlocks")."""
+    """The effective unlock set, sorted by unlock_key (design/core.txt, "Unlocks")."""
     runs_out_at: int | None
     """When the running mix first runs a store it costs to empty: the earliest empties_at among falling ledger lines
     that a card of the flattened running mix costs. None: no running mix, a greyed one, or it runs indefinitely."""
@@ -78,10 +78,10 @@ class View:
     """No ledger line needs the player: none falling uncovered and none starved (coverage.all_covered). Live, so not
     the end on its own: ended_at is."""
     ended_at: int | None
-    """When the end happened (Save.ended_at; DESIGN.txt, "The end"), or None. Once set it never clears."""
+    """When the end happened (Save.ended_at; design/end.txt, "The end"), or None. Once set it never clears."""
     running_mix: MixId | None
     """The mix the hands run now: the first order on now whose mix is not greyed, else the player's own (save.active)
-    (DESIGN.txt, "Order mix")."""
+    (design/cards.txt, "Order mix")."""
     mix_order: int | None
     """The index into save.orders of the order whose mix runs; None while the player's own mix runs."""
     orders_on: tuple[bool, ...]
@@ -89,24 +89,24 @@ class View:
     order_states: tuple[OrderState, ...]
     """order_states[i]: where orders[i] stands now, why it is off when it is (plan.order_states)."""
     offers: tuple[OfferView, ...] = ()
-    """Every shown offer, in rules order (DESIGN.txt, "Read model" in part "TOWNSFOLK, INSTALLED RULES AND OFFERS")."""
+    """Every shown offer, in rules order (design/townsfolk.txt, "Read model" in part "TOWNSFOLK, INSTALLED RULES AND OFFERS")."""
     fights: tuple[FightView, ...] = ()
-    """One per unlocked fight runner, cards then standing, each in rules order (DESIGN.txt, "FIGHTS", "View")."""
+    """One per unlocked fight runner, cards then standing, each in rules order (design/fights.txt, "FIGHTS", "View")."""
     running_town_mix: MixId | None = field(default=None, repr=False)
     """The town mix running now: the first order on now whose verb is a SwitchMix of a town mix that is not greyed;
-    None when nobody runs shares (DESIGN.txt, "THE TOWN'S MIX"). running_mix reads hands mixes alone. Left out of the
+    None when nobody runs shares (design/towns-mix.txt, "THE TOWN'S MIX"). running_mix reads hands mixes alone. Left out of the
     repr, with town_mix_order, so the recorded fingerprints (tests/cards_contract) stay those of a game with no town."""
     town_mix_order: int | None = field(default=None, repr=False)
     """The index into save.orders of the order whose town mix runs; None when none does."""
     held: tuple[HeldView, ...] = field(default=(), repr=False)
-    """The cards whose while_running entries are held now, in rules.cards order (DESIGN.txt, "ENTRIES HELD WHILE A
+    """The cards whose while_running entries are held now, in rules.cards order (engine/design/, "ENTRIES HELD WHILE A
     CARD RUNS"). Left out of the repr, like the town's, so the recorded fingerprints stay those of a game with none."""
     order_guards: tuple[tuple[GuardView, ...], ...] = field(default=(), repr=False)
-    """order_guards[i]: one per guard of orders[i], in the order of Order.unless (DESIGN.txt, "RULE GUARDS"). Left
+    """order_guards[i]: one per guard of orders[i], in the order of Order.unless (design/rule-guards.txt, "RULE GUARDS"). Left
     out of the repr, like the town's, so the recorded fingerprints stay those of a game with no guard."""
     order_doing: tuple[int | None, ...] = field(default=(), repr=False)
     """order_doing[i]: the index in orders[i].actions of the action it runs now, else None (plan.order_doing;
-    DESIGN.txt, "OR ELSE"). Left out of the repr, like order_guards."""
+    design/or-else.txt, "OR ELSE"). Left out of the repr, like order_guards."""
 
 
 def view(save: Save, rules: Rules) -> View:
@@ -250,7 +250,7 @@ def _card_view(save: Save, rules: Rules, now: Running, mixed: dict[CardId, tuple
 
 
 def _full_store(mixed: dict[CardId, tuple[int, Run]], c: CardDef, run: RunKind | None) -> StoreId | None:
-    """The store a full pause stopped the card on: a paused run on a store the card makes (DESIGN.txt, "FULL OUTPUT")."""
+    """The store a full pause stopped the card on: a paused run on a store the card makes (design/full-output.txt, "FULL OUTPUT")."""
     store = mixed[c.id][1].store if run is RunKind.PAUSED else None
     return store if store is not None and store in card_makes(c) else None
 
@@ -262,7 +262,7 @@ def _run_by(save: Save, c: CardDef, tapped: bool) -> RunBy | None:
 
 
 def _completes_at(bar: Segment, by: RunBy | None, total: int) -> int | None:
-    """A tap's landing: it keeps its speed and a rule waits for it (DESIGN.txt, "CURE CUT-IN"). A share claims none: a
+    """A tap's landing: it keeps its speed and a rule waits for it (design/cure-cut-in.txt, "CURE CUT-IN"). A share claims none: a
     rule that takes the hands yields the mix, so its segment does not hold to its landing."""
     if by is not RunBy.TAP:
         return None

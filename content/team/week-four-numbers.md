@@ -239,7 +239,7 @@ the table runs.
 
 ## Odds targets (combat)
 
-loss_bp = T / (T + P) (engine `DESIGN.txt`, "FIGHTS").
+loss_bp = T / (T + P) (`engine/design/`, "FIGHTS").
 
 | Fight | Prepared | Loss share | Notes |
 |---|---|---|---|

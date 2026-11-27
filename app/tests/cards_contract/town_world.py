@@ -1,4 +1,4 @@
-"""Plain builders for day two's contract tests (engine DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS"): a
+"""Plain builders for day two's contract tests (engine design/townsfolk.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS"): a
 town lane run by rules beside the hands and a rack, one offer with two answers, and the trigger that shows it. Built
 from the engine's public types and entry points only; no Hypothesis here.
 
@@ -41,7 +41,7 @@ NO_OUT = Outcome(lines=(LineKey("no.said"),), queues=(HC,))
 
 
 def always(card: CardId) -> Order:
-    """A lane's always rule (DESIGN.txt, "Ruled lane"; api/contract/a-lane-run-by-rules.txt, "A lane run by rules")."""
+    """A lane's always rule (design/townsfolk.txt, "Ruled lane"; api/contract/a-lane-run-by-rules.txt, "A lane run by rules")."""
     return Order(ALWAYS, TapCard(card))
 
 

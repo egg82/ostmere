@@ -99,7 +99,7 @@ hands from whatever task they run when the player taps it, unless that task is a
 is taken up again once the cure lands, by the queue if no rule or entry of theirs would. A stage can run half an hour
 or three hours, and a chip that showed during one had no cure in reach until it ended. A rule on the cure still waits
 for the task to land, so every drawn landing comes true while the player is away; a player present can cure sooner
-than their rule, a small edge for attention (engine `DESIGN.txt`, "CURE CUT-IN", known gap). Shorter stages (more taps,
+than their rule, a small edge for attention (`engine/design/`, "CURE CUT-IN", known gap). Shorter stages (more taps,
 and moved story counts) and builds off the hands (building no longer costs the player's time) were the alternatives.
 
 **A card that shows every need met does the thing**. A card is not shown until the story beats it waits on

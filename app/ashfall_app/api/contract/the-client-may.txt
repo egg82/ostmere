@@ -166,7 +166,7 @@ THE CLIENT MAY
       "{store} up to {b}, until under {m}"             at_least, value b, release m*Q
       "{store} up to {b}, until down to {b}"           at_least, value b, release b
     so each crossing in items falls on the amount the page shows, and a share is reached at the share itself from
-    either side (engine DESIGN.txt, "SHARE LEVELS"). Read back: a flagged level is its share; at_most n =
+    either side (engine design/share-levels.txt, "SHARE LEVELS"). Read back: a flagged level is its share; at_most n =
     floor((value+1)/Q), m = floor((release+1)/Q); at_least n = floor(value/Q), m = floor(release/Q). A rule of items
     read back with no band (m == n: an order card with no release) is worded without "until" (ui.rule.below,
     ui.rule.reaches). A new rule starts with both levels shares (down to a quarter, until three quarters; up to full,
@@ -208,7 +208,7 @@ THE CLIENT MAY
     no order card to offer names its largest drain (unless that is the hands' tap, which ends by itself) and offers
     Edit mix, as a full line that something still feeds does. There is no banner text: "everything keeps itself
     going" shows only as every line white. A store whose StoreInfo.bonus_bp is set only feeds a bonus (the standing
-    actions that take from it hold a lane speed while they run: engine DESIGN.txt, "HELD SPEED"), so its line is
+    actions that take from it hold a lane speed while they run: engine design/held-speed.txt, "HELD SPEED"), so its line is
     always white, names no drain, and once starved reads ui.ledger.unfed, {pct} from bonus_bp, in ui.ledger.starved's
     place: running low on it misses the bonus and asks nothing.
   - fold the drawn lines of stores that share a StoreInfo.group_key into one row, once two or more are drawn: the

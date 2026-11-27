@@ -1,4 +1,4 @@
-"""Fallbacks (engine DESIGN.txt, "OR ELSE"): unit tests written beside the implementation, for what the blind contract
+"""Fallbacks (engine design/or-else.txt, "OR ELSE"): unit tests written beside the implementation, for what the blind contract
 of docs/design/rule-guards.md leaves out: the rule log across a season that retires one of a rule's actions."""
 from ashfall_app.engine import (
     QUANTITY_SCALE as Q, AfterTime, CardDef, CardId, Ended, LaneDef, LaneId, Order, Outcome, PacingCurve,

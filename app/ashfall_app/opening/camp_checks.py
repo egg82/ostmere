@@ -1,5 +1,5 @@
 """The camp's checks: its store and levels, what lifts a held level, and alternatives among the cards lifting one
-(engine DESIGN.txt, "THE CAMP")."""
+(engine design/camp.txt, "THE CAMP")."""
 from collections.abc import Iterator
 from typing import TYPE_CHECKING
 
@@ -49,7 +49,7 @@ def _camp_modifiers(o: "Opening") -> "Iterator[tuple[str, ModifierEntry]]":
 
 def _check_alternatives(o: "Opening", where: str, cards: list[str]) -> None:
     """Two or more cards lifting one level are alternatives: each unlocked only by answers of one offer, and no answer
-    unlocking two, so at most one ever finishes (engine DESIGN.txt, "THE CAMP")."""
+    unlocking two, so at most one ever finishes (engine design/camp.txt, "THE CAMP")."""
     if len(cards) < 2:
         return
     others = [*o.start, *(u for c in o.cards for u in (*c.outcome.unlocks, *c.finished.unlocks)),

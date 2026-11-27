@@ -1,4 +1,4 @@
-"""Answering an offer: the two unlocks, then the answer's outcome as a trigger's lands. Semantics: DESIGN.txt,
+"""Answering an offer: the two unlocks, then the answer's outcome as a trigger's lands. Semantics: design/townsfolk.txt,
 "AnswerOffer"."""
 from dataclasses import replace
 

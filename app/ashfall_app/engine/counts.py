@@ -1,6 +1,6 @@
 """What a card's work says: its completions, its effective cap, whether it is completed, which saved mixes are greyed.
 
-Below rates and work in the import order, so both read the same derived facts (DESIGN.txt, "Caps", "Greyed mix").
+Below rates and work in the import order, so both read the same derived facts (design/cards.txt, "Caps", "Greyed mix").
 """
 from .cards import CardDef, CardState
 from .gone import left_cards
@@ -36,7 +36,7 @@ def work_segment(save: Save, card: CardId) -> Segment:
 
 def repeating(save: Save, rules: Rules, card: CardId) -> bool:
     """The card is tapped on its lane, a declared one, and its work runs with no limit: a repeating tap, which does
-    not end by itself (DESIGN.txt, "REPEATING TAPS"). Only retap.settle starts one; a fresh tap is bounded."""
+    not end by itself (design/repeating-taps.txt, "REPEATING TAPS"). Only retap.settle starts one; a fresh tap is bounded."""
     lane = index(rules).cards[card].lane
     seg = work_segment(save, card)
     return lane != HANDS and seg.limit is None and seg.rate > 0 and any(
@@ -65,7 +65,7 @@ set the same way)."""
 
 def is_retired(save: Save, rules: Rules, card: CardId) -> bool:
     """Unlock(RETIRED, card) is in the unlock set (never with rules.opening None, where nothing is gated), or the card's
-    lane has left (DESIGN.txt, "LEAVES": held as JOINED is, so with any opening)."""
+    lane has left (design/leaves.txt, "LEAVES": held as JOINED is, so with any opening)."""
     return card in _RETIRED.get((save.unlocked, rules), lambda: _retired(save, rules))
 
 
@@ -76,7 +76,7 @@ def _retired(save: Save, rules: Rules) -> frozenset[str]:
 
 
 def is_completed(save: Save, rules: Rules, card: CardId) -> bool:
-    """Out of play: retired, or its completions have reached its cap (DESIGN.txt, "Caps", "Retired")."""
+    """Out of play: retired, or its completions have reached its cap (design/cards.txt, "Caps", "Retired")."""
     if is_retired(save, rules, card):
         return True
     cap = effective_cap(save, rules, card)
@@ -103,7 +103,7 @@ def _capped(rules: Rules) -> tuple[tuple[CardId, int, int], ...]:
 
 def greyed(save: Save, rules: Rules, mix: MixId) -> bool:
     """A hands mix holding a completed card is greyed whole; a town mix never is: a retired card stops only its own
-    share (mixruns._mix_run; DESIGN.txt, "THE TOWN'S MIX", "Uncapped only")."""
+    share (mixruns._mix_run; design/towns-mix.txt, "THE TOWN'S MIX", "Uncapped only")."""
     cards = index(rules).cards
     return any(is_completed(save, rules, s.card) for s in flatten_shares(save.mixes, mix)
                if s.card in cards and cards[s.card].lane == HANDS)

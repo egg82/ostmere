@@ -1,4 +1,4 @@
-"""A share on a spent store yields (engine DESIGN.txt, "SPENT", invariants 133-141): the implementation's own tests of
+"""A share on a spent store yields (engine design/spent.txt, "SPENT", invariants 133-141): the implementation's own tests of
 the fixpoint and the yield's arithmetic, beside the blind contract suite."""
 from dataclasses import replace
 
@@ -86,7 +86,7 @@ def test_nothing_moves_when_the_rest_of_the_lane_has_no_share():
 
 
 def test_a_receiver_paused_after_the_yield_resumes_at_an_hour_of_its_saved_share():
-    """The dry rule pauses by effective shares, but writes the resume level from the saved share (DESIGN.txt, "SPENT",
+    """The dry rule pauses by effective shares, but writes the resume level from the saved share (design/spent.txt, "SPENT",
     QUESTIONS)."""
     cards = (CardDef(CardId("pool"), 10, costs=(Flow(P, per_hour(4)),)),
              CardDef(CardId("eat"), 10, costs=(Flow(A, per_hour(4)),)),

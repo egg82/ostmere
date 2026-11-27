@@ -389,7 +389,7 @@ draw. P14 inputs unchanged; under E-d its act is the roll.
   description, not its rate).
 - Unanswered on purpose: keep "where spent memory goes"; add "whether the reserve covers the next Black Drift".
 
-**`content/canon.jsonl`**: update every fact these touch (changed beats; E-a retired, E-d added, E-b closing,
+**`content/canon/`**: update every fact these touch (changed beats; E-a retired, E-d added, E-b closing,
 strands; C-promise-7, -15, -17; selection, chronology, the Essart, the dead god; N3, N4, N6, N8, N9; the Pilgrim,
 Keeper, the Unpaid; mysteries). Rewrite a superseded fact in place under its id, so canon states what is true
 now; new facts get new ids.

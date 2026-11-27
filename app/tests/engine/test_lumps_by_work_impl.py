@@ -1,4 +1,4 @@
-"""Lumps paid by work (engine DESIGN.txt, "Rate form", invariant 80): a store moves by floor(G), G the sum of each
+"""Lumps paid by work (engine design/cards.txt, "Rate form", invariant 80): a store moves by floor(G), G the sum of each
 lump's amount times its card's work over the work per completion, so a whole completion pays exactly its amount at
 any speed and a lump stops where its work stops.
 
@@ -81,7 +81,7 @@ def test_a_tap_with_one_whole_input_in_store_completes_and_empties_it():
 
 
 def test_a_mixed_card_with_one_whole_input_pays_it_and_pauses_at_the_boundary():
-    """DESIGN.txt, "Inputs against a dry store", in the mix at a speed with no whole duration: x empties at the first
+    """design/cards.txt, "Inputs against a dry store", in the mix at a speed with no whole duration: x empties at the first
     completion, which counts, and the card pauses there instead of running its next completion unpaid. A mix card's
     work has no limit, so its last second runs past the boundary (1000 of 11000 work units here): y is paid for that
     second's part, under one second's pay, and x, at 0, is not charged for it."""

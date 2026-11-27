@@ -56,7 +56,7 @@ def cures_chip(rules: Rules, card: CardId, chip: ChipId) -> bool:
 
 
 def cures_shown(save: Save, rules: Rules, card: CardId) -> bool:
-    """Whether `card` is a cure for a chip shown now (DESIGN.txt, "CURE CUT-IN")."""
+    """Whether `card` is a cure for a chip shown now (design/cure-cut-in.txt, "CURE CUT-IN")."""
     return any(cures_chip(rules, card, c) for c in shown_chips(save, rules))
 
 

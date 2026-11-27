@@ -1,4 +1,4 @@
-"""An expedition's pieces on fixtures/trips.toml merged after the shipped chapters (week-four-plan item 5; engine DESIGN
+"""An expedition's pieces on fixtures/trips.toml merged after the shipped chapters (week-four-plan item 5; engine design/banked-time.txt
 "BANKED TIME"): a hands trip and its town twin adding to one count, finds on that count, and a skill whose first card is the
 trip. What the loader and its checks accept, what the player-only check refuses, and the engine's reading: the nth find
 lands the instant the nth trip completes however the count is split, and a trip whose materials sit at their caps keeps
@@ -150,7 +150,7 @@ def test_the_count_is_the_sum_of_what_each_card_adds(shipped_plus: tuple[Opening
 
 
 def test_a_trip_whose_materials_sit_at_their_caps_keeps_running_and_counting(shipped_plus: tuple[Opening, Rules]):
-    """The ore is at its cap and nothing refills the pool, so the full rule (engine DESIGN, "FULL OUTPUT") reads the trip:
+    """The ore is at its cap and nothing refills the pool, so the full rule (engine design/full-output.txt, "FULL OUTPUT") reads the trip:
     its count store has room, so it is no fully-stopped card and its inputs go on paying for a count."""
     _, r = shipped_plus
     s = advance(hands_trip(r, BP), r, 200 + 5 * 600)

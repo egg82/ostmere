@@ -679,7 +679,7 @@ export interface components {
         /**
          * AtLeast
          * @description value_of_cap, release_of_cap: that level is basis points (0..10000) of the watched store's cap now, not a
-         *     quantity; on a store_value, in orders and queue entries only (contract/the-client-may.txt, "a store rule"; engine DESIGN.txt,
+         *     quantity; on a store_value, in orders and queue entries only (contract/the-client-may.txt, "a store rule"; engine design/share-levels.txt,
          *     "SHARE LEVELS").
          */
         AtLeast: {
@@ -1228,7 +1228,7 @@ export interface components {
         /**
          * Forecast
          * @description Everything that lands by `horizon_at` if the player changes nothing: orders, the queue and everything running
-         *     played out (engine DESIGN.txt, "Forecast"). It holds for every later view of the save until its next decision.
+         *     played out (engine design/, "Forecast"). It holds for every later view of the save until its next decision.
          *     A time past horizon_at is unknown: draw none, never a guess.
          */
         Forecast: {

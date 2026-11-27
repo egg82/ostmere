@@ -198,7 +198,7 @@ Totals (rows 1-37): 236 planted, 202 red at once, 34 survived a pass: 21 killed,
 24 delete mix     planted 7, red 5, survived 2
       e (DeleteMix of an inactive mix evaluates orders): killed by
         test_cards_mixable.py::test_deleting_another_mix_does_not_evaluate
-      g (DeleteMix of the active mix keeps the pauses): undecided by the contract: DESIGN.txt clears pauses on a switch
+      g (DeleteMix of the active mix keeps the pauses): undecided by the contract: engine/design/ clears pauses on a switch
         and on SaveMix of the active mix, and says of DeleteMix only that nothing is active and evaluation ran; the
         contract is silent on pauses, so no test asserts either way
 25 standing       planted 5, red 3, survived 2
@@ -233,7 +233,7 @@ Totals (rows 1-37): 236 planted, 202 red at once, 34 survived a pass: 21 killed,
         segments at every instant; no stale one reaches the guard (also green over the deep profile)
 36 speed zero     planted 5, red 5
     (row 37 has no variants of its own: its three are engine_contract row 9, g h i, all red or killed there.)
-38 dry boundary   DESIGN.txt's last decision: a mix card whose input runs dry at its completion boundary is passed over like
+38 dry boundary   the engine design's last decision: a mix card whose input runs dry at its completion boundary is passed over like
                   a tap (the rejected reading), planted 1, red 1, by test_a_mix_card_whose_store_runs_dry_at_its_boundary_is_
                   paused_with_one_completion.
 46 end            planted 12 (a never, b re-dated, c cleared, d no feature, e no coverage, f events only, g target time,
@@ -249,7 +249,7 @@ Totals (rows 1-37): 236 planted, 202 red at once, 34 survived a pass: 21 killed,
                   [unlocked] cases of test_a_dead_entry_whose_until_cannot_fall_settles_at_once); i equivalent: the pop
                   stays pending at that instant until no entry settles, so one per pop drops the same entries. The
                   property test alone is red for c.
-48 offer kinds  the kind's answer verb AnswerKind (DESIGN.txt, "OFFER KINDS", invariants 98-105; test_cards_offer_kinds.py). Wrong engines to
+48 offer kinds  the kind's answer verb AnswerKind (design/offer-kinds.txt, "OFFER KINDS", invariants 98-105; test_cards_offer_kinds.py). Wrong engines to
                 plant one at a time, each at the verb's two places: where the engine decides it can act and is dead, and where it
                 applies it. All thirteen planted (m as its four validation checks, l as its two): each is killed by the tests
                 named in brackets. h cannot be planted on the order's own verb, because evaluation sees the AnswerOffer it

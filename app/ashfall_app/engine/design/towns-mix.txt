@@ -1,0 +1,209 @@
+THE TOWN'S MIX (people as shares: docs/design/day-three-plan.md, item 3). Where this part and an entry above
+disagree, this part holds; it replaces CARDS' "Mixable" and the validation line "Only HANDS cards are mixable until
+the town's mix". Examples name ids only; who joins when, and the default tasks, are content's.
+
+FIT PASS
+- The town's mix is a Mix (Mixes, docs/systems.md: "one mechanism for both layers: the town's buildings will run
+  cards, staff are shares"; docs/decisions.md, "The mix", last line). Nothing about Mix, CardShare, SubMix,
+  nesting, flattening, greying, SaveMix or DeleteMix is new; what is new is which time a share is a share of. A
+  hands mix's share is basis points of the player's time; a town mix's share is basis points of one person's time,
+  the person being the lane the card is on. So the town's mix is one Mix whose cards sit on several people's lanes,
+  each lane's shares summing to at most BP, and the whole to at most BP times the people present.
+- A person is still a ruled lane (TOWNSFOLK, "Ruled lane"), and the hands lane is already the model for a lane whose
+  time a mix runs: a tap on HANDS takes the whole of the player's time and every mix card yields (Lanes). A joined
+  person's lane gets exactly that rule: a tap on it (only ever a rule's or an outcome's) takes the whole of that
+  person and their shares yield until it lands. So the first person's installed and player-set tap rules keep
+  working unchanged after the join, as taps over the mix, which is how "the first person's rules become the town's
+  standing orders" holds without converting them.
+- Which town mix runs is set the way a ruled lane's task is: by its always rule, Order(AfterTime(0), SwitchMix(m)),
+  under the existing Order mix pushdown (CARDS, "Order mix"), read per layer. The town has no player's own mix
+  (no save.active for it), as a ruled lane has no player's tap: a new Save field was refused for a lane's default
+  task (TOWNSFOLK, Rejected, "A per-lane default task") and is refused again here. Every verb keeps an order: the
+  town's switch is an order's, never the player's or the queue's.
+- Joining is an Outcome part (Triggers, Cards: "what lands"), landing once like an install, and its fact (this
+  lane's person has joined) is an only-growing unlock, as an offer's answer is. A save already past the join under
+  new rules gets it at the rebase instant through step 6, the mechanism installs already use.
+- How games do it: RimWorld and Dwarf Fortress give each colonist a work-priority table over shared jobs; Banished
+  and Township assign people to buildings by count; Idle Awakening's mix is one person's split. The split per person
+  over that person's own cards is Idle Awakening's, once per person, edited as one table, which is RimWorld's
+  presentation without its pooled jobs (KNOWN GAPS, "Pooled work"). Nystrom: Type Object (a mix is data), Command
+  (the join and every switch are verbs or outcome parts in the log), and no new State machine: whether a person runs
+  their shares or a tap is the Lanes rule HANDS already follows.
+
+CHOICES (the town's mix)
+- Layer: a mix's layer is derived from its flattened cards: HANDS if every card is on HANDS, TOWN if every card is on
+  a ruled lane; a mix with no card is TOWN when a join of the rules makes it (RulesIndex.town_mixes) or its
+  Mix.layer is TOWN, else HANDS. A mix holding both raises InvalidVerbError at SaveMix; nesting a mix of the other layer
+  is the same refusal (checked on the flattened result). plan.mix_layer(mixes, mix) is the one place it is read. Mix.layer
+  is set where a mix is emptied: SaveMix of a mix with no component keeps the TOWN the saved mix of that id read, and a
+  leave marks each mix it empties that no join made (a verb's own value is replaced; a mix with cards is read from
+  them); it is left out of the encoding while HANDS, so no save changes its text and FORMAT stays. Why a field and not the cards alone: read by its cards
+  alone, the game's town mix a leave empties (LEAVES, step 4) or a join makes with no share card was HANDS, and the
+  town's always rule then took the hands for good (a player's switch set only save.active beneath it); as TOWN, its
+  rule runs nothing and the player can still edit it back into use.
+- Joined: UnlockKind gains JOINED, id a LaneId. A ruled lane's person is present once Unlock(JOINED, lane) is held;
+  present lanes are rules.lanes order filtered by that. Only Outcome.joins adds it (validation refuses it in any
+  Outcome.unlocks and in Rules.opening, as ANSWERED), and it is written to save.unlocked whatever rules.opening is,
+  as ANSWERED and ANSWER are. Why not a LaneDef flag: who has joined is the story's moment, not the lane's shape (a
+  person's lane runs a build before they join), and some ruled lanes are never people (a cure lane whose task an
+  installed rule sets).
+- Town share: in a TOWN mix a CardShare's share_bp is basis points of the time of the person whose lane the card is
+  on. SaveMix of a TOWN mix refuses (InvalidVerbError): a card on a lane not joined, a card with a cap, and any lane
+  whose flattened shares sum above BP. A HANDS mix is checked as before (sum <= BP). The engine never moves a share
+  between people, nor between cards (Shares: idle is shown, never redistributed).
+- Uncapped only: a TOWN mix holds no capped card (refused above), so only retirement takes a card out of it, and a
+  retired card stops only its own share: the mix is never greyed (counts.greyed reads a mix's HANDS cards only), the
+  card's Run is GREYED (0/1, as in a greyed hands mix), its share idles for that person and is shown, never handed to
+  another person or card (Town share), and the mix keeps running for everyone else. A HANDS mix holding a completed
+  or retired card still greys whole, unchanged (Greyed mix). A person's one-off is their lane's rule tap (the day-two idiom: an installed first=True always rule),
+  which yields their shares while it runs and passes over once done. Why: a town mix greyed by a finished build
+  would idle every person in it until a visit, the 2 AM test's failure, for work a tap rule already does; and the
+  hands' grey-whole exists to send the player to the editor and falls through to the queue or orders, where the
+  town has nothing to fall to.
+- Running town mix: plan.running_town_mix_id(save, rules) is the mix of the first order, in sequence, whose latch is
+  true, whose verb is a SwitchMix of a TOWN mix (a town mix is never greyed); else None (nobody runs shares). The
+  hands' running mix (Order mix) reads only SwitchMix orders of HANDS mixes, then the queue mix, then save.active; so orders of one
+  layer never change the other's running mix, and order sequence is priority within a layer only. Everything Order
+  mix says of the hands' pushdown holds for the town's: a pure function of latches and greying, rates rebuilt and
+  pauses cleared (Running dry) when either running mix changes, a latch change past the firing cap waits (Firing cap).
+- Verbs: a player's SwitchMix of a TOWN mix raises InvalidVerbError ("set by rules"), as a player's TapCard on a
+  ruled lane does; SetQueue refuses an entry whose verb is a SwitchMix of a TOWN mix (the queue is the hands' plan);
+  SetOrders accepts one (it is the town's rule) when the mix is in save.mixes, as for any SwitchMix, so a town mix's
+  rule can be set only after its join has created the mix. save.active never names a TOWN mix: DeleteMix and SaveMix
+  are as before, and the only writer of active is the player's HANDS switch. A player's SaveMix of the
+  running town mix applies at once (rates rebuilt, pauses cleared), as SaveMix of the running hands mix does.
+- Reserved ids: a MixId beginning "town:" is content's. SaveMix refuses (InvalidVerbError) one not already in
+  save.mixes, so only a join creates it; once created the player edits it as any mix. SaveMix under the id of a saved
+  mix keeps that mix's layer (InvalidVerbError otherwise; plan.mix_layer of the saved and of the new). Why: mix ids are
+  the player's own text, never renamed, so a join's id must be one no player can already hold; and a name the player
+  types for a hands mix (a rename, a save as new) must never overwrite a town mix, nor a town edit a hands mix, which
+  would move the rules switching it into the other layer.
+- Rates on a joined lane L: while L holds no tap, each card of the flattened running town mix that is on L runs at
+  its share, as a hands mix card does on HANDS (Rate form, dry pauses, L's
+  LaneSpeed joins its stack, its lumps paid as rates). While L holds a tap, every running town card on L is YIELDED
+  (0/1, share kept and shown) and runs again when the tap lands; cards of the same mix on other lanes are not
+  affected. A tap on L is started only by an order, an Outcome's start, or nothing (the player never taps a ruled
+  lane), and evaluation reads L as free whenever it holds no tap, whatever its shares run (as HANDS is free while
+  its mix runs). A card of a TOWN mix on a lane not joined, or unlocked-not, runs nothing (its share idles).
+- Dry pauses: TOWN mix cards are mix consumers. A dry store pauses the hands mix's consumers last-in-mix first (as
+  before), then the running town mix's last-in-mix first, then other lanes' taps (rules order, as before). Any fixed
+  order would do (the hour of hysteresis prevents chatter); this one leaves the hands' pause order exactly as today,
+  so no day-one or day-two route moves.
+- No XP: a card on a ruled lane carries no skill and no XP line; validation (InvalidRulesError) now refuses it in the
+  engine, not only in the loader (docs/decisions.md, "You and the town": townsfolk do not level). Camp make flows
+  (CampEntry) are unchanged.
+- Join: Outcome.joins, a tuple of Join(lane: LaneId, mix: MixId, card: CardId | None = None). Allowed only in a
+  TriggerDef's and an AnswerDef's outcome (once-only, as installs). It lands after `orders` and before `queues`.
+  Each join, in tuple order, when Unlock(JOINED, lane) is not yet held:
+  1. add Unlock(JOINED, lane);
+  2. if save.mixes holds no mix `mix`, append Mix(mix, ()) and, unless save.orders already holds an equal order,
+     append the town's always rule Order(AfterTime(0), SwitchMix(mix)) with its latch latched now (as an install);
+     append, never insert: a town rule set by the player above it keeps priority;
+  3. the share card: the card of the first order on L that is an always rule (AfterTime(0), TapCard) of an uncapped
+     card not retired, else `card`, else none;
+  4. remove from save.orders (with their latches) every always rule on L whose card is uncapped; always rules of
+     capped cards stay (a pending one-off still acts, as a tap yielding the shares; a finished one stays passed over
+     as before), and every other rule on L stays where it is;
+  5. if there is a share card and mix `mix` holds no CardShare of a card on L, append CardShare(card, BP).
+  A join of a lane already joined changes nothing. Orders and the queue evaluate after the outcome, as always. A
+  running tap on L at that instant is not cut: with its always rule gone a repeating tap is bounded and lands at its
+  next completion (REPEATING TAPS), and L's share yields until then. MAX_MIXES is checked by SaveMix only: a join may
+  take save.mixes past it.
+- Why the uncapped always rule becomes the share: after the join an always rule on L would tap L at every landing and
+  yield L's shares for good; and a repeating card run by its tap and the same card at BP in a mix pay the same
+  (invariant 93), so the conversion keeps what L does. A card with inputs or a tap line is not repeat-eligible
+  (invariant 78): it goes from a per-completion draw to a rate draw at the join. Accepted: same totals, smoother.
+- Lane rules (TOWNSFOLK): LaneRules(L) counts as before (orders on L whose when is not AfterTime(0)); a join removes
+  only always rules, so it never changes the count.
+- Lane order: LaneBar.order is unchanged (a tap's rule, else None); for shares the view names town_mix_order.
+- Read model (view.py): View gains running_town_mix: MixId | None (plan.running_town_mix_id) and town_mix_order: int
+  | None (the index into save.orders of the order whose town mix runs; None when none does). CardView for a card of
+  the running town mix carries its share and run state exactly as a hands mix card's (by MIX, or YIELDED while its
+  lane taps). greyed_mixes lists greyed HANDS mixes only; a retired card of a town mix leaves View.cards and its person's share shows as idle. runs_out_at stays the hands' running mix only. Coverage
+  (all_covered) counts a running town card as a running supplier, as a running hands card.
+- Codec: FORMAT unchanged. Save's fields are unchanged (app/tests/held/save_fields.json); a TOWN mix is a Mix in
+  save.mixes; JOINED is one more UnlockKind value; Outcome gains `joins` (rules and released outcomes only, never a
+  save); Join joins the codec's classes. A save written before this part holds no JOINED and no TOWN mix, so it
+  decodes as before.
+- Rebase: step 4 drops Unlock(JOINED) of a gone lane. Mix ids are never dropped ("town:" ids included). Step 6
+  lands a join whose trigger is already true at the rebase instant, as an install: a save past the moment gets
+  Unlock(JOINED), the mix and its rule, and its first uncapped always rule as the share, keeping every other rule.
+- Content (the loader): OutcomeEntry gains `joins`, a list of {lane, mix, card (optional)}, refused outside a
+  trigger's or an answer's outcome; `mix` begins "town:". The loader's own XP check on ruled-lane cards stays as a
+  clearer message ahead of the engine's.
+- The arrivals count (a gate's `arrivals: n`): a StoreEntry with `tally = true` that outcomes add to and gates read as
+  an ordinary at_least on a store; the engine needs nothing new. A trigger on the first arrival's feature adds 1
+  (so a save past that arrival gets 1 at rebase, as any new trigger already true fires), and each joining outcome
+  adds one per join to a tally store, except a join marked `counted` (the loader's JoinEntry only), whose person a
+  tally counted on arrival (the first arrival's). The loader (opening/tally_checks.py) refuses a card or standing
+  action that takes a tally store as a cost or an input, and a joining outcome whose tally additions differ from its
+  joins not marked counted.
+
+INVARIANTS (the town's mix; numbered on from 89)
+90. Shares: in any save reached by play, for every TOWN mix in save.mixes, its flattened shares name only cards on
+    joined lanes, none capped, each lane's sum <= BP, so the total <= BP times the joined count. For any running
+    town mix and joined lane L with no tap, each of its cards on L runs at share_bp, and the
+    unused remainder of L's BP idles; while L taps, each is YIELDED with its share unchanged.
+91. Never trains: no rules with a skill or XP line on a ruled-lane card pass validation, so in any save no skill's
+    XP rate depends on a town mix, a join or a ruled lane's tap.
+92. A rule on the town fires as on a lane: (a) view.running_town_mix is the mix of the first latched
+    SwitchMix order of a TOWN mix, else None; view.running_mix is computed with every TOWN-mix order removed, and
+    running_town_mix with every HANDS-mix order removed and save.active ignored. (b) A tap order on a joined lane L
+    acts at exactly the instants it would if L ran no shares (L free of taps, card ready, speed above 0), and
+    invariant 57 holds with TOWN switches added to the verbs that are never applied.
+93. Tap equals share: on a joined lane L, a repeat-eligible card c (invariant 78) run by L's always rule, and c at BP
+    in the running town mix with no rule tapping L, give equal stores, card work and card counts at every t, for any
+    slicing into advances, views and snapshots.
+94. Join keeps the work: for s whose lane L runs a repeat-eligible card c by its first uncapped always rule, a join of
+    L landing at T gives at every t >= T, with no decision, the stores, card work and counts of the same save
+    without the join; its orders differ only by L's removed uncapped always rules and the town's added always rule
+    (absent if an equal one was held), its mixes only by `mix` (created or extended), and its unlock set only by
+    Unlock(JOINED, L). The rules on L that are not always rules keep their order and their latches.
+95. Once: a Join lands at most once per save (it lives only in once-only outcomes and a joined lane's join changes
+    nothing); a town always rule the player removed comes back only through a different join whose mix is absent;
+    a join never inserts above an existing order.
+96. Validation: InvalidRulesError for a Join whose lane is not a declared ruled lane, whose card is not an uncapped
+    card on that lane, whose mix does not begin "town:", or that sits outside a trigger's or answer's outcome; and
+    for a JOINED unlock in Outcome.unlocks or Rules.opening. InvalidVerbError for a player's SaveMix of a mix mixing
+    layers, naming a card on an unjoined lane or a capped ruled-lane card, or summing a lane above BP; of a new
+    "town:" id; of a saved mix's id with cards of the other layer; for a player's SwitchMix of a TOWN mix; and for
+    SetQueue with one.
+97. Rebase: for s past the moment whose trigger holds a Join of L, rebasing s into rules that add that trigger gives
+    the save invariant 94 describes, at the save's time; rebasing a save already holding Unlock(JOINED, L) into rules
+    that lack L drops that unlock and changes nothing else about the town.
+
+REJECTED, AND WHY (the town's mix)
+- A mix per person (each ruled lane its own mix): "one mix whose shares are people's time"
+  (docs/design/day-three-plan.md, item 3) and the Mixes row's staff-as-shares both want one table the player edits
+  at once; per-person mixes would need a per-lane
+  running mix and so a per-lane always rule to switch each, multiplying rules for one decision.
+- A pooled town lane (people times BP of anyone's time over shared town cards): content's cards are per person, and
+  pooling loses who is doing what, which the scene and the lines draw. Pooled work is KNOWN GAPS.
+- The town's own active mix (save.active for the town, set by a player's switch): a new Save field, and a second way
+  to say what the always rule says (the same refusal as a lane's default task).
+- A static LaneDef.person flag: changes a released lane (the first person's lane shipped in day two), cannot say
+  when someone joins, and a cure lane is ruled without being a person.
+- Deriving who is present from the town mix's cards: a person dropped from the split would vanish from the strip
+  instead of standing idle, which is the honest picture (Shares: idle is shown).
+- Converting the first person's tap rules into SwitchMix orders: it invents a mix per rule; taps that yield are the
+  hands' rule and keep the first person's rules working as they were set.
+- Taps on a joined lane running beside its shares: a person would work more than one person's time, and "shares sum
+  to the people present" would be false.
+- Capped cards in a TOWN mix: one finished build greys the whole town mix and idles everyone until a visit; a rule tap
+  already does a person's one-off.
+- A FORMAT bump: nothing in the codec changes shape; the content release already keeps two builds off one save.
+- A new event at the join: a join lands inside an outcome, at an instant that already evaluates.
+
+KNOWN GAPS (the town's mix)
+- A person dying by a fight's tally stays FIGHTS' gap ("Whole losses that are people"). A person leaving by an
+  outcome is LEAVES, below.
+- Pooled work (a building any townsperson can staff, wide expeditions as several people on one trip): a card on no
+  one person's lane needs a share unit of "people", not one person's BP. Decided by: the first staffed building or
+  the first wide expedition (BANKED TIME, KNOWN GAPS, "Wide expeditions": a trip card on one person's lane at a
+  share already works; several people on one trip is this gap).
+- An always rule the player writes on a joined lane through the full editor: the engine accepts it and it yields that
+  person's shares for good. The page builds none for a joined lane (api/contract/the-towns-mix.txt, "The town's mix"). Decided by:
+  the first save seen holding one.
+- Joint projects (one card both layers work on, docs/decisions.md, "You and the town"): a card is on one lane.
+  Decided by: the first joint project.
+

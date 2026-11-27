@@ -1,4 +1,4 @@
-"""Store caps (DESIGN.txt, "Store caps"): a Modifier aimed at StoreCap(store) raises what the store holds, combined as
+"""Store caps (design/core.txt, "Store caps"): a Modifier aimed at StoreCap(store) raises what the store holds, combined as
 rates are and rounded down; LedgerLine.cap is the cap now; a full store's makers restart the instant it lands; a
 lump landing after it is clamped at the raised cap; only raises validate; the save carrying one round-trips."""
 import pytest

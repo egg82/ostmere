@@ -1,4 +1,4 @@
-"""Properties over random card worlds (DESIGN.txt, "INVARIANTS" 1-3, 7, 9, 25, 26 and 34-38): splitting time is
+"""Properties over random card worlds (design/core.txt, "INVARIANTS" 1-3, 7, 9, 25, 26 and 34-38): splitting time is
 harmless, now is idempotent, decide advances first, values and counts stay in bounds, every segment starts at the save's
 time and is linear to the next event, counts are read off the work, no uncapped completion is an event, a HANDS tap
 never runs beside the mix, and the logged entry points split exactly with keys from the rules."""

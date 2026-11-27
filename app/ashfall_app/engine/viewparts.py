@@ -1,4 +1,4 @@
-"""The read model's parts: ledger lines, bars and cards, as view.view builds them. Semantics: DESIGN.txt, "Read model"
+"""The read model's parts: ledger lines, bars and cards, as view.view builds them. Semantics: engine/design/, "Read model"
 and part "CARDS", "Card panel".
 """
 from dataclasses import dataclass, field
@@ -23,12 +23,12 @@ class Contribution:
 
 @dataclass(frozen=True)
 class LedgerLine:
-    """One unlocked store (DESIGN.txt, "Read model"). net_per_hour: the sum of contributions, unclamped (overflow at a
+    """One unlocked store (engine/design/, "Read model"). net_per_hour: the sum of contributions, unclamped (overflow at a
     cap shows). falling: the segment's rate < 0. empties_at: reach_time(segment, 0) when falling or at 0, else None.
     fills_at: reach_time(segment, cap) when rising or at the cap, else None. covered: some standing order's verb
     (latched or not) or the queue head's makes this store, following Outcome.starts; a dead verb covers nothing. starved: the store has run dry
-    while something waits on it (work.starved; DESIGN.txt, "Starved line"), shown as a problem whether covered or
-    not. cap: what the store holds now, StoreDef.cap under its StoreCap modifiers (DESIGN.txt, "Store caps")."""
+    while something waits on it (work.starved; design/cards.txt, "Starved line"), shown as a problem whether covered or
+    not. cap: what the store holds now, StoreDef.cap under its StoreCap modifiers (design/core.txt, "Store caps")."""
 
     store: StoreId
     segment: Segment
@@ -57,7 +57,7 @@ class MenuNode:
 
 @dataclass(frozen=True)
 class SkillPhase:
-    """A skill's prestige phase as its row shows it (DESIGN.txt, "PRESTIGE PHASES"), all at save.time: its phase,
+    """A skill's prestige phase as its row shows it (design/prestige-phases.txt, "PRESTIGE PHASES"), all at save.time: its phase,
     level_counted (what a SkillLevel condition reads), at_top (phases.at_top), waiting_levels (the levels a click now
     would land, phases.waiting_levels), the menu in track order, undo_open (prestige.undo_open), mastered
     (prestige.mastered), pick_owed (prestige.pick_owed), topped_at (PhaseState.topped_at), the nodes its picks hold
@@ -116,7 +116,7 @@ class LaneBar:
 
 
 class RunBy(Enum):
-    """Who is running a card now. On HANDS a tap yields the mix, so it is never both (DESIGN.txt, "One bar")."""
+    """Who is running a card now. On HANDS a tap yields the mix, so it is never both (design/cards.txt, "One bar")."""
 
     TAP = "tap"
     MIX = "mix"
@@ -170,23 +170,23 @@ class CardView:
     completion's time, whatever the bar holds; 0 when tap_s is None. Left out of the repr: the recorded fingerprints
     predate it, and tap_s already carries the speed they need."""
     spent_store: StoreId | None = field(default=None, repr=False)
-    """The store a SPENT card is stopped on; None unless run is SPENT (DESIGN.txt, "SPENT")."""
+    """The store a SPENT card is stopped on; None unless run is SPENT (design/spent.txt, "SPENT")."""
     gained: tuple[SpentShare, ...] = field(default=(), repr=False)
     """What each paused or spent card of its mix on its lane gives it now, as explain()'s `gained`; () when none. Left
     out of the repr with spent_store, so the recorded fingerprints stay those of a game with no spent card."""
     crew: int | None = field(default=None, repr=False)
-    """A group card's free members now (DESIGN.txt, "GROUPS (pooled lanes)"); None on any other card. While it is above
+    """A group card's free members now (design/groups.txt, "GROUPS (pooled lanes)"); None on any other card. While it is above
     0, share_bp and `gained` are the totals over those members: the card runs at them. Left out of the repr as the
     fields above are."""
     full_store: StoreId | None = field(default=None, repr=False)
-    """The store a full pause stopped the card on (DESIGN.txt, "FULL OUTPUT"): its run is PAUSED on a store it makes;
+    """The store a full pause stopped the card on (design/full-output.txt, "FULL OUTPUT"): its run is PAUSED on a store it makes;
     None on any other card. Left out of the repr as the fields above are."""
 
 
 @dataclass(frozen=True)
 class HeldView:
     """A card or standing action whose while_running entries are held now: its share (of its lane's time; BP for a
-    standing action) and the entries as the stack holds them, each sourced "held:" + the runner (DESIGN.txt, "ENTRIES
+    standing action) and the entries as the stack holds them, each sourced "held:" + the runner (engine/design/, "ENTRIES
     HELD WHILE A CARD RUNS", "HELD SPEED"). `card` is the runner's id: cards and standing actions share one namespace."""
 
     card: Runner
@@ -236,7 +236,7 @@ class OfferView:
 
 @dataclass(frozen=True)
 class GuardView:
-    """One guard of a rule (DESIGN.txt, "RULE GUARDS"): `on` its latch; `lets_go` the quantity of the watched store it
+    """One guard of a rule (design/rule-guards.txt, "RULE GUARDS"): `on` its latch; `lets_go` the quantity of the watched store it
     lets go at as the engine reads it now (its release, a share level read off the cap now), None off a store."""
 
     on: bool

@@ -1,5 +1,5 @@
 """The economy engine: a pure, deterministic discrete-event simulation. Imports only the stdlib and itself.
-Semantics and the invariants tests check: DESIGN.txt beside this file."""
+Semantics and the invariants tests check: engine/design/ beside this file."""
 from .api import (
     Line, Step, advance, advance_logged, decide, decide_logged, explain, explain_work, level, new_save, next_event,
     segment, value, xp,

@@ -1,5 +1,5 @@
 """The running mixes: the hands' (an order's, else the player's own) and the town's (an order's alone), and their
-cards' shares with how each runs now. Semantics: DESIGN.txt, "Order mix" and "THE TOWN'S MIX"."""
+cards' shares with how each runs now. Semantics: engine/design/, "Order mix" and "THE TOWN'S MIX"."""
 from collections.abc import Callable
 
 from .counts import greyed, is_retired
@@ -22,7 +22,7 @@ def _busy(save: Save, lane: LaneId) -> bool:
 
 
 def running_mix(save: Save, rules: Rules) -> Mix | None:
-    """The mix the hands run now: an order's while its condition holds, else the player's own (DESIGN.txt, "Order
+    """The mix the hands run now: an order's while its condition holds, else the player's own (engine/design/, "Order
     mix")."""
     mix = running_mix_id(save, rules)
     return next((m for m in save.mixes if m.id == mix), None)
@@ -60,14 +60,14 @@ def mix_entries(save: Save, rules: Rules) -> Entries:
 
 def town_entries(save: Save, rules: Rules) -> Entries:
     """The running town mix's cards on joined lanes, in flattened order, with their effective share of their person's
-    time and how it runs: as mix_entries, a share YIELDED while a tap holds the card's lane (DESIGN.txt, "THE TOWN'S
+    time and how it runs: as mix_entries, a share YIELDED while a tap holds the card's lane (engine/design/, "THE TOWN'S
     MIX", "Rates on a joined lane"). A card on a lane not joined runs nothing."""
     return _TOWN.get(save, rules, lambda: _town_entries(save, rules))[0]
 
 
 def mix_gains(save: Save, rules: Rules) -> Gains:
     """Each card of the running mixes receiving a paused or spent card's share, with what it receives from each, in the
-    mix order of the givers (DESIGN.txt, "SPENT"); a card absent receives nothing."""
+    mix order of the givers (design/spent.txt, "SPENT"); a card absent receives nothing."""
     hands = _MIX.get(save, rules, lambda: _mix_entries(save, rules))[1]
     town = _TOWN.get(save, rules, lambda: _town_entries(save, rules))[1]
     return hands | town if town else hands

@@ -1,4 +1,4 @@
-"""SPENT, when it starts and stops (engine DESIGN.txt, "SPENT", invariants 136, 138 and "The instant"). Written blind
+"""SPENT, when it starts and stops (engine design/spent.txt, "SPENT", invariants 136, 138 and "The instant"). Written blind
 from that part; MUTANTS_spent.txt names the wrong implementations each test must turn red for. EAT at 4000 empties its
 pool p at exactly second 100 (spent_world.standard); R1 at 2500 and R2 at 1500 make z and w at their share, so a
 share of s moves a store 360 * s units a second."""

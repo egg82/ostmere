@@ -1,6 +1,6 @@
 """What a Leave does to a save: the person is gone, and the plan loses what it held for them, the orders tapping the
 lane's cards and their shares in every saved mix, and the pauses of what stopped with them. The inverse of joins.py. What follows from the fact (the
-lane's cards out of play, the listed standings stopped) is derived where it is read (gone.py). Semantics: DESIGN.txt,
+lane's cards out of play, the listed standings stopped) is derived where it is read (gone.py). Semantics: design/leaves.txt,
 "LEAVES"."""
 from dataclasses import replace
 

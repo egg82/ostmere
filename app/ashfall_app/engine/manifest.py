@@ -1,6 +1,6 @@
 """The manifest an envelope carries, read back: the ids (and the few numbers) of the rules a save was written under.
 
-Semantics: DESIGN.txt, "Manifest". codec.manifest writes it; rebase reads it here, so Save.chips and Save.fired become
+Semantics: design/saves-across-releases.txt, "Manifest". codec.manifest writes it; rebase reads it here, so Save.chips and Save.fired become
 ids and an id the new rules lack can be named.
 """
 from dataclasses import dataclass

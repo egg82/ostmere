@@ -1,4 +1,4 @@
-"""Rebase for day two (engine DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS": "Rebase", "Installs land
+"""Rebase for day two (engine design/townsfolk.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS": "Rebase", "Installs land
 once"; invariant 60). IdKind gains OFFER and ANSWER. Step 3 drops an offer or answer the new rules lack (an answer
 they put under another offer counts as gone) from the unlock set (OFFER, ANSWERED, ANSWER) and drops each order and
 queue entry answering one; step 6 is where a new trigger already true installs its rule, reported by rebase_logged's

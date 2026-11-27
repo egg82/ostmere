@@ -1,4 +1,4 @@
-PRESTIGE PHASES (engine DESIGN.txt, "PRESTIGE PHASES")
+PRESTIGE PHASES (engine design/prestige-phases.txt, "PRESTIGE PHASES")
   SkillBar.prestige is null when the content has no prestige, and SkillBar is then the curve's alone. Otherwise a
   skill climbs one XP segment through phases; SkillBar.level is its shown level, counting from 1 in each phase and
   stopping at the phase's top, level_xp and next_level_xp the bar's ends within the phase (next_level_xp null at the

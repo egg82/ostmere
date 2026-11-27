@@ -1,0 +1,143 @@
+LEAVES (a person leaves the town: docs/design/week-three-plan.md, item 4; blind tests from this part and
+api/contract/ alone, item 5, against app/tests/engine_contract/MUTANTS_leaves.txt). The inverse of THE TOWN'S MIX's
+Join (engine/joins.py). Where this part and an entry above disagree, this part holds. Examples name ids only; who
+leaves, when and why is content's.
+
+FIT PASS
+- People (a person is a ruled lane, present once joined), Lanes, Mixes, Standing orders and Unlocks, each run
+  backwards. Joining is an outcome part landing once with an only-growing fact; leaving is the same: an outcome part
+  whose fact, this lane's person has left, is one more only-growing unlock kind. No Save field, verb, event kind or
+  system: what follows from the fact (the lane's cards out of play, the listed standings stopped) is derived wherever
+  it is read, as retirement is; what the player's plan held (orders, shares) is edited once, as a join edits it.
+- Retirement already says "out of play for good, by an only-growing fact"; a leave retires a lane's cards by that one
+  predicate, except that it never greys a mix: a person's shares are their own time (THE TOWN'S MIX, "Town share"), so
+  removing them changes nobody else's, and greying would stop every lane for one person.
+- How games do it: RimWorld and Banished remove a colonist and their work-table rows go with them, the other workers'
+  priorities untouched; a departed companion's skills leave the party sheet (Nystrom: Command, the leave a part in the
+  log; Type Object, a lane's cards are data that go out of play by a fact, never deleted from the rules).
+
+CHOICES (leaves)
+- Shape: Outcome.leaves, a tuple of Leave(lane: LaneId, stops: tuple[ActionId, ...] = ()), exported from the engine
+  package beside Join. Allowed only in a TriggerDef's and an AnswerDef's outcome (once-only, as installs and joins).
+  It lands after `retire_orders` and before `orders` and `joins`: raises, retire_orders, leaves, orders, joins,
+  queues, starts, then lines.
+- Left: UnlockKind gains LEFT ("left"), id a LaneId, held as JOINED is (PRESENT_ONLY: written to save.unlocked and
+  counted only when present, whatever rules.opening is). Only Outcome.leaves adds it (validation refuses it in any
+  Outcome.unlocks and in Rules.opening). A lane's person is present when JOINED is held and LEFT is not; a ruled lane
+  with LEFT held is gone, joined or not. Unlocks only grow, so a leave is for good: a person who returns is a new lane
+  id.
+- Each leave, in tuple order, when Unlock(LEFT, lane) is not yet held, at that instant:
+  1. add Unlock(LEFT, lane);
+  2. the lane's tap ends: the lane is freed, and the running card's completion is dropped: no push line, no outcome,
+     no completion; its inputs taken at the start stay taken, and what its rate form has already paid stays (a store
+     is never wound back). The work segment stays where it stopped, on a card now out of play;
+  3. remove from save.orders, with their latches, every order whose verb is a TapCard of a card on the lane (each
+     logged ended LEFT, "Retired chores", "Logged");
+  4. remove from every saved mix each CardShare of a card on the lane; a mix
+     left with no component stays, empty (its rule, if any, stays: it runs nothing; an emptied mix keeps the TOWN layer: the leave sets Mix.layer,
+     THE TOWN'S MIX, "Layer");
+  5. remove from save.pauses the pause of each card on the lane and of each standing action in `stops`: nothing waits
+     on that store for them any more, so it is not starved on their account;
+  A leave of a lane already left changes nothing.
+- Out of play, derived: a card whose lane has LEFT held counts as retired by the one predicate "completed or retired"
+  (CARDS, "Retired"), with no RETIRED unlock written: a tap of it is refused (InvalidVerbError from the player; nothing
+  from an order, the queue or an Outcome's start), SaveMix refuses it, it makes nothing (and so is no maker, SPENT),
+  covers nothing, and holds no entries (ENTRIES HELD WHILE A CARD RUNS). It is in neither View.cards nor
+  View.completed: it went with the person. Unlocked(CARD) of it stays true (unlocks grow).
+- Never greys: step 4 takes the lane's cards out of every saved mix at the instant they go out of play, so no mix
+  holds one. Other lanes' shares are untouched: no share moves to another person (each person's shares are their own
+  time), and SPENT's yield never crosses lanes.
+- Stops: a standing action named in the `stops` of the Leave of a lane whose LEFT is held is stopped: it reads as a
+  locked standing action everywhere (contributes 0 to every rate, no Run in View.standing, explain's share_bp 0, no
+  maker), though Unlocked(ACTION) of it stays true. Derived from the rules' Leave and the unlock, never stored; so
+  validation allows at most one Leave per lane across all of the rules' outcomes, and a stopped standing stays
+  stopped for good.
+- Nothing lands on a left lane: an install whose card is on a left lane, a join of a left lane, and a start of a card
+  on one change nothing, in the same outcome or any later one. An order a SetOrders sets tapping such a card is
+  accepted, as for a retired card, and is passed over (its card cannot act); the page builds none.
+- Read model (view.py): View.lanes holds no LaneBar for a left lane; View.standing leaves out stopped standings; the
+  joined lanes the town strip draws are those not left. running_town_mix, town_mix_order and the town mix's cards
+  read as before over the mix step 4 left.
+- Codec: FORMAT unchanged. LEFT is one more UnlockKind value; Outcome gains `leaves` (rules and released outcomes only,
+  never a save), left out of the rules encoding while empty (as `joins`), so rules without a leave keep their
+  digest; Leave joins the codec's classes. Save's fields are unchanged (app/tests/held/save_fields.json). A save
+  written before this part holds no LEFT and decodes as before.
+- Rebase: step 4 drops Unlock(LEFT) of a gone lane. Step 6 lands a leave whose trigger is already true at the rebase instant,
+  so a save past the moment loads with the person gone: LEFT held, the lane's orders and shares removed (each order
+  logged ended LEFT in rebase_logged), its tap ended unpaid.
+- Content (the loader): OutcomeEntry gains `leaves`, a list of {lane, stops (default [])}, refused outside a
+  trigger's or an answer's outcome; lane a ruled lane, stops standing action ids; ValueError naming the trigger or
+  answer and the lane ("trigger {id}: leaves {lane}, which is not a ruled lane"; "trigger {id}: leaves {lane}, which
+  another outcome already leaves"). UnlockEntry and ConditionEntry's unlock_kind gain "left", refused in an
+  outcome's unlocks and the opening as "joined" is. Combat's gap for people lost by a fight's tally stays open
+  (FIGHTS, KNOWN GAPS): this is an outcome, not a fight.
+- Answers to the blind tests' questions (leaves):
+  - Leave(lane, stops=()), those two fields in that order, a frozen dataclass in engine/cards.py exported from
+    ashfall_app.engine beside Join.
+  - A SaveMix naming a card of a left lane raises InvalidVerbError (the mix checks' "card {c} is completed": the one
+    out-of-play predicate), as for any retired card. A player's TapCard of one raises InvalidVerbError too (a ruled
+    lane's card is never the player's to tap).
+  - A rate-form task stopped by a leave keeps exactly what its lines had paid at T: the stores read at T as a reading
+    without the leave would (each store's segment at integer T, its lump lines' floor(G(T)) as "Rate form" rounds
+    them), and nothing after. The rest of the completion's outcome stores are never paid.
+  - Validation (InvalidRulesError): "{where}: only a trigger's or an answer's outcome has a person leave ({lane})";
+    "{where}: leaves {lane}, which is not a declared ruled lane"; "{where}: leaves {lane}, stopping {id}, which is
+    not a standing action"; "lane {lane}: left by two outcomes" (two Leaves of one lane, in one outcome or two);
+    LEFT in Outcome.unlocks or Rules.opening as JOINED is (the message names the kind).
+  - Loader (ValueError, where as the other refusals name it: "trigger {id}", "answer {id}", "card {id}"): "{where}:
+    only a trigger's or an answer's outcome has a person leave"; the two above (the second also for a lane named
+    twice in one outcome); "{where}: leaves {lane}, stopping {id}, which is not a standing action"; and a join of the
+    lane in the outcome that leaves it, "{where}: joins {lane} in the outcome that leaves it": the engine lands it
+    as nothing (leaves come before joins), so content naming both is a mistake. A join of the lane in a later
+    outcome is not checked (KNOWN GAPS, the first gap).
+
+INVARIANTS (leaves; numbered on from 147. Invariant 27 now reads "... except one on ANSWERED, ANSWER, JOINED or LEFT,
+which is true only once the save holds it"; invariant 49 now reads, for mixes: "mixes equal those of s less the
+shares a leave landing at the rebase instant removes".)
+148. Others untouched: a leave of L landing at T changes no saved share or order of any other lane. On rules
+    where no store that a card on L makes or takes is made or taken by anything else, every Explanation of every
+    line not on L at T, after the outcome, equals its Explanation just before T. (Where L's cards made a store others
+    take, the others see that store's change by the dry rule and SPENT, as for any maker gone out of play.)
+149. No mix greys: no saved mix is greyed at T or later because of the leave; a mix greyed before T stays greyed.
+150. Orders gone and logged: from T, save.orders holds no order whose verb is a TapCard of a card on L; the rest keep
+    their order and latches; the span's rule_changes hold exactly one RuleChange(T, o, False, level, Ended.LEFT) per
+    distinct order removed.
+151. Pays nothing mid-task: a tap on L running at T gives no push line, no outcome and no completion at T or later,
+    the card's completions stay as at T, and no store moves by that card after T.
+152. Out of play: from T every card on L is retired (a player's TapCard raises InvalidVerbError, an order's or an
+    Outcome's start changes nothing), is in neither View.cards nor View.completed, and no saved mix holds it; each
+    standing action in the Leave's stops contributes 0 to every rate and is absent from View.standing, and its
+    Unlocked(ACTION) condition stays true.
+153. Once and for good: Unlock(LEFT, L) enters only through Outcome.leaves and never leaves; a second leave of L, a
+    join of L, and an install or start on L at T or later change nothing.
+154. Rebase: for s past the moment whose trigger holds a Leave of L, rebasing s into rules that add that trigger gives
+    the save 148-152 describe, at the save's time, and it loads (decode, advance, view) without error.
+155. Codec and validation: decode(encode(s, r), r) == s for s holding LEFT; rules with no leave keep their digest; a
+    Leave of a lane that is not a declared ruled lane, a stops id that is not a declared standing action, two Leaves
+    of one lane anywhere in the rules, a Leave outside a trigger's or answer's outcome, or LEFT in Outcome.unlocks or
+    Rules.opening raises InvalidRulesError.
+
+REJECTED, AND WHY (leaves)
+- A lane left idle (the person gone, the lane kept with its rules and shares): a person-shaped hole in the Rules tab
+  and the town strip, with no reason on it.
+- Greying the town's mix on a retirement (as a hands mix does): every lane stops for one person, until a visit. Chosen
+  instead: the retired card's own share stops (Uncapped only).
+- Moving the leaver's shares to another person: a person's shares are their own time (THE TOWN'S MIX, "Town share").
+- A lane-less stand-in (the person kept as a card with no lane): a person the player never set to work, which content
+  cannot always use.
+- Paying the task in progress: the person is gone at that instant, and a completion landing for them afterwards is a
+  line about someone who left.
+- RETIRED unlocks written for each of the lane's cards: one fact (LEFT) already says it; several writers of one set
+  for the same thing, and the cards would show in the Completed tab.
+- A RETIRED-style unlock per stopped standing action: a new meaning for an id kind (RETIRED ids are cards), renamed
+  by another kind at rebase, for what the rules' Leave and LEFT already say.
+- Keeping the leaver's shares in saved mixes, skipped when flattened: SaveMix would refuse the player's own mix when
+  they next edit it, and the saved split would say something the game no longer does.
+
+KNOWN GAPS (leaves)
+- A trigger or offer that taps or installs on a lane after its person left changes nothing; content checks nothing
+  for it yet. Decided by: the first chapter whose loader run trips on one.
+- Fights on a left lane's cards: their tallies stop with the cards; whole losses that are people stay FIGHTS' gap.
+- A town mix the player named in a save from before Mix.layer, if the player empties it with a SaveMix (a leave sets
+  the layer), reads as HANDS: nothing had set its layer. Decided by: a save that does it.
+

@@ -1,5 +1,5 @@
 """Share levels: a store condition's level given as basis points of the store's cap, read as a quantity off the cap at
-the instant the condition is read. DESIGN.txt, "SHARE LEVELS" (the reading table and the band of one item)."""
+the instant the condition is read. design/share-levels.txt, "SHARE LEVELS" (the reading table and the band of one item)."""
 from .gates import store_cap
 from .orders import AtLeast, AtMost, StoreValue
 from .rules import Rules

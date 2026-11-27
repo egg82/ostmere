@@ -1,4 +1,4 @@
-Wrong implementations of drains and the loader's fractions (engine DESIGN.txt, "DRAINS ... AND FRACTIONS AT THE
+Wrong implementations of drains and the loader's fractions (engine design/, "DRAINS ... AND FRACTIONS AT THE
 LOADER", invariants 121-132), to plant one at a time in a scratch copy; a test written blind from that part alone must go
 red for each. "Cure" is a card with a drain of A' on store x; "heal" is a standing action costing x; "wound" is a maker
 of x. Record each run below the list as MUTANTS_held.txt does (planted, red, survived, equivalent with the reason).
@@ -45,7 +45,7 @@ of x. Record each run below the list as MUTANTS_held.txt does (planted, red, sur
                                                                                      [DRAINS, "Paid as an input"]
 
 RUNS
-- Suite tests/engine_contract/test_drains_*.py (blind, written from DESIGN.txt's DRAINS part alone). Run: python -m
+- Suite tests/engine_contract/test_drains_*.py (blind, written from the engine design's DRAINS part alone). Run: python -m
   tools.mutate_suite drains --run (specs tools/drains_mutants/mNN.py, each a list of (path, old, new) edits against the
   implementation, one per row). `--check` fails unless every row is claimed by a test marked @kills(row).
 - Against the implementation: rows 1-24 all KILLED, each with a test that claims it red; no survivors, no equivalent

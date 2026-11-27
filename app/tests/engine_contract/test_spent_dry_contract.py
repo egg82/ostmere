@@ -1,4 +1,4 @@
-"""SPENT, what a spent store changes beyond the yield (engine DESIGN.txt, "SPENT", invariants 135, 139 and the amended
+"""SPENT, what a spent store changes beyond the yield (engine design/spent.txt, "SPENT", invariants 135, 139 and the amended
 41). Written blind from that part and api/contract/; MUTANTS_spent.txt names the wrong implementations each test
 must turn red for."""
 from ashfall_app.engine import ActionId, Flow, RunKind, StandingDef, advance, per_hour, value, view

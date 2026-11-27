@@ -1,4 +1,4 @@
-"""Invariants 157 and 159 and the amended 114 (engine DESIGN.txt, "HELD SPEED ..."): a HeldSpeed(l, A) held at share h
+"""Invariants 157 and 159 and the amended 114 (engine design/held-speed.txt, "HELD SPEED ..."): a HeldSpeed(l, A) held at share h
 changes every make, cost and XP line of a runner on lane l and every card's work there exactly as
 Modifier(LaneSpeed(l), ADD_BP, A * h // BP) written into save.modifiers by hand would, and no line on another lane, HANDS
 included; no LaneState.speed and no save.modifiers ever holds a held entry; only the lines on a HeldSpeed's lane list that

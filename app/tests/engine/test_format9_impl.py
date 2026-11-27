@@ -1,4 +1,4 @@
-"""FORMAT 9: a Mix has no holds (engine DESIGN.txt, "Codec"). UPGRADES[8] drops holds from every saved mix, so a format 8
+"""FORMAT 9: a Mix has no holds (engine design/, "Codec"). UPGRADES[8] drops holds from every saved mix, so a format 8
 save loads and runs on as the same save, and a SaveMix the decision log kept before FORMAT 9, its mix carrying an empty
 holds, reads back as the same verb, so an old log still replays."""
 import json

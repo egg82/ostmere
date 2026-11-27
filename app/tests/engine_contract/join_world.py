@@ -1,4 +1,4 @@
-"""A world with a ruled lane for the rebase tests of the town's mix (engine DESIGN.txt, "THE TOWN'S MIX", "Rebase"): the
+"""A world with a ruled lane for the rebase tests of the town's mix (engine design/towns-mix.txt, "THE TOWN'S MIX", "Rebase"): the
 release before the join's rules, and the release that adds a trigger whose outcome joins the lane."""
 from dataclasses import replace
 
@@ -46,7 +46,7 @@ def joined_save() -> Save:
 
 
 def left_save() -> Save:
-    """The joined save run on under rules whose later trigger has the person leave (engine DESIGN.txt, "LEAVES")."""
+    """The joined save run on under rules whose later trigger has the person leave (engine design/leaves.txt, "LEAVES")."""
     r = new_rules()
     gone = replace(r, triggers=(*r.triggers, TriggerDef(TriggerId("leave"), AfterTime(600), Outcome(leaves=(Leave(PERSON),)))))
     validate_rules(gone)

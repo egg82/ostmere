@@ -1,4 +1,4 @@
-"""Invariants 80 (flow), 82 (odds move one way) and 85 (a tap keeps its odds), from DESIGN.txt, "FIGHTS", alone. The
+"""Invariants 80 (flow), 82 (odds move one way) and 85 (a tap keeps its odds), from design/fights.txt, "FIGHTS", alone. The
 odds are read only through explain(): the MUL_BP entry sourced "odds:<runner>" on a runner's lost line."""
 from hypothesis import given, strategies as st
 

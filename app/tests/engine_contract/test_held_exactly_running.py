@@ -1,4 +1,4 @@
-"""Invariant 110 (engine DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS": "The entries"): for each WhileRunning(side, a) of a
+"""Invariant 110 (engine design/entries-held.txt, "ENTRIES HELD WHILE A CARD RUNS": "The entries"): for each WhileRunning(side, a) of a
 card c, the effective stack and explain_strength hold exactly one Modifier(SideStrength(side), ADD_BP, a * h // BP,
 "held:" + c) while h(c) > 0 and none while h(c) = 0; the strength equals the same rules with the entries written into
 save.modifiers by hand. h is set by the scenario (a tap: BP; a town share: its basis points); the share rules

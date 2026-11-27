@@ -1,5 +1,5 @@
 """Replay every kept snapshot of every save in a dump through its logged decisions under this build's engine and
-rules, and say whether, and by when, each stops matching what was stored (engine DESIGN.txt, "Shipping the evaluation
+rules, and say whether, and by when, each stops matching what was stored (engine design/, "Shipping the evaluation
 change"). Read-only: it reads one JSON file and prints logfmt; no database.
 
     python -m tools.replay_check <dump.json>      # from app/; exit 1 when any snapshot mismatches

@@ -1,4 +1,4 @@
-"""SPENT, never stored, and the older invariants it must not disturb (engine DESIGN.txt, "SPENT", invariants 140, 16, 19).
+"""SPENT, never stored, and the older invariants it must not disturb (engine design/spent.txt, "SPENT", invariants 140, 16, 19).
 Written blind from that part; MUTANTS_spent.txt names the wrong implementations each test must turn red for."""
 import json
 from dataclasses import fields

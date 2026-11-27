@@ -1,6 +1,6 @@
 """Plain builders for the cards contract tests: ids, rules, a running mix, lookups, and a rich world holding every
 kind of state a save can carry. No Hypothesis here, so the purity subprocess can import it cheaply. Built from the
-engine's public types and entry points only (DESIGN.txt, part "CARDS")."""
+engine's public types and entry points only (design/cards.txt, part "CARDS")."""
 from collections.abc import Sequence
 
 from ashfall_app.engine import (
@@ -37,7 +37,7 @@ def rules(stores: list[StoreDef], *, cards: list[CardDef] | None = None, standin
 
 def refill(*stores: StoreId) -> CardDef:
     """A card making each store that no test mixes or taps: a maker in play, so a card paused on one of them is PAUSED,
-    not SPENT (engine DESIGN.txt, "SPENT")."""
+    not SPENT (engine design/spent.txt, "SPENT")."""
     return CardDef(CardId("refill"), 100, makes=tuple(Flow(s, 1000) for s in stores))
 
 
@@ -81,7 +81,7 @@ def per_completion(r: Rules, card: CardId) -> int:
 
 
 def done(save: Save, r: Rules, card: CardId) -> int:
-    """Completions read off the work segment, as DESIGN.txt defines them (work // (work_s * BP))."""
+    """Completions read off the work segment, as engine/design/ defines them (work // (work_s * BP))."""
     return work(save, card).start_value // per_completion(r, card)
 
 
@@ -120,7 +120,7 @@ def view_of(save: Save, r: Rules, card: CardId) -> CardView:
 
 
 def running_mix(save: Save, r: Rules) -> MixId | None:
-    """The mix the hands run now (DESIGN.txt, "Order mix"): an order's while it is latched, else save.active."""
+    """The mix the hands run now (design/cards.txt, "Order mix"): an order's while it is latched, else save.active."""
     return view(save, r).running_mix
 
 
