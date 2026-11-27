@@ -13,7 +13,7 @@ from ashfall_app.opening.schema import CHAPTERS, load_opening
 from tests.game_client import GameClient, game_client
 from tests.shipped_ruleset import ShippedRuleset
 
-FIXTURE = Path(__file__).resolve().parent.parent / "opening" / "fixtures" / "askkinds.toml"
+FIXTURE = Path(__file__).resolve().parents[2] / "opening" / "fixtures" / "askkinds.toml"
 
 
 def order(kind: str, role: str) -> dict[str, object]:

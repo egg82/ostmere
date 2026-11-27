@@ -6,7 +6,7 @@ from datetime import UTC, datetime
 from ashfall_app import engine as e
 from ashfall_app.db.saves import SaveRecord
 from ashfall_app.saves.interface import Ruleset
-from ashfall_app.saves.load import load
+from ashfall_app.saves.builds.load import load
 
 Q = e.QUANTITY_SCALE
 A = e.CardId("a")

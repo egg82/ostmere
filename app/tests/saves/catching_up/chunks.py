@@ -9,7 +9,7 @@ from pathlib import Path
 from ashfall_app import engine as e
 from ashfall_app.opening.schema import load_opening, to_rules
 
-GOLDEN = Path(__file__).resolve().parent / "golden"
+GOLDEN = Path(__file__).resolve().parent.parent / "golden"
 DAY_S = 86_400
 MAX_CALLS = 3000
 """A chain that has not ended after this many calls is not making progress."""

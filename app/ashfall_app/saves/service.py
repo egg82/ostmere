@@ -37,7 +37,7 @@ from .interface import (
     Stale,
     TooManySaves,
 )
-from .load import Loaded, load
+from .builds.load import Loaded, load
 
 HISTORY = 200
 BUDGET_S = 3.0

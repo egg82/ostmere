@@ -19,7 +19,7 @@ from ashfall_app.saves.journal import DAY_S, ComposedDay
 from ashfall_app.saves.service import PgSaves
 from tests.fake_clock import FakeClock
 from tests.kills import kills
-from tests.saves.journal_fixture import (
+from tests.saves.journal.journal_fixture import (
     BEAT, HABITS, JOURNAL, TIRED, WORK, journaled, lock_waiters, reference, store_lines, stored,
 )
 

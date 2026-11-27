@@ -17,7 +17,7 @@ from ashfall_app.saves import __main__ as cli
 from ashfall_app.saves.__main__ import main
 from ashfall_app.saves.interface import Ruleset
 from ashfall_app.saves.service import PgSaves
-from ashfall_app.saves.strip import Stripped, strip
+from ashfall_app.saves.builds.strip import Stripped, strip
 from tests.fake_clock import FakeClock
 
 STAND = e.TapCard(e.CardId("stand_up"))

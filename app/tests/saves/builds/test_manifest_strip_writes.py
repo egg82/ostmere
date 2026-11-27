@@ -10,9 +10,9 @@ from ashfall_app import engine as e
 from ashfall_app.db import saves as rows
 from ashfall_app.db.manifests import stripped
 from ashfall_app.db.tables import save_manifests, save_snapshots, saves
-from ashfall_app.saves.check import check
+from ashfall_app.saves.builds.check import check
 from ashfall_app.saves.interface import Ruleset
-from ashfall_app.saves.manifest import registered
+from ashfall_app.saves.builds.manifest import registered
 from ashfall_app.saves.service import PgSaves
 from ashfall_app.saves.support import restore
 from tests.fake_clock import FakeClock

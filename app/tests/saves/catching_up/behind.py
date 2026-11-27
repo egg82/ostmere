@@ -8,7 +8,7 @@ from ashfall_app import engine as e
 from ashfall_app.db import saves as rows
 from ashfall_app.saves.interface import Ruleset
 from ashfall_app.saves.write import written
-from tests.saves.chunks import golden
+from tests.saves.catching_up.chunks import golden
 
 NAME = "f7/05-seed0-end526"
 SAVED_AT = 526

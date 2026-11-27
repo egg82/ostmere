@@ -6,7 +6,7 @@ from pathlib import Path
 from ashfall_app.engine import Line, RuleChange, advance_logged, decode, encode, rebase
 from ashfall_app.opening.schema import Opening, to_rules
 
-GOLDEN = Path(__file__).resolve().parent / "golden"
+GOLDEN = Path(__file__).resolve().parent.parent / "golden"
 SPAN_S = 10_800
 K = 7
 

@@ -14,15 +14,15 @@ from ashfall_app import logs
 from ashfall_app.db import saves as rows
 from ashfall_app.db.manifests import stripped
 from ashfall_app.db.tables import save_manifests, save_snapshots, saves
-from ashfall_app.saves.check import check
+from ashfall_app.saves.builds.check import check
 from ashfall_app.saves.interface import Ruleset, Unavailable
-from ashfall_app.saves.load import load
-from ashfall_app.saves.manifest import register
+from ashfall_app.saves.builds.load import load
+from ashfall_app.saves.builds.manifest import register
 from ashfall_app.saves.service import PgSaves
 from tests.fake_clock import FakeClock
 
 STAND = e.TapCard(e.CardId("stand_up"))
-GOLDEN = Path(__file__).resolve().parent / "golden"
+GOLDEN = Path(__file__).resolve().parent.parent / "golden"
 
 
 def column(engine: Engine, save_id: int) -> str:

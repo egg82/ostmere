@@ -22,8 +22,8 @@ from ashfall_app.db.engine import open_database
 from tests import pg
 from tests.fake_clock import T0
 
-APP = Path(__file__).resolve().parents[2]
-WORKER = "tests.saves.two_builds_worker"
+APP = Path(__file__).resolve().parents[3]
+WORKER = "tests.saves.builds.two_builds_worker"
 
 
 class Pod:

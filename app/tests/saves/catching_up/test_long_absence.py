@@ -11,9 +11,9 @@ import pytest
 
 from ashfall_app.engine import Rules, Save, rebase
 from ashfall_app.opening.schema import load_opening, to_rules
-from tests.saves.absence import advanced_counted
+from tests.saves.catching_up.absence import advanced_counted
 
-GOLDEN = Path(__file__).resolve().parent / "golden"
+GOLDEN = Path(__file__).resolve().parent.parent / "golden"
 DAYS = 1
 INSTANTS_PER_DAY_MAX = 400
 """The end save runs about 120 instants a game day (its rules and the camp's lane); a short cycle all day is thousands."""

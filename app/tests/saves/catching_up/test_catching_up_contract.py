@@ -9,8 +9,8 @@ from ashfall_app.db import saves as rows
 from ashfall_app.saves.interface import Behind, Played, Ruleset, Stale
 from ashfall_app.saves.service import PgSaves
 from tests.fake_clock import FakeClock
-from tests.saves.behind import AWAY_S, SAVED_AT, seed, snapshot
-from tests.saves.chunks import MakeStop, Stop, always, every, irregular, never
+from tests.saves.catching_up.behind import AWAY_S, SAVED_AT, seed, snapshot
+from tests.saves.catching_up.chunks import MakeStop, Stop, always, every, irregular, never
 
 VERB = e.SetOrders(())
 """Valid on the seeded save, which holds orders; a save it was applied to differs from one it was not."""

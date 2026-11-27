@@ -9,7 +9,7 @@ from sqlalchemy import Engine, text
 from ashfall_app import engine as e
 from ashfall_app import logs
 from ashfall_app.db import saves as rows
-from ashfall_app.saves.check import check
+from ashfall_app.saves.builds.check import check
 from ashfall_app.saves.interface import Ruleset, Unavailable
 from ashfall_app.saves.service import PgSaves
 from tests.fake_clock import FakeClock

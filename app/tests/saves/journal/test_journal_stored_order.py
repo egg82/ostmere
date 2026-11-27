@@ -8,7 +8,7 @@ from ashfall_app.saves.interface import Ruleset
 from ashfall_app.saves.journal import DAY_S
 from ashfall_app.saves.service import PgSaves
 from tests.fake_clock import FakeClock
-from tests.saves.journal_fixture import journaled, store_lines, stored
+from tests.saves.journal.journal_fixture import journaled, store_lines, stored
 
 
 def never() -> Callable[[], bool]:

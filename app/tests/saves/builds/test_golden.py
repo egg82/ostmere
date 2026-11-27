@@ -18,7 +18,7 @@ from ashfall_app.engine import (
 from ashfall_app.opening.schema import load_opening, to_rules
 from tests.saves.changes import RETUNED, changed_opening
 
-GOLDEN = Path(__file__).resolve().parent / "golden"
+GOLDEN = Path(__file__).resolve().parent.parent / "golden"
 SAVES = sorted(p for f in range(OLDEST_FORMAT, FORMAT + 1) for p in (GOLDEN / f"f{f}").glob("*.json"))
 DAYS = int(os.environ.get("SAVES_DAYS", "1"))
 DAY_S = 86_400

@@ -6,7 +6,7 @@ from ashfall_app.saves.journal import DAY_S, ComposedDay, Line, Loss, Note, Sour
 from ashfall_app.saves.journal_rules import LossRunner
 from ashfall_app.saves.journal_tallies import Tallies
 from tests.engine_contract.fight_world import LOST, started, world
-from tests.saves.journal_fixture import HABITS, WORK
+from tests.saves.journal.journal_fixture import HABITS, WORK
 
 POOL = ("n1", "n2", "n3")
 FOLD = "ui.journal.fold"

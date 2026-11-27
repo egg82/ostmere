@@ -8,8 +8,8 @@ from ashfall_app.saves.interface import Played, Ruleset
 from ashfall_app.saves.ruleruns import KEPT
 from ashfall_app.saves.service import PgSaves
 from tests.fake_clock import FakeClock
-from tests.saves.behind import BUSY_AWAY_S, seed_busy, snapshot
-from tests.saves.chunks import every, never
+from tests.saves.catching_up.behind import BUSY_AWAY_S, seed_busy, snapshot
+from tests.saves.catching_up.chunks import every, never
 
 
 @pytest.fixture
