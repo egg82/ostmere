@@ -1,4 +1,4 @@
-// A ruled lane's tasks wear the card face (ui/cardpick.ts, from cardrow.ts and cardneeds.ts) in its editor, Plan names a
+// A ruled lane's tasks wear the card face (ui/cards/cardpick.ts, from cardrow.ts and cardneeds.ts) in its editor, Plan names a
 // lane task's lane, and a lane's Town row carries a quiet dot while a task of it has not been in front of the player.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { TAUGHT, testContext } from "./context";
@@ -6,9 +6,9 @@ import { dayTwoStep } from "../fixtures/daytwo";
 import type { View } from "../src/api/types";
 import { keepsOf } from "./kept";
 import { el } from "../src/ui/dom";
-import { LaneRows } from "../src/ui/lanerows";
-import { RulesTab } from "../src/ui/rules";
-import { StintPlan } from "../src/ui/stintplan";
+import { LaneRows } from "../src/ui/town/lanerows";
+import { RulesTab } from "../src/ui/rules/rules";
+import { StintPlan } from "../src/ui/next/stintplan";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

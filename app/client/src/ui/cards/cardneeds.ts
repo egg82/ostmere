@@ -1,0 +1,201 @@
+// A card's needs (docs/design/opening-screen/asks-and-cards.md, "Cards"): one line per store need as have/need, then each skill-level
+// need, then each step it waits on. Needs read in the card's quiet tone; a short one marks only the number it is short
+// of while it holds the card back (red is the ledger's alarm, not a need). A store need with a gate (Need.gate: what
+// the trigger that grants the store waits on) draws the gate in its place, as a skill-level or step row, and never names
+// the store; a tap of a short store need's row lights its makers (Need.makers, ui/cards/makerlight.ts) and does not tap the
+// card. A spent one (Need.spent: nothing in play makes it and nothing is left to grant it) says so on its row.
+// A need on a clock with a part of the day (StoreInfo.clock) draws when it opens until it is met ("Opens after dark",
+// game/condition/timewords.ts); a tally (StoreInfo.tally) draws as have/need though it has no ledger line; a need on any other store the player has
+// never been shown draws no row, unless it has a gate: the card's countdown is all of it. A skill
+// level or a step once met stays met (levels and completions never fall), so its row goes; a store can fall, so its row stays.
+// While the card works (Card.run full or held) its needs are not drawn: its inputs are drawn as it runs, so the store
+// reads short of a whole input; a run paused for want of one (run paused) draws them.
+// A card with a reach stake (CardInfo.reach) also draws its store against the next reach, even while it works: a rising
+// line joins the ledger only once full, so this row is where the player reads how far the next reach is; it goes once
+// every reach is passed.
+// A card that shows an upside (CardInfo.upside_key) and takes from no store (CardInfo.takes empty: no inputs, costs or
+// drains) says so in a need's place, while it works too: a benefit with no cost beside it reads as a cost not shown (takesNothing).
+// A card a full pause stopped (Card.full_store: every store it fills is full) says which store has no room, in a need's
+// place and quiet: it starts again by itself as the store is drawn down (contract/full-output.txt, "FULL OUTPUT"). A spent card
+// (Card.spent_store) says in the same place which store nothing makes now, unless that store's need row is drawn; and a
+// card running on a share while every store it makes is full says its work is wasted (game/cards/wasted.ts).
+// Rebuilt only when what is needed changes; store needs are sampled every frame. A failed tap marks the row that shows
+// what its blocker names (shows()).
+import type { Card, Condition, LedgerLine, Need, View } from "../../api/types";
+import { sample } from "../../game/page/clock";
+import { completionsOf } from "../../game/ledger/cues";
+import { UI } from "../../game/page/text";
+import { levelOf, needKind, opensWords, skillWords, stepWords, storeWords } from "../../game/cards/needwords";
+import { el, setText } from "../dom";
+import { lightMakers } from "./makerlight";
+import { wastedOn } from "../../game/cards/wasted";
+import type { Catalog } from "../../game/page/catalog";
+import type { PartContext } from "../part";
+
+const MARK = "\u0001";   // where the have number goes in a need's words
+
+/** A need's words with its have number put in; marked while the need is short. Rebuilt only when either changes. */
+function drawNeed(node: HTMLElement, words: string, have: string, short: boolean): void {
+  const [pre = "", post = ""] = words.split(MARK);
+  node.classList.toggle("short", short);
+  if (node.textContent === pre + have + post && (node.querySelector(".need-have") !== null) === short) return;
+  node.replaceChildren(...(short ? [pre, el("b", "need-have", have), post] : [pre + have + post]).filter((k) => k !== ""));
+}
+
+/** The line of a card that shows an upside, takes from no store and draws no other need row, in the place a cost would
+ * sit; else null: a benefit with no cost beside it is what reads as a hidden cost. */
+export function takesNothing(catalog: Catalog, card: string, needs: Need[] = []): HTMLElement | null {
+  const info = catalog.cards.get(card);
+  const bare = info && info.upside_key && info.takes.length === 0 && needs.length === 0 && info.skill_needs.length === 0 && info.step_needs.length === 0 && !info.reach;
+  return bare ? el("span", "card-need nothing", catalog.text.get(UI.takesNothing)) : null;
+}
+
+/** Whether the card is drawing its inputs as it works (full): a paused run, waiting or yielded one is not. */
+function working(card: Card): boolean {
+  return card.run === "full";
+}
+
+export class CardNeeds {
+  readonly root = el("span", "card-needs");
+  private storeRows: HTMLElement[] = [];
+  private stores: string[] = [];
+  private needs: Need[] = [];
+  private shape: string | null = null;
+  private readonly reach = el("span", "card-need reach");
+  private readonly noRoom = el("span", "card-need full");
+  private nothing: HTMLElement | null = null;
+  private reachLine: LedgerLine | null = null;
+
+  constructor(private readonly ctx: PartContext, private readonly id: string) {}
+
+  /** Rebuilt only when what is needed changes. */
+  draw(card: Card, view: View, done: boolean): void {
+    const { catalog } = this.ctx;
+    const info = catalog.cards.get(this.id);
+    const skillNeeds = info?.skill_needs ?? [];
+    const stepNeeds = info?.step_needs ?? [];
+    const kind = (n: Need): string => { const k = needKind(catalog, view, n); return k === "store" ? "" : k; };
+    this.needs = card.needs;
+    this.nothing = takesNothing(catalog, this.id, card.needs);
+    const shape = card.needs.map((n) => `${n.store}:${n.quantity}:${kind(n)}:${JSON.stringify(n.gate)}`).join("|") + `|${card.full_store ?? ""}|${card.spent_store ?? ""}|${wastedOn(catalog, view, card) ?? ""}`;
+    if (shape !== this.shape) {
+      this.shape = shape;
+      this.stores = card.needs.map((n) => n.store);
+      this.storeRows = card.needs.map((n, i) => this.storeRow(`card-need ${kind(n)}`.trim(), i));
+      const skills = skillNeeds.map(() => el("span", "card-need skill"));
+      const steps = stepNeeds.map(() => el("span", "card-need step"));
+      this.root.replaceChildren(...this.storeRows, ...skills, ...steps, ...(this.nothing ? [this.nothing] : []), ...(info?.reach ? [this.reach] : []), ...(card.full_store !== null || card.spent_store !== null || wastedOn(catalog, view, card) !== null ? [this.noRoom] : []));
+    }
+    card.needs.forEach((need, i) => {
+      const row = this.storeRows[i];
+      if (row) row.hidden = row.classList.contains("unseen") || (row.classList.contains("when") && sample(need.segment, view.at) >= need.quantity);
+    });
+    const skillNodes = [...this.root.querySelectorAll<HTMLElement>(".card-need.skill")];
+    skillNeeds.forEach((need, i) => {
+      const node = skillNodes[i];
+      if (!node) return;
+      const have = levelOf(view, need.skill);
+      node.hidden = have >= need.level;
+      drawNeed(node, skillWords(catalog, need.skill, MARK, need.level), catalog.format.count(have), have < need.level);
+    });
+    card.needs.forEach((need, i) => { if (need.gate !== null && this.storeRows[i]) this.drawGate(this.storeRows[i], need.gate, view); });
+    const stepNodes = [...this.root.querySelectorAll<HTMLElement>(".card-need.step")];
+    stepNeeds.forEach((need, i) => {
+      const node = stepNodes[i];
+      if (!node) return;
+      const have = completionsOf(view, need.card);
+      node.hidden = have >= need.count;
+      drawNeed(node, stepWords(catalog, need.card, MARK, need.count), catalog.format.count(have), have < need.count);
+    });
+    const rows = [...this.storeRows, ...skillNodes, ...stepNodes];
+    if (working(card)) rows.forEach((row) => { row.hidden = true; });
+    const store = info?.reach?.store;
+    this.reachLine = store === undefined ? null : view.ledger.find((l) => l.store === store) ?? null;
+    this.tickReach(view.at);
+    this.drawNoRoom(card, view);
+    this.root.hidden = done || (this.nothing === null && rows.every((row) => row.hidden) && this.reach.hidden && this.noRoom.hidden);
+  }
+
+  /** The row drawn for what `condition` watches (a blocker's): its store's have/need, its skill level or its step;
+   * null when the card draws none (a store never shown, a time, a row already met and hidden). */
+  shows(condition: Condition): HTMLElement | null {
+    if (condition.kind === "after_time") return null;
+    const w = condition.watched;
+    const info = this.ctx.catalog.cards.get(this.id);
+    const nth = (kind: string, i: number): HTMLElement | undefined =>
+      i < 0 ? undefined : [...this.root.querySelectorAll<HTMLElement>(`.card-need.${kind}`)][i];
+    const node = w.kind === "store_value" ? this.storeRows[this.stores.indexOf(w.store)]
+      : w.kind === "skill_level" ? nth("skill", (info?.skill_needs ?? []).findIndex((n) => n.skill === w.skill))
+        : w.kind === "card_count" ? nth("step", (info?.step_needs ?? []).findIndex((n) => n.card === w.card)) : undefined;
+    return node && !node.hidden ? node : null;
+  }
+
+  /** The store needs at game time t; a gated one is drawn with the view (draw). */
+  tick(card: Card, _view: View | null, t: number): void {
+    const { catalog } = this.ctx;
+    this.tickReach(t);
+    card.needs.forEach((need, i) => {
+      const node = this.storeRows[i];
+      if (!node || node.classList.contains("unseen") || need.gate !== null) return;
+      if (node.classList.contains("when")) {
+        setText(node, opensWords(catalog, need));
+        return;
+      }
+      const have = sample(need.segment, t);
+      const short = card.blocker !== null && have < need.quantity;   // red only while it holds the card back
+      drawNeed(node, storeWords(catalog, need, MARK), catalog.isLevel(need.store) ? catalog.format.level(have) : catalog.format.items(have), short);
+    });
+  }
+
+  /** Why a stopped card stopped, in a need's place: no room in a full store, or a spent store nothing makes now, unless
+   * that store's own need row already says so; or that a running card's work is wasted, every store it makes full. */
+  private drawNoRoom(card: Card, view: View): void {
+    const { catalog } = this.ctx;
+    const full = card.full_store;
+    const wasted = wastedOn(catalog, view, card);
+    const spent = card.spent_store !== null && this.storeRows[this.stores.indexOf(card.spent_store)]?.hidden !== false ? card.spent_store : null;
+    this.noRoom.hidden = full === null && spent === null && wasted === null;
+    this.noRoom.classList.toggle("spent", full === null && spent !== null);
+    this.noRoom.classList.toggle("wasted", wasted !== null);
+    if (wasted !== null) setText(this.noRoom, catalog.text.fill(UI.cardWasted, { store: catalog.storeTitle(wasted) }));
+    else if (full !== null) setText(this.noRoom, catalog.text.fill(UI.noRoom, { store: catalog.storeTitle(full) }));
+    else if (spent !== null) setText(this.noRoom, catalog.text.fill(UI.cardSpentOn, { store: catalog.storeLabel(spent) }));
+  }
+
+  private tickReach(t: number): void {
+    const info = this.ctx.catalog.cards.get(this.id);
+    const have = this.reachLine === null ? 0 : sample(this.reachLine.segment, t);
+    const next = info?.reach?.stops.find((s) => s > have);
+    this.reach.hidden = this.reachLine === null || next === undefined;
+    if (!this.reach.hidden && next !== undefined && info?.reach) {
+      const { catalog } = this.ctx;
+      setText(this.reach, catalog.format.reach(catalog.storeTitle(info.reach.store), have, next));
+    }
+  }
+
+  /** The row of the i-th store need: a tap of it while it is short lights that need's makers, not the card. */
+  private storeRow(cls: string, i: number): HTMLElement {
+    const row = el("span", cls);
+    row.addEventListener("click", (e) => {
+      const makers = this.needs[i]?.makers ?? [];
+      if (!row.classList.contains("short") || makers.length === 0) return;
+      e.stopPropagation();
+      lightMakers(this.ctx.actions, makers);
+    });
+    return row;
+  }
+
+  /** A gate in a store need's place: the skill level or the card's completions the grant waits on, short while unmet. */
+  private drawGate(node: HTMLElement, gate: Condition, view: View): void {
+    const { catalog } = this.ctx;
+    if (gate.kind === "after_time") return;
+    const w = gate.watched;
+    if (w.kind === "skill_level") {
+      const have = levelOf(view, w.skill);
+      drawNeed(node, skillWords(catalog, w.skill, MARK, gate.value), catalog.format.count(have), have < gate.value);
+    } else if (w.kind === "card_count") {
+      const have = completionsOf(view, w.card);
+      drawNeed(node, stepWords(catalog, w.card, MARK, gate.value), catalog.format.count(have), have < gate.value);
+    }
+  }
+}

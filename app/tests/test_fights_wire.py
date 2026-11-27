@@ -1,13 +1,13 @@
 """Fights on the wire (api/contract/fights.txt, "FIGHTS"), on the real opening given one fight card and one standing fight:
 the content's side, threat and fight infos, and the view's fights after a tap and an advance, each a plain copy of
-the engine's FightView (the odds themselves are the engine's: tests/engine_contract/test_fight_view.py)."""
+the engine's FightView (the odds themselves are the engine's: tests/engine_contract/fight/test_fight_view.py)."""
 from dataclasses import replace
 from functools import cache
 
 import pytest
 
 from ashfall_app import engine as e
-from ashfall_app.api import content_models as cm
+from ashfall_app.api.world import content_models as cm
 from ashfall_app.api import models as w
 from ashfall_app.api.service import Game
 from ashfall_app.opening.fight_entries import SideEntry, ThreatEntry

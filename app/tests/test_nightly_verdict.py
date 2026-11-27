@@ -117,5 +117,40 @@ def test_every_job_that_fails_on_drift_records_its_verdict_first():
         uses = [i for i, s in enumerate(job["steps"]) if s.get("uses") == "./.github/actions/readout-verdict"]
         fails = [i for i, s in enumerate(job["steps"]) if "readout differs" in str(s.get("name", ""))]
         assert uses and uses[0] < fails[0], name
+        assert job["steps"][fails[0]]["uses"] == "./.github/actions/readout-differs", name
         assert job["steps"][uses[0]]["if"] == "always()", name
     assert "refresh-readouts" in yaml.safe_load((WORKFLOWS / "nightly.yml").read_text())["jobs"]
+
+
+def run_report(tmp: Path, event: str, changed: tuple[str, ...]) -> tuple[int, str]:
+    tmp.mkdir()
+    readouts = tmp / "readouts-new"
+    readouts.mkdir()
+    for name in changed:
+        (readouts / name).write_text("x\n")
+    summary = tmp / "summary.md"
+    code = nv.report(event, "42", readouts, summary)
+    return code, summary.read_text() if summary.exists() else ""
+
+
+def test_a_differing_readout_is_listed_and_fails_unless_on_a_pull_request(tmp_path: Path):
+    code, summary = run_report(tmp_path / "pr", "pull_request", ("dayone-typical.txt",))
+    assert code == 0 and "`dayone-typical.txt`" in summary and "readouts_pull 42" in summary
+    for event in ("push", "schedule", "workflow_dispatch"):
+        code, summary = run_report(tmp_path / event, event, ("dayone-typical.txt",))
+        assert code == 1 and "`dayone-typical.txt`" in summary, event
+
+
+def test_nothing_differing_reports_nothing_on_any_event(tmp_path: Path):
+    for event in ("pull_request", "push"):
+        assert run_report(tmp_path / event, event, ()) == (0, "")
+
+
+def test_a_test_failure_still_fails_a_pull_request_job():
+    jobs: dict[str, Any] = yaml.safe_load((WORKFLOWS / "ci.yml").read_text())["jobs"]
+    for name, job in jobs.items():
+        steps = job["steps"]
+        if not any(s.get("uses") == "./.github/actions/readout-differs" for s in steps):
+            continue
+        tests = [s for s in steps if "pytest" in str(s.get("run", ""))]
+        assert tests and all("continue-on-error" not in s and "|| true" not in s["run"] for s in tests), name

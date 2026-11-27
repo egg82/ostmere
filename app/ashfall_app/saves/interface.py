@@ -41,7 +41,7 @@ class Ruleset:
     repeats: RepeatRules | None = None
     """How repeats are counted (repeats.py); None counts none."""
     held_manifest: str | None = None
-    """These rules' manifest as canonical text, when save_manifests holds it as their digest's (saves/manifest.py
+    """These rules' manifest as canonical text, when save_manifests holds it as their digest's (saves/builds/manifest.py
     `registered`): a save written then leaves it out of `state`. None: saves are written whole."""
     journal: JournalRules | None = None
     """The journal's subjects and habits (journal_rules.py); None composes no days."""

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Flag the flat-story shapes (docs/research/flat-story.md) in content/beats.yaml.
+"""Flag the flat-story shapes (docs/research/writing/flat-story.md) in content/beats.yaml.
 
 Usage: flatcheck.py [beats.yaml] [--route route.json] [--decisions decisions.jsonl] [--days day_one,...]
   --days: check only these day lists (default: every day_*: list). A promise only a left-out list opens may be

@@ -6,8 +6,8 @@ import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
 import { dayTwoStep } from "../fixtures/daytwo";
 import type { Offer, Order, View } from "../src/api/types";
-import { Asks } from "../src/ui/asks";
-import { RulesTab } from "../src/ui/rules";
+import { Asks } from "../src/ui/asks/asks";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 Object.assign(window, { innerWidth: 1440, innerHeight: 900 });

@@ -5,8 +5,8 @@ import { install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Step } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { UI } from "../src/game/text";
+import { Catalog } from "../src/game/page/catalog";
+import { UI } from "../src/game/page/text";
 import { Screen } from "../src/ui/screen";
 import { keepsOf, NEW_FLAT, type Flat } from "./kept";
 

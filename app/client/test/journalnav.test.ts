@@ -2,8 +2,8 @@
 // where they go at its edge, a section's contents lists its pages by title, and the sheet shows the place in the section.
 // The logic runs on synthetic pages (many sections, a book far longer than any shipped); the sheet on the fixture pages:
 // D is a days page, A and C are creatures pages, B is a places page, so the pages run D, A, C, B.
-import { Catalog } from "../src/game/catalog";
-import { contentsOf, pagesOf, placeOf, SECTIONS, turnOf, type Page, type Reading, type Section } from "../src/game/journal";
+import { Catalog } from "../src/game/page/catalog";
+import { contentsOf, pagesOf, placeOf, SECTIONS, turnOf, type Page, type Reading, type Section } from "../src/game/book/journal";
 import { fixtureContent } from "../fixtures/content";
 import { journalStep, LONG_CREATURES, LONG_DAYS, LONG_DAYS_N, LONG_PLACES, LONG_READ, LONG_READ_TO, NOTE_B, NOTE_C, NOTES_A, NOTES_D, withJournal, withLongBook } from "../fixtures/journal";
 import { expect, fire, rig, text } from "./journalrig";

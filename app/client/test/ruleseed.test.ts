@@ -5,7 +5,7 @@ import { testContext } from "./context";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Condition } from "../src/api/types";
-import { RulesTab } from "../src/ui/rules";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 

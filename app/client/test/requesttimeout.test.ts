@@ -1,6 +1,6 @@
 // A request no server answers is given up after REQUEST_TIMEOUT_MS and shown as reconnecting (src/api/api.ts).
 import { httpApi, REQUEST_TIMEOUT_MS } from "../src/api/api";
-import { Session, type SessionEvents } from "../src/game/session";
+import { Session, type SessionEvents } from "../src/game/page/session";
 
 const noop = (): void => undefined;
 const seen: boolean[] = [];

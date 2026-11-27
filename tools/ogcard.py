@@ -36,7 +36,7 @@ FIRE_FROM_TOP = 0.68   # the fire sits this far down the card, clear of the titl
 
 
 def moment() -> Image.Image:
-    """The front page's canned camp (app/client/src/ui/camp-views.ts: fireback built, stool, stores) at night."""
+    """The front page's canned camp (app/client/src/ui/front/camp-views.ts: fireback built, stool, stores) at night."""
     state = STAGES["7_fireback_built"].then({"feature:night"})
     entries = build.write_layers(random.Random(build.SEED))
     return composite(entries, state)

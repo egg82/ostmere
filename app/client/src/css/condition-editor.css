@@ -6,7 +6,7 @@
 .cond-stores { padding-top: .9rem; border-top: 1px solid var(--rule); }   /* a hairline between the groups */
 .cond-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
 .cond-heading { margin: 0 !important; overflow-wrap: anywhere; }
-.cond-mixes > .card-list { flex: 1 1 100%; }   /* the lane editor's tasks, drawn as cards (ui/cardpick.ts) */
+.cond-mixes > .card-list { flex: 1 1 100%; }   /* the lane editor's tasks, drawn as cards (ui/cards/cardpick.ts) */
 .card.pick:has(> .card-tap[aria-pressed="true"]) { box-shadow: inset 0 0 0 1px var(--ink-dim); }   /* the whole card, its bonus line under the tap included */
 .card.pick { flex-direction: column; }   /* a kept bonus's line sits under the tap, as .card.fighting seats it */
 .card.pick .card-head { padding-right: 0; }

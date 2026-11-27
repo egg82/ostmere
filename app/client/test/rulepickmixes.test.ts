@@ -4,7 +4,7 @@ import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
 import type { Mix, View } from "../src/api/types";
-import { RulesTab } from "../src/ui/rules";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

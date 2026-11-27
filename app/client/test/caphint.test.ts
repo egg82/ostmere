@@ -1,11 +1,11 @@
-// The first full store (docs/design/opening-screen/hands-strip.md, the hands strip, "Hint: the first full store"; game/caphint.ts):
+// The first full store (docs/design/opening-screen/hands-strip.md, the hands strip, "Hint: the first full store"; game/hands/caphint.ts):
 // a store the hands still make sits at its cap while another hands task could take the time, and no rule watches it reach
 // a level. Written from that row: each case changes one fact of the full fixture and expects the mark to come or go.
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Order, View } from "../src/api/types";
-import { capStore } from "../src/game/caphint";
-import { Catalog } from "../src/game/catalog";
+import { capStore } from "../src/game/hands/caphint";
+import { Catalog } from "../src/game/page/catalog";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

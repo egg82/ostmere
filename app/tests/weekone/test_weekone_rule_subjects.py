@@ -3,7 +3,7 @@ who meets a need and goes to write its rule finds it there. Over week one's typi
 lost fight shows the hurt chip), from the first save."""
 import pytest
 
-from ashfall_app.api import content_models as cm
+from ashfall_app.api.world import content_models as cm
 from ashfall_app.api import models as w
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests import rule_subjects

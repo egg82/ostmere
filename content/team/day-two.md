@@ -349,7 +349,7 @@ ships, so the live game gains no levels before its numbers are simulated.
    gets none; A16's countdown says when first light comes. The owner, spoiler-free: "the second night: does it need the
    'this is a real-time wait' card again, or is a countdown on the next card enough?" Recommendation: countdown only.
 6. **Day one's end card** says day two is still being written. With day two shipped it should lose that line, and day
-   two's end card takes the out-of-fiction "this is as far as it goes for now" (`research/waits-and-ends.md`).
+   two's end card takes the out-of-fiction "this is as far as it goes for now" (`research/design/waits-and-ends.md`).
 7. **Arrivals.** B7 needs three arrivals by about day 6; day two brings none. Day three must bring the People row's
    arrivals, with "food to spare" as the draw (`decisions.md`, "Nothing appears").
 8. **Her pace.** Her cards run at base rate, so the gap to the player's levelled rate is the "competence grows" feel. If

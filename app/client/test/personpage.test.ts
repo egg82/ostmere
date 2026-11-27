@@ -1,16 +1,16 @@
-// A person's page (ui/personpage.ts), opened by Change on their Town row: their cards in full, their mix (once joined),
+// A person's page (ui/town/personpage.ts), opened by Change on their Town row: their cards in full, their mix (once joined),
 // and the rules that run them. A ruled lane before the join and the town's people after it.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
 import { dayTwoStep } from "../fixtures/daytwo";
 import { townStep } from "../fixtures/town";
 import type { Decision, Mix, View } from "../src/api/types";
-import { ruledLaneOf } from "../src/game/lanes";
-import { taskRules } from "../src/game/orders";
-import { NewMarks } from "../src/game/marks";
-import { Cards } from "../src/ui/cards";
-import { pickRow } from "../src/ui/cardpick";
-import { LaneRows } from "../src/ui/lanerows";
+import { ruledLaneOf } from "../src/game/town/lanes";
+import { taskRules } from "../src/game/rules/orders";
+import { NewMarks } from "../src/game/lessons/marks";
+import { Cards } from "../src/ui/cards/cards";
+import { pickRow } from "../src/ui/cards/cardpick";
+import { LaneRows } from "../src/ui/town/lanerows";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

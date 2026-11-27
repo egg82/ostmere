@@ -1,5 +1,8 @@
 # Can an LLM draw the field-journal sketches? Verdict: not at the bar
 
+The renders named below (`*.svg`, `*.png`) are not kept in git: `bash render.sh <script>` writes them again, and the
+copies this verdict judged are in the NAS backup share, under `ostmere/sketch-test-outputs/`.
+
 Neither sketch clears the bar for shipping in the game. Judged against the Journal 3 target (quick, nervous field sketches with searching lines, partial hatching, side studies, labels and a crossed-out attempt), both pages have all the ingredients. Neither has the drawing. A reader would spot that a machine drew them, mostly from the anatomy and the sameness of the pen, not from the page furniture.
 
 ## Redo: feathers, heads from the neck, seeded layouts, notes as data

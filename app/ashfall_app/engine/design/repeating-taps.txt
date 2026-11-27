@@ -63,7 +63,7 @@ CHOICES (repeating taps)
   the lane repeats ("the tap does not end by itself") and the next completion once it is bounded; LaneBar.order and
   card are as before. next_event_at moves past her completions, so the page samples her bar for as long as nothing
   changes and asks again only when something does. The client draws the lane row from Card.bar modulo bar_total
-  already (app/client/src/ui/lanerows.ts) and does not read LaneBar.completes_at, so it needs no change.
+  already (app/client/src/ui/town/lanerows.ts) and does not read LaneBar.completes_at, so it needs no change.
 - Lines, rule changes and decision context are unchanged: an eligible card has no tap line, and latches change at the
   same instants.
 - Live saves: a save written with a bounded tap that may repeat decodes as before and repeats from its next resolved

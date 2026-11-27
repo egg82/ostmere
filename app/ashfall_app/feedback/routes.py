@@ -6,13 +6,13 @@ from fastapi import APIRouter, Request, Response
 from pydantic import StringConstraints
 
 from ..accounts.interface import Limited
-from ..api import session
+from ..api.player import session
 from ..api.error_models import ApiError
 from ..api.errors import rate_limited, unavailable
 from ..api.limits import NO_NUL
 from ..api.models import Request as WireRequest
 from ..api.route import ErrorRoute
-from ..api.saves_models import SaveId
+from ..api.player.saves_models import SaveId
 from .service import PgFeedback
 
 TEXT_MAX = 2000
