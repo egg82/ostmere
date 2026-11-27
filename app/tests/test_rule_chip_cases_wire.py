@@ -1,4 +1,4 @@
-"""The shipped cards, chips and stores that client/fixtures/real_chip_cards.json mirrors (client/test/rulechipsreal.test.ts runs
+"""The shipped cards, chips and stores that client/fixtures/real_chip_cards.json mirrors (client/test/game/condition/rulechipsreal.test.ts runs
 the rule editor's simple view on every pair) are the shipped content's: a card or chip the content changes fails here until the
 fixture is regenerated: `shipped_slice` is what it holds, as JSON with two-space indent."""
 import json

@@ -1,7 +1,7 @@
 Wrong implementations of the chunked catch-up (engine advance_logged(..., stop), PgSaves stop_for / Behind / Played.
 catching_up_to, Step.catching_up_to, the page's Session), each applied alone. All must go red. Suites: tests/saves/catching_up/
 test_chunked_advance.py (engine), tests/saves/catching_up/test_catching_up_contract.py (service), tests/test_catching_up_api.py (API),
-client/test/catchup.test.ts (page). "killed" below was observed against a scratch implementation written from the
+client/test/game/page/catchup.test.ts (page). "killed" below was observed against a scratch implementation written from the
 contract text, not against the real one; the same list is to be re-run on the real implementation. Mutants not
 run say so.
 

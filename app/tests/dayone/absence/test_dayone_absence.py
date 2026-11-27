@@ -17,7 +17,7 @@ from tests.rules.play.playthrough import opening, opening_rules
 
 Run = list[absence.Point]
 CASES = Path(__file__).resolve().parents[3] / "client" / "fixtures" / "arrival_cases.json"
-"""The page's rules as cases, shared with client/test/arrivalcases.test.ts: either side drifting fails its own test."""
+"""The page's rules as cases, shared with client/test/game/book/arrivalcases.test.ts: either side drifting fails its own test."""
 
 
 def cases(name: str) -> list[dict[str, Any]]:
