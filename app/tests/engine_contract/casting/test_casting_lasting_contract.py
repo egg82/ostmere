@@ -3,13 +3,13 @@ joining and the cast lane's leaving move nothing, and a rebase keeps a held cast
 Written blind from that part."""
 from pathlib import Path
 
-from ashfall_app.engine import CardId, CardShare, Mix, SaveMix, advance, decide, encode, rebase
-from casting_world import CAST_AT, TOWN, at, completions, held, kills, rules_of, scene
+from ashfall_app.engine import CardId, CardShare, Mix, Rules, Save, SaveMix, advance, decide, encode, rebase
+from casting_world import CAST_AT, TOWN, completions, held, kills, rules_of, scene
 
 SHARES = dict(t_a_chop=1000, t_b_chop=3000, t_c_chop=2000)
 
 
-def shift(s, r, t: int, **by_card: int):
+def shift(s: Save, r: Rules, t: int, **by_card: int) -> Save:
     """The save advanced to t, then the town mix changed to `by_card`."""
     s = advance(s, r, t)
     return decide(s, r, t, SaveMix(Mix(TOWN, tuple(CardShare(CardId(c), bp) for c, bp in by_card.items()))))
@@ -49,10 +49,21 @@ def test_the_cast_lane_leaving_the_town_does_not_move_the_role(tmp_path: Path):
 
 @kills(14)
 def test_a_rebase_of_a_save_that_holds_the_feature_keeps_it_exactly(tmp_path: Path):
+    """Under the same rules, and under rules whose cast is at another instant (so the save is reshaped)."""
     r = rules_of(tmp_path)
     s = advance(scene(r, SHARES), r, 400)
-    kept = rebase(encode(s, r), r)
-    assert held(kept, r) == ["t_b"] and kept.unlocked == s.unlocked
+    for new in (r, rules_of(tmp_path, cast_at=250)):
+        kept = rebase(encode(s, r), new)
+        assert held(kept, new) == ["t_b"] and kept.unlocked == s.unlocked
+
+
+@kills(4, 14)
+def test_an_outcome_replayed_for_a_role_already_cast_changes_nothing(tmp_path: Path):
+    """The rules lose the cast trigger and gain the same cast under another id: the rebase fires it for a save that
+    holds the role, and counts have moved on (b still leads, but holds the role, so a would be next)."""
+    old, new = rules_of(tmp_path), rules_of(tmp_path, cast_id="t_cast_again", cast_at=300)
+    s = advance(scene(old, SHARES), old, 400)
+    assert held(rebase(encode(s, old), new), new) == ["t_b"]
 
 
 @kills(14)

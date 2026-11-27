@@ -5,8 +5,8 @@ written blind from that part alone must go red for each. `@kills(row)` on a test
  1 counts a group      a member's count includes its pooled group's cards.
  2 latest join         a tie through every pattern goes to the latest of the tied (latest declared / joined), not the earliest declared.
  3 total over lanes    a lane's count is the total over all lanes of the card, not its own.
- 4 recasts on counts   the cast is made again when counts change after it, so a later leader takes the role.
- 5 slot before cast    a text holding {<role>} is accepted where it can show before the cast.
+ 4 recasts on counts   an outcome replayed for a role already cast casts again (counts having moved), so a second lane holds it.
+ 5 slot before cast    the line of any outcome may hold {<role>}, not only the outcome that casts it, so it can show before the cast.
  6 patterns summed     the patterns' counts are added together, not read one at a time.
  7 losers revived      a lane out on a pattern is back in for the next.
  8 non-person lane     a pooled lane or a station is a candidate.
@@ -15,7 +15,7 @@ written blind from that part alone must go red for each. `@kills(row)` on a test
 11 second role         a lane holding a cast feature of another role is eligible.
 12 leaving moves it    the cast lane leaving the town takes the feature away or moves the cast.
 13 cast before joins   the cast lands before the same outcome's joins, so a lane joining in it is not eligible.
-14 rebase recasts      a rebase of a save holding the feature casts again, or one landing the outcome casts at the trigger's time.
+14 rebase drops it     a rebase reshaping a save drops a held cast feature as an unknown id.
 15 role check          a role that is a lane id, a slot, or not a word is accepted.
 16 role twice          a role cast by two outcomes, or twice in one, is accepted.
 17 pattern unchecked   a pattern that is no town card's id pattern is accepted.

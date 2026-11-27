@@ -72,7 +72,7 @@ def test_a_pooled_lanes_cards_are_never_counted_for_its_members(tmp_path: Path):
     assert lead_of(tmp_path, by, crew=True) == ["t_a"]
 
 
-@kills(1, 8)
+@kills(1)
 def test_the_pooled_lane_is_never_the_one_cast(tmp_path: Path):
     by = dict(t_p_chop=9000)
     assert counts(tmp_path, by, crew=True)["t_p_chop"] > 0

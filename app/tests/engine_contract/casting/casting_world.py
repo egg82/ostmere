@@ -71,12 +71,13 @@ def _leave(lane: str, at: int) -> str:
 
 
 def chapter(joins: Mapping[str, int] | None = None, casts: str | None = LEAD, leaves: Mapping[str, int] | None = None,
-            cast_at: int = CAST_AT, cast_extra: str = "", extra: str = "", extra_text: str = "", extra_kinds: str = "", later: str = "",
-            crew: bool = False) -> str:
-    """The chapter. `casts` is the body of the cast trigger's `casts = [ ... ]` (None: no cast trigger at all, the control);
-    `cast_extra` more fields of that outcome; `extra` more TOML; `extra_text` more `[text]` lines, `extra_kinds` more `[line_kinds]`, `later` the label t_a's lane takes
-    once something is unlocked (a `later_labels` entry). People join at 0 unless
-    `joins` says when (-1: never, by a trigger of their own); with `crew` t_m joins the crew of t_p (its group's cards, no split of its own)."""
+            cast_at: int = CAST_AT, cast_extra: str = "", extra: str = "", extra_text: str = "", extra_kinds: str = "",
+            later: str = "", crew: bool = False, cast_id: str = "t_cast") -> str:
+    """The chapter. `casts` is the body of the cast trigger's `casts = [ ... ]` (None: no cast trigger at all, the
+    control), the trigger being `cast_id` at `cast_at`; `cast_extra` more fields of that outcome; `extra` more TOML;
+    `extra_text` more `[text]` lines; `extra_kinds` more `[line_kinds]`; `later` the label t_a's lane takes once something
+    is unlocked (a `later_labels` entry). People join at 0 unless `joins` says when (-1: never, by a trigger of their
+    own); with `crew` t_m joins the crew of t_p (its group's cards, no split of its own)."""
     at = {**{p: 0 for p in PEOPLE}, **(joins or {})}
     out = ['version = 1\n\n[[stores]]\nid = "t_heap"\nlabel_key = "t_s_heap"\ncap_items = 20\n\n[[stores]]\nid = "t_load"\nlabel_key = "t_s_load"\ncap_items = 20\n\n']
     out.append(_lane("t_p", "pooled = true\n"))
@@ -91,7 +92,7 @@ def chapter(joins: Mapping[str, int] | None = None, casts: str | None = LEAD, le
         out.append(_leave(p, t))
     line = 'line_keys = ["t_l_cast"], ' if casts is not None and "t_l_cast" in extra_text else ""
     if casts is not None:
-        out.append(f'[[triggers]]\nid = "t_cast"\nwhen = {{ test = "after_time", value = {cast_at} }}\n'
+        out.append(f'[[triggers]]\nid = "{cast_id}"\nwhen = {{ test = "after_time", value = {cast_at} }}\n'
                    f'outcome = {{ {line}casts = [{casts}]{cast_extra} }}\n\n')
     kinds = ""
     if "t_l_cast" in extra_text:

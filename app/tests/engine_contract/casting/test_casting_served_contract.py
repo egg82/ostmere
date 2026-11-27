@@ -2,6 +2,9 @@
 role cast by any outcome in content order, its lanes the role's candidates in declared order with the feature each cast
 unlocks. Written blind from that part."""
 from pathlib import Path
+from typing import Any
+
+from ashfall_app.api.world.content_models import CastInfo
 
 from casting_world import LEAD, PEOPLE, at, feature, game, held, kills, rules_of
 
@@ -10,7 +13,7 @@ LATER = ('[[triggers]]\nid = "t_scout"\nwhen = { test = "after_time", value = 21
          f'outcome = {{ casts = [{SCOUT}] }}\n\n')
 
 
-def infos(tmp_path: Path, **kw):
+def infos(tmp_path: Path, **kw: Any) -> list[CastInfo]:
     return game(tmp_path, **kw).content().cast_infos
 
 
