@@ -2,6 +2,7 @@
 Raises ValueError naming the aim. Imports the schema for types only (checks.py calls this)."""
 from typing import TYPE_CHECKING
 
+from .casts import cast_unlocks
 from .refs import fail, outcomes
 
 if TYPE_CHECKING:
@@ -17,6 +18,7 @@ def check_aims(o: "Opening") -> None:
         fail(f"aim {o.aims[0].id}", "the first aim holds from the start, so it takes no after")
     given = {(u.unlock_kind, u.id) for u in o.start}
     given |= {(u.unlock_kind, u.id) for _, out in outcomes(o) for u in out.unlocks}
+    given |= {unlock for _, unlock in cast_unlocks(o)}
     for a in o.aims[1:]:
         if a.after is None:
             fail(f"aim {a.id}", "only the first aim takes no after")

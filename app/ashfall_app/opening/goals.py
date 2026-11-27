@@ -51,7 +51,8 @@ def goal_defs(o: "Opening", rules: Rules) -> dict[str, GoalDef]:
 def story(out: Outcome) -> bool:
     """A story beat: it unlocks something, someone joins or leaves, or it tells lines with no find or effect on them.
     A find (a store with its lines), an effect, a Camp level are progress the player sees where it lands."""
-    return bool(out.unlocks or out.joins or out.leaves) or (bool(out.lines) and not out.stores and not out.modifiers)
+    moves = out.unlocks or out.joins or out.leaves or out.casts
+    return bool(moves) or (bool(out.lines) and not out.stores and not out.modifiers)
 
 
 def _clocks(o: "Opening") -> frozenset[str]:

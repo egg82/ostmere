@@ -14,6 +14,8 @@ TEXT AND NUMBERS (one rule)
                        filled in every text entry, labels and lines alike; in a line (a key of Content.line_infos) it is
                        lowercased, as the lines' voice writes every word. A slot naming a lane with no name_key fails
                        the opening's checks; a slot's name may hold a digit, the text around it may not
+    {<role>}           a cast role's person's name, as {<lane>}, from the lane whose feature
+                       CastInfo.lanes names view.unlocked holds; left as written while none is (contract/casting.txt, "CASTING")
     {found}            the amount a find found, in whole items (as {n} as an amount), filled in the one line its FindInfo
                        {line_key, store, quantity} (Content.find_infos) names; the opening's checks hold that line to
                        exactly one {found} and no other text to any
