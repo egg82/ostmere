@@ -1,4 +1,4 @@
-// The mix editor's entry rows (ui/editor.ts): one per component, with its share, what it does at that share (from the
+// The mix editor's entry rows (ui/mixes/editor.ts): one per component, with its share, what it does at that share (from the
 // dry run's view, `after`) and a ✕ that drops it.
 import type { Mix, View } from "../../api/types";
 import { UI } from "../../game/text";

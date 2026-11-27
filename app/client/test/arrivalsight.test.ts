@@ -1,5 +1,5 @@
 // A new card that gets a new slot at the end of its group, out of sight on a phone below the mix's cards, is brought
-// into view once (ui/cards.ts): scrolled to the nearest edge, unless a finger is on the page or just left it. A card
+// into view once (ui/cards/cards.ts): scrolled to the nearest edge, unless a finger is on the page or just left it. A card
 // taking a finished card's slot lands under the finger and needs no scroll.
 import { FakeEvent, fakeDocument, install } from "./fake-dom";
 import { testContext } from "./context";

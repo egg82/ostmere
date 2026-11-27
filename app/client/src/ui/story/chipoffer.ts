@@ -1,7 +1,7 @@
 // The hands strip's first-rule lesson entry (docs/design/opening-screen/hands-strip.md, the hands strip, "rule offer (after the end)"):
 // while the rule's lesson may start, a chip's order card shows its rule in the player's words ("While tired → Rest") with
 // Show me, which opens a new rule on the real editor where the lesson walks it. Nothing is ever built from the row: once
-// the lesson is done or skipped no row is drawn and the chip carries a quiet mark instead (ui/story.ts, game/cues.ts
+// the lesson is done or skipped no row is drawn and the chip carries a quiet mark instead (ui/story/story.ts, game/cues.ts
 // hintedChips). Only the first card can be the lesson's subject: one at a time, never a twin. It is drawn the first time
 // its chip is on with no rule answering it, and stays until such a rule is set (not when the chip clears), so the strip
 // moves once, on its arrival.

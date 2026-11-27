@@ -1,4 +1,4 @@
-// Next's Plan and a popped stint in Lately (ui/stintplan.ts, ui/stintlately.ts; contract/, "Goal stints", "Rule runs"):
+// Next's Plan and a popped stint in Lately (ui/next/stintplan.ts, ui/next/stintlately.ts; contract/, "Goal stints", "Rule runs"):
 // Plan lists the saved mixes, then the goals the picked mix would run to, and the pick queues the stint; an ended stint
 // reads as its mix and goal with how long it ran and when its goal landed.
 import { install } from "./fake-dom";

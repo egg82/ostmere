@@ -3,7 +3,7 @@
 // in track order, each with its rank ("2/5"), what one more rank changes as plain numbers before and after
 // (game/prestige.ts), and its own button. The sheet stays open after the click: it says the skill is past its top and
 // offers Undo while undo_open; an undo brings the same menu back to choose again; it also lists the picks, each with Move
-// (ui/movepicks.ts). Every number is the view's.
+// (ui/skills/movepicks.ts). Every number is the view's.
 import type { MenuNode, SkillPrestige, View } from "../../api/types";
 import { changeText, liftedTop } from "../../game/prestige";
 import { UI } from "../../game/text";
@@ -17,7 +17,7 @@ export class PrestigeSheet {
   private readonly body = el("div", "sheet-mixes");
   private view: View | null = null;
   private skill = "";
-  /** The picked node whose rank is being moved (ui/movepicks.ts), null otherwise. */
+  /** The picked node whose rank is being moved (ui/skills/movepicks.ts), null otherwise. */
   private moving: string | null = null;
 
   constructor(private readonly ctx: PartContext) {

@@ -1,4 +1,4 @@
-// The phone frame (docs/design/redesign.md, "Phone frame"; ui/tabs.ts, ui/partseat.ts, ui/asks.ts): on a phone the tabs
+// The phone frame (docs/design/redesign.md, "Phone frame"; ui/tabs.ts, ui/partseat.ts, ui/asks/asks.ts): on a phone the tabs
 // are the bottom bar, Tasks · Town · Rules · Book. Town holds the ledger and skills after the town's own rows; Book opens
 // as a sheet whose Done page holds the finished cards (shown once there are some). On a landscape phone the ledger and
 // skills stay off the tabs, and Book is a view as on a desktop, Done in it. The shown ask is one row whose way in names how many wait and

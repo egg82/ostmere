@@ -82,7 +82,7 @@ sections are in `design/opening-screen/index.md`.
   - **The lessons never thin out.** The rule lesson re-teaches the editor pattern (pick, save, find the row) that the
     mix lesson has just taught, at the same density (Kalyuga).
   - **Nothing records where a lesson was abandoned.** The code keeps only that a lesson ended (`keepLesson(id)` in
-    `ui/lessons.ts`), not which step it was skipped on or where a player waited. That is the very signal Valve
+    `ui/lessons/lessons.ts`), not which step it was skipped on or where a player waited. That is the very signal Valve
     patches from.
 
   "Never repeated" is not contradicted: on-demand help did nothing or harm in Andersen's simpler games, and the repeat

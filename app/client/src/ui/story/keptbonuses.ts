@@ -1,5 +1,5 @@
 // The camp header's one control for the permanent bonuses carried (FeatureInfo.label_key; chips are the passing states,
-// ui/chipnode.ts): a count that opens their list, each bonus with what it does (FeatureInfo.effect_key, figured as an
+// ui/story/chipnode.ts): a count that opens their list, each bonus with what it does (FeatureInfo.effect_key, figured as an
 // answer's cost is). The header keeps what changes; these only ever grow, and every figure
 // that uses them counts them whether or not the list is open.
 import type { Content } from "../../api/types";

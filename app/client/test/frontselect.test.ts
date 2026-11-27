@@ -1,4 +1,4 @@
-// The front page's selection (begin.ts, ui/frontdress.ts) with the real wiring and a spy for the game: the main button
+// The front page's selection (begin.ts, ui/front/frontdress.ts) with the real wiring and a spy for the game: the main button
 // opens the selected game, and while New game is selected it is Begin and starts a new game instead of opening a save.
 // Drawing a game's picture reads its view and never opens the save (api.open stays uncalled until a tap opens one).
 import { FakeEl, fakeDocument, install } from "./fake-dom";

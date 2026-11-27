@@ -9,7 +9,7 @@ export interface StoryMarks {
   /** Unlocked stores a beat waits on, and the stores a clock waiting on them keeps moving on. */
   stores: ReadonlySet<string>;
   skills: ReadonlySet<string>;
-  /** Store goals on a store the player has no line for yet: stated as a line of their own (ui/goals.ts), the cards
+  /** Store goals on a store the player has no line for yet: stated as a line of their own (ui/story/goals.ts), the cards
    * that make it marked. */
   unlined: Goal[];
   /** Card fights a beat waits on the lost tally of: the card is marked and the wait line states the count. */

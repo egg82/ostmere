@@ -1,6 +1,6 @@
 // The rule editors' pickers list cards under the Tasks page's sections, in the page's order, each section by shown name,
 // with the mixes after the cards (docs/decisions/mixes.md, "the rule editors"). The page's own section of a card is read
-// off ui/cardgroups.ts, so a picker that puts a card elsewhere than the page does fails here.
+// off ui/cards/cardgroups.ts, so a picker that puts a card elsewhere than the page does fails here.
 import { fakeDocument, FakeEl, install } from "./fake-dom";
 import { Catalog } from "../src/game/catalog";
 import { testContext } from "./context";

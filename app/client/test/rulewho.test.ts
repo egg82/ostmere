@@ -1,4 +1,4 @@
-// A new rule is offered for a person only while their lane holds a task a rule can do (ui/rulewho.ts, ui/personpage.ts;
+// A new rule is offered for a person only while their lane holds a task a rule can do (ui/rules/rulewho.ts, ui/town/personpage.ts;
 // docs/decisions/principles.md, "Every option offered works as worded"): on Camp a rule does a person's tasks and no mix,
 // and a one-off or a card at its cap is no task a rule can do, so a person with only those would open an empty Do row.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";

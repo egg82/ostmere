@@ -1,6 +1,6 @@
-// The chronicle, newest first, the Book's first page (docs/design/opening-screen/attention.md, "The chronicle"; ui/book.ts): a
+// The chronicle, newest first, the Book's first page (docs/design/opening-screen/attention.md, "The chronicle"; ui/book/book.ts): a
 // row of filters once more than one kind has an entry (game/chronicle.ts routes each kind to one), then the newest
-// return's "Since you left" chapter (ui/chapter.ts) and one stretch per earlier visit, folded to a line of counts (the
+// return's "Since you left" chapter (ui/book/chapter.ts) and one stretch per earlier visit, folded to a line of counts (the
 // newest open when there is no chapter). Lines run oldest first within each. Each line carries its cause beneath it.
 // Under Story, a stretch ends with how many entries it holds of each other filter, and each count opens that filter.
 import { agoWords } from "../../game/ago";

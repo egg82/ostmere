@@ -1,4 +1,4 @@
-// The speaker button and the Settings row (src/ui/soundcontrol.ts): drawn only once a sound is registered, one switch
+// The speaker button and the Settings row (src/ui/settings/soundcontrol.ts): drawn only once a sound is registered, one switch
 // behind both, and the cut taken at once.
 import { FakeEvent, fakeDocument, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";

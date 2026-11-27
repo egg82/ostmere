@@ -1,4 +1,4 @@
-// Plan adds a card too (ui/stintplan.ts, game/queue.ts; docs/design/opening-screen/rules-tab.md, "The Rules tab"): one queue, two
+// Plan adds a card too (ui/next/stintplan.ts, game/queue.ts; docs/design/opening-screen/rules-tab.md, "The Rules tab"): one queue, two
 // ways in. A card's When ready and Plan's pick of the same card send the same entry; Plan lists the cards it could take
 // now, one that waits saying what in its face's words, then the mixes.
 import { install } from "./fake-dom";

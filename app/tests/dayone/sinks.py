@@ -106,7 +106,7 @@ def in_mix(save: Save, trip: Trip) -> bool:
 
 def line_drawn(v: View, line: LedgerLine, kept: frozenset[str] = frozenset()) -> bool:
     """Whether the page draws the store's ledger line at this view: one it has kept (`kept`: a line drawn once stays,
-    kept for the account, client ui/ledger.ts), or one joining now (client game/shown.ts, lineJoins): starved, drawn
+    kept for the account, client ui/ledger/ledger.ts), or one joining now (client game/shown.ts, lineJoins): starved, drawn
     down by something other than the hands' tap, full while fed, or covered. A line joining by an order card's offer
     is not modelled, so this errs toward refusing."""
     if str(line.store) in kept:

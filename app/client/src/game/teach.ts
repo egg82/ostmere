@@ -3,7 +3,7 @@
 // - switching mixes: a build waits on a store nothing at work makes (its blocker has no ready time), and a saved mix
 //   that makes it could run instead (the strip's Mixes list), or else the running mix could take its maker (Edit); the
 //   switch-mix lesson's subject (game/lessons.ts);
-// - what to smoke: a tap of a short need's row lights every maker in play (Need.makers, ui/cardneeds.ts), so the
+// - what to smoke: a tap of a short need's row lights every maker in play (Need.makers, ui/cards/cardneeds.ts), so the
 //   choice between them is in view.
 import type { Card, Mix, View } from "../api/types";
 import type { Catalog } from "./catalog";

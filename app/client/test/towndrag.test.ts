@@ -1,4 +1,4 @@
-// A person's split on their page is set with the hands' share bar (ui/sharebar.ts, ui/personmix.ts): dragging a divider
+// A person's split on their page is set with the hands' share bar (ui/mixes/sharebar.ts, ui/town/personmix.ts): dragging a divider
 // trades share between a person's neighbouring parts, the last one against their idle rest, and the let-go sends the mix
 // at once, with no Save; the old -/+ step buttons are gone.
 import { type FakeEl, install, pointer } from "./fake-dom";

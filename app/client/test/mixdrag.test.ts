@@ -1,4 +1,4 @@
-// The mix editor's forecast (ui/editor.ts, "after" totals) while a divider is being dragged: the numbers follow the
+// The mix editor's forecast (ui/mixes/editor.ts, "after" totals) while a divider is being dragged: the numbers follow the
 // drag and are still there after the finger lifts, and a new view arriving mid-drag does not wipe them.
 import { fakeDocument, FakeEl, install, pointer } from "./fake-dom";
 import { testContext } from "./context";

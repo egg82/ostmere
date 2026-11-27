@@ -69,7 +69,7 @@ const manyDone = (v: View): View => (hash.has("manydone") ? { ...v, completed: f
 const share = (o: Order, i: number): Order => (o.when.kind !== "at_most" || i > 1 ? o : { ...o, when: i === 0
   ? { ...o.when, value: 2500, release: 7500, value_of_cap: true, release_of_cap: true } : { ...o.when, release: 10000, release_of_cap: true } });
 const shared = (v: View): View => (hash.has("shares") ? { ...v, orders: v.orders.map(share) } : v);
-// #goalrows: a store goal on wood (30, an hour off), for the goal pickers (ui/stint.ts) with a store's shares under it.
+// #goalrows: a store goal on wood (30, an hour off), for the goal pickers (ui/next/stint.ts) with a store's shares under it.
 const woodGoal = (v: View): View => (!hash.has("goalrows") ? v : { ...v, goal_rows: [{ kind: "store", store: "wood", skill: null, target: 30 * Q,
   lands_at: v.at + 3600, per_hour: 60_000, limit: null, until: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30 * Q, release: 30 * Q, value_of_cap: false, release_of_cap: false } }] });
 // #nextrow: Next's row moved up above the third rule, a Larder build queued, and that rule waiting behind Next

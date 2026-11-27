@@ -1,4 +1,4 @@
-// Where the lesson's note stands (ui/lessons.ts, place): the geometry, apart from the page.
+// Where the lesson's note stands (ui/lessons/lessons.ts, place): the geometry, apart from the page.
 export interface Spot { left: number; top: number }
 type Box = Pick<DOMRect, "left" | "top" | "right" | "bottom" | "width" | "height">;
 

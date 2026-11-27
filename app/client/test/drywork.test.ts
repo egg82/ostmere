@@ -1,4 +1,4 @@
-// A dry store is an alarm only when the player's own work waits on it (issue 467; game/dryneed.ts, ui/ledger.ts): a card
+// A dry store is an alarm only when the player's own work waits on it (issue 467; game/dryneed.ts, ui/ledger/ledger.ts): a card
 // of the hands' running mix, or one a rule or the queue would run, takes from it. A store only a townsperson's share
 // takes from reads "ran dry" quietly in its place, and is not seated with the red lines at the top of a phone's Tasks.
 import { install } from "./fake-dom";

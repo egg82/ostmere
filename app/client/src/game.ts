@@ -158,7 +158,7 @@ function takeDown(...parts: ({ readonly root: HTMLElement } | null)[]): void {
 /** The Settings sheet, with the speaker button seated on the scene's head when a sound is there to switch. */
 function settingsSheet(catalog: Catalog, screen: Screen, keeps: Keeps): SettingsSheet {
   const sound = soundControl(catalog.text, browserSoundSwitch());
-  if (sound) screen.root.querySelector(".scene-head")?.append(sound.button);   // the head: ui/story.ts, seated by ui/headseat.ts
+  if (sound) screen.root.querySelector(".scene-head")?.append(sound.button);   // the head: ui/story/story.ts, seated by ui/story/headseat.ts
   return new SettingsSheet(catalog.text, new ReminderRow(catalog.text), browserStraight(), skipLessons(keeps, () => screen.redraw()), sound);
 }
 

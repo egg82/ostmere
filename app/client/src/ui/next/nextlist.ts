@@ -1,5 +1,5 @@
 // "Next", the queue in the Rules tab (docs/design/opening-screen/rules-tab.md, "The Rules tab"): what the queue will tap or run
-// (a goal stint, ui/stint.ts), in its order, one line each with Remove, or "under way" for a tap a lane already runs.
+// (a goal stint, ui/next/stint.ts), in its order, one line each with Remove, or "under way" for a tap a lane already runs.
 // Each tap is one run: runs of the same card one after another are one line, "×N", whose Remove and ≡ act on one. Its
 // heading is a row among the hands rules, moved as one (game/nextrow.ts): the rules above it outrank a ready head, the
 // rules under it wait for one (contract/endpoints.txt, "Next's row"). It starts at the bottom, just above "Otherwise".

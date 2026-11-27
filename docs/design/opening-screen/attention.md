@@ -20,12 +20,12 @@ beside them. Nothing the player needs during play sits in a far corner.
   fight go to the chronicle alone. The chronicle is one tap away (the tabs' Book, which opens on it: in the rail on a
   desktop, the bottom bar on a phone), dotted while a line it holds left the strip entirely before the player touched anything after it
   showed. A new line slides in once, about 200 ms (no slide under reduced motion).
-- **The chronicle** (`ui/chroniclesheet.ts`; `decisions.md`, "The chronicle and unwrap, as built") is the Book's first
+- **The chronicle** (`ui/book/chroniclesheet.ts`; `decisions.md`, "The chronicle and unwrap, as built") is the Book's first
   page (The Book, below): a row of filters once two kinds have entries: Story,
   Finds, Levels, Rules, Fights, Town talk, each once it has one, and All. It opens on Story, at the top, newest first.
   It is a diary of visits: one stretch per return after at least half an hour away (`game/chronicle.ts`), each from the
   game second the player left to the one they next left, its lines oldest first. The newest return's stretch is the
-  "Since you left" chapter (`ui/chapter.ts`): under an ember spine, never folded, titled with how long the player was
+  "Since you left" chapter (`ui/book/chapter.ts`): under an ember spine, never folded, titled with how long the player was
   away ("54m"), drawn under Story and All even with no line. Under Story its lines are followed by its figures as
   rows of a dim label and a value (`game/chronwords.ts`, `chapterRows`): stores ("+326 Dead wood · −26 Warmth"), levels
   ("Camp 1 → 2 · Foraging 2 → 4"), rules (one per line, "… came on ×2"), waiting ("1 ask", which closes the

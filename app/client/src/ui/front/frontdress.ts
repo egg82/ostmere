@@ -1,5 +1,5 @@
 // The front page once the content is in: the stage's scene, the panel's words, and, for a browser with games, the list
-// of them (ui/places.ts) with the selected game's camp behind the panel and its line in it. begin.ts says who this
+// of them (ui/front/places.ts) with the selected game's camp behind the panel and its line in it. begin.ts says who this
 // browser is and what opening a game does; this draws.
 import type { GameApi } from "../../api/api";
 import type { Content, SaveInfo } from "../../api/types";

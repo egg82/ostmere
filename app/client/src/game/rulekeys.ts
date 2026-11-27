@@ -1,4 +1,4 @@
-// The text keys of the Rules tab and the condition editor (ui/rules.ts, ui/condition.ts, ui/rulewhy.ts; contract/dry-rules.txt, "Dry rules"),
+// The text keys of the Rules tab and the condition editor (ui/rules/rules.ts, ui/condition/condition.ts, ui/rules/rulewhy.ts; contract/dry-rules.txt, "Dry rules"),
 // merged into `UI`, game/text.ts.
 export const RULE_KEYS = {
   ruleFull: "ui.rule.full", // in the place of the New rule button once the rules hold Content.limits.max_orders
@@ -16,7 +16,7 @@ export const RULE_KEYS = {
   ruleReachesUntilDown: "ui.rule.reaches_until_down", // "{store}{n}{m}": a "reaches" rule, an amount when and a share until
   ruleOfFull: "ui.rule.of_full", // a level's two forms in the editor: a share of the store's cap, or whole items
   ruleExact: "ui.rule.exact",
-  ruleQuickDown: "ui.rule.quick_down", // "{store}{test}{n}{task}{m}": the quick add's sentence for a "below" rule (ui/condquick.ts)
+  ruleQuickDown: "ui.rule.quick_down", // "{store}{test}{n}{task}{m}": the quick add's sentence for a "below" rule (ui/condition/condquick.ts)
   ruleQuickUp: "ui.rule.quick_up", // the same for a "reaches" rule
   ruleFallsTo: "ui.rule.falls_to", // the quick add's two tests, its {test}
   ruleReachesTo: "ui.rule.reaches_to",

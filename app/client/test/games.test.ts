@@ -1,4 +1,4 @@
-// The Games sheet (src/ui/games.ts): the account's games with the one played marked, Open and Delete only on the others,
+// The Games sheet (src/ui/front/games.ts): the account's games with the one played marked, Open and Delete only on the others,
 // Delete asked once more before it goes, a deleted game held with Restore, New game handed to the page and refused at
 // the cap with the content's line; and the tab's game chosen from its address (begin.ts).
 import { FakeEvent, fakeDocument, install, type FakeEl } from "./fake-dom";

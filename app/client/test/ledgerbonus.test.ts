@@ -1,5 +1,5 @@
 // A store that only feeds a bonus (StoreInfo.bonus_bp: its eaters hold a lane speed while they run) is never drawn as
-// an alarm and names no drain; dry, it says the bonus is off, with the bonus as a number (ui/ledger.ts; contract/,
+// an alarm and names no drain; dry, it says the bonus is off, with the bonus as a number (ui/ledger/ledger.ts; contract/,
 // the ledger's white and red). Any other store keeps the red and "ran dry".
 import { install } from "./fake-dom";
 import { testContext } from "./context";

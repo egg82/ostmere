@@ -1,4 +1,4 @@
-// The Town view's groups and a group's page (contract/groups.txt, "GROUPS"; ui/townstrip.ts, ui/personpage.ts, ui/groupmembers.ts):
+// The Town view's groups and a group's page (contract/groups.txt, "GROUPS"; ui/town/townstrip.ts, ui/town/personpage.ts, ui/town/groupmembers.ts):
 // a row per person who runs their own split and one per group with a member; a group of one draws as that person; a group of
 // two takes its label, a count and one bar; a member mid one-off drops the crew; a marked person who names the group is not in it.
 // The views are fixtures/groups.ts's: four marked people, a pooled lane "crew" and its members nan and ole.

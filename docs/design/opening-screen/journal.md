@@ -5,7 +5,7 @@ under them (api `contract/journal.txt`, "JOURNAL"; `decisions.md`, "What you lea
 the type and the sketches). Fits into: Unlocks (entries and notes), Knowledge (the numbers, read off `View.fights`),
 Lessons (its first use), the Book (a page of it). Not a system: one caller, nothing to swap. The page's code is
 `game/journal.ts` (pure: which pages and notes show, what is unread, how a turn runs, the contents, the numbers rows, the
-seeded draws), `ui/journal.ts` (the Book's Journal page) and `ui/journalnav.ts` (its controls for finding a page).
+seeded draws), `ui/book/journal.ts` (the Book's Journal page) and `ui/book/journalnav.ts` (its controls for finding a page).
 
 ```
 phone, portrait                        desktop, and a phone in landscape

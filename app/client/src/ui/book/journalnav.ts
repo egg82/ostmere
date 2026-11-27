@@ -1,6 +1,6 @@
 // The Journal's controls for finding a page (docs/design/opening-screen/journal.md, "The journal"): Prev and Next, which stay in
 // a section and name the section they cross into, the page's place in its section, and the contents button with the
-// list of a section's pages that it swaps for the spread. Held here so the sheet (ui/journal.ts) only says which page.
+// list of a section's pages that it swaps for the spread. Held here so the sheet (ui/book/journal.ts) only says which page.
 import { bookmarksOf, contentsOf, placeOf, SECTIONS, turnOf, type Page, type Reading, type Section } from "../../game/journal";
 import type { Catalog } from "../../game/catalog";
 import { UI } from "../../game/text";

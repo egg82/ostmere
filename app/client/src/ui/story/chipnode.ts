@@ -1,4 +1,4 @@
-// A chip's node on the band (ui/story.ts): its word, beside it the level when the store it watches is one a lost fight
+// A chip's node on the band (ui/story/story.ts): its word, beside it the level when the store it watches is one a lost fight
 // adds to (Catalog.isLevel; "hurt 2"), and under it what it costs (ChipInfo.cost_key). The level follows the store's
 // served level (View.levels) as it heals.
 import type { View } from "../../api/types";
@@ -32,7 +32,7 @@ export function drawLevels(catalog: Catalog, band: HTMLElement, view: View, t: n
   }
 }
 
-/** A node of the band's row, by its key: `chip:<id>`, or `keep:<id>` for the book carried (ui/story.ts). */
+/** A node of the band's row, by its key: `chip:<id>`, or `keep:<id>` for the book carried (ui/story/story.ts). */
 export function bandItem(ctx: PartContext, key: string): HTMLElement {
   const [kind, id = ""] = key.split(":");
   const { catalog } = ctx;

@@ -65,7 +65,7 @@ export interface PartContext {
   lines(): LogLine[];
   /** The save being played: what the log's fight labels are drawn from. */
   saveId(): number;
-  /** The lesson under way (ui/lessons.ts), or null: offers that would crowd it wait. */
+  /** The lesson under way (ui/lessons/lessons.ts), or null: offers that would crowd it wait. */
   lesson(): string | null;
   /** What the lesson under way started on (its trigger's data attributes), or null: another offer like it waits. */
   lessonSubject(): Subject | null;

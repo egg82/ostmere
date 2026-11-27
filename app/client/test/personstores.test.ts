@@ -1,4 +1,4 @@
-// A person's split shows its stores (issue 467; ui/personmix.ts, ui/storetimes.ts), as the hands' mix editor does: under the
+// A person's split shows its stores (issue 467; ui/town/personmix.ts, ui/mixes/storetimes.ts), as the hands' mix editor does: under the
 // bar, each store the person's cards make or cost, with what it holds of its cap, its rate and where it heads. At rest the
 // rate now alone; while a divider is held, now → after from a dry run of the split under the finger. A store none of
 // their cards touch, whose rate holds, is not listed.

@@ -1,5 +1,5 @@
 // A phone's rule editor gets the art's height (src/game.css), and the pinned stage hands the panel its exact height
-// (src/ui/headseat.ts). Both are layout, which fake-dom cannot draw (no ResizeObserver, no media match), so this reads
+// (src/ui/story/headseat.ts). Both are layout, which fake-dom cannot draw (no ResizeObserver, no media match), so this reads
 // the rule and the call; the measured result is in the branch's before/after renders.
 import { readFileSync } from "node:fs";
 import { readGameCss } from "./gamecss";

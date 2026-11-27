@@ -32,7 +32,7 @@ export const UI = {
   jobNewMany: "ui.job.new_many", // "{person}": the same, when one person is offered several jobs in one step
   jobNewTown: "ui.job.new_town", // "{card}": the same, when one job is offered several people
   jobNewAll: "ui.job.new_all", // the same, when several jobs are offered several people in one step
-  goalIn: "ui.goal.in", // "{d}": the time left on the wait line (ui/waitline.ts)
+  goalIn: "ui.goal.in", // "{d}": the time left on the wait line (ui/story/waitline.ts)
   goalWhile: "ui.goal.while", // "{store}": the wait line's clock runs while this store holds some
   goalPaused: "ui.goal.paused", // "{store}": the wait line's clock stopped on this dry store
   goalLost: "ui.goal.lost", // "{card}", "{n}": the wait line's count of a card's fights lost
@@ -146,7 +146,7 @@ export const UI = {
   queueRuns: "ui.queue.runs", // "{card}{n}": a Next row of n runs of a card one after another
   queueRemoveOne: "ui.queue.remove_one", // Remove on a Next row of several runs: it takes one off
   queueHeading: "ui.queue.heading", // the Rules tab's list of what the queue taps next
-  queuePlan: "ui.queue.plan", // Next's "+ Plan": a stint written from the list (ui/stintplan.ts)
+  queuePlan: "ui.queue.plan", // Next's "+ Plan": a stint written from the list (ui/next/stintplan.ts)
   queueFull: "ui.queue.full", // the When ready button's place once the queue holds Content.limits.max_queue
   handsNext: "ui.hands.next", // "{card}": the strip's note of the queue's head
   handsThen: "ui.hands.then", // "{mix}": what the hands go back to, while a tap, a rule's mix or a goal stint holds them

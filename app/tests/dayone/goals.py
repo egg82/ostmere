@@ -210,7 +210,7 @@ def page_forecast(save: Save, rules: Rules) -> Forecast:
 def drawn(save: Save, v: View, rules: Rules) -> list[tuple[str, str, int]]:
     """(kind, id, time) for every time the page draws: card countdowns, a ledger line's "full in" or "empty in", a
     skill row's next level, each the first the forecast lists after now (game/forecast.ts). The Camp store has no ledger
-    line (ui/ledger.ts draws it as the Camp bar, which shows no time), so no fill or emptying of it is drawn."""
+    line (ui/ledger/ledger.ts draws it as the Camp bar, which shows no time), so no fill or emptying of it is drawn."""
     out: list[tuple[str, str, int]] = []
     f = page_forecast(save, rules)
     for c in v.cards:

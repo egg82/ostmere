@@ -53,7 +53,7 @@ const shown = (): string[] => list().filter((n) => !n.classList.contains("held")
   story.tick(0);
   expect("a line shows", shown(), [text("line.1")]);
   const [waiting] = story.appendKeys(["line.2"], true, true);
-  waiting?.classList.add("held");   // as the arrival queue holds it (ui/reveal.ts)
+  waiting?.classList.add("held");   // as the arrival queue holds it (ui/feedback/reveal.ts)
   now = 100;
   story.tick(0);
   expect("a held line leaves the shown one in place", shown(), [text("line.1")]);

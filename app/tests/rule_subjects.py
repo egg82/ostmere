@@ -50,7 +50,7 @@ def _band_fits(content: cm.Content, line: w.LedgerLine) -> bool:
 
 
 def drawable_lines(content: cm.Content, view: w.View) -> set[str]:
-    """The stores whose ledger line the page may draw (ui/ledger.ts): the ledger open, not the Camp's, not hidden, and
+    """The stores whose ledger line the page may draw (ui/ledger/ledger.ts): the ledger open, not the Camp's, not hidden, and
     with room for a band."""
     if not _unlocked(view, "feature", LEDGER_FEATURE):
         return set()

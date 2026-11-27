@@ -1,4 +1,4 @@
-// The Notifications section of Settings (src/ui/reminders.ts): the kinds off at first and on in any combination, the
+// The Notifications section of Settings (src/ui/settings/reminders.ts): the kinds off at first and on in any combination, the
 // subscription made when the first goes on and dropped only when none is on, one window for all of them shown once
 // any kind is on, and what the server holds shown on open.
 import { FakeEvent, fakeDocument, install } from "./fake-dom";

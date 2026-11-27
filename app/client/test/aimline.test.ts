@@ -1,4 +1,4 @@
-// The aim (ui/aim.ts, game/shown.ts currentAim; contract/the-client-may.txt, "The client may"): the aim's line states the text of
+// The aim (ui/story/aim.ts, game/shown.ts currentAim; contract/the-client-may.txt, "The client may"): the aim's line states the text of
 // the last of Content.aim_infos whose `after` view.unlocked holds, from the first view on; a later aim takes its turn
 // in the arrival queue; content with no aims leaves the line empty.
 import { install } from "./fake-dom";

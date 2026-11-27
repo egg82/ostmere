@@ -73,7 +73,7 @@ touching the page around it.
 How the chronicle stands today, moved from its row in `systems.md`. The unwrap cursor lives in the presentation store.
 
 - **One record, one home per kind.** Every line the game writes, each rule's start and let-go and each fight goes to
-  the chronicle, the Book's first page (`app/client/src/ui/chroniclesheet.ts`, in `app/client/src/ui/book.ts`). Each kind
+  the chronicle, the Book's first page (`app/client/src/ui/book/chroniclesheet.ts`, in `app/client/src/ui/book/book.ts`). Each kind
   has one filter (`app/client/src/game/chronicle.ts`, `ROUTES`): story, taps and the body's lines
   under Story; finds, levels, rules and fights each under their own; town talk under its own, ready for the living
   world. The story strip on the main screen holds the Story filter's kinds and nothing else, so a find, a level, a
@@ -81,7 +81,7 @@ How the chronicle stands today, moved from its row in `systems.md`. The unwrap c
   and All last; under Story a stretch ends with its counts of the other filters, each opening its filter. Each filter
   keeps its own newest 200, so a busy kind never pushes out a quiet one's.
 - **Coming back opens a chapter.** The chronicle runs newest first, and the newest return's stretch is "Since you
-  left" (`app/client/src/ui/chapter.ts`): never folded, its lines with their causes, then under Story its figures as
+  left" (`app/client/src/ui/book/chapter.ts`): never folded, its lines with their causes, then under Story its figures as
   rows, each only when it has something: stores gained and lost, levels old → new (the Camp's first), the rules that
   ran, and how many asks wait now, linked to the Asks list (the sheet of all of them when several wait). Figures, not sentences: a death or a fall stays a story line in the
   chapter, never a count in a row. The figures are taken once, as the return lands (`app/client/src/game/chapter.ts`),
@@ -106,7 +106,7 @@ How the chronicle stands today, moved from its row in `systems.md`. The unwrap c
   story line before what it announces.
 - What the rules did lately: the engine's rule changes (`app/ashfall_app/engine/rulelog.py`) kept per rule on the
   save's row (`app/ashfall_app/saves/ruleruns.py`), a goal stint's start and landing among them, with what the save
-  gained in its mix's stores between the two, drawn at the foot of the Rules tab (`app/client/src/ui/rulelately.ts`)
+  gained in its mix's stores between the two, drawn at the foot of the Rules tab (`app/client/src/ui/rules/rulelately.ts`)
   and as the chronicle's Rules entries (`app/client/src/game/rulerows.ts`). The record is a summary, so a start a later
   start replaced before any page saw it is not an entry.
 - Fights since the last view, exactly as many lost as the engine's count, which ones picked by a shuffle-bag draw keyed

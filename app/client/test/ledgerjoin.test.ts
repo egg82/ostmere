@@ -1,4 +1,4 @@
-// Ledger lines join one at a time (ui/ledger.ts, game/shown.ts; docs/design/opening-screen/ledger-and-fights.md, "Ledger and rules"):
+// Ledger lines join one at a time (ui/ledger/ledger.ts, game/shown.ts; docs/design/opening-screen/ledger-and-fights.md, "Ledger and rules"):
 // when the ledger arrives it draws only the lines that ask something (red, starved, or carrying an offer); any other
 // line joins the first time it is falling (not just from the hands' passing tap), full while something feeds it, or
 // covered by a rule. Once drawn a line stays, kept for the account, so a reload keeps it; with nothing kept, the

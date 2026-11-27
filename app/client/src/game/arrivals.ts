@@ -4,7 +4,7 @@
 // ("Coming back"), and a live step's story lines, each shown before what it announces ("One thing at a time"); a
 // second queue at LINK_PACE sets off a live step's cascade link by link (docs/design/redesign.md, "Feel"). It is
 // the first piece of the planned chronicle (docs/systems.md, "Chronicle and unwrap"), whose events will carry times.
-// No DOM here: the payload is whatever the reader shows (ui/reveal.ts).
+// No DOM here: the payload is whatever the reader shows (ui/feedback/reveal.ts).
 import type { Unlock } from "../api/types";
 
 /** The kinds of thing that arrive, in the order they are shown when nothing says when each happened. */
@@ -26,7 +26,7 @@ export interface Pace {
 }
 export const ARRIVAL_PACE: Pace = { minGapMs: MIN_GAP_MS, maxGapMs: MAX_GAP_MS, capMs: CAP_MS };
 
-/** A cascade's links (ui/reveal.ts): one LINK_GAP_MS after another, so the eye can follow, at most MAX_LINKS turns. */
+/** A cascade's links (ui/feedback/reveal.ts): one LINK_GAP_MS after another, so the eye can follow, at most MAX_LINKS turns. */
 export const LINK_GAP_MS = 90;
 export const MAX_LINKS = 6;
 export const LINK_PACE: Pace = { minGapMs: LINK_GAP_MS, maxGapMs: LINK_GAP_MS, capMs: (MAX_LINKS - 1) * LINK_GAP_MS };

@@ -106,7 +106,7 @@ LOSS LINES
     "loss" and "fold". The day's lines and subjects may be empty: loss notes need neither.
   - The page: game/fights.ts lostPool(fight: FightInfo | null): readonly string[], the pool a runner's lost entries
     are worded from (loss_pool when set, else lost_line_keys, [] for null), which the chronicle's poolLine draws
-    from; ui/fightpanel.ts FightPanel(catalog, info), whose .fight-loss node holds the on-loss line.
+    from; ui/ledger/fightpanel.ts FightPanel(catalog, info), whose .fight-loss node holds the on-loss line.
 
   Rejected, and why:
   - An event or timer in the engine per lost fight: an instant per fight (engine design/fights.txt, "FIGHTS", REJECTED).

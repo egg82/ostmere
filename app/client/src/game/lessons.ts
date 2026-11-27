@@ -2,7 +2,7 @@
 // one step at a time. A lesson is data: an id, when it may start, the control whose showing starts it (its trigger,
 // which carries the lesson's subject in its data attributes), and its steps, each naming the control to highlight
 // (a CSS selector, filled from the subject), its line, and whether a touch or a read ends it. The runner
-// (ui/lessons.ts), the highlight and the record (Keeps.lessonKept: done or skipped, never again) are written once,
+// (ui/lessons/lessons.ts), the highlight and the record (Keeps.lessonKept: done or skipped, never again) are written once,
 // so a later lesson is one entry below.
 import type { OrderCard, View } from "../api/types";
 import type { Catalog } from "./catalog";
@@ -99,7 +99,7 @@ export const LESSONS: readonly Lesson[] = [
   },
   {
     id: SECOND_MIX,
-    // a card the player keeps tapping by hand that their running mix could take (game/hints.ts, secondMixCard; ui/cards.ts
+    // a card the player keeps tapping by hand that their running mix could take (game/hints.ts, secondMixCard; ui/cards/cards.ts
     // marks it), once the first rule's lesson is behind: walked on the Mixes list's own New mix with nothing in it, so the
     // tasks and their shares are the player's pick; saving runs nothing, so it ends on how to switch
     may: (view, keeps) => view.mixes.length > 0 && keeps.lessonKept(FIRST_RULE),
@@ -117,7 +117,7 @@ export const LESSONS: readonly Lesson[] = [
   },
   {
     id: CAP_RULE,
-    // the first full store the hands fill (game/caphint.ts; ui/ledger.ts marks its line), once writing rules is open (the
+    // the first full store the hands fill (game/caphint.ts; ui/ledger/ledger.ts marks its line), once writing rules is open (the
     // Rules tab is drawn then, with its New rule): walked
     // on the Rules tab's own New rule with nothing filled in; what the hands do instead is the player's pick, so that step
     // points at the whole row
@@ -139,7 +139,7 @@ export const LESSONS: readonly Lesson[] = [
   SIDE_LESSON,
   {
     id: DRY_STORE,
-    // the first dry store a mix card stopped on that a card in play could refill (game/dryhint.ts; ui/ledger.ts marks its
+    // the first dry store a mix card stopped on that a card in play could refill (game/dryhint.ts; ui/ledger/ledger.ts marks its
     // line), once rules are taught: walked on the running mix's own Edit, adding the maker; a rule is the other answer, in
     // one line. A save with a hands mix that already feeds itself has done what this teaches (dryCue reads that)
     may: (view, keeps) => keeps.lessonKept(FIRST_RULE) || view.orders.some((o) => o.then.kind === "switch_mix"),
@@ -154,7 +154,7 @@ export const LESSONS: readonly Lesson[] = [
   },
   {
     id: TOWN_MIX,
-    // the town's mix, the first time its strip shows (ui/townstrip.ts marks each person's Change): taught on the strip and the person page's bar;
+    // the town's mix, the first time its strip shows (ui/town/townstrip.ts marks each person's Change): taught on the strip and the person page's bar;
     // not while the save's town mix has been split any other way than the game made it (townMixAsMade)
     may: (view) => townMixAsMade(view),
     trigger: `[data-teach="town-change"]`,
@@ -167,7 +167,7 @@ export const LESSONS: readonly Lesson[] = [
   POT_LESSON,
   {
     id: MIX_STOPPED,
-    // the first running mix to grey over a done card (ui/hands.ts marks its Edit): taught on Edit and the editor's own add button
+    // the first running mix to grey over a done card (ui/hands/hands.ts marks its Edit): taught on Edit and the editor's own add button
     // (when the content names the card that takes its place), ✕ and Save; the mark is only on a mix whose ✕ will be live
     may: (view) => view.greyed_mix_ids.length > 0,
     trigger: `[data-teach="mix-stopped"]`,
@@ -180,7 +180,7 @@ export const LESSONS: readonly Lesson[] = [
   },
   {
     id: SWITCH_MIX,
-    // after the end, a build waits on a store nothing at work makes (game/teach.ts, switchCue; ui/hands.ts marks the way to the
+    // after the end, a build waits on a store nothing at work makes (game/teach.ts, switchCue; ui/hands/hands.ts marks the way to the
     // list, or Edit): taught on the real controls, to the saved mix that makes the store, or to adding the card that does
     may: () => true,
     trigger: `[data-switch]`,
@@ -193,7 +193,7 @@ export const LESSONS: readonly Lesson[] = [
   },
   {
     id: CLOCK,
-    // the night's countdown, the moment it first shows (ui/cards.ts marks it): a wait in real time, taught on the clock itself;
+    // the night's countdown, the moment it first shows (ui/cards/cards.ts marks it): a wait in real time, taught on the clock itself;
     // not in a save past its first night (nightsBegun)
     may: (view) => nightsBegun(view) <= 1,
     trigger: `[data-teach="clock"]`,
@@ -201,7 +201,7 @@ export const LESSONS: readonly Lesson[] = [
   },
   {
     id: JOURNAL,
-    // the Book's tab, the moment the journal joins the Book (ui/journal.ts marks it): its own control, so no Show me; then the
+    // the Book's tab, the moment the journal joins the Book (ui/book/journal.ts marks it): its own control, so no Show me; then the
     // Journal's button in the Book, which carries the unread dot; not in a save with a second page written
     may: (view) => view.unlocked.filter((u) => u.category === "entry").length <= 1,
     trigger: `[data-teach="journal"]`,
@@ -230,7 +230,7 @@ export const LESSONS: readonly Lesson[] = [
   },
   {
     id: PRESTIGE,
-    // the Push past control, which shows only once a skill is at its top (ui/skillrow.ts marks it): taught on the control itself,
+    // the Push past control, which shows only once a skill is at its top (ui/skills/skillrow.ts marks it): taught on the control itself,
     // until a skill of this save has been pushed past (its phase beyond the first)
     may: (view) => !view.skills.some((s) => (s.prestige?.phase ?? 1) > 1),
     trigger: `[data-teach="prestige"]`,
@@ -257,7 +257,7 @@ export function guided(id: string, view: View, keeps: Keeps): boolean {
   return lesson !== undefined && mayStart(lesson, view, keeps);
 }
 
-/** A guided rule offer waits off screen while another lesson is under way (`current`, ui/lessons.ts): one lesson at a
+/** A guided rule offer waits off screen while another lesson is under way (`current`, ui/lessons/lessons.ts): one lesson at a
  * time, and its Show me would open its editor with no lesson to walk it. It waits too while the rule's lesson runs on
  * another offer (`subject`, what that lesson started on): one Show me at a time, never a twin, until that one is
  * answered (its lesson ended, or the offer gone). */

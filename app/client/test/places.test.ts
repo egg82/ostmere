@@ -1,4 +1,4 @@
-// The front page's list of games (ui/places.ts): every game newest first and New game last, left out when the account is
+// The front page's list of games (ui/front/places.ts): every game newest first and New game last, left out when the account is
 // full; the newest selected at the start; a tap selects, a second tap on the selected row opens; on a phone a tap opens;
 // a game with no camp level says nothing of one; a view that fails is a plain dark frame, never the empty camp.
 import { FakeEl, fakeDocument, install } from "./fake-dom";

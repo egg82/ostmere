@@ -45,7 +45,7 @@ export class Cards implements Part {
   private readonly rows = new Map<string, Row>();
   private view: View | null = null;
   private story: ReadonlySet<string> = new Set();
-  /** The wait line, first in the deck (ui/waitline.ts). */
+  /** The wait line, first in the deck (ui/story/waitline.ts). */
   private readonly wait: WaitLine;
   private pressed = false;
   /** The first card this update gave a new slot at its group's end. */

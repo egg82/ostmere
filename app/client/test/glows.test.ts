@@ -1,4 +1,4 @@
-// The strip's Edit glow when the running mix greys (ui/fresh.ts, GlowWhile; hands.ts): it appears on greying, waits
+// The strip's Edit glow when the running mix greys (ui/feedback/fresh.ts, GlowWhile; hands.ts): it appears on greying, waits
 // while another control holds the one glow or the reveal holds the button back, and clears when the editor is opened
 // (from Edit or elsewhere) or the mix is no longer grey; a mix that stays grey after that does not glow again.
 import { fixtureStep } from "../fixtures/steps";

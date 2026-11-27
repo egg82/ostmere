@@ -1,6 +1,6 @@
 // The clock's lesson (game/lessons.ts, CLOCK): the night is a wait in real time, taught on its countdown the moment
 // that countdown first shows. The countdown is the foot of a card waiting on a store the player was never shown
-// (ui/cards.ts marks it); before it, nothing starts; a card waiting on a store in view is no clock.
+// (ui/cards/cards.ts marks it); before it, nothing starts; a card waiting on a store in view is no clock.
 import { install } from "./fake-dom";
 import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";

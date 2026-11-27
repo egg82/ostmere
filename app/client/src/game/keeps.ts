@@ -79,7 +79,7 @@ export class Keeps {
     this.keepAccount({ ...this.account, devices_opened: true });
   }
 
-  /** The one mention of reminders has been drawn: it is never drawn again (ui/remindermention.ts). */
+  /** The one mention of reminders has been drawn: it is never drawn again (ui/settings/remindermention.ts). */
   reminderMentioned(): boolean {
     return this.account.reminder_mentioned ?? false;
   }
@@ -187,7 +187,7 @@ export class Keeps {
     return this.save.chapter ?? null;
   }
 
-  /** The note has been read: its page was turned to with the note on it (ui/journal.ts). Kept for the account. */
+  /** The note has been read: its page was turned to with the note on it (ui/book/journal.ts). Kept for the account. */
   journalRead(note: string): boolean {
     return (this.account.journal_read ?? []).includes(note);
   }

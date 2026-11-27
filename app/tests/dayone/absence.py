@@ -85,7 +85,7 @@ def rule_words(when: ConditionEntry, store: str) -> str:
 
 
 def ledger_hold_ms(after: View, store: str) -> int:
-    """A ledger line's reading time as ui/ledger.ts holds it on arrival: its name and rate, and on a red line with an
+    """A ledger line's reading time as ui/ledger/ledger.ts holds it on arrival: its name and rate, and on a red line with an
     order card offered, the offer's sentence (condition, arrow, task) and its two-word button."""
     o, text = opening(), opening().text
     words = [text[next(s.label_key for s in o.stores if s.id == store)], "+0/min"]

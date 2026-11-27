@@ -1,4 +1,4 @@
-// The mix editor's entry rows and its drag-in (ui/editor.ts): what each row shows and does, and how a card joins by tap
+// The mix editor's entry rows and its drag-in (ui/mixes/editor.ts): what each row shows and does, and how a card joins by tap
 // or by being dragged onto the bar. Pins the code before it moves out of editor.ts.
 import { fakeDocument, FakeEl, FakeEvent, install, pointer } from "./fake-dom";
 import { testContext } from "./context";

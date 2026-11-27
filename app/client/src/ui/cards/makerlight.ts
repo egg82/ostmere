@@ -1,4 +1,4 @@
-// A short need's makers, lit on a tap of its row (ui/cardneeds.ts): the ledger lines they feed or draw on
+// A short need's makers, lit on a tap of its row (ui/cards/cardneeds.ts): the ledger lines they feed or draw on
 // (Actions.highlight) and their cards on the panel (each card node's data-card, cards.ts), the first scrolled into view
 // if it is out of it, until the next press anywhere.
 import type { Actions } from "../part";

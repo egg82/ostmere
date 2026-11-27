@@ -1,7 +1,7 @@
 // The panel's tabs: one row of buttons, each with its words from the catalog, that tells `select` which tab a tap chose
 // and shows which one is on: Tasks, the town (named by ui.town.title, as its heading is), Rules and Book. game.css gives the one row three forms: the desktop's left rail
 // (docs/design/redesign.md, "Desktop frame"), a row over the cards on a landscape phone, and a phone's bottom bar with an
-// icon each (ui/partseat.ts seats it). Book (ui/book.ts owns its button) is a view like Town, except on a phone, where
+// icon each (ui/partseat.ts seats it). Book (ui/book/book.ts owns its button) is a view like Town, except on a phone, where
 // it opens a sheet and the tab on stays as it was (Screen decides).
 import type { Catalog } from "../game/catalog";
 import { UI } from "../game/text";

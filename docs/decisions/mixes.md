@@ -218,10 +218,10 @@ one-off as a When ready entry (`engine/design/`, "Installed rule", "Queued one-o
 `app/ashfall_app/engine/installs.py`); a new save has neither, and nothing installs a rule that watches a store.
 Content order cards are never built for the player: they feed the first rule's lesson and the hint dots. Where each
 order stands (on, waiting, outranked, passed over, behind Next) is served on the View as order_states (`engine.plan.order_states`),
-and the Rules tab says why a rule is off under it (`app/client/src/ui/rulewhy.ts`). The page queues one run of a card
+and the Rules tab says why a rule is off under it (`app/client/src/ui/rules/rulewhy.ts`). The page queues one run of a card
 (held until its count is one past the runs planned before it), and a mix until a goal row lands (a goal
 stint: a queued switch runs over the player's mix until it pops, `engine/design/`, "Queue mix";
-`app/client/src/ui/stint.ts`), and lists the queue as Next in the Rules tab (`app/client/src/game/queue.ts`).
+`app/client/src/ui/next/stint.ts`), and lists the queue as Next in the Rules tab (`app/client/src/game/queue.ts`).
 Next is a row among the hands' rules, moved like one (owner: not taking the next planned thing when it is ready feels
 off, but Plan should not jump every rule: a rule that cures tiredness still comes first). Rules above it outrank a ready
 entry; rules under it wait while one has the hands and pick up again after it pops. A ready entry takes the hands when

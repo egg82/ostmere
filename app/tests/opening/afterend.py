@@ -19,7 +19,7 @@ from ashfall_app.opening.order_entries import OrderCardEntry
 from tests.opening.playthrough import Player, opening
 
 END_READ_S = 20
-"""What waits on the end comes this long after it: the end lines' reading time (ui/end.ts, READ_MS)."""
+"""What waits on the end comes this long after it: the end lines' reading time (ui/story/end.ts, READ_MS)."""
 
 
 def rest_card() -> OrderCardEntry:

@@ -80,9 +80,9 @@ looked at, and fine. On every scripted route the ledger's dry-wood offer shows a
 before any rule and minutes before the end, so the rule's lesson starts there (`tests/opening/test_first_rule_offer.py`
 holds it); the rest entry is the rule lesson's second door, for a player who rests by hand. Further mixes and rules are the player's to write; a quiet dot marks the card, chip or line one could answer.
 
-Fits into: the offers it replaces for one first time (the first-mix offer, `ui/chipoffer.ts`, the ledger's inline
-entry), the one glow (`ui/fresh.ts`) as its highlight, and the save's presentation (`Keeps`) as its record. A
-lesson is data in `game/lessons.ts` (an id, when it may start, its trigger, its steps); the runner is `ui/lessons.ts`.
+Fits into: the offers it replaces for one first time (the first-mix offer, `ui/story/chipoffer.ts`, the ledger's inline
+entry), the one glow (`ui/feedback/fresh.ts`) as its highlight, and the save's presentation (`Keeps`) as its record. A
+lesson is data in `game/lessons.ts` (an id, when it may start, its trigger, its steps); the runner is `ui/lessons/lessons.ts`.
 The mix tutorials end with these: building a mix, changing one and finding the list, and the rule
 lesson's hand-back to the mix. A second mix gets its own lesson; after that and the cap rule's, further mixes and the default mix are the player's to make,
 with the quiet dot as the only hint. A later system gets its own lesson, one entry there plus the

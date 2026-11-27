@@ -1,4 +1,4 @@
-// How many of the story strip's newest lines fit whole in its room (ui/story.ts).
+// How many of the story strip's newest lines fit whole in its room (ui/story/story.ts).
 /** A line's top and bottom edge, in the same units as the room's height. */
 export interface Span { top: number; bottom: number }
 

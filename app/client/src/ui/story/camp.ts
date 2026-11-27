@@ -6,8 +6,8 @@
 // once what that names is unlocked (CampLevel.names), so it never names a store or card the player has not met; until
 // then it reads UI.nextUnnamed, so the bar still shows there is a next thing to reach. Warm,
 // because it is the player's; not a control, so it does not look like one. It arrives at its first level, its burst
-// with it, already pointing at the next; a level landing bursts on it (ui/ladder.ts). Under the level, a story beat's
-// store with no line yet (ui/goals.ts): the box shows for one alone before the first level.
+// with it, already pointing at the next; a level landing bursts on it (ui/feedback/ladder.ts). Under the level, a story beat's
+// store with no line yet (ui/story/goals.ts): the box shows for one alone before the first level.
 import type { CampLevel, LedgerLine, View } from "../../api/types";
 import { sample } from "../../game/clock";
 import { UI } from "../../game/text";

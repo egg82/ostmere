@@ -1,4 +1,4 @@
-// A card that takes from no store says so where a cost would be (ui/cardneeds.ts takesNothing; docs/decisions/principles.md):
+// A card that takes from no store says so where a cost would be (ui/cards/cardneeds.ts takesNothing; docs/decisions/principles.md):
 // on its face, while it works too, and on a person's page. Read off CardInfo.takes, never a label.
 import { install } from "./fake-dom";
 import { testContext } from "./context";

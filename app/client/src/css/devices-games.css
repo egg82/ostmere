@@ -1,4 +1,4 @@
-/* "Another device" (ui/devices.ts): a quiet text button at the panel's foot, and its sheet */
+/* "Another device" (ui/devices/devices.ts): a quiet text button at the panel's foot, and its sheet */
 .devices-open { position: relative; }   /* its dot (.new-dot) sits at the label's end */
 .devices-open .new-dot { top: .5rem; left: auto; right: .2rem; }
 .devices-sheet { max-width: min(28rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); overflow-y: auto; }
@@ -24,7 +24,7 @@
 .devices-joinform { display: flex; gap: .5rem; align-items: flex-end; }
 .devices-field { flex: 1; min-width: 0; display: flex; align-items: center; gap: .5rem; }
 .devices-input { flex: 1; min-width: 0; min-height: 2.75rem; }
-/* Games (ui/games.ts): the account's games, the one played marked, the deleted ones held under them */
+/* Games (ui/front/games.ts): the account's games, the one played marked, the deleted ones held under them */
 .games-sheet, .settings-sheet { max-width: min(28rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); overflow-y: auto; }
 .games-sheet .panel-heading, .settings-sheet .panel-heading { margin: 0 0 .2rem; }
 .settings-choice { display: flex; align-items: center; gap: .55rem; min-height: 2.4rem; cursor: pointer; color: var(--ink); }   /* each kept choice on its own row (as .front-keep) */

@@ -1,4 +1,4 @@
-// The Book's Done page (ui/book.ts), offered once something is finished: view.completed, dimmed, each with its cap reached, or marked retired when a newer card replaced it
+// The Book's Done page (ui/book/book.ts), offered once something is finished: view.completed, dimmed, each with its cap reached, or marked retired when a newer card replaced it
 // (a `retired` unlock); a ruled lane's are left out. Plain panels, not buttons: nothing here can be tapped.
 import type { View } from "../../api/types";
 import { panelView } from "../../game/lanes";

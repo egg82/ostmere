@@ -1,4 +1,4 @@
-// The lessons' marks on the hands strip's controls (ui/hands.ts), read as subjects by game/lessons.ts: the switch-mix
+// The lessons' marks on the hands strip's controls (ui/hands/hands.ts), read as subjects by game/lessons.ts: the switch-mix
 // lesson's on Mixes ▾ or Edit, and the stopped-mix lesson's on Edit. Each mark is data attributes, cleared and set anew
 // from each view.
 import type { Mix, View } from "../../api/types";

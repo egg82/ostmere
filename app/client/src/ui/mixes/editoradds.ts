@@ -1,6 +1,6 @@
 // The mix editor's Add control (editor.ts): one "+ Add" that folds the cards that can join, so the editor does not grow
 // with every unlocked card. A tap opens the list in place and a second tap closes it; a pick leaves it open, so several
-// cards can join in a row. A lesson step pointing at a chip inside opens it (the "unfold" event, ui/lessons.ts).
+// cards can join in a row. A lesson step pointing at a chip inside opens it (the "unfold" event, ui/lessons/lessons.ts).
 import type { View, Mix } from "../../api/types";
 import type { Catalog } from "../../game/catalog";
 import type { NewMarks } from "../../game/marks";

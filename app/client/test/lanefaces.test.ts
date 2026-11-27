@@ -1,4 +1,4 @@
-// A ruled lane's tasks wear the card face (ui/cardpick.ts, from cardrow.ts and cardneeds.ts) in its editor, Plan names a
+// A ruled lane's tasks wear the card face (ui/cards/cardpick.ts, from cardrow.ts and cardneeds.ts) in its editor, Plan names a
 // lane task's lane, and a lane's Town row carries a quiet dot while a task of it has not been in front of the player.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { TAUGHT, testContext } from "./context";

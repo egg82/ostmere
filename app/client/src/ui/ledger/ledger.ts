@@ -1,5 +1,5 @@
 // The ledger (docs/design/redesign.md, "Ledger"): grouped, each group's label drawn while it has a row: the player's
-// stores (Yours), then the threats at them (ui/threats.ts). A line per store the view lists, the Camp store excepted
+// stores (Yours), then the threats at them (ui/ledger/threats.ts). A line per store the view lists, the Camp store excepted
 // (it is the Camp bar), each from when it first means something (game/shown.ts): one that asks something (red, starved
 // or carrying an offer), or is falling, full while fed, or covered by a rule. Once drawn a line stays, kept for the
 // account (game/keeps.ts). A line is white unless it is falling with nothing covering it (game/cover.ts: a rule drawing
@@ -9,7 +9,7 @@
 // the red line carries a quiet mark (until touched) and the player writes the rule in the Rules tab. A card for a
 // rising line (cues.risingCard: a side lane's task or a hands build) is marked once the line is full or rising, and
 // kept until a rule is set. Nothing stands under a line once a rule watches its store: the row carries that rule's mark
-// and taps through to it (ui/linerule.ts), A full store that
+// and taps through to it (ui/ledger/linerule.ts), A full store that
 // something still feeds says so and that the extra is lost, never in an alarm's colour; a red line with no order card
 // to answer it names what draws on it most, with Edit mix. The first full store the hands fill (game/caphint.ts)
 // carries the quiet mark and starts the cap rule's lesson, once writing rules is open; nothing is built from it. The

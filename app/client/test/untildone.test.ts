@@ -1,4 +1,4 @@
-// Until done (contract/until-done.txt, "UNTIL DONE"; game/untildone.ts, ui/whenready.ts): a staged card a tap started can be run
+// Until done (contract/until-done.txt, "UNTIL DONE"; game/untildone.ts, ui/cards/whenready.ts): a staged card a tap started can be run
 // on to its cap from its own face while it runs. On the hands it becomes the queue entry it would have been had it
 // been queued first (tap until its cap, at Next's front, or a running When ready entry held on to the cap); on a
 // person's lane an always rule where a new lane rule goes. Not offered on the last stage, on a rule's tap, or idle.

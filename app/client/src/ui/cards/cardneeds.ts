@@ -2,7 +2,7 @@
 // need, then each step it waits on. Needs read in the card's quiet tone; a short one marks only the number it is short
 // of while it holds the card back (red is the ledger's alarm, not a need). A store need with a gate (Need.gate: what
 // the trigger that grants the store waits on) draws the gate in its place, as a skill-level or step row, and never names
-// the store; a tap of a short store need's row lights its makers (Need.makers, ui/makerlight.ts) and does not tap the
+// the store; a tap of a short store need's row lights its makers (Need.makers, ui/cards/makerlight.ts) and does not tap the
 // card. A spent one (Need.spent: nothing in play makes it and nothing is left to grant it) says so on its row.
 // A need on a clock with a part of the day (StoreInfo.clock) draws when it opens until it is met ("Opens after dark",
 // game/timewords.ts); a tally (StoreInfo.tally) draws as have/need though it has no ledger line; a need on any other store the player has

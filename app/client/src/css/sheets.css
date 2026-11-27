@@ -10,7 +10,7 @@
 .sheet:not(:has(> .panel-heading, > .book)) { padding-top: 1.1rem; }
 .book-sheet { max-width: min(40rem, calc(100vw - 2rem)); }
 .book-sheet .book-head { position: sticky; top: 0; z-index: 1; background: var(--raise); padding-top: .6rem; }
-/* the Journal, a page of the Book (ui/journal.ts; docs/design/opening-screen/journal.md, "The journal"). The page is parchment
+/* the Journal, a page of the Book (ui/book/journal.ts; docs/design/opening-screen/journal.md, "The journal"). The page is parchment
    written in the hand's ink, whatever the browser prefers: the game is one dark theme. Phone: one portrait page, the
    sketch, the notes and the numbers top to bottom, the Book's sheet full height while it is open. Desktop: an open spread
    of two 600:780 pages, the sketch alone on the left, the notes then the numbers on the right. */
@@ -33,7 +33,7 @@
 .journal-numbers { display: flex; flex-direction: column; gap: .6rem; margin-top: .4rem; padding-top: .6rem; border-top: 1px solid var(--hand-pencil); font: 400 1rem/1.3 "Alegreya Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; color: var(--hand-ink); background: var(--parchment); }
 .journal-notes:focus-visible { outline: 2px solid var(--hand-pencil); outline-offset: -2px; }   /* a scroller a keyboard reaches: its ring is the pencil's, not the browser's white */
 .journal-numbers[hidden] { display: none; }
-/* the page's marks (ui/pagemarks.ts; docs/design/journal.md, "Marks on the page"): over the page's words but placed
+/* the page's marks (ui/book/pagemarks.ts; docs/design/journal.md, "Marks on the page"): over the page's words but placed
    clear of them, multiplied into the parchment like a stain; the phone's page is the spread, the desktop's the right page */
 .journal-spread { position: relative; overflow: hidden; }
 .journal-marks { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
@@ -45,7 +45,7 @@
 .journal-bookmarks .tab { flex: none; white-space: nowrap; }
 .journal-place { align-self: center; min-width: 3.2ch; text-align: center; font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
 .journal-sheet .sheet-actions .quiet { white-space: nowrap; padding-inline: .7rem; }
-/* a section's contents (ui/journal.ts): its pages as rows in the parchment, a tap turns to one */
+/* a section's contents (ui/book/journal.ts): its pages as rows in the parchment, a tap turns to one */
 .journal-contents { box-sizing: border-box; width: min(36rem, calc(100vw - 3rem)); max-height: calc(100dvh - 14rem); overflow-y: auto; overscroll-behavior: contain; margin: 0 auto; padding: .4rem .6rem; background: var(--parchment); color: var(--hand-ink); }
 .journal-contents[hidden] { display: none; }
 .journal-entry { display: flex; align-items: center; gap: .8rem; position: relative; width: 100%; min-height: 2.75rem; padding: .3rem .4rem; text-align: left; background: var(--parchment); border: 0; box-shadow: inset 0 -1px 0 rgba(43, 36, 28, .25); color: var(--hand-ink); cursor: pointer; }

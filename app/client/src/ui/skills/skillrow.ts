@@ -1,4 +1,4 @@
-// One skill's row (ui/skills.ts lists them): its label, level, an XP bar between the level's own bounds (level_xp to
+// One skill's row (ui/skills/skills.ts lists them): its label, level, an XP bar between the level's own bounds (level_xp to
 // next_level_xp, sampled; full at the last level), and what the next level pays, shown before it is reached
 // (SkillInfo.levels, the first entry above the level; a story unlock's words are the content's own), with the time to
 // it when the view's forecast has one (game/forecast.ts: so a change of mix shows at once in the time, and the time
@@ -7,7 +7,7 @@
 // Under prestige (SkillBar.prestige; docs/design/prestige-phases.md, "What the page shows") the level is the one counted
 // across phases (level_counted), which never falls at a click, and SkillInfo.levels count the same way. The foot says "tops out in" when
 // the forecast has the top; at the top the bar is full and marked, the foot counts the levels waiting and holds the
-// Push past control, which opens the sheet (ui/prestigesheet.ts) and is where its lesson starts, so the note shows
+// Push past control, which opens the sheet (ui/skills/prestigesheet.ts) and is where its lesson starts, so the note shows
 // nowhere earlier. A mastered skill at its top reads as mastered, with no control. While the last pick can be taken
 // back the foot holds Undo; while a pick is owed, Choose; with picks or parked ranks to show, Picks.
 import type { SkillBar, SkillPrestige, View } from "../../api/types";

@@ -1,4 +1,4 @@
-// Where the lesson's note stands (ui/lessons.ts, place): below its control, else beside it, else above it, and never
+// Where the lesson's note stands (ui/lessons/lessons.ts, place): below its control, else beside it, else above it, and never
 // over a sibling of the control, the panel's tabs or the next step's control.
 import { fakeDocument, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";

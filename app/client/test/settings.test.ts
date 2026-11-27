@@ -1,4 +1,4 @@
-// The Settings sheet (src/ui/settings.ts): this device's reminders live in it and not in "Another device", and the
+// The Settings sheet (src/ui/settings/settings.ts): this device's reminders live in it and not in "Another device", and the
 // reminders mention opens it with the row focused.
 import { FakeEvent, fakeDocument, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";

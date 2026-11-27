@@ -1,5 +1,5 @@
 // No text sits inside a bar (docs/design/redesign.md, "Phone frame"), the Mixes list's small ones included: each row's
-// segments are hue alone, and a legend beneath names each task with its share, in the bar's order (ui/selector.ts).
+// segments are hue alone, and a legend beneath names each task with its share, in the bar's order (ui/mixes/selector.ts).
 import { fakeDocument, install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";

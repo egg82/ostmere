@@ -1,4 +1,4 @@
-// One ask, as the Asks list draws it (ui/asks.ts; contract/offers.txt, "OFFERS"; docs/design/redesign.md, "Asks"): who
+// One ask, as the Asks list draws it (ui/asks/asks.ts; contract/offers.txt, "OFFERS"; docs/design/redesign.md, "Asks"): who
 // asks, by face and name; the question; "↳" what led to it; one button per answer with its label, its cost text and
 // each figure it moves, before → after (game/asks.ts); then the texts the offer has where it differs from the usual
 // (waiting, expiry, permanence). Anything the content leaves out is not drawn. A tap sends answer_offer.

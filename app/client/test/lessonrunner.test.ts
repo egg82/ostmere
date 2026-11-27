@@ -1,4 +1,4 @@
-// The lesson runner's rules for every lesson's steps (ui/lessons.ts): when a step starts and its control, or the rows it
+// The lesson runner's rules for every lesson's steps (ui/lessons/lessons.ts): when a step starts and its control, or the rows it
 // keeps clear, is not what the page shows at that spot (off the window, under a pinned strip), the control is scrolled to
 // the middle, once (at once under reduced motion); a read step never holds back a tap on a later step's
 // control; and a step's `clear` keeps the note off what its line refers to (the cap rule's reaches step: the levels).

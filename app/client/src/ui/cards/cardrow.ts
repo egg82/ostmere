@@ -33,7 +33,7 @@ export interface Row {
   bonus: Bonus | null;
   /** The upside line of a card that feeds no side, else null. */
   upside: HTMLElement | null;
-  /** A rule started its running tap (ui/fires.ts), as of the last restyle. */
+  /** A rule started its running tap (ui/cards/fires.ts), as of the last restyle. */
   byOrder?: boolean;
   /** performance.now() until which a level shows on the card (cardlevel.ts); undefined: none. */
   levelUntil?: number;

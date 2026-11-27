@@ -1,6 +1,6 @@
 // The Asks list (contract/offers.txt, "OFFERS"; docs/design/redesign.md, "Asks"): every open offer, and their one home on the
 // page. It takes no room until an ask is open. Under its heading the first open ask in content order is drawn
-// (ui/asknode.ts) in a slot of fixed height, so a season bringing several moves nothing under it, and "{n} more"
+// (ui/asks/asknode.ts) in a slot of fixed height, so a season bringing several moves nothing under it, and "{n} more"
 // opens the whole list in a sheet. On a phone the slot is one row (who, the question, how many wait), and a tap
 // anywhere on it opens the sheet, so a season's asks never push the cards from under the thumb. A new ask arrives through the arrival queue after the last of its lines in this
 // Step, or at once when the Step holds none of them (it showed before the page's last view); one that arrives already

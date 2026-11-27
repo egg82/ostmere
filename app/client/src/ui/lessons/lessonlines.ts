@@ -1,4 +1,4 @@
-// A ledger line as a lesson's trigger (ui/ledger.ts): the cap rule's (game/caphint.ts) and the dry store's
+// A ledger line as a lesson's trigger (ui/ledger/ledger.ts): the cap rule's (game/caphint.ts) and the dry store's
 // (game/dryhint.ts) lessons start from the line that is their subject, its data attributes naming what it is about.
 import type { DryCue } from "../../game/dryhint";
 

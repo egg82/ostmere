@@ -151,10 +151,10 @@ triggers are the engine firing it. The end is one too, with its time kept (`Save
 end"). What the next beat waits on is a query over them: the pending triggers with when each lands
 (`app/ashfall_app/engine/pending.py`), read against the content's goals (`app/ashfall_app/opening/goals.py`) into the
 view's goals (`app/ashfall_app/api/goals.py`), which the page marks (`app/client/src/game/story.ts`, the wait line
-`app/client/src/ui/waitline.ts`). Each store and level goal, and each skill's next level, also gets when it lands at
+`app/client/src/ui/story/waitline.ts`). Each store and level goal, and each skill's next level, also gets when it lands at
 the rates as set, a tap of the hands set aside, and the dry store that binds it (`app/ashfall_app/api/goalrows.py`,
 `app/ashfall_app/api/setrates.py`), which the mix and condition editors list for an edit
-(`app/client/src/ui/goaltimes.ts`). "The player set a rule on a ruled lane" is one: the LaneRules subject, fired at
+(`app/client/src/ui/mixes/goaltimes.ts`). "The player set a rule on a ruled lane" is one: the LaneRules subject, fired at
 the decision that sets it (`engine/design/`, "Lane rules"). A later prestige phase's level pays are one table per
 skill, keyed by the level within the phase, which the merge expands into ordinary triggers
 (`app/ashfall_app/opening/phase_pays.py`).

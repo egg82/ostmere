@@ -1,4 +1,4 @@
-// The Rules page's Mine | Camp switch (docs/decisions/mixes.md, "Mine and Camp"; ui/ruleswitch.ts, game/ruleside.ts):
+// The Rules page's Mine | Camp switch (docs/decisions/mixes.md, "Mine and Camp"; ui/rules/ruleswitch.ts, game/ruleside.ts):
 // a rule is on the side of the lane its action runs on, the switch shows only once a second person has hands and keeps
 // its side per device, a new rule offers its side's tasks alone, and a rule the player saves lands on its own side.
 // The views are the engine's own town (fixtures/town.ts) over the day-two page.

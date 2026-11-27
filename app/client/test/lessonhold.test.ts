@@ -1,4 +1,4 @@
-// One lesson at a time, and none held for ever (ui/lessons.ts; docs/design/opening-screen/lessons.md, "Lessons"): a lesson
+// One lesson at a time, and none held for ever (ui/lessons/lessons.ts; docs/design/opening-screen/lessons.md, "Lessons"): a lesson
 // whose trigger has gone and whose next step's control stays off screen is abandoned (nothing kept) after HELD_MS, so
 // the next lesson can run and this one starts over; while one lesson runs, another's guided offer (the ledger's, the strip's, the mix offer
 // row's) waits off screen, so its Show me never opens an editor with no lesson to walk it.

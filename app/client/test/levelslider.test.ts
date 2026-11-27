@@ -1,4 +1,4 @@
-// A rule's level is set with a slider (ui/condlevels.ts on ui/valueslider.ts): dragging or touching the track sets the
+// A rule's level is set with a slider (ui/condition/condlevels.ts on ui/valueslider.ts): dragging or touching the track sets the
 // level live. A share snaps to five points and reads as its word or percentage; an exact number moves by one up to the
 // store's maximum. The arrow keys step it. Each level has its own slider, and a level the rule cannot take is not set.
 import { FakeEl, FakeEvent, fakeDocument, install, pointer } from "./fake-dom";

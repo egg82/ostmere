@@ -1,7 +1,7 @@
 // The chronicle's routing and grouping (docs/decisions.md, "The chronicle and unwrap, as built"): every kind of entry
 // has one filter, the story strip shows the story filter's kinds and nothing else, and the entries fall into stretches,
 // one per return after a long time away (Visit, kept by the page, game/session.ts), each running from the second the
-// player left to the second they next left. Pure; the sheet (ui/chroniclesheet.ts) draws them.
+// player left to the second they next left. Pure; the sheet (ui/book/chroniclesheet.ts) draws them.
 import type { Content, Visit } from "../api/types";
 
 /** How a content line is set (opening/line_kinds.py), authored beside its text. */

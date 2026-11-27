@@ -1,4 +1,4 @@
-// The name a new mix opens with (ui/editor.ts showNew): the first mix is ui.mix.default ("Main"), as the first-mix
+// The name a new mix opens with (ui/mixes/editor.ts showNew): the first mix is ui.mix.default ("Main"), as the first-mix
 // offer's one tap names it, whether it comes through the guided lesson or the Mixes list; later ones are ui.mix.new.
 import { install } from "./fake-dom";
 import { testContext } from "./context";

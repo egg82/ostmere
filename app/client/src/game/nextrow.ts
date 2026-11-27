@@ -52,7 +52,7 @@ export function reorderedItems(items: readonly number[], item: number, to: numbe
   return moved;
 }
 
-/** Where each drawn row comes from once the hands' items are `moved` (ui/ruleslide.ts): a rule's new slot in `group` ->
+/** Where each drawn row comes from once the hands' items are `moved` (ui/rules/ruleslide.ts): a rule's new slot in `group` ->
  * the slot it had (its index now), and NEXT -> NEXT. */
 export function itemShift(group: readonly number[], moved: readonly number[]): Map<number, number> {
   const shift = new Map<number, number>([[NEXT, NEXT]]);

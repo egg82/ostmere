@@ -16,13 +16,13 @@
 .scene-box.no-art .scene-art { visibility: hidden; }
 .scene-art { display: block; }
 
-/* the head: the Camp bar, chips and Chronicle in one row just above the art, in its stage (ui/headseat.ts) */
+/* the head: the Camp bar, chips and Chronicle in one row just above the art, in its stage (ui/story/headseat.ts) */
 .scene-head { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .6rem; padding: .4rem .75rem; line-height: 1.35; text-align: left; }
-/* the aim: what this stretch is for, in the story's voice; one line, its room there from the first screen (ui/aim.ts,
-   ui/headseat.ts): above the art, under the head's row on a phone */
+/* the aim: what this stretch is for, in the story's voice; one line, its room there from the first screen (ui/story/aim.ts,
+   ui/story/headseat.ts): above the art, under the head's row on a phone */
 .aim { flex: none; box-sizing: content-box; height: 1.3em; margin: 0; padding: 0 .75rem .35rem; font-size: var(--t-meta); font-style: italic; line-height: 1.3; color: var(--ink-hi); text-shadow: 0 1px 3px #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .aim.aim-new { animation: arrive .9s ease-out; }
-.sound-button { flex: none; min-width: 2.4rem; min-height: 2.4rem; padding: 0; cursor: pointer; font-size: 1.2rem; line-height: 1; background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink) !important; }   /* the speaker (ui/soundcontrol.ts), the head's last item; struck through while sound is off */
+.sound-button { flex: none; min-width: 2.4rem; min-height: 2.4rem; padding: 0; cursor: pointer; font-size: 1.2rem; line-height: 1; background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink) !important; }   /* the speaker (ui/settings/soundcontrol.ts), the head's last item; struck through while sound is off */
 .sound-button:hover, .sound-button:focus-visible { color: var(--ink-hi) !important; background: var(--press); }
 .sound-button.off { color: var(--ink-dim) !important; text-decoration: line-through; }
 .chips { display: flex; flex-wrap: wrap; gap: .9rem; margin-left: auto; }   /* after the Camp bar, against the Chronicle: a chip coming or going never moves the bar's left edge */
@@ -35,7 +35,7 @@
 .chip-cost { display: block; line-height: 1.15; color: var(--ink); }   /* what the chip costs, under its word */
 .chip.keep { position: relative; }   /* a thing carried (FeatureInfo.label_key), with its dot */
 .chip.keep::before { content: "▤"; }
-.kept { position: relative; }   /* the permanent bonuses behind one count (ui/keptbonuses.ts), its dot (new-dot) at the count's end */
+.kept { position: relative; }   /* the permanent bonuses behind one count (ui/story/keptbonuses.ts), its dot (new-dot) at the count's end */
 .kept-button { padding: .1rem 0; font: inherit; font-size: var(--t-meta); color: var(--ink); text-shadow: 0 1px 3px #000; background: transparent; border: 0; text-decoration: underline 1px var(--ink-dim); text-underline-offset: .25em; cursor: pointer; }
 .kept-button::before { content: "▤"; margin-right: .3em; display: inline-block; text-decoration: none; }
 .kept-button:hover, .kept-button:focus-visible, .kept-button[aria-expanded="true"] { color: var(--ink-hi); text-decoration-color: var(--ink-hi); }
@@ -54,21 +54,21 @@
 .camp-next::before { content: "▸ "; }
 .camp-track { display: block; height: 3px; margin-top: .35rem; background: var(--track); overflow: hidden; }
 .camp-fill { display: block; height: 100%; transform-origin: left; transform: scaleX(0); background: var(--ember); }
-.goal { margin-top: .3rem; }   /* a story beat's store with no line yet, under the Camp level (ui/goals.ts) */
+.goal { margin-top: .3rem; }   /* a story beat's store with no line yet, under the Camp level (ui/story/goals.ts) */
 .camp-head:not([hidden]) ~ .goals .goal:first-child { margin-top: .4rem; }
 .goal-what { white-space: nowrap; }
 .goal .camp-track { height: 2px; }
 /* The story mark (game/story.ts): the Camp bar's next marker, before the name of what a story beat waits on. */
 .card.story .card-title::before, .line.story .line-name::before, .skill.story .skill-name::before { content: "▸ " / ""; color: var(--ink-dim); }
-.wait-line { margin: 0; font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; }   /* the wait (ui/waitline.ts): plain text, no card */
+.wait-line { margin: 0; font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; }   /* the wait (ui/story/waitline.ts): plain text, no card */
 
-/* the story strip (ui/story.ts), off the art in the panel's colours: the newest lines that fit, whole. Every line the
+/* the story strip (ui/story/story.ts), off the art in the panel's colours: the newest lines that fit, whole. Every line the
    content can write sits unseen in the strip's one grid cell with them (.strip-room), so the cell is the tallest line's
-   height at this width; ui/story.ts keeps as many of the newest lines as fit in it, so none is cut and none arriving
+   height at this width; ui/story/story.ts keeps as many of the newest lines as fit in it, so none is cut and none arriving
    moves anything. */
 .strip { display: grid; padding: .5rem .75rem .6rem; background: var(--bg); color: var(--ink-hi); border-top: 1px solid var(--rule); }
 .strip > .lines, .strip > .strip-room { grid-area: 1 / 1; min-width: 0; margin: 0; padding: 0; font-size: var(--t-story); font-style: italic; line-height: 1.35; }
-.strip-room { display: grid; visibility: hidden; align-self: start; }   /* its own height, not the cell's: ui/story.ts measures it */
+.strip-room { display: grid; visibility: hidden; align-self: start; }   /* its own height, not the cell's: ui/story/story.ts measures it */
 .strip-room > span { grid-area: 1 / 1; }
 .lines { align-self: start; list-style: none; --line-from-x: 0; --line-from-y: .4rem; }
 /* the newest lines that have shown, oldest first, the older dimmer; one waiting its turn in the arrival queue takes no room */

@@ -1,13 +1,13 @@
 // The story at the seam between the art and the controls (docs/design/opening-screen/attention.md, "One column of attention").
 // The head, at the art's top: the Camp bar, the chips (an icon from the tone, the word, and under it what the chip
 // costs; each once its cure is on screen, game/shown.ts), the permanent bonuses the player carries (a feature with a
-// label) behind one count (ui/keptbonuses.ts), and the book, dotted when it arrives, until the journal's first entry moves it into the Book. The Book (ui/book.ts) holds the chronicle and
+// label) behind one count (ui/story/keptbonuses.ts), and the book, dotted when it arrives, until the journal's first entry moves it into the Book. The Book (ui/book/book.ts) holds the chronicle and
 // the journal; its tab is dotted when a line left the strip before the player touched anything after it showed. The story strip, off the art: the newest story lines that fit (game/chronicle.ts, inStrip), whole and oldest
 // first, the older dimmer, in room kept for the tallest story line the content can write (Content.line_infos, laid out
-// unseen in the strip's one cell; ui/stripfit.ts counts how many fit, at least the newest). The Feedback button
+// unseen in the strip's one cell; ui/story/stripfit.ts counts how many fit, at least the newest). The Feedback button
 // (feedback.ts) opens the tester's sheet from the panel's foot. Every line, every rule's start and let-go and every fight
-// goes to the chronicle (ui/chroniclesheet.ts) with its game second, kind and cause. Lines arrive in (at, seq) order with
-// each Step; their text is the content's. The aim (ui/aim.ts) is the story's too. ui/headseat.ts seats the head, the
+// goes to the chronicle (ui/book/chroniclesheet.ts) with its game second, kind and cause. Lines arrive in (at, seq) order with
+// each Step; their text is the content's. The aim (ui/story/aim.ts) is the story's too. ui/story/headseat.ts seats the head, the
 // aim and the strip.
 import type { JournalDay, LogLine, Mention, View } from "../../api/types";
 import { DayMentions } from "../../game/people";
@@ -40,9 +40,9 @@ const TOUCHES = ["pointerdown", "keydown"] as const;
 const KEEP = 200;
 
 export class Story implements Part {
-  /** The story strip: the newest lines that fit its room, whole (ui/headseat.ts seats it under the art). */
+  /** The story strip: the newest lines that fit its room, whole (ui/story/headseat.ts seats it under the art). */
   readonly root = el("section", "strip");
-  /** The Camp bar and chips: on the art's top, or just above the art on a phone (ui/headseat.ts seats it). */
+  /** The Camp bar and chips: on the art's top, or just above the art on a phone (ui/story/headseat.ts seats it). */
   readonly head = el("div", "scene-head");
   private readonly chips = el("div", "chips");
   private readonly kept: KeptBonuses;
@@ -72,7 +72,7 @@ export class Story implements Part {
   readonly keys: Past[] = [];
   private readonly mentions = new DayMentions();
 
-  /** `showAsks`: what the chronicle's count of waiting asks opens (ui/asks.ts); `leaveBook`: what leaving the Book's view
+  /** `showAsks`: what the chronicle's count of waiting asks opens (ui/asks/asks.ts); `leaveBook`: what leaving the Book's view
    * for them shows (the Tasks tab). */
   constructor(private readonly ctx: PartContext, showAsks: () => void = () => undefined, leaveBook: () => void = () => undefined) {
     this.camp = new CampBar(ctx);

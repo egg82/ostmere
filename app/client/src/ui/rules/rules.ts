@@ -126,7 +126,7 @@ export class RulesTab implements Part {
     if (!this.drag.active && this.view && this.mode.kind !== "edit" && this.shape(this.view) !== this.drawn) this.draw();
   }
 
-  /** The rows moved with `index` (ui/handsitems.ts). */
+  /** The rows moved with `index` (ui/rules/handsitems.ts). */
   private itemsOf(view: View, index: number): number[] {
     return itemsOf(view, index, view.queue.length > 0 || this.plan.rows(view).length > 0);
   }

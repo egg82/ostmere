@@ -1,6 +1,6 @@
 // A job offered to people nobody has set to it (docs/decisions/people.md, "A new job is said once"): the cards a person of
 // the town gained between two views that no mix, rule, queue entry or run holds, grouped by job, the cards one town-card
-// definition fans out over its lanes sharing a label_key. The story strip words one line for the step (ui/story.ts); a
+// definition fans out over its lanes sharing a label_key. The story strip words one line for the step (ui/story/story.ts); a
 // card that arrives at work, a card of a person who joined in the same step, and the player's own cards are no offer.
 import type { View } from "../api/types";
 import type { Catalog } from "./catalog";

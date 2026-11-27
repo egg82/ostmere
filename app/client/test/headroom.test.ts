@@ -1,4 +1,4 @@
-// On a desktop the head sits above the art (src/ui/headseat.ts) and its room comes out of the skills and ledger under
+// On a desktop the head sits above the art (src/ui/story/headseat.ts) and its room comes out of the skills and ledger under
 // the art, not the art: the root learns the head's measured height and the panel's floor gives it up (src/game.css).
 // Both are layout, which fake-dom cannot draw, so this reads the rule and the call; the measured result is in the
 // branch's before/after renders.

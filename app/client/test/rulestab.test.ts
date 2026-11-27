@@ -1,4 +1,4 @@
-// The Rules tab (docs/design/opening-screen/rules-tab.md, "The Rules tab"; ui/rules.ts, ui/condition.ts): one line per rule;
+// The Rules tab (docs/design/opening-screen/rules-tab.md, "The Rules tab"; ui/rules/rules.ts, ui/condition/condition.ts): one line per rule;
 // changing a rule's levels never gated, writing a new one gated by the taught step; a chip's rule edited with no level
 // and no number; ≡ dragged or moved by key or menu sending the permuted set_orders (task rules keep their places); a
 // mix dropped on a slot, or tapped then a slot, or picked, re-pointing the rule; Otherwise setting the default; the
@@ -283,7 +283,7 @@ expect("a task rule doesn't move", reorderRule(tab, 3, 0), null);
   expect("opened: gone, and not back", label.classList.contains("glow"), false);
 }
 
-// Behind a line (the line-first queue, ui/reveal.ts): a fired rule's pulse, the tab's glow and the flight's landing
+// Behind a line (the line-first queue, ui/feedback/reveal.ts): a fired rule's pulse, the tab's glow and the flight's landing
 // pulse each wait their turn rather than show while a line is read.
 {
   const waiting: Array<{ kind: string; run: () => void }> = [];

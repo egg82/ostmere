@@ -82,7 +82,7 @@ function times<T>(q: ArrivalQueue<T>, from: number, until = from + 30_000): Arra
   expect("idle after", q.idle, true);
 }
 
-// The reveal on the page (ui/reveal.ts), against a stand-in DOM: a line, a card arriving at its turn, and a straggler
+// The reveal on the page (ui/feedback/reveal.ts), against a stand-in DOM: a line, a card arriving at its turn, and a straggler
 // drawn while a line is still being read.
 {
   const listeners = new Map<string, () => void>();

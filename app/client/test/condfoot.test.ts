@@ -1,4 +1,4 @@
-// A rule's editor on a phone (ui/condition.ts; src/game.css): the choices scroll in their own area and the pinned foot
+// A rule's editor on a phone (ui/condition/condition.ts; src/game.css): the choices scroll in their own area and the pinned foot
 // (the rule as a sentence, Remove, Save) sits outside it, so no chip is ever behind the foot.
 import { readGameCss } from "./gamecss";
 import { install } from "./fake-dom";

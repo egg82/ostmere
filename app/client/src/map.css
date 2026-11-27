@@ -1,4 +1,4 @@
-/* The Book's Map page (ui/mappage.ts; contract/map.txt, "MAP"). The sheet is the dark ground of the game, on a hairline like
+/* The Book's Map page (ui/book/mappage.ts; contract/map.txt, "MAP"). The sheet is the dark ground of the game, on a hairline like
    every group but the scene; its stamps are masks filled with ink: warm for the town (the player's own), cool for what
    was found (docs/decisions.md, "Art: a drawn, living town over bars"). Labels are text with a halo of the ground. */
 .map-page { --map-ground: var(--stage); --map-found: #a3a7a9; --map-home: var(--ember-hot);

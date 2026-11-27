@@ -1,4 +1,4 @@
-// The chronicle, the Book's first page (ui/chroniclesheet.ts, ui/chapter.ts): newest first, the newest return's "Since you left" chapter
+// The chronicle, the Book's first page (ui/book/chroniclesheet.ts, ui/book/chapter.ts): newest first, the newest return's "Since you left" chapter
 // at the top, never folded, then one stretch per earlier return folded to its counts; a row of filters once two kinds
 // have entries, Story first; under Story, the chapter's figures as rows and a stretch's counts of the other filters, each
 // opening its filter; each line over its cause.

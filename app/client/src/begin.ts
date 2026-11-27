@@ -1,7 +1,7 @@
 // The front page: the game's own camp on a stage, and a panel with the way in. A page load asks the server who this
 // browser is (GET /api/me, which never makes an account). Without a save the stage shows a canned moment and Begin
 // makes the save (and the account); under it, "I have a code" and "I have recovery words" join this browser to a game
-// played elsewhere. With saves it lists them (ui/places.ts, beside the stage, or the Games button's sheet on a phone):
+// played elsewhere. With saves it lists them (ui/front/places.ts, beside the stage, or the Games button's sheet on a phone):
 // the selected game's camp is the stage and Continue opens it (the save the tab's address names, #game=ID, else the
 // newest), and selecting New game turns Continue into Begin. It is skipped, opening that save at once, when the address
 // names a live save, when a join link came (its code waits in the game's "Another device" sheet), or when this device's

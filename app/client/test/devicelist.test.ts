@@ -1,4 +1,4 @@
-// The Another device sheet's list of browsers (src/ui/devicelist.ts): one row per served device with its label and last
+// The Another device sheet's list of browsers (src/ui/devices/devicelist.ts): one row per served device with its label and last
 // use, the asking browser marked, Remove sending DELETE for that row's id and redrawing from the answer, and removing
 // this browser asking first and then starting the page again.
 import { fakeDocument, install, type FakeEl } from "./fake-dom";

@@ -1,4 +1,4 @@
-// The Feedback sheet (src/ui/feedback.ts): Send waits for words, a kept send thanks and closes, one that is not kept says
+// The Feedback sheet (src/ui/settings/feedback.ts): Send waits for words, a kept send thanks and closes, one that is not kept says
 // to try later and keeps the words, Not now keeps a draft, and the screen puts the button in the panel's foot and sends what
 // the player wrote.
 import { FakeEvent, fakeDocument, install, type FakeEl } from "./fake-dom";

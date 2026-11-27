@@ -1,4 +1,4 @@
-// Dragging a card from the editor's Add row (ui/editor.ts): a tap joins it, and so does a drop on the bar.
+// Dragging a card from the editor's Add row (ui/mixes/editor.ts): a tap joins it, and so does a drop on the bar.
 
 /** A tap joins the card; so does dragging it onto the bar. Dragged anywhere else, nothing happens. */
 export function dragIn(e: PointerEvent, node: HTMLElement, bar: HTMLElement, join: () => void): void {

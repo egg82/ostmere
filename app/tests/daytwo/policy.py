@@ -107,7 +107,7 @@ def her_task(v: View, orders: tuple[Order, ...], knobs: Knobs2) -> Move | None:
 
 def her_first_rule(v: View, orders: tuple[Order, ...], knobs: Knobs2) -> Move | None:
     """The damp wood line's order card, taken while the line is red (falling or starved, uncovered), whatever draws it
-    down, as the page offers it (client ui/ledger.ts, offerFor; game/shown.ts drawnDown decides only when a line with no
+    down, as the page offers it (client ui/ledger/ledger.ts, offerFor; game/shown.ts drawnDown decides only when a line with no
     offer joins): above her default rule, since a rule below an always rule acts only while that one cannot (engine
     design/townsfolk.txt, "Ruled lane")."""
     line = next((ln for ln in v.ledger if ln.store == "damp_wood"), None)

@@ -1,4 +1,4 @@
-// A person's page (ui/personpage.ts), opened by Change on their Town row: their cards in full, their mix (once joined),
+// A person's page (ui/town/personpage.ts), opened by Change on their Town row: their cards in full, their mix (once joined),
 // and the rules that run them. A ruled lane before the join and the town's people after it.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";

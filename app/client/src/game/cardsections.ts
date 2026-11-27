@@ -1,4 +1,4 @@
-// The sections a card sits under, on the Tasks page (ui/cardgroups.ts) and in every list of cards a rule editor offers:
+// The sections a card sits under, on the Tasks page (ui/cards/cardgroups.ts) and in every list of cards a rule editor offers:
 // one per lane, the hands first, a lane's crafts in a section under its other cards.
 import type { View } from "../api/types";
 import type { Catalog } from "./catalog";

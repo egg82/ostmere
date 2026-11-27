@@ -1,4 +1,4 @@
-// A person's page on the town fixture (ui/personpage.ts), for the suites about it: the town strip's rows, the page the
+// A person's page on the town fixture (ui/town/personpage.ts), for the suites about it: the town strip's rows, the page the
 // Change of one opens, and the server's side of a decision (a save_mix lands in the view, as the engine keeps it).
 import { fakeDocument, type FakeEl } from "./fake-dom";
 import { testContext, type Recorded } from "./context";

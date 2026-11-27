@@ -1,4 +1,4 @@
-// A card's needs in words, one home for the card's face (ui/cardneeds.ts) and Plan's waiting rows (ui/stintplan.ts):
+// A card's needs in words, one home for the card's face (ui/cards/cardneeds.ts) and Plan's waiting rows (ui/next/stintplan.ts):
 // a store's have/need, when a clock with a part of the day opens (game/timewords.ts), a skill level, a step. The face
 // passes its have as a mark it later fills (Format takes a have as text); Plan passes the number. Pure.
 import type { Card, Condition, Need, View } from "../api/types";

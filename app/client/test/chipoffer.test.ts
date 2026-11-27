@@ -1,4 +1,4 @@
-// The strip's first-rule lesson entry (ui/chipoffer.ts, cues.chipCards): hidden before the end and while its lines are being
+// The strip's first-rule lesson entry (ui/story/chipoffer.ts, cues.chipCards): hidden before the end and while its lines are being
 // read; shown while the lesson may start, when tired with no rule on energy's at_most; staying after the chip clears; gone
 // once any such rule is set or the lesson is behind; arriving as the chip; opening the editor, never building.
 import { fixtureContent, Q, TIRED } from "../fixtures/content";
