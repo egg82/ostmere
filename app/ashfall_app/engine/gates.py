@@ -1,5 +1,6 @@
 """What the unlock set and the chips let through: who may run, be seen, or change a rate. Reads only; design/core.txt,
 "Unlocks", "Chips" and "Store caps". work.py exposes the same functions to the rest of the engine."""
+from collections.abc import Callable
 from math import prod
 
 from .heldentries import held_entries, held_part, holders, keep_held
@@ -94,6 +95,19 @@ def store_cap(save: Save, rules: Rules, store: StoreId) -> int:
     cap = kept.get(store)
     if cap is None:
         cap = kept[store] = _store_cap(save, rules, store, picked)
+    return cap
+
+
+def cap_reader(save: Save, rules: Rules) -> Callable[[StoreId], int]:
+    """store_cap for many stores of one save: the memo and the picks' entries are read once, not once a store."""
+    picked = pick_entries(save, rules)
+    kept = _CAP_OF.get((rules, save.modifiers, picked), dict)
+
+    def cap(store: StoreId) -> int:
+        found = kept.get(store)
+        if found is None:
+            found = kept[store] = _store_cap(save, rules, store, picked)
+        return found
     return cap
 
 
