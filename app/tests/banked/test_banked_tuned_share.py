@@ -5,8 +5,8 @@ import pytest
 from ashfall_app.engine import Save
 from tests.banked.chapter import CHAPTER, rules
 from tests.banked.play import play
-from tests.dayone import sinks
-from tests.dayone.sinks import SINKS, TUNE_STEP_BP, Trip
+from tests.dayone.player import sinks
+from tests.dayone.player.sinks import SINKS, TUNE_STEP_BP, Trip
 
 H = 3600
 STEP = TUNE_STEP_BP
