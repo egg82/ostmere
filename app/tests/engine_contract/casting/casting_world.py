@@ -126,6 +126,8 @@ def refused(tmp_path: Path, entry: str, **kw: Any) -> None:
 
 def scene(r: Rules, by_card: Mapping[str, int]) -> Save:
     """At 0, after the joins: the town mix holds `by_card`, and runs."""
+    if not by_card and not any(m.id == TOWN for m in new_save(r).mixes):
+        return new_save(r)
     mix = Mix(TOWN, tuple(CardShare(CardId(c), bp) for c, bp in by_card.items()))
     s = decide(new_save(r), r, 0, SaveMix(mix))
     return decide(s, r, 0, SetOrders((Order(AfterTime(0), SwitchMix(TOWN)),)))

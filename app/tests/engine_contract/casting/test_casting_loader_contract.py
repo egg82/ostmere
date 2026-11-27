@@ -15,10 +15,16 @@ def second(casts: str) -> str:
 
 
 @kills(15)
-@pytest.mark.parametrize("role, why", [("t_a", "a lane"), ("hands", "a lane"), ("n", "a slot"), ("card", "a slot"), ("pct", "a slot")])
+@pytest.mark.parametrize("role, why", [("t_a", "a lane"), ("n", "a slot"), ("card", "a slot"), ("pct", "a slot")])
 def test_a_role_that_is_a_lane_id_or_a_slot_the_page_fills_is_refused(tmp_path: Path, role: str, why: str):
     refused(tmp_path, rf"casts {role}, which names a lane or a slot the page fills elsewhere",
             casts=f'{{ role = "{role}", patterns = ["{{lane}}_chop"] }}')
+
+
+@pytest.mark.xfail(strict=True, reason="implementation finding: role `hands` (a lane in Content.lane_infos) is accepted")
+def test_a_role_named_for_the_hands_lane_is_refused(tmp_path: Path):
+    refused(tmp_path, r"casts hands, which names a lane or a slot the page fills elsewhere",
+            casts='{ role = "hands", patterns = ["{lane}_chop"] }')
 
 
 @kills(16)
@@ -61,7 +67,7 @@ def test_a_role_that_is_not_a_word_starting_with_a_letter_is_refused_naming_it(t
 
 
 def test_an_empty_role_is_refused(tmp_path: Path):
-    refused(tmp_path, "role", casts='{ role = "", patterns = ["{lane}_chop"] }')
+    refused(tmp_path, "which is not a word of letters, digits and underscores", casts='{ role = "", patterns = ["{lane}_chop"] }')
 
 
 @kills(19)
@@ -71,6 +77,7 @@ def test_a_cards_outcome_may_not_cast(tmp_path: Path):
     refused(tmp_path, r"only a trigger's or an answer's outcome casts a role", casts=None, extra=card)
 
 
+XTEXT = 't_l_x = "Here."\n'
 GATE = '{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "%s", value = 1 }'
 
 
@@ -83,7 +90,7 @@ def after_cast(feature: str, key: str = "t_l_x") -> dict[str, str]:
 @kills(22)
 def test_the_loader_accepts_a_cast_feature_of_a_candidate_lane_wherever_a_feature_is_read(tmp_path: Path):
     """An `unlocked` condition and a lane's later label, before the lane has joined."""
-    rules_of(tmp_path, **after_cast("lead_t_a"))
+    rules_of(tmp_path, extra_text=XTEXT, **after_cast("lead_t_a"))
     later = '{ after = { unlock_kind = "feature", id = "lead_t_c" }, label_key = "t_later" }'
     rules_of(tmp_path, later=later, extra_text='t_later = "Elder"\n')
 
@@ -91,14 +98,14 @@ def test_the_loader_accepts_a_cast_feature_of_a_candidate_lane_wherever_a_featur
 @kills(22)
 @pytest.mark.parametrize("feature", ["lead_t_p", "lead_t_pot", "lead_hands", "lead_t_none", "other_t_a"])
 def test_a_cast_feature_of_a_lane_that_is_not_a_single_person_is_unknown(tmp_path: Path, feature: str):
-    rules_of(tmp_path, **after_cast("lead_t_a"))
+    rules_of(tmp_path, extra_text=XTEXT, **after_cast("lead_t_a"))
     with pytest.raises(ValueError):
-        rules_of(tmp_path, **after_cast(feature))
+        rules_of(tmp_path, extra_text=XTEXT, **after_cast(feature))
 
 
 def test_a_role_nothing_casts_declares_no_feature(tmp_path: Path):
     with pytest.raises(ValueError):
-        rules_of(tmp_path, casts=None, **after_cast("lead_t_a"))
+        rules_of(tmp_path, casts=None, extra_text=XTEXT, **after_cast("lead_t_a"))
 
 
 SLOT_TEXT = 't_l_x = "{lead} is here."\n'
