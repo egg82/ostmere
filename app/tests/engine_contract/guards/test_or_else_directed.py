@@ -1,4 +1,4 @@
-"""Directed tests for survivors of the or_else mutation run (tools/or_else_mutants/): what the blind suite left open."""
+"""Directed tests for survivors of the or_else mutation run (tools/mutants/or_else/): what the blind suite left open."""
 from ashfall_app.engine import (
     AfterTime, AtMost, Outcome, QUANTITY_SCALE as Q, StoreValue, TapCard, TriggerDef, TriggerId, advance,
 )

@@ -37,7 +37,7 @@ RUNS
   holds the directed tests below). Rerun, from app/, in batches under the per-test timeout of pytest.ini:
       python -m tools.mutate_suite guards --run --only 1,2,3,4,5,6,7,8,9,10,11,12,13
       python -m tools.mutate_suite guards --run --only 14,15,16,17,18,19,20,21,22,23,24,25,26
-  `--check` fails unless every row is claimed. Specs: tools/guards_mutants/mNN[x].py, a variant per "or" clause.
+  `--check` fails unless every row is claimed. Specs: tools/mutants/guards/mNN[x].py, a variant per "or" clause.
 - Against the engine at #90: rows 1-26, 44 plants, all KILLED. The blind suite let four through; each has a directed
   test claiming its row:
     3  lets go     no blind test brings a guard on inside `when`'s band (the guards there hold from the start)

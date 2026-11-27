@@ -46,7 +46,7 @@ of x. Record each run below the list as MUTANTS_held.txt does (planted, red, sur
 
 RUNS
 - Suite tests/engine_contract/drains/test_drains_*.py (blind, written from the engine design's DRAINS part alone). Run: python -m
-  tools.mutate_suite drains --run (specs tools/drains_mutants/mNN.py, each a list of (path, old, new) edits against the
+  tools.mutate_suite drains --run (specs tools/mutants/drains/mNN.py, each a list of (path, old, new) edits against the
   implementation, one per row). `--check` fails unless every row is claimed by a test marked @kills(row).
 - Against the implementation: rows 1-24 all KILLED, each with a test that claims it red; no survivors, no equivalent
   mutants. Row 13 moves every rules digest, so the pinned pre-drains fixture's test goes red alone.

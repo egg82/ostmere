@@ -168,7 +168,7 @@ jobs:
           python -m tools.weektwo_shards --check | tee weektwo-shards.out
           grep '^matrix=' weektwo-shards.out >> "$GITHUB_OUTPUT"
 
-  # Every planted mutant (app/tools/*_mutants/, and the journal contract's tests/journal_contract/journal_plants.py)
+  # Every planted mutant (app/tools/mutants/*/, and the journal contract's tests/journal_contract/journal_plants.py)
   # applies to the current code: each anchor occurs exactly once. Plants only, and every row of every suite's MUTANTS
   # file is claimed by a test marked @kills. No test run, no dependencies beyond the standard library; a mutation run
   # is by hand.
