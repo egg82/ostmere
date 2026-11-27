@@ -1,4 +1,4 @@
-"""Golden saves (golden/f<FORMAT>/, written by tools/golden_saves.py; every format's are kept, so a FORMAT bump runs
+"""Golden saves (tests/saves/golden/f<FORMAT>/, written by tools/golden_saves.py; every format's are kept, so a FORMAT bump runs
 the older ones through UPGRADES for real) load under today's opening and under a test change of it
 (a new card a new trigger unlocks, a renamed store, a retuned work_s), keep everything they had earned under an id
 both rules declare, drop the old store, and run on (engine design/saves-across-releases.txt, "Rebase", invariants 49 to 51).

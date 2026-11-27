@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/saves/test_loss_steps.py): a store that grows by one an hour
+# A test chapter, merged onto the opening alone (tests/saves/journal/test_loss_steps.py): a store that grows by one an hour
 # from the first minute with nobody deciding, which the test's journal reads as a loss runner's tally. Not story: the
 # ids and words are the tests' own.
 version = 1

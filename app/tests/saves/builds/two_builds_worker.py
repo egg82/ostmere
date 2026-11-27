@@ -1,4 +1,4 @@
-"""One "pod" for tests/saves/test_two_builds.py: a process of its own playing saves under one build's rules against the
+"""One "pod" for tests/saves/builds/test_two_builds.py: a process of its own playing saves under one build's rules against the
 database ASHFALL_TEST_DB names. RULES picks today's opening (today) or a retune of it (retuned,
 tests/saves/changes.py); RELEASE is its content release. Reads one JSON command a line on stdin, answers one JSON line on stdout:
 

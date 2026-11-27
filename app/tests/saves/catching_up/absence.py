@@ -1,5 +1,5 @@
 """A long absence counted: the instants and full schedules an advance resolves, read off the engine's own functions, so a
-busy runner cannot hide them (tests/saves/test_long_absence.py, tests/weekone/test_weekone_long_absence.py)."""
+busy runner cannot hide them (tests/saves/catching_up/test_long_absence.py, tests/weekone/test_weekone_long_absence.py)."""
 from collections.abc import Callable
 
 from ashfall_app.engine import Event, Rules, Save, advance, api, schedule

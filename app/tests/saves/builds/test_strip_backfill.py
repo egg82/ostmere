@@ -1,4 +1,4 @@
-"""The strip backfill (saves/strip.py): whole save and snapshot rows are written without their manifest and read whole
+"""The strip backfill (saves/builds/strip.py): whole save and snapshot rows are written without their manifest and read whole
 again; a row already stripped is left alone; a row whose digest holds another manifest, or whose envelope names
 another digest, stays whole; a row a player's write changed after it was read keeps that write; a dry run writes
 nothing; and the manifests no row names are pruned, this build's kept."""

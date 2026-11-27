@@ -1,4 +1,4 @@
-"""Saves written without their manifest (saves/write.py `written`, saves/manifest.py `registered`): a pod whose start
+"""Saves written without their manifest (saves/write.py `written`, saves/builds/manifest.py `registered`): a pod whose start
 stored its manifest writes save and snapshot rows stripped of it, one whose start found another manifest held writes
 them whole, and a restore stores the manifest before it writes. Every row written stripped reads whole again through
 the read path the build before this one shipped with (db/saves.py), and rebases under later rules."""

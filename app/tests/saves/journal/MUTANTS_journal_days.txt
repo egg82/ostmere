@@ -1,6 +1,6 @@
 Wrong implementations of the journal's write path (saves/journal_write.py, db/journal.py, db/step.py, saves/write.py)
 and its wire (api/service.py, accounts/presentation.py), each planted alone in a scratch copy by tools/mutate_suite.py's
-`journal_days` suite (specs tools/journal_days_mutants/): tests/saves/test_journal_days.py with the tests in the suite's
+`journal_days` suite (specs tools/journal_days_mutants/): tests/saves/journal/test_journal_days.py with the tests in the suite's
 `also` beside it. Needs ASHFALL_TEST_PG. Each must go red.
 
  1 stale trusted   journal_write.py: a locking read that waited on another write is trusted
