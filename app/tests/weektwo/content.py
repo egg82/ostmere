@@ -5,7 +5,7 @@ from ashfall_app.engine import (
     BP, AfterTime, AnswerId, CardId, OfferId, Order, Rules, Save, StoreId, TapCard, Unlock, UnlockKind,
     View,
 )
-from ashfall_app.engine.rates import store_value
+from ashfall_app.engine.loop.rates import store_value
 from tests.daythree import content as c3
 from tests.daythree.chapter import Landings, Later, Offer, Share
 from tests.dayone.player.policy import Move

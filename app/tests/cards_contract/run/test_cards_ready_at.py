@@ -5,7 +5,7 @@ from ashfall_app.engine import (
     ActionId, Amount, AtLeast, CardDef, CardId, Flow, StandingDef, StoreDef, StoreId, StoreValue, Unlock, UnlockKind,
     advance, new_save,
 )
-from ashfall_app.engine import work as engine_work
+from ashfall_app.engine.loop import work as engine_work
 from cards_world import Q, rules
 
 X, Y, Z = StoreId("x"), StoreId("y"), StoreId("z")

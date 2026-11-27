@@ -9,7 +9,7 @@ import pytest
 from ashfall_app.engine import (
     AfterTime, CardId, Order, Rules, Save, SetOrders, TapCard, advance, decide, new_save, view,
 )
-from ashfall_app.engine.rates import tapped_cards
+from ashfall_app.engine.loop.rates import tapped_cards
 from ashfall_app.rules.expand.convert import condition
 from ashfall_app.rules.schema import OPENING, Opening, load_opening, to_rules
 

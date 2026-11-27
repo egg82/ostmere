@@ -1,4 +1,4 @@
-"""Step.rule_changes (engine/rulelog.py): each order's latch turning true (it comes on) or false (it lets go) on the way
+"""Step.rule_changes (engine/orders/rulelog.py): each order's latch turning true (it comes on) or false (it lets go) on the way
 to a logged step, with the time and the amount of the store its condition reads. Orders have no id, so an order is
 matched across a change by what it says: a reorder reports nothing, an edit reports the edited order as new. Recording
 changes nothing: the logged save is the plain one."""

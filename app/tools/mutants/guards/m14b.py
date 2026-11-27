@@ -1,6 +1,6 @@
 """Row 14 of MUTANTS_guards.txt: state order: paused is judged before passed over."""
 EDITS: list[tuple[str, str, str]] = [
-    ('ashfall_app/engine/plan.py',
+    ('ashfall_app/engine/orders/plan.py',
      '''        if all(is_dead(save, rules, a) for a in o.actions):
             return OrderState.PASSED_OVER
         if not when_latch(latch):

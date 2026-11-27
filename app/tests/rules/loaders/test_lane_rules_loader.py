@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from ashfall_app.engine import AtLeast, LaneId, LaneRules
-from ashfall_app.engine.index import index
+from ashfall_app.engine.core.index import index
 from ashfall_app.rules.schema import Opening, merge_chapters, to_rules
 from tests.rules.loaders.test_townsfolk_loader import shipped
 

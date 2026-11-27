@@ -7,7 +7,7 @@ from typing import Unpack
 from ashfall_app.engine import (
     BP, CardId, CardShare, Mix, MixId, Rules, Save, SaveMix, SwitchMix, Verb, View, advance, decide, new_save, view,
 )
-from ashfall_app.engine.work import completions
+from ashfall_app.engine.loop.work import completions
 from tests.banked.chapter import CHAPTER, COMFORT, FIGHTING, GATHER, Times, rules
 from tests.dayone.player import sinks
 

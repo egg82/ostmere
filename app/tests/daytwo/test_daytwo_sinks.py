@@ -7,7 +7,7 @@ from collections.abc import Sequence
 import pytest
 
 from ashfall_app.engine import CardId, SetQueue, TapCard, Verb
-from ashfall_app.engine.work import completions
+from ashfall_app.engine.loop.work import completions
 from tests.daytwo import content as c
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer

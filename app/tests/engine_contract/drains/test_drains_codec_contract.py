@@ -12,7 +12,7 @@ import pytest
 from ashfall_app.engine import (
     FORMAT, QUANTITY_SCALE as Q, Amount, CardDef, Save, advance, decode, encode, new_save, rebase, rules_digest,
 )
-from ashfall_app.engine.codec import manifest
+from ashfall_app.engine.savefile.codec import manifest
 from drains_world import X, X2, cure, kills, mixed, pinned, tapped, world
 from tests.format8 import as_format_8
 

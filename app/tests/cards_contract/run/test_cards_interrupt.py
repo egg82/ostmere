@@ -10,7 +10,7 @@ from ashfall_app.engine import (
     InvalidVerbError, LaneId, LaneSpeed, LaneState, LineKey, Order, Pause, RunKind, SetOrders, StandingDef, StoreDef, StoreId,
     StoreValue, TapCard, WorkRef, ActionId, advance, advance_logged, decide, new_save, next_event, Modifier,
 )
-from ashfall_app.engine import work as engine_work
+from ashfall_app.engine.loop import work as engine_work
 from cards_world import (
     Q, add, card_view, cost, keys, lane, ledger, make, mul, refill, rules, tap, val, view_of, with_mix, work,
 )

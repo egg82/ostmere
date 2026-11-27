@@ -4,7 +4,7 @@ nothing when the content declares no fight."""
 from collections.abc import Iterator
 
 from ....engine import AtLeast, AtMost, CardDef, FightDef, Outcome, Rules, StandingDef, StoreValue, ThreatStrength, UnlockKind
-from ....engine.cure_reading import feeds, puts_up
+from ....engine.cards.cure_reading import feeds, puts_up
 from ...refs import fail
 
 COMBAT = "combat"

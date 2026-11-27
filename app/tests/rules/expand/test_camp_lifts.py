@@ -11,8 +11,8 @@ from ashfall_app.engine import (
     BP, AtLeast, CardId, Modifier, ModifierKind, Rules, Save, StoreCap, StoreId, StoreState, StoreValue, encode,
     new_save, rebase, units,
 )
-from ashfall_app.engine.gates import store_cap
-from ashfall_app.engine.segments import Segment
+from ashfall_app.engine.unlocks.gates import store_cap
+from ashfall_app.engine.core.segments import Segment
 from ashfall_app.rules.schema import DAY_ONE, DAY_TWO, OPENING, Opening, load_opening, to_rules
 from tests.rules.content.test_day_two import with_day_two
 

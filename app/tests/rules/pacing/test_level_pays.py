@@ -7,7 +7,7 @@ from ashfall_app.engine import (
     CardDef, CardId, FlowKind, Modifier, ModifierKind, Outcome, PacingCurve, RateRef, Rules, SkillDef, SkillId, SourceId,
     TriggerDef, TriggerId, per_hour, units,
 )
-from ashfall_app.engine.orders import AtLeast, SkillLevel
+from ashfall_app.engine.orders.orders import AtLeast, SkillLevel
 from ashfall_app.rules.schema import Opening, load_opening, to_rules
 from tests.dayone.pacing.growth import climb_hours, fastest_rates, level_times, runaway
 from tests.rules.play.blank_levels import top_level

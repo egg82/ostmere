@@ -9,7 +9,7 @@ import pytest
 from ashfall_app.engine import (
     AfterTime, AtLeast, Outcome, Rules, Save, TriggerDef, TriggerId, Unlock, UnlockKind, Unlocked, advance,
 )
-from ashfall_app.engine import triggers
+from ashfall_app.engine.cards import triggers
 from tests.rules.play.playthrough import Player, opening_rules
 
 BLOCKED = 40

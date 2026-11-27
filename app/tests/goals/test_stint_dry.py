@@ -2,7 +2,7 @@
 entry leaves the queue, the player's own mix runs on, and the rule log says why (Ended.DRY)."""
 from ashfall_app import engine as e
 from ashfall_app.engine import BP, CardId, CardShare, Mix, MixId, QueueEntry, SaveMix, SetQueue, SwitchMix
-from ashfall_app.engine.plan import running_mix_id
+from ashfall_app.engine.orders.plan import running_mix_id
 from tests.goals.test_goal_rows import running, world
 
 STINT = MixId("stint")

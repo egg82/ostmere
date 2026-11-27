@@ -76,7 +76,7 @@ def test_a_chapters_moves_re_key_the_chapters_that_file_holds_and_those_after(tr
     assert changed(before, after) == list(ORDER[1:])
 
 
-@pytest.mark.parametrize("entry", ["ashfall_app/engine/api.py", "ashfall_app/rules/schema.py",
+@pytest.mark.parametrize("entry", ["ashfall_app/engine/core/api.py", "ashfall_app/rules/schema.py",
                                    "ashfall_app/rules/opening.toml", "ashfall_app/rules/prestige.toml",
                                    "tests/weektwo/routes.py", "tools/chapter_saves.py", "content/beats.yaml"])
 def test_what_every_chapter_reads_re_keys_every_chapter(tree: Path, entry: str):

@@ -14,7 +14,7 @@ from ashfall_app.engine import (
     TapCard, TriggerDef, TriggerId, CardId, Unlock, UnlockKind, Unlocked, advance, advance_logged, decide,
     decide_logged, encode, forecast, new_save, rebase_logged, validate_rules,
 )
-from ashfall_app.engine.discrete import discrete_value
+from ashfall_app.engine.orders.discrete import discrete_value
 from cards_world import Q, RACK
 from town_world import ASK, H, MIX, R, T1, T2, TC, TOWN, X, YES, always, mixing, started, town
 

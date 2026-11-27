@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from ashfall_app.engine import CardId, Order, SetOrders, StoreId, TapCard, advance, decide, new_save, units, value
-from ashfall_app.engine.rates import tapped_cards
+from ashfall_app.engine.loop.rates import tapped_cards
 from ashfall_app.rules.expand.convert import condition
 from ashfall_app.rules.schema import OPENING, Opening, load_opening, to_rules
 

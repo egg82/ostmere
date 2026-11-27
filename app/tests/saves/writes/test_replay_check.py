@@ -5,7 +5,7 @@ from typing import Any
 
 from ashfall_app import engine as e
 from ashfall_app.db.stored.manifests import stripped
-from ashfall_app.engine.work import ready
+from ashfall_app.engine.loop.work import ready
 from ashfall_app.saves.interface import Ruleset
 from tools.replay_check import check_dump, report
 

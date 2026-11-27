@@ -15,7 +15,7 @@ from ..db import saves as rows
 from ..db.stored.journal import Seen
 from ..db.stored.manifests import without
 from ..db.stored.step import Log, write_step
-from ..engine.codec import Json
+from ..engine.savefile.codec import Json
 from . import journal_write, mixbest
 from .interface import Played, Ruleset
 from .repeats import Logged, Repeats, count, hands_cards, since

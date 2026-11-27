@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from fractions import Fraction
 
 from ....engine import CardDef, Outcome, Rules, StandingDef, StoreId, Unlock, UnlockKind
-from ....engine.fightlines import fight_costs, fight_makes
+from ....engine.combat.fightlines import fight_costs, fight_makes
 
 HOUR = 3600
 

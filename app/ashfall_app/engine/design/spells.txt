@@ -29,7 +29,7 @@ CHOICES (spells)
   - FightDef gains chained: StoreId | None = None: the tally of this runner's fights that chains resolved, one unit per
     link. Allowed only on a standing fight whose threat is a group; required there when some card's chain names the
     runner.
-  - ChainDef(runner: ActionId, reach: int, lines: tuple[LineKey, ...]), a frozen dataclass in engine/cards.py.
+  - ChainDef(runner: ActionId, reach: int, lines: tuple[LineKey, ...]), a frozen dataclass in engine/cards/cards.py.
     CardDef gains chain: ChainDef | None = None. runner: the standing fight the chain resolves fights of. reach: the
     base reach (>= 1), set by the content from the input the working takes. lines: the link lines, at least one.
   - ChainReach(card: CardId), a Target (Modifiers): the reach of that card's chain.

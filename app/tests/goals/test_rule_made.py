@@ -3,7 +3,7 @@ stores its mix makes when the rule comes on and lets go, and the saves layer tur
 an ended goal stint (test_stint_made)."""
 from ashfall_app import engine as e
 from ashfall_app.engine import BP, AtLeast, CardId, CardShare, Mix, MixId, Order, SaveMix, SetOrders, StoreValue, SwitchMix, TapCard
-from ashfall_app.engine.units import units
+from ashfall_app.engine.core.units import units
 from ashfall_app.saves.ruleruns import RuleRun, merged
 from tests.goals.test_goal_rows import LOG, PLANK, running, world
 

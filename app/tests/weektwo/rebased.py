@@ -20,7 +20,7 @@ from ashfall_app.engine import (
     AnswerOffer, AtLeast, AtMost, Order, Rules, Save, SetOrders, StateFormatError, StoreValue, TapCard, TriggerId, Verb,
     advance, decide, decode, encode, new_save, rebase, verb_to_json,
 )
-from ashfall_app.engine.codec import Json, canonical
+from ashfall_app.engine.savefile.codec import Json, canonical
 from ashfall_app.rules.expand.convert import build_rules
 from ashfall_app.rules.schema import (
     CHAPTERS, DAY_EIGHTEEN, DAY_ELEVEN, DAY_FIFTEEN, DAY_NINE, DAY_NINETEEN, DAY_SIXTEEN, DAY_TWELVE, DAY_TWENTY_FIVE, DAY_TWENTY_SEVEN,

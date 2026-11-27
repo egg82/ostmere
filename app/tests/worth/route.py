@@ -19,7 +19,7 @@ visit before's set landing, the player's own mix edited, and the set gaining a s
 from dataclasses import dataclass
 
 from ashfall_app.engine import Rules, Save, Unlock, UnlockKind, view
-from ashfall_app.engine.phases import at_top
+from ashfall_app.engine.prestige.phases import at_top
 from tests.dayone.player.player import DayOnePlayer
 from tests.worth import goaltime as gt
 from tests.worth import probe as pr

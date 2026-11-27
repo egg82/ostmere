@@ -4,9 +4,9 @@ level; the rates are setrates.py's."""
 from collections.abc import Sequence
 
 from ... import engine as e
-from ...engine.phases import counted_xp, level_counted, phase_state
-from ...engine.rates import Running
-from ...engine.segments import value_at
+from ...engine.prestige.phases import counted_xp, level_counted, phase_state
+from ...engine.loop.rates import Running
+from ...engine.core.segments import value_at
 from . import decision_models as w
 from . import goal_models as g
 from ..rules import setrates as sr
@@ -64,7 +64,7 @@ def _level(save: e.Save, rules: e.Rules, now: Running, skill: str, target: int, 
 
 
 def lands(t: int, left: int, per_hour: int) -> int | None:
-    """A rate in rate units moves a quantity by that many units a second (engine/units.py)."""
+    """A rate in rate units moves a quantity by that many units a second (engine/core/units.py)."""
     if left <= 0:
         return t
     return None if per_hour <= 0 else t + e.ceil_div(left, per_hour)

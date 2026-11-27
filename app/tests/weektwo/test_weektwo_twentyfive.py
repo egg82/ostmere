@@ -8,7 +8,7 @@ day twenty-five, loads under today's and plays on with nobody deciding. The rhyt
 import pytest
 
 from ashfall_app.engine import AnswerOffer, CardId, Unlock, UnlockKind
-from ashfall_app.engine.work import completions
+from ashfall_app.engine.loop.work import completions
 from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer

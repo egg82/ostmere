@@ -1,6 +1,6 @@
 """Row 22 of MUTANTS_guards.txt: too strict: a share guard is refused."""
 EDITS: list[tuple[str, str, str]] = [
-    ('ashfall_app/engine/checks.py',
+    ('ashfall_app/engine/validate/checks.py',
      '''    for g in guards:
         check_condition(rules, g)
 ''',

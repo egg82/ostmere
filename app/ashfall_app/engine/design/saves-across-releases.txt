@@ -18,7 +18,7 @@ CHOICES (saves across releases)
   shown and how many off lines it has said, and Save.fired[i] the state of its trigger i; every other tuple in the save already names its ids. decode is unchanged in kind: the manifest is part of
   the text it re-encodes and compares. Data, not a flag per change (docs/decisions.md, "Developed live": no machinery).
 - FORMAT is 10 (chips_seen counts; 9 Mix without holds, 8 added LaneState.speed, 7 the manifest's offers, 6 took the failed attempt off
-  LaneState, 5 added Save.chips_seen, 4 the manifest). OLDEST_FORMAT is 4, the first format a rebase reads. UPGRADES[f] (engine/upgrade.py)
+  LaneState, 5 added Save.chips_seen, 4 the manifest). OLDEST_FORMAT is 4, the first format a rebase reads. UPGRADES[f] (engine/savefile/upgrade.py)
   turns an envelope of format f into one of format f + 1, as JSON, before anything is decoded; a rebase chains them
   from the text's format up to FORMAT. Every format from OLDEST_FORMAT below FORMAT has an entry (a test and the release
   lock both check it). A text of a format below OLDEST_FORMAT or above FORMAT raises StateFormatError: FORMAT 3 texts
@@ -31,7 +31,7 @@ CHOICES (saves across releases)
   reads back as the same verb without it (verb_from_json), so old decision logs still replay. UPGRADES[9] (FORMAT 10)
   turns each chips_seen flag into a count, 1 for a chip seen and 0 for one not: its off lines start their turns
   from the first.
-- Rebase: rebase(text, rules) -> Save, pure (engine/rebase.py); rebase_logged(text, rules) -> Step, its save that same
+- Rebase: rebase(text, rules) -> Save, pure (engine/savefile/rebase.py); rebase_logged(text, rules) -> Step, its save that same
   Save, its lines those of step 6, all at the save's time, seq from 0, and Step.dropped how many ids of each kind step 3
   found gone (IdKind order, kinds with none left out). rebase, rebase_logged, IdKind, UPGRADES and OLDEST_FORMAT are
   exported by the engine package. When the text's format is FORMAT and its digest is rules_digest(rules), the result is
@@ -43,7 +43,7 @@ CHOICES (saves across releases)
   3. find the gone ids: each id the manifest declares (IdKind: stores, skills, standing actions, cards, lanes, chips,
      triggers, features, offers, answers) that the new rules do not, and each answer the new rules put under another
      offer than the manifest did;
-  4. drop what names one (engine/dropping.py): an order or queue entry whose condition names a gone id (its latch with
+  4. drop what names one (engine/savefile/dropping.py): an order or queue entry whose condition names a gone id (its latch with
      it), an action naming one (TapCard, AnswerOffer; the order goes when no action is left), an AnswerKind whose kind
      and role no offer of the new rules has, a modifier aimed at one (RateRef runner or store, WorkRef, LaneSpeed,
      StoreCap; the save's and each tap's kept speed entries), a pause of or on one, a mix's share of a gone card (the
@@ -72,7 +72,7 @@ CHOICES (saves across releases)
   rename, is a step on UPGRADES (run once on the envelope at load), never a flag on saves.
 - No release lock and no renames: content may rename, remove or rewrite any id or outcome; a renamed id is a new one,
   and the save's progress under the old id is dropped. Every FORMAT bump needs an UPGRADES entry
-  (tests/engine/test_rebase_impl.py). The release number that orders builds for the server's saves is the CI run
+  (tests/engine/savefile/test_rebase_impl.py). The release number that orders builds for the server's saves is the CI run
   number: api/contract/saves-across-releases-and-pods.txt, "Saves across releases and pods".
 
 INVARIANTS (saves across releases; numbered on from 46. r, r2, r3 valid rules; s a save the engine returned under r;

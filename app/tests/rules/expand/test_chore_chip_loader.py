@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from ashfall_app.engine import CardId, ChipId
-from ashfall_app.engine.cure_reading import cures_chip
+from ashfall_app.engine.cards.cure_reading import cures_chip
 from ashfall_app.rules.chores import chores
 from ashfall_app.rules.expand.convert import build_rules
 from ashfall_app.rules.schema import OPENING, Opening, load_opening

@@ -11,7 +11,7 @@ from ashfall_app.api import models as w
 from ashfall_app.api.goals.sources import StoreSources, sources, store_sources
 from ashfall_app.engine import QUANTITY_SCALE as Q
 from ashfall_app.rules.schema import Opening
-from tests.engine.test_cards_impl import CHOP, CRAFT, WOOD, rules
+from tests.engine.cards.test_cards_impl import CHOP, CRAFT, WOOD, rules
 
 LEVEL = e.AtLeast(e.SkillLevel(e.SkillId("k")), 2, 2)
 CLOCK = e.AtLeast(e.StoreValue(e.StoreId("plank")), 5 * Q, 5 * Q)

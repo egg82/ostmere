@@ -1,4 +1,4 @@
-"""`Save` (engine/state.py) has the fields in tests/held/save_fields.json and no more: a new engine part adds its own
+"""`Save` (engine/core/state.py) has the fields in tests/held/save_fields.json and no more: a new engine part adds its own
 state type, never a field on `Save` (docs/systems.md, "The engine"). The held fields are the ones that predate the rule;
 the list only shrinks. `python -m tests.gates.test_save_fields --write` (from app/) rewrites it after a field is removed;
 never run it to let a field through."""
@@ -6,7 +6,7 @@ import dataclasses
 import sys
 from pathlib import Path
 
-from ashfall_app.engine.state import Save
+from ashfall_app.engine.core.state import Save
 from tests.held_ledger import Ledger, dump, load, problems, tally, total
 
 HELD = Path(__file__).resolve().parent.parent / "held/save_fields.json"

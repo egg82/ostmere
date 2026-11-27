@@ -112,7 +112,7 @@ def tapped(r: Rules, *cards_: CardId, mods: tuple[Modifier, ...] = (), at: int =
 
 
 def stack(s: Save, r: Rules) -> tuple[Modifier, ...]:
-    from ashfall_app.engine.gates import effective_stack
+    from ashfall_app.engine.unlocks.gates import effective_stack
     return effective_stack(s, r)
 
 

@@ -20,13 +20,13 @@ from multiprocessing import get_context
 from ashfall_app.engine import (
     AtLeast, CardId, InvalidVerbError, Rules, Save, SetOrders, SetQueue, TapCard, Verb, advance, decide, next_event,
 )
-from ashfall_app.engine import plan
-from ashfall_app.engine.counts import unit, work_value
-from ashfall_app.engine.gates import store_cap
-from ashfall_app.engine.ids import HANDS
-from ashfall_app.engine.index import index
-from ashfall_app.engine.rates import exact_net, running
-from ashfall_app.engine.work import blocker, completions, tappable
+from ashfall_app.engine.orders import plan
+from ashfall_app.engine.cards.counts import unit, work_value
+from ashfall_app.engine.unlocks.gates import store_cap
+from ashfall_app.engine.core.ids import HANDS
+from ashfall_app.engine.core.index import index
+from ashfall_app.engine.loop.rates import exact_net, running
+from ashfall_app.engine.loop.work import blocker, completions, tappable
 from tests.dayone.player import policy
 
 BOOSTS = policy.QUEUEABLE

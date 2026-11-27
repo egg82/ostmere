@@ -14,7 +14,7 @@ H = 3600
 A, B = SkillId("a"), SkillId("b")
 LEVEL_XP = 3600 * 1000 * 100
 RATE = LEVEL_XP // H
-"""Card a's rate: a level an hour (XP per second in quantity units, engine/units.py)."""
+"""Card a's rate: a level an hour (XP per second in quantity units, engine/core/units.py)."""
 
 
 def world(fast_b: bool = False) -> tuple[Rules, Save]:

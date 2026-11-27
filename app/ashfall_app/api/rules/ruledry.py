@@ -1,8 +1,8 @@
 """View.order_dry: a store rule's mix that is, or may be, short of an input it cannot release without (contract/dry-rules.txt,
 "Dry rules"). The line a goal row names (goalrows.limit) and the rates as set (setrates.py) answer it."""
 from ... import engine as e
-from ...engine.rates import Running
-from ...engine.sides import costs, makes
+from ...engine.loop.rates import Running
+from ...engine.loop.sides import costs, makes
 from ..goals import goal_models as g
 from ..goals import goalrows
 from . import setrates as sr

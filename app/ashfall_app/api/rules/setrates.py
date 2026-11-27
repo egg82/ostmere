@@ -1,17 +1,17 @@
-"""Rates of the setup as set: the engine's own running shares and lines (engine/rates.py) with a tap of the hands set
+"""Rates of the setup as set: the engine's own running shares and lines (engine/loop/rates.py) with a tap of the hands set
 aside, so the hands' mix runs at its shares (contract/goal-rows.txt, "Goal rows"). A tap ends in minutes; a goal is hours out,
 and a dry run of a mix edit made while a tap runs would otherwise move nothing. A hold keeps the run it had with the
 tap in place."""
 from fractions import Fraction
 
-from ...engine.ids import HANDS, ActionId, CardId, Runner, SkillId, StoreId
-from ...engine.index import index
-from ...engine.mixruns import mix_entries
-from ...engine.modifiers import FlowKind, RateRef, Run, RunKind
-from ...engine.rates import Running, exact_contribution, exact_net, line, running, tapped_cards
-from ...engine.rules import Rules
-from ...engine.sides import makes
-from ...engine.state import Save
+from ...engine.core.ids import HANDS, ActionId, CardId, Runner, SkillId, StoreId
+from ...engine.core.index import index
+from ...engine.mixes.mixruns import mix_entries
+from ...engine.modifiers.modifiers import FlowKind, RateRef, Run, RunKind
+from ...engine.loop.rates import Running, exact_contribution, exact_net, line, running, tapped_cards
+from ...engine.core.rules import Rules
+from ...engine.loop.sides import makes
+from ...engine.core.state import Save
 
 _DRY = frozenset({RunKind.PAUSED, RunKind.SPENT})
 

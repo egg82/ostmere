@@ -85,7 +85,7 @@ While tired → Rest
   go since, its last let-go, each with the store's level at that moment (never for a chip's rule) and how long ago.
 - **The record is the server's,** since a rule can come on and let go while the page is closed (Step.rule_runs,
   contract/). It is a chronicle record, not a new system: the engine reports each order's latch turning true or
-  false (`engine/rulelog.py`), and the save keeps one entry per rule, the most recent few, pruned as it is written.
+  false (`engine/orders/rulelog.py`), and the save keeps one entry per rule, the most recent few, pruned as it is written.
 - **A rule is known by what it says,** its condition and what it runs, since rules have no id. A reorder keeps its
   entry. An edit makes it a new rule, so the old entry goes and the edited one starts its own the next time it comes
   on; a removed rule's entry goes with it.

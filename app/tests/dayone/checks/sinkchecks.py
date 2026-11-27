@@ -8,8 +8,8 @@ from ashfall_app.engine import (
     AtLeast, CardCount, CardId, InvalidVerbError, RunBy, RunKind, Rules, Save, SkillLevel, TapCard, View, advance,
     decide, value_at, view,
 )
-from ashfall_app.engine.work import completions
-from ashfall_app.engine.cure_reading import puts_up
+from ashfall_app.engine.loop.work import completions
+from ashfall_app.engine.cards.cure_reading import puts_up
 from tests.dayone.fights.cures import CURE_S, act
 
 

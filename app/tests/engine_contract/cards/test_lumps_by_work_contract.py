@@ -18,7 +18,7 @@ from ashfall_app.engine import (
     StoreValue, SwitchMix, TapCard, TriggerDef, TriggerId, advance, decide, new_save, next_event, segment, value_at,
     view,
 )
-from ashfall_app.engine.modifiers import WorkRef
+from ashfall_app.engine.modifiers.modifiers import WorkRef
 
 X, Y, Z = StoreId("x"), StoreId("y"), StoreId("z")
 A, B = CardId("a"), CardId("b")

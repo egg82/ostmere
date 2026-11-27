@@ -4,7 +4,7 @@ Raises ValueError naming the entry (refs.fail)."""
 from typing import TYPE_CHECKING
 
 from ....engine import CardId, Rules
-from ....engine.cure_reading import cures_chip
+from ....engine.cards.cure_reading import cures_chip
 from ...chores import chores as chore_chips
 from ...refs import fail, need, outcomes
 

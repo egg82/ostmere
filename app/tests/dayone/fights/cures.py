@@ -15,10 +15,10 @@ from ashfall_app.engine import (
     value, view,
 )
 from ashfall_app.rules.expand.convert import unlock
-from ashfall_app.engine.checks import check_hand_tap
-from ashfall_app.engine.errors import InvalidVerbError
-from ashfall_app.engine.work import completions
-from ashfall_app.engine.cure_reading import count_stores, cures_chip
+from ashfall_app.engine.validate.checks import check_hand_tap
+from ashfall_app.engine.core.errors import InvalidVerbError
+from ashfall_app.engine.loop.work import completions
+from ashfall_app.engine.cards.cure_reading import count_stores, cures_chip
 from tests.dayone.player.player import DayOnePlayer
 from tests.rules.play.playthrough import opening
 

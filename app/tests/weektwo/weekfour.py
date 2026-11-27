@@ -4,8 +4,8 @@ chapter adds to the policies. Ids only (CLAUDE.md, "Never spoil the owner")."""
 from collections.abc import Callable
 
 from ashfall_app.engine import AnswerId, CardId, ChipId, OfferId, Rules, Save, StoreId, TapCard, View, units
-from ashfall_app.engine.rates import store_value
-from ashfall_app.engine.work import completions
+from ashfall_app.engine.loop.rates import store_value
+from ashfall_app.engine.loop.work import completions
 from tests.daythree.chapter import ChipRule, Landings, Later, Share
 from tests.dayone.player.policy import Move, lane_free
 from tests.dayone.player.sinks import Chapter

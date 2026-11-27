@@ -8,7 +8,7 @@ from ashfall_app.engine import (
     ActionId, CardDef, CardId, PacingCurve, PrestigeDef, Rules, SkillDef, SkillId, StandingDef, StoreDef, StoreId,
     per_hour, units,
 )
-from ashfall_app.engine.nodes import ORDINARY_ABSENCE_S
+from ashfall_app.engine.prestige.nodes import ORDINARY_ABSENCE_S
 from ashfall_app.rules.checks.run import check_content
 from ashfall_app.rules.expand.convert import build_rules
 from ashfall_app.rules.prestige import PrestigeEntry, check_phase_spans

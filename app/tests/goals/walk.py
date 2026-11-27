@@ -28,8 +28,8 @@ from ashfall_app.engine import (
     ActionId, AfterTime, AtLeast, CardCount, CardId, CardView, LaneRules, Pending, Rules, RunBy, Running, Save, SkillLevel,
     StoreValue, TapCard, TriggerDef, Unlock, Unlocked, UnlockKind, Verb, View, pending,
 )
-from ashfall_app.engine.conditions import is_true
-from ashfall_app.engine.work import completions
+from ashfall_app.engine.orders.conditions import is_true
+from ashfall_app.engine.loop.work import completions
 from ashfall_app.rules.goals import GoalDef, goal_defs, moved_by, story
 from ashfall_app.rules.schema import CHAPTERS, IN_WRITING, Opening, load_opening
 

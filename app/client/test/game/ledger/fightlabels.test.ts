@@ -71,7 +71,7 @@ if (orders.size < 3) throw new Error(`the save does not move the pool's order: $
 expect("a one-line pool is that line", poolLine(1, "hunt", "won", ["only"], 5), "only");
 
 // No line twice in a row, across a round's end too; a pool of two takes turns. The draws the engine's port is held to
-// (engine/rotation.py, tests/engine/test_format10_impl.py) are fixtures/bag_cases.json, taken from this function.
+// (engine/cards/rotation.py, tests/engine/cards/test_format10_impl.py) are fixtures/bag_cases.json, taken from this function.
 for (const n of [3, 6, 7]) {
   const six = Array.from({ length: n }, (_, i) => `l${i}`);
   for (const key of ["hurt|off", "a|b", "pack|won"]) {

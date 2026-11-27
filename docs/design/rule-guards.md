@@ -127,7 +127,7 @@ order's latch is true" (which mix runs, which tap starts, which lane a rule hold
 ## Evaluation, determinism and replay
 
 Evaluation already applies every verb that can act (`engine/design/`, "Evaluation applies every verb"; the loop in
-`app/ashfall_app/engine/instant.py`). That loop is unchanged. Two of its sources read differently:
+`app/ashfall_app/engine/loop/instant.py`). That loop is unchanged. Two of its sources read differently:
 
 - the tap source walks the rules in order and takes, from each rule that is on, its first listed tap that can act;
 - the running mix is found the same way: from each rule that is on, its first listed mix that is not greyed, and the

@@ -8,7 +8,7 @@ import pytest
 
 from ashfall_app import main
 from ashfall_app.engine import AtLeast, CardId, LaneId, LaneRules, RuleInstall, StoreId, Unlock, UnlockKind
-from ashfall_app.engine.index import index
+from ashfall_app.engine.core.index import index
 from ashfall_app.rules.schema import Opening, merge_chapters, to_rules
 
 pytestmark = pytest.mark.usefixtures("townsfolk_opening")

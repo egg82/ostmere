@@ -11,8 +11,8 @@ import pytest
 from ashfall_app.engine import (
     BP, QUANTITY_SCALE, CardId, CardShare, Mix, MixId, RunKind, Rules, Save, Segment, SaveMix, StoreId, SwitchMix, advance, value_at, decide, new_save, view,
 )
-from ashfall_app.engine.segments import reach_time
-from ashfall_app.engine.work import completions
+from ashfall_app.engine.core.segments import reach_time
+from ashfall_app.engine.loop.work import completions
 from ashfall_app.rules.checks.run import check_opening
 from ashfall_app.rules.checks.people.player_checks import check_player_only
 from ashfall_app.rules.schema import Opening, merge_chapters, to_rules

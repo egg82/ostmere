@@ -19,7 +19,7 @@ from ashfall_app.engine import (
     BP, CardId, CardShare, Condition, Mix, MixId, QueueEntry, Rules, Save, SaveMix, SetQueue, SwitchMix, advance, decide,
     view,
 )
-from ashfall_app.engine.conditions import is_true
+from ashfall_app.engine.orders.conditions import is_true
 from tests.dayone.player.player import DayOnePlayer
 from tests.worth import goaltime as gt
 from tests.worth import probe as pr

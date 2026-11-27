@@ -8,8 +8,8 @@ from ashfall_app.engine import (
     BP, HANDS, CardDef, CardId, EventKind, Flow, InvalidVerbError, MixId, RunBy, StoreDef, StoreId, SwitchMix, advance,
     advance_logged, decide, explain_work, new_save, next_event, segment, value, value_at, view,
 )
-from ashfall_app.engine import work as engine_work
-from ashfall_app.engine.schedule import events
+from ashfall_app.engine.loop import work as engine_work
+from ashfall_app.engine.loop.schedule import events
 from cards_gen import Scenario, few, play, play_logged, rule_keys, scenario_st, span, timeline
 from cards_world import Q, lane, rules, save_mix, work
 

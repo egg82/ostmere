@@ -17,7 +17,7 @@ class Suite:
     """The directory under app/ holding the suite's MUTANTS file and its own tests."""
 
 
-LEAVES_ALSO = ("tests/engine/test_leaves_impl.py", "tests/engine/test_retired_chores_impl.py",
+LEAVES_ALSO = ("tests/engine/people/test_leaves_impl.py", "tests/engine/people/test_retired_chores_impl.py",
                "tests/rules/loaders/test_leaves_loader.py", "tests/rules/loaders/test_retired_chores_loader.py")
 SUITES = {
     "held": Suite("MUTANTS_held.txt", "test_held_*.py", "mutants/held", home=f"{CONTRACT}/held"),

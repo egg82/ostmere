@@ -4,7 +4,7 @@ from ashfall_app.engine import (
     Amount, AtLeast, AtMost, CardCount, CardDef, CardId, ChipDef, ChipId, Outcome, PacingCurve, Rules, SkillDef, SkillId,
     StoreDef, StoreId, StoreValue, TriggerDef, TriggerId, Unlock, UnlockKind, new_save, view,
 )
-from ashfall_app.engine.cure_reading import puts_up
+from ashfall_app.engine.cards.cure_reading import puts_up
 from tests.dayone.fights import cures
 
 COUNT, OTHER, WOOD = StoreId("count"), StoreId("other"), StoreId("wood")

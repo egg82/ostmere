@@ -15,7 +15,7 @@ from ashfall_app.engine import (
     AtLeast, AtMost, CardId, Line, Order, Save, SetOrders, StoreId, StoreValue, TapCard, Unlock, UnlockKind, Verb, View,
     advance_logged, next_event, units,
 )
-from ashfall_app.engine.work import completions
+from ashfall_app.engine.loop.work import completions
 from ashfall_app.rules.expand.convert import condition
 from ashfall_app.rules.schema import load_opening
 from tests.dayone.player import policy, sinks

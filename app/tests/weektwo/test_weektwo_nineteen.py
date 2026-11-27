@@ -8,7 +8,7 @@ under today's and plays on with nobody deciding. The rhythm is the readouts' (te
 import pytest
 
 from ashfall_app.engine import AnswerId, CardId, TapCard, Unlock, UnlockKind
-from ashfall_app.engine.counts import completions
+from ashfall_app.engine.cards.counts import completions
 from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer

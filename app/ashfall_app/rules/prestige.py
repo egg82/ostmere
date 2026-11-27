@@ -10,8 +10,8 @@ from ..engine import (
     ActionId, CardId, FlowKind, NodeDef, NodeId, NodeTarget, PrestigeDef, RateRef, Rules, SkillId, StoreCap, StoreId,
     WorkRef,
 )
-from ..engine.nodes import ORDINARY_ABSENCE_S
-from ..engine.phases import span
+from ..engine.prestige.nodes import ORDINARY_ABSENCE_S
+from ..engine.prestige.phases import span
 from .entries.entries import Entry
 
 

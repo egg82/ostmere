@@ -9,7 +9,7 @@ from ashfall_app.engine import (
     SetOrders, SetQueue, StandingDef, StoreDef, StoreId, StoreValue, SwitchMix, TapCard, Verb, advance, decide,
     new_save, view,
 )
-from ashfall_app.engine import work as engine_work
+from ashfall_app.engine.loop import work as engine_work
 from cards_world import Q, RACK, ledger, rules, save_mix, with_mix
 
 X, Y, Z = StoreId("x"), StoreId("y"), StoreId("z")

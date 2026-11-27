@@ -8,7 +8,7 @@ from ashfall_app.api.world.line_causes import line_infos
 from ashfall_app.api.world.line_models import WhenCause
 from ashfall_app.api.service import Game
 from ashfall_app.engine import new_save
-from ashfall_app.engine.answershifts import answer_shifts
+from ashfall_app.engine.offers.answershifts import answer_shifts
 from ashfall_app.rules.checks.cards.ask_checks import check_asks
 from ashfall_app.rules.entries.offer_entries import OfferEntry
 from ashfall_app.rules.schema import Opening

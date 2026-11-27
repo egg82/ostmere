@@ -1,6 +1,6 @@
 """A working's chain on the wire (api/contract/spells.txt, "SPELLS"), on tests/rules/fixtures/chains.toml merged onto the
 opening: the content's chain and group, the view's reach and chained tally, and one LogLine per link in the Step that
-carries the completion. The length itself is the engine's (tests/engine/test_chains_impl.py)."""
+carries the completion. The length itself is the engine's (tests/engine/combat/test_chains_impl.py)."""
 from dataclasses import replace
 from functools import cache
 from pathlib import Path

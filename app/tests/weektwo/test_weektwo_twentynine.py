@@ -9,8 +9,8 @@ spoil the owner")."""
 import pytest
 
 from ashfall_app.engine import AnswerOffer, StoreId, value
-from ashfall_app.engine.gates import shown_chips
-from ashfall_app.engine.work import completions
+from ashfall_app.engine.unlocks.gates import shown_chips
+from ashfall_app.engine.loop.work import completions
 from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer

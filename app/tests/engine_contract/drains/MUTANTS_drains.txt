@@ -25,7 +25,7 @@ of x. Record each run below the list as MUTANTS_held.txt does (planted, red, sur
                    share a digest.                                                                 [128]
 13 digest moves    the rules encoding writes `drains: []` for every card, so rules without a drain change digest
                    and every live save's text changes (compare with a pinned fixture, as
-                   tests/engine/test_pre_fights_save.py does).                                     [128]
+                   tests/engine/savefile/test_pre_fights_save.py does).                                     [128]
 14 cure blind      cure_reading.takes ignores drains: a card that only drains x is not a cure for an at_least
                    chip on x, and its tap does not cut in.                                         [129]
 15 repeats         a drain card on a declared lane is repeat-eligible: its landings are skipped while x is 0.  [130]

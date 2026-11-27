@@ -8,7 +8,7 @@ from sqlalchemy import Engine
 
 from ... import logs
 from ...db.stored import manifests
-from ...engine.codec import canonical, manifest
+from ...engine.savefile.codec import canonical, manifest
 from ..interface import Ruleset
 
 _log = logging.getLogger("ashfall.saves")
