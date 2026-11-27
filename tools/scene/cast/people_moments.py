@@ -44,6 +44,8 @@ WINDOWS: dict[str, str] = {
     "drift": "store:drift_clock@12..15",
     "naming": "store:sorrel_clock@6..9",
     "bowl": "store:kept_clock@8..11",
+    "board": "store:bede_clock@4..7",
+    "hands": "store:bede_clock@10..13",
 }
 """Each moment's window. The seed's is the pair's own three-hour count, which the trigger reads at 20; the first
 group are clocks of the moment's own, started by the outcome that tells it, and the last the chapters' own hours-since

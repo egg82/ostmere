@@ -90,7 +90,13 @@ def test_a_day_twenty_five_route_readout_is_reported(week_days: Days, name: str)
     rs.check(f"weektwo-twentyfive-{name}", report.route_text("twentyfive", name, *week_days))
 
 
-@pytest.mark.parametrize("week_days, name", [(("twentyfive", r), r) for r in report.ROUTES], indirect=["week_days"],
+@pytest.mark.parametrize("week_days, name", [(("twentyseven", r), r) for r in report.ROUTES], indirect=["week_days"],
+                         ids=report.ROUTES)
+def test_a_day_twenty_seven_route_readout_is_reported(week_days: Days, name: str):
+    rs.check(f"weektwo-twentyseven-{name}", report.route_text("twentyseven", name, *week_days))
+
+
+@pytest.mark.parametrize("week_days, name", [(("twentyseven", r), r) for r in report.ROUTES], indirect=["week_days"],
                          ids=report.ROUTES)
 def test_the_whole_games_pacing_readout_is_reported(week_days: Days, name: str):
     p, later = week_days
@@ -153,3 +159,9 @@ def test_day_twenty_fives_visit_readout_is_reported(twentyfive_counts: Counts, t
     assert len(twentyfive_counts[1]) >= 3, "the chapter's visits were counted"
     rs.check("weektwo-twentyfive", chapter_text("twentyfive", twentyfive_counts[1], twentyfive_marks,
                                                 cap_lines(twentyfive_counts[0], verdicts.CHAPTERS["twentyfive"])))
+
+
+def test_day_twenty_sevens_visit_readout_is_reported(twentyseven_counts: Counts, twentyseven_marks: dict[str, str]):
+    assert len(twentyseven_counts[1]) >= 3, "the chapter's visits were counted"
+    rs.check("weektwo-twentyseven", chapter_text("twentyseven", twentyseven_counts[1], twentyseven_marks,
+                                                 cap_lines(twentyseven_counts[0], verdicts.CHAPTERS["twentyseven"])))

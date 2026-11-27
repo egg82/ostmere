@@ -156,7 +156,7 @@ joins = [
   { lane = "n16", mix = "town:camp", card = "g_road_fungus_stew", own_split = false },
   { lane = "n17", mix = "town:camp", card = "g_road_fungus_stew", own_split = false },
   { lane = "n18", mix = "town:camp", card = "g_road_fungus_stew", own_split = false },
-  { lane = "n19", mix = "town:camp", card = "g_road_fungus_stew", own_split = false },
+  { lane = "n19", mix = "town:camp", card = "g_hearth_fungus_stew", own_split = false },
 ]
 whereabouts = [
   { person = "n16", layer = "figure_n16_at_the_pot" },
@@ -181,7 +181,7 @@ joins = [
   { lane = "n16", mix = "town:camp", card = "g_road_clear_road", own_split = false },
   { lane = "n17", mix = "town:camp", card = "g_road_clear_road", own_split = false },
   { lane = "n18", mix = "town:camp", card = "g_road_clear_road", own_split = false },
-  { lane = "n19", mix = "town:camp", card = "g_road_clear_road", own_split = false },
+  { lane = "n19", mix = "town:camp", card = "g_hearth_clear_road", own_split = false },
 ]
 whereabouts = [
   { person = "n16", no_scene = "clears the cut road, out past the palisade above the story strip's clearance, where no figure's head may sit" },
@@ -217,7 +217,7 @@ by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n16"
 ruled = true
 told = "line"
-group = "g_road"
+crews = ["g_hearth", "g_road"]
 
 [[lanes]]
 id = "n17"
@@ -226,7 +226,7 @@ by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n17"
 ruled = true
 told = "line"
-group = "g_road"
+crews = ["g_hearth", "g_road"]
 
 [[lanes]]
 id = "n18"
@@ -235,16 +235,16 @@ by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n18"
 ruled = true
 told = "line"
-group = "g_road"
+crews = ["g_hearth", "g_road"]
 
 [[lanes]]
 id = "n19"
 lodging = { build = "hall" }
-by_day = { card = "g_road_fungus_stew" }
+by_day = { card = "g_hearth_fungus_stew" }
 label_key = "lane_n19"
 ruled = true
 told = "line"
-group = "g_road"
+crews = ["g_hearth", "g_road"]
 
 # Hours since the four sat down, and a latch at six, for the widowers' offer (machinery).
 [[stores]]
@@ -359,7 +359,7 @@ role = "food"
 stores = [{ store = "arrivals", items = 3 }]
 joins = [
   { lane = "n20", mix = "town:camp", card = "g_road_fungus_stew", own_split = false },
-  { lane = "n21", mix = "town:camp", card = "g_road_fungus_stew", own_split = false },
+  { lane = "n21", mix = "town:camp", card = "g_hearth_fungus_stew", own_split = false },
   { lane = "n22", mix = "town:camp", card = "g_road_fungus_stew", own_split = false },
 ]
 whereabouts = [
@@ -381,12 +381,12 @@ role = "build"
 stores = [{ store = "arrivals", items = 3 }]
 joins = [
   { lane = "n20", mix = "town:camp", card = "g_road_stakes", own_split = false },
-  { lane = "n21", mix = "town:camp", card = "g_road_stakes", own_split = false },
+  { lane = "n21", mix = "town:camp", card = "g_hearth_clear_road", own_split = false },
   { lane = "n22", mix = "town:camp", card = "g_road_stakes", own_split = false },
 ]
 whereabouts = [
   { person = "n20", no_scene = "works the stakes, which the scene draws as the stack growing and never as anyone at it" },
-  { person = "n21", no_scene = "works the stakes, which the scene draws as the stack growing and never as anyone at it" },
+  { person = "n21", no_scene = "clears the cut road, out past the palisade above the story strip's clearance, where no figure's head may sit" },
   { person = "n22", no_scene = "works the stakes, which the scene draws as the stack growing and never as anyone at it" },
 ]
 modifiers = [
@@ -417,16 +417,16 @@ by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n20"
 ruled = true
 told = "mention"
-group = "g_road"
+crews = ["g_hearth", "g_road"]
 
 [[lanes]]
 id = "n21"
 lodging = { build = "hall" }
-by_day = { card = "g_road_fungus_stew" }
+by_day = { card = "g_hearth_fungus_stew" }
 label_key = "lane_n21"
 ruled = true
 told = "mention"
-group = "g_road"
+crews = ["g_hearth", "g_road"]
 
 [[lanes]]
 id = "n22"
@@ -435,7 +435,7 @@ by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n22"
 ruled = true
 told = "mention"
-group = "g_road"
+crews = ["g_hearth", "g_road"]
 
 # ---------- Lucy's jobs ----------
 
@@ -707,7 +707,45 @@ I9 = ["l_walkers_1"]
 I10 = ["l_thanks"]
 B21 = ["l_b21_1"]
 
+# Each answer to a work offer lands a number a few hours after the answer, named for the answer (the ledger shows its
+# source): to the food, the camp's rest +3%; to the building, the player's hands +3%. Starting values, not tuned.
+[[triggers]]
+id = "t_kept_o_walkers_food"
+when = { test = "at_least", subject_kind = "store", id = "walkers_clock", value = 4 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_walkers_food", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_walkers_food"]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10300, source = "o_walkers_food" }]
+
+[[triggers]]
+id = "t_kept_o_walkers_build"
+when = { test = "at_least", subject_kind = "store", id = "walkers_clock", value = 4 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_walkers_build", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_walkers_build"]
+modifiers = [{ target = "lane", id = "hands", kind = "mul_bp", amount_bp = 10300, source = "o_walkers_build" }]
+
+[[triggers]]
+id = "t_kept_o_widowers_food"
+when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 36 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_widowers_food", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_widowers_food"]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10300, source = "o_widowers_food" }]
+
+[[triggers]]
+id = "t_kept_o_widowers_build"
+when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 36 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_widowers_build", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_widowers_build"]
+modifiers = [{ target = "lane", id = "hands", kind = "mul_bp", amount_bp = 10300, source = "o_widowers_build" }]
+
 [line_kinds]
+l_kept_o_walkers_food = "story"
+l_kept_o_walkers_build = "story"
+l_kept_o_widowers_food = "story"
+l_kept_o_widowers_build = "story"
 l_echo_j_steam_hole_no = "story"
 l_echo_j_leaning_wall_no = "story"
 l_echo_j_midden_no = "story"
@@ -765,6 +803,10 @@ pot_stew = [{ lane = "n23", amount_bp = 1500 }]
 pot_fungus_stew = [{ lane = "n23", amount_bp = 1000 }]
 
 [text]
+l_kept_o_walkers_food = "the four keep the pot between them. the camp rests a little easier."
+l_kept_o_walkers_build = "the four have the road in hand, and your hands go a little quicker."
+l_kept_o_widowers_food = "the three keep the pot as if it were theirs. the camp rests easier."
+l_kept_o_widowers_build = "the three have the stakes in hand now, and your hands go quicker."
 l_echo_j_steam_hole_no = "someone went down the hole by the stream and came up warm to the elbows."
 l_echo_j_leaning_wall_no = "two of them pulled the wall down. the wood is stacked off the stones."
 l_echo_j_midden_no = "the midden pit is dug, and the ground beside it has gone soft and sour."
@@ -818,7 +860,7 @@ a_walkers_food_cost = "{pct} smoked from the rack, {pct_b} smoked at the table"
 a_walkers_build_cost = "{pct} all road clearing, {pct_b} smoked at the table"
 l_walkers_food = "the four go to the pot together."
 l_walkers_build = "the four take the shovels between them."
-l_walkers_group = "{n2} counts the four in with the road crew. they stand close all the same"
+l_walkers_group = "{n2} and {n4} share the four between the road crew and the hearth crew, one split a crew. they stand close all the same"
 lane_n16 = "One of the four"
 lane_n17 = "One of the four"
 lane_n18 = "One of the four"

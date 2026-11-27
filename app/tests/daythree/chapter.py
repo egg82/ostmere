@@ -5,6 +5,7 @@ plays one on top of day two's moves from the beat it starts at to the visit its 
 neither holds a trip nor queues comforts does both by hand (moves.py)."""
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
+from typing import NamedTuple
 
 from ashfall_app.engine import AnswerId, CardId, ChipId, OfferId, Order, Rules, Save, StoreId, Unlock, UnlockKind, View
 from ashfall_app.engine.work import completions
@@ -45,6 +46,13 @@ def fired_ids(save: Save, rules: Rules) -> frozenset[str]:
     found = frozenset(t.id for t, f in zip(rules.triggers, save.fired) if f)
     _FIRED[:] = [(save.fired, rules, found)]
     return found
+
+
+class Offer(NamedTuple):
+    """An order card's rule, the unlock it is offered after and, when the content ends its offering, the unlock that does."""
+    after: Unlock
+    order: Order
+    until: Unlock | None = None
 
 
 @dataclass(frozen=True)
@@ -93,9 +101,9 @@ class Later:
     sinks: Chapter
     steps: tuple[CardId, ...]
     """One-off steps, tapped the moment they are ready."""
-    order_cards: tuple[tuple[Unlock, Order], ...]
+    order_cards: tuple[tuple[Unlock, Order] | Offer, ...]
     """Each order card's rule (the content's order_cards) and the unlock it is offered after: a route that takes rules
-    sets it, first in its orders, once offered."""
+    sets it, first in its orders, once offered and until the unlock that ends its offering, if it has one."""
     keeps: tuple[Keep, ...]
     landed: Callable[[Save, Rules], set[str]]
     """The chapter's story ids landed in a save."""

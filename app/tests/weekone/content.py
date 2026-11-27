@@ -3,7 +3,7 @@ save, and each chapter's sinks, steps, shares and cures, on the rules day three 
 merged). Ids only (CLAUDE.md, "Never spoil the owner")."""
 from ashfall_app.engine import AfterTime, AnswerId, CardId, OfferId, Order, StoreId, TapCard, Unlock, UnlockKind
 from tests.daythree import content as c3
-from tests.daythree.chapter import Cure, Landings, Later, Share
+from tests.daythree.chapter import Cure, Landings, Later, Offer, Share
 from tests.dayone.player.sinks import Chapter, Trip
 
 HAND_ON_STONE, STONES, HURT = CardId("hand_on_stone"), StoreId("stones"), StoreId("hurt")
@@ -34,13 +34,13 @@ BED_RULE = (Unlock(UnlockKind.CARD, DIG_BED), Order(AfterTime(0), TapCard(DIG_BE
 """Her bed on her lane is dug by a rule of the player's (a capped card is never a share)."""
 
 
-def sew_rule() -> tuple[tuple[Unlock, Order], ...]:
+def sew_rule() -> tuple[tuple[Unlock, Order] | Offer, ...]:
     """The pelts' sink's order card (day_six.toml, sew_wraps), offered once the bedding is built. Of pelt's order cards
     only this one: hide_flaps' shows at G2 and is day eight's to set (weektwo/content.py, ORDER_STORES)."""
     return tuple(x for x in c3.order_cards(c3.opening3(), ("pelt",)) if x[1].then == TapCard(SEW))
 
 
-def windbreak_rule() -> tuple[tuple[Unlock, Order], ...]:
+def windbreak_rule() -> tuple[tuple[Unlock, Order] | Offer, ...]:
     """The stones' sink's order card (day_five.toml, build_windbreak), offered once the pair join. Of stones' order
     cards only this one: gap_fire's is day nine's to set (weektwo/content.py, ORDER_STORES)."""
     return tuple(x for x in c3.order_cards(c3.opening3(), ("stones",)) if x[1].then == TapCard(WINDBREAK))

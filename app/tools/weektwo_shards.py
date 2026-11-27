@@ -39,15 +39,20 @@ SHARDS: dict[str, frozenset[str]] = {
     "twentyfive-sharp": frozenset({"twentyfive-sharp"}),
     "twentyfive-whenever": frozenset({"twentyfive-whenever"}),
     "twentyfive": frozenset({"twentyfive"}),
+    "twentyseven-sharp": frozenset({"twentyseven-sharp"}),
+    "twentyseven-whenever": frozenset({"twentyseven-whenever"}),
+    "twentyseven": frozenset({"twentyseven"}),
     "makers": frozenset({"makers"}),
 }
-NIGHTLY_ONLY = frozenset({"twentyfive-sharp", "twentyfive"})
+NIGHTLY_ONLY = frozenset({"twentyfive-sharp", "twentyfive", "twentyseven-sharp", "twentyseven"})
 """The shards a pull request's slice does not play: the shard's wall time, as the last nightly measured it, plus the slice
 job's 26 s of setup and 10% margin, is over `playthrough-slice`'s 6 minutes. A shard's wall time is the SUM of the builds
 and heavy calls of its longest xdist loadgroup (`--dist loadgroup` puts every test of one play in one worker, one after
 another), not its slowest play or test, and with more loadgroups than the job's four workers the groups queue. Last
 measured (#540): day twenty-five's typical shard 490 s and its sharp 612 s, against the ~334 s a slice job has after
-setup. The nightly plays these. A shard leaves the set by being split or sped up, never by a longer timeout; the 6 minutes
+setup. Day twenty-seven's typical and sharp shards are here unmeasured, split as day twenty-five's were, since each plays
+on from the chapter before's end with the same tests; the first nightly to play them gives their wall time. The nightly
+plays these. A shard leaves the set by being split or sped up, never by a longer timeout; the 6 minutes
 is what tests/test_ci_budget.py's 10 leaves after `changes`, `slice` and `ci-ok`."""
 WHOLE_GAME = frozenset({"makers"})
 """The shards whose readouts read the whole game, not one chapter: a pull request's smoke plan plays them from the start where

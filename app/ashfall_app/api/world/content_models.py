@@ -224,6 +224,8 @@ class OrderCard(BaseModel):
     then: OrderVerb
     offered_after: Unlock | None
     """Offered only once view.unlocked holds this: the drain the order answers has begun."""
+    offered_until: Unlock | None
+    """Not offered once view.unlocked holds this (an order card offered once: its rule was retired at a season's turn)."""
     chip: str | None
     """The chip this card answers (its `when` is that chip's): offered in the hands strip while the chip shows, never
     under a ledger line (contract/)."""

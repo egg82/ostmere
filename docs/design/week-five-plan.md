@@ -120,7 +120,9 @@ design estimates at 672 h**; 10 needs 1-3, 5 and 9; 11-13 follow the content; 14
     side layer, Camp levels, aims, journal notes, end card, and its `beats.yaml` twin (item 11). Accept, each: the loader
     and the lock pass; the fight, chip, season and finite checks pass with every week-5 pool listed as feeding nothing
     progress needs; item 9's band holds for the chapter's beat; density targets hold on typical; per absence at most two
-    moments; a save rebased from each earlier chapter's end loads and plays on.
+    moments; a save rebased from each earlier chapter's end loads and plays on. The season's thaw standing (item 1)
+    costs the old chip store and its gift pool together, so it stops when either runs dry: size them equal at the turn,
+    or the other is left over.
 11. **`beats.yaml` and the flat check** (**S**, content). The chapters' twin lists (Y1-Y15, a night list for the last
     two), side entries SL37-SL41, the spine entries' changed gates and `pays` (B22-B25), B25's system unlock removed
     (prestige ships already), and the accepted exceptions recorded as accepted. Accept: the flat check raises nothing for

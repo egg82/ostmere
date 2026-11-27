@@ -29,7 +29,9 @@ SPELLS (engine design/spells.txt, "SPELLS")
   - R's chained rises by k; its fought and lost do not move; nothing else of R's changes (its odds, its ledger lines,
     its standing bar). What casting brings is the working's own lines, as for any card.
   - k = 0 (R not fighting, or no room) sends no link line; the completion is as for a card without a chain.
-  A chain longer than the group ends at the group: k never exceeds due, and two chains at one instant share one due.
+  A chain longer than the group ends at the group: k never exceeds due. A second chain at the same instant reads
+  fought and chained as the first left them, as one a moment later would: the members still due, or, when the first
+  ended the group, the next group whole.
   While away it is the same: a working queued, mixed or ruled completes at the same T with the same k and the same
   lines, in the catching-up Steps that carry T, whatever the player looked at meanwhile. Nothing in a chain reads a seed,
   the save's id or the time a request was made.

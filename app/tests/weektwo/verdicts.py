@@ -24,7 +24,7 @@ from tests.weekone import verdicts as v1
 from tests.weektwo import content as w2
 from tests.weektwo import counters, ends
 from tests.weektwo import weekfour as w4
-from tests.weektwo.routes import eighteen, eleven, fifteen, nine, nineteen, sixteen, twelve, twentyfive, twentythree, twentytwo, week2
+from tests.weektwo.routes import eighteen, eleven, fifteen, nine, nineteen, sixteen, twelve, twentyfive, twentyseven, twentythree, twentytwo, week2
 
 EIGHT = w2.day_eight("typical")
 """The chapter's span: its start and stop beats are the same on every route."""
@@ -38,10 +38,11 @@ NINETEEN = w2.day_nineteen("typical")
 TWENTYTWO = w4.day_twenty_two("typical")
 TWENTYTHREE = w4.day_twenty_three("typical")
 TWENTYFIVE = w4.day_twenty_five("typical")
+TWENTYSEVEN = w4.day_twenty_seven("typical")
 BEATS = {EIGHT.start: ("B8", "B9"), NINE.start: ("B10",), ELEVEN.start: ("B11",), TWELVE.start: ("B12",),
          FIFTEEN.start: ("B14",), SIXTEEN.start: ("B15",), EIGHTEEN.start: ("B16",),
          NINETEEN.start: ("B17",), TWENTYTWO.start: ("B18", "B19"),
-         TWENTYTHREE.start: ("B20",), TWENTYFIVE.start: ("B21",)}
+         TWENTYTHREE.start: ("B20",), TWENTYFIVE.start: ("B21",), TWENTYSEVEN.start: ()}
 """The spine beats each chapter lands, by the beat it starts at, each held to its band."""
 BOOSTS = (*v1.BOOSTS, str(w2.HIDE_FLAPS))
 """What the babysitter taps the second it can: week one's and the chapter's comfort. The build is its order's in both."""
@@ -56,10 +57,10 @@ def days(p: DayTwoPlayer, chapter: Later = EIGHT) -> dict[str, float]:
 
 CHAPTERS = {"eight": EIGHT, "nine": NINE, "eleven": ELEVEN, "twelve": TWELVE, "fifteen": FIFTEEN, "sixteen": SIXTEEN,
             "eighteen": EIGHTEEN, "nineteen": NINETEEN, "twentytwo": TWENTYTWO,
-            "twentythree": TWENTYTHREE, "twentyfive": TWENTYFIVE}
+            "twentythree": TWENTYTHREE, "twentyfive": TWENTYFIVE, "twentyseven": TWENTYSEVEN}
 PLAYS = {"eight": week2, "nine": nine, "eleven": eleven, "twelve": twelve, "fifteen": fifteen, "sixteen": sixteen,
          "eighteen": eighteen, "nineteen": nineteen, "twentytwo": twentytwo,
-         "twentythree": twentythree, "twentyfive": twentyfive}
+         "twentythree": twentythree, "twentyfive": twentyfive, "twentyseven": twentyseven}
 """Each chapter's typical play is the one its counting reads."""
 PART_STEPS = 1
 ALL = -1

@@ -16,7 +16,7 @@ from tests.dayone.absence import capcheck, caploss
 from tests.dayone.player.beats import STORY
 from tests.dayone.human.human import HumanPlayer, human_day
 from tests.dayone.player.schedules import HOUR
-from tests.opening.playthrough import opening
+from tests.opening.playthrough import offering, opening
 
 ABSENCES_H = (1, 8, 24, 72, 168)
 KINDS = ("line", "feature", "chip", "store", "skill", "card", "level")
@@ -92,7 +92,7 @@ def ledger_hold_ms(after: View, store: str) -> int:
     line = next((ln for ln in after.ledger if str(ln.store) == store), None)
     unlocked = {(u.kind.value, str(u.id)) for u in after.unlocked}
     offered = [c for c in o.order_cards if c.store == store and c.chip is None and c.tap_card is not None
-               and (c.offered_after is None or (c.offered_after.unlock_kind, c.offered_after.id) in unlocked)]
+               and offering(c, lambda k, i: (k, i) in unlocked)]
     if line is not None and (line.starved or (line.falling and not line.covered)) and offered:
         card = offered[-1]   # game/ledger/cues.ts offeredCard: the last one offered
         task = text[next(c.label_key for c in o.cards if c.id == card.tap_card)]

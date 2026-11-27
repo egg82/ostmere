@@ -84,8 +84,8 @@ HIDDEN = {
     "cut_night_clock", "b17_clock", "r2_clock", "b17_floor", "night_21", "fungus_stews", "beds_covered",
     "still_left", "thaw_left", "film", "still_clock", "pace_clock", "pace_3h", "still_30",
     "sorrel_clock", "sorrel_12h", "sorrel_16h", "cache_torn", "night_24",
-    "kept_clock", "kept_4h", "kept_12h", "kept_24h", "walkers_clock", "walkers_6h", "bede_wait",
-    "own_hands", "left_to_them", "bay2_mid", "hut_mid",
+    "kept_clock", "kept_4h", "kept_12h", "kept_24h", "walkers_clock", "walkers_6h", "bede_wait", "bede_clock", "night_28",
+    "own_hands", "left_to_them", "work_food", "work_build", "bay2_mid", "hut_mid",
 }
 
 

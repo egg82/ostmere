@@ -9,7 +9,7 @@ from ashfall_app.engine import (
 )
 from ashfall_app.opening.convert import condition
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, OPENING, Opening, load_opening, to_rules
-from tests.daythree.chapter import Keep, Landings, Later
+from tests.daythree.chapter import Keep, Landings, Later, Offer
 from tests.dayone.player.sinks import Chapter, Trip
 
 TRIGGERED = {"K2": ("t_stream",), "K3": ("t_night_3",), "K5": ("t_joins",),
@@ -69,14 +69,15 @@ def keeps() -> tuple[Keep, ...]:
     return tuple(Keep(CardId(card), StoreId(store), max(floor, need(rules3(), StoreId(store)))) for card, store, floor in KEPT)
 
 
-def order_cards(op: Opening, stores: tuple[str, ...] = ORDER_STORES) -> tuple[tuple[Unlock, Order], ...]:
+def order_cards(op: Opening, stores: tuple[str, ...] = ORDER_STORES) -> tuple[Offer, ...]:
     """The chapter's order cards on `stores` that tap a card once offered, as the page fills them in (opening/convert.py)."""
     cards = {c.id for c in op.cards}
-    out: list[tuple[Unlock, Order]] = []
+    out: list[Offer] = []
     for oc in op.order_cards:
         if oc.store in stores and oc.tap_card is not None and oc.offered_after is not None:
             after = Unlock(UnlockKind(oc.offered_after.unlock_kind), oc.offered_after.id)
-            out.append((after, Order(condition(oc.when, cards), TapCard(CardId(oc.tap_card)))))
+            until = oc.offered_until and Unlock(UnlockKind(oc.offered_until.unlock_kind), oc.offered_until.id)
+            out.append(Offer(after, Order(condition(oc.when, cards), TapCard(CardId(oc.tap_card))), until))
     return tuple(out)
 
 

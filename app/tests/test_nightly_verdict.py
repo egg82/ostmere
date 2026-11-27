@@ -142,10 +142,11 @@ def run_report(tmp: Path, event: str, changed: tuple[str, ...]) -> tuple[int, st
     return code, summary.read_text() if summary.exists() else ""
 
 
-def test_a_differing_readout_is_listed_and_fails_unless_on_a_pull_request(tmp_path: Path):
-    code, summary = run_report(tmp_path / "pr", "pull_request", ("dayone-typical.txt",))
-    assert code == 0 and "`dayone-typical.txt`" in summary and "readouts_pull 42" in summary
-    for event in ("push", "schedule", "workflow_dispatch"):
+def test_a_differing_readout_is_listed_and_fails_only_in_the_nightly(tmp_path: Path):
+    for event in ("pull_request", "push"):
+        code, summary = run_report(tmp_path / event, event, ("dayone-typical.txt",))
+        assert code == 0 and "`dayone-typical.txt`" in summary and "readouts_pull 42" in summary, event
+    for event in ("schedule", "workflow_dispatch"):
         code, summary = run_report(tmp_path / event, event, ("dayone-typical.txt",))
         assert code == 1 and "`dayone-typical.txt`" in summary, event
 
