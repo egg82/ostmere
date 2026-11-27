@@ -4,7 +4,7 @@
 // screens keep them in the strip's body.
 import { install } from "./fake-dom";
 import { testContext } from "./context";
-import { Hands } from "../src/ui/hands";
+import { Hands } from "../src/ui/hands/hands";
 
 install();
 

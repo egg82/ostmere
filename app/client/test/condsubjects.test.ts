@@ -4,9 +4,9 @@
 // ruleoffers.offeredSubjects and whenChoices in the full editor, on every fixture save. What is left out, and why, is
 // condsubjects.ts's KINDS.
 import { fixtureContent } from "../fixtures/content";
-import { Catalog } from "../src/game/catalog";
-import { offeredSubjects, whenChoices } from "../src/game/ruleoffers";
-import { subjectOpen } from "../src/game/subjectrule";
+import { Catalog } from "../src/game/page/catalog";
+import { offeredSubjects, whenChoices } from "../src/game/condition/ruleoffers";
+import { subjectOpen } from "../src/game/condition/subjectrule";
 import { KINDS, missing, present, SAVES } from "./condsubjects";
 
 const catalog = new Catalog(fixtureContent);

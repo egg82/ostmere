@@ -1,6 +1,6 @@
 """The ladder readout: each played route through the edge of played content on the live engine, printing per skill the
 game time every level was first reached and the gap from the one before, with the current phase's top and when it was
-reached, then each card's share of the running mixes by game day, flagging the cards whose share went to zero and
+reached, and when its max level (the end of its prestige track) was reached or that it was not, then each card's share of the running mixes by game day, flagging the cards whose share went to zero and
 stayed there ("Each new layer reworks the old ones", docs/decisions.md), then each skill's XP by source per band of game
 days (sources.py) and whether one saved mix shape always wins (dominance.py: at each sampled instant every saved hands
 mix is scored alone as the running mix, by the levels it gains per game hour, and the shape of the best one wins; the
@@ -26,7 +26,7 @@ from tests.ladder.reach import reaches
 from tests.ladder.shares import DAY_S, day_averages, gone_quiet
 from tests.ladder.sources import BANDS, band_label, band_shares
 from tests.ladder.ticks import (
-    at_time, card_shares, counted_at, mix_scores, phase_progress, phase_top_level, xp_by_source,
+    at_time, card_shares, counted_at, max_level, mix_scores, phase_progress, phase_top_level, xp_by_source,
 )
 from tests.weektwo.routes import TWELVE_PUSH_ROUTES, twelve
 
@@ -67,7 +67,17 @@ def skill_rows(p: DayTwoPlayer, save_at: Callable[[int], Save], last: int | None
                    for r in reaches(times, at, levels[-last:] if last else levels))
         (hit,) = reaches(times, at, [top])
         out.append(f"    top L{top}: " + (f"{days(hit.at).strip()} d" if hit.at is not None else "not by the edge"))
+        cap = max_level(rules, sk.id)
+        (hit_cap,) = reaches(times, at, [cap])
+        out.append(max_line(cap, reached, hit_cap.at))
     return out
+
+
+def max_line(cap: int, reached: int, at: int | None) -> str:
+    """A skill's time to its max level, or that the play did not reach it and the level it got to."""
+    if at is not None:
+        return f"    max L{cap}: {days(at).strip()} d"
+    return f"    max L{cap}: not by the edge (reached L{reached})"
 
 
 def sampled(p: DayTwoPlayer, save_at: Callable[[int], Save], step_h: int) -> list[tuple[int, Save]]:

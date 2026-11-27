@@ -1,4 +1,4 @@
-// FIXTURE, never shipped: a TransferCode for screenshots, its QR rows drawn by segno (ashfall_app/api/qr.py) from its
+// FIXTURE, never shipped: a TransferCode for screenshots, its QR rows drawn by segno (ashfall_app/api/player/qr.py) from its
 // join_url once, so the fixture page shows a code a phone can read.
 import { ApiFailure } from "../src/api/api";
 import type { Device, Devices, TransferCode } from "../src/api/types";

@@ -1,4 +1,4 @@
-// The town's mix on the page (contract/the-towns-mix.txt, "The town's mix"; game/town.ts, ui/townstrip.ts, ui/personpage.ts): in the Town
+// The town's mix on the page (contract/the-towns-mix.txt, "The town's mix"; game/town/town.ts, ui/town/townstrip.ts, ui/town/personpage.ts): in the Town
 // tab, once people have joined, one block per person: their face and who, their shares and the idle rest, the card they are on;
 // each person's Change opens their page, where their tasks join or leave their split; before the join the page is day two's lane row. The views are the
 // engine's own (fixtures/townwire.ts: helper tapping Haul by a rule, shares yielded; mason on shares).
@@ -6,11 +6,11 @@ import { type FakeEl, install } from "./fake-dom";
 import { dayTwoStep } from "../fixtures/daytwo";
 import { townStep } from "../fixtures/town";
 import type { Card, Mix, View } from "../src/api/types";
-import { panelView } from "../src/game/lanes";
-import { Catalog } from "../src/game/catalog";
+import { panelView } from "../src/game/town/lanes";
+import { Catalog } from "../src/game/page/catalog";
 import { fixtureContent } from "../fixtures/content";
 import { pageRig, savedMix, shareOf, texts } from "./personrig";
-import { isTownMix, townMixToEdit } from "../src/game/town";
+import { isTownMix, townMixToEdit } from "../src/game/town/town";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

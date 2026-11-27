@@ -31,7 +31,7 @@ Fits into: Feedback (`systems.md`).
 
 Each kind of event has one fixed effect, sized by how much it matters (`decisions.md`, "Juice has a ceiling, written
 as a ladder"). Nothing grows when its event repeats: a card's tenth completion looks like its first. The rungs are data
-in `app/client/src/ui/ladder.ts`, their sizes keyframes in `app/client/src/game.css`. Lowest first:
+in `app/client/src/ui/feedback/ladder.ts`, their sizes keyframes in `app/client/src/game.css`. Lowest first:
 
 | Rung | When | Effect | Under reduced motion |
 |---|---|---|---|
@@ -43,7 +43,7 @@ in `app/client/src/ui/ladder.ts`, their sizes keyframes in `app/client/src/game.
 
 - **A rule's completion sits with the mix's**, one rung below the same completion from a tap, so a tap stays special
   and a mix or rule running alone still shows what it did. A rule's run is a tap the page did not send, started by a
-  standing order (`app/client/src/ui/fires.ts`, the card's by-order dot).
+  standing order (`app/client/src/ui/cards/fires.ts`, the card's by-order dot).
 - **The level on its card:** the cards a level makes faster are LevelPays.speeds, and only one whose speed rose shows
   it. Its foot reads the skill, the level and one whole completion's time at the old and the new speed
   (`ui.card.levelled`); under a minute the times keep the decimals that tell them apart (5 s → 4.5 s). Each time is

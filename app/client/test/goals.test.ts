@@ -1,4 +1,4 @@
-// What a story beat waits on, on screen (contract/goals.txt, "Goals"; game/story.ts): the card, the ledger line and the skill
+// What a story beat waits on, on screen (contract/goals.txt, "Goals"; game/story/story.ts): the card, the ledger line and the skill
 // row it waits on carry the story mark and nothing else does; a store with no line yet is a row of its own in the Camp
 // bar's box; a wait on the clock is a plain line under them, with its time and the store that keeps it moving, or that
 // store alone while it is dry.
@@ -7,11 +7,11 @@ import { testContext } from "./context";
 import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Goal, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { storyMarks } from "../src/game/story";
-import { UI } from "../src/game/text";
-import { CampBar } from "../src/ui/camp";
-import { WaitLine } from "../src/ui/waitline";
+import { Catalog } from "../src/game/page/catalog";
+import { storyMarks } from "../src/game/story/story";
+import { UI } from "../src/game/page/text";
+import { CampBar } from "../src/ui/story/camp";
+import { WaitLine } from "../src/ui/story/waitline";
 
 install();
 

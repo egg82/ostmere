@@ -1,13 +1,13 @@
-// Kinds of one store in one ledger row (ui/ledgergroups.ts; contract/, "Ledger"): two or more drawn fold into one row
+// Kinds of one store in one ledger row (ui/ledger/ledgergroups.ts; contract/, "Ledger"): two or more drawn fold into one row
 // at the first one's place, with their total, opened by a tap; one drawn alone keeps its own row.
 import { install } from "./fake-dom";
 import { fixtureStep } from "../fixtures/steps";
 import { fixtureContent } from "../fixtures/content";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import type { LedgerLine } from "../src/api/types";
-import { LedgerGroups } from "../src/ui/ledgergroups";
+import { LedgerGroups } from "../src/ui/ledger/ledgergroups";
 import { testContext } from "./context";
-import { Glow } from "../src/ui/fresh";
+import { Glow } from "../src/ui/feedback/fresh";
 
 install();
 

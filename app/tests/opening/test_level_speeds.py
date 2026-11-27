@@ -3,7 +3,7 @@ that level, so the page can show the level on the card it speeds up. A work entr
 card on that lane; a rate, a cap or a find names none."""
 import pytest
 
-from ashfall_app.api.content_models import Content
+from ashfall_app.api.world.content_models import Content
 from ashfall_app.api.service import Game
 from ashfall_app.opening.schema import load_opening
 from ashfall_app.saves.ruleset import ruleset

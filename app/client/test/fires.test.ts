@@ -3,7 +3,7 @@
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { LaneBar, View } from "../src/api/types";
-import { OrderFires } from "../src/ui/fires";
+import { OrderFires } from "../src/ui/cards/fires";
 
 const card = fixtureContent.order_cards[0]!;
 const base: View = { ...fixtureStep("covered", 100).view, orders: [{ when: card.when, then: card.then, unless: [], or_else: [], below_next: false }], orders_on: [true] };

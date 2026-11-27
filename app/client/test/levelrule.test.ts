@@ -2,9 +2,9 @@
 // (#218): "reaches 2" is on whenever the chip reads 2 or more, which is raw above one item, where a ledger store's
 // amount is shown rounded down. The crossings sit on the amount the page shows (contract/the-client-may.txt, "a store rule").
 import { fixtureContent, Q } from "../fixtures/content";
-import { buildRule, readRule, ruleWhen, valid, type StoreRule } from "../src/game/storerule";
-import { conditionWords } from "../src/game/orders";
-import { Catalog } from "../src/game/catalog";
+import { buildRule, readRule, ruleWhen, valid, type StoreRule } from "../src/game/condition/storerule";
+import { conditionWords } from "../src/game/rules/orders";
+import { Catalog } from "../src/game/page/catalog";
 import { withHurtChip } from "../fixtures/fights";
 import { fixtureStep } from "../fixtures/steps";
 

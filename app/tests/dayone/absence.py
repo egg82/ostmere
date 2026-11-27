@@ -22,7 +22,7 @@ ABSENCES_H = (1, 8, 24, 72, 168)
 KINDS = ("line", "feature", "chip", "store", "skill", "card", "level")
 ARRIVING = {UnlockKind.FEATURE, UnlockKind.STORE, UnlockKind.SKILL, UnlockKind.CARD}
 BEHIND_LEDGER = ("skill", "card", "level")
-"""The kinds the page shows after the ledger's lines (game/arrivals.ts KIND_ORDER; a level's burst is a skill's)."""
+"""The kinds the page shows after the ledger's lines (game/story/arrivals.ts KIND_ORDER; a level's burst is a skill's)."""
 
 
 @dataclass(frozen=True)
@@ -51,7 +51,7 @@ class Point:
 
 def place(chips: Mapping[str, tuple[str, bool]], lines: Sequence[tuple[str, str | None]], shown: AbstractSet[str],
           repeats: AbstractSet[str]) -> list[str]:
-    """Where each line goes, as game/awaylines.ts places it: "band", "chronicle" or "none". `chips`: line key to (chip, is
+    """Where each line goes, as game/book/awaylines.ts places it: "band", "chronicle" or "none". `chips`: line key to (chip, is
     its on-line); `lines`: (key, card); `shown`: the chips shown after; `repeats`: the uncapped cards."""
     chip_of = [chips.get(key) if card is None else None for key, card in lines]
     last = {c[0]: i for i, c in enumerate(chip_of) if c is not None}
@@ -76,7 +76,7 @@ def band_lines(rules: Rules, lines: tuple[Line, ...], before: View, after: View,
 
 
 def rule_words(when: ConditionEntry, store: str) -> str:
-    """An order card's condition as game/storerule.ts ruleWhen words it (a count is one word, whatever its value)."""
+    """An order card's condition as game/condition/storerule.ts ruleWhen words it (a count is one word, whatever its value)."""
     text, o = opening().text, opening()
     label = text[next(s.label_key for s in o.stores if s.id == store)]
     band = when.release is not None and when.release != when.value
@@ -85,7 +85,7 @@ def rule_words(when: ConditionEntry, store: str) -> str:
 
 
 def ledger_hold_ms(after: View, store: str) -> int:
-    """A ledger line's reading time as ui/ledger.ts holds it on arrival: its name and rate, and on a red line with an
+    """A ledger line's reading time as ui/ledger/ledger.ts holds it on arrival: its name and rate, and on a red line with an
     order card offered, the offer's sentence (condition, arrow, task) and its two-word button."""
     o, text = opening(), opening().text
     words = [text[next(s.label_key for s in o.stores if s.id == store)], "+0/min"]
@@ -94,7 +94,7 @@ def ledger_hold_ms(after: View, store: str) -> int:
     offered = [c for c in o.order_cards if c.store == store and c.chip is None and c.tap_card is not None
                and (c.offered_after is None or (c.offered_after.unlock_kind, c.offered_after.id) in unlocked)]
     if line is not None and (line.starved or (line.falling and not line.covered)) and offered:
-        card = offered[-1]   # game/cues.ts offeredCard: the last one offered
+        card = offered[-1]   # game/ledger/cues.ts offeredCard: the last one offered
         task = text[next(c.label_key for c in o.cards if c.id == card.tap_card)]
         words += [rule_words(card.when, store), "→", task, "two words"]
     return ar.reading_ms(" ".join(words))

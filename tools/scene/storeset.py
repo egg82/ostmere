@@ -1,11 +1,11 @@
 """The stores the scene reads: each `store:` atom of a layer's `when`/`until` or a grade's `when`. build.py writes them
-beside the manifest as the app's scene_stores.json, which the API serves levels from (app/ashfall_app/api/scenestores.py)."""
+beside the manifest as the app's scene_stores.json, which the API serves levels from (app/ashfall_app/api/world/scenestores.py)."""
 import json
 from collections.abc import Iterable, Mapping
 from pathlib import Path
 from typing import Any
 
-APP_LIST = Path(__file__).resolve().parents[2] / "app" / "ashfall_app" / "api" / "scene_stores.json"
+APP_LIST = Path(__file__).resolve().parents[2] / "app" / "ashfall_app" / "api" / "world" / "scene_stores.json"
 
 
 def stores_read(layers: Iterable[Mapping[str, Any]], grades: Mapping[str, Mapping[str, Any]]) -> list[str]:

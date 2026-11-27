@@ -1,17 +1,17 @@
 ## Asks
 
-Every open offer (someone asks) lives in one list under the hands strip (`ui/asks.ts`), headed `ASKS`, and it takes
+Every open offer (someone asks) lives in one list under the hands strip (`ui/asks/asks.ts`), headed `ASKS`, and it takes
 no room while nothing is open. The first open offer in content order is drawn in a slot of fixed height that the ask
 fills, so when a season or a busy day brings several, nothing under it moves: the rest are only counted, as `2 more`,
 which opens every open ask in a sheet. On a phone the slot is one row and opens that sheet ("Phone"). The chronicle's
 waiting row points here: with one waiting on a wider screen it brings the ask into view and focuses its first answer;
 with several, or on a phone, it opens the sheet.
 
-An ask (`ui/asknode.ts`) reads top to bottom: who asks, a face (initial, ringed in the lane's hue) and name per person;
+An ask (`ui/asks/asknode.ts`) reads top to bottom: who asks, a face (initial, ringed in the lane's hue) and name per person;
 the question in the story's size; `↳` and what led to it, worded as a chronicle line's cause (an earlier answer by its
 label); one button per answer (44 px) with its label, its cost text (`takes 12m 30s` from takes_s; an effect such as
 `+10% rest` for an answer that installs a modifier), and each figure the answer moves, `Dead wood -2/min → -1.8/min`,
-`Rest 5 s → 4 s`, read off a dry run of that answer (`ui/askruns.ts`), never computed by the page. Last, the offer's own
+`Rest 5 s → 4 s`, read off a dry run of that answer (`ui/asks/askruns.ts`), never computed by the page. Last, the offer's own
 words for what differs from the usual: what waiting costs, when it goes, what the answer settles for good. Each piece
 the content leaves out is not drawn, so a bare offer is its question and its buttons. No `Dismiss`: it stays until
 answered.

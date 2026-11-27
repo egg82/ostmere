@@ -1,4 +1,4 @@
-// Until done (contract/until-done.txt, "UNTIL DONE"; game/untildone.ts, ui/whenready.ts): a staged card a tap started can be run
+// Until done (contract/until-done.txt, "UNTIL DONE"; game/cards/untildone.ts, ui/cards/whenready.ts): a staged card a tap started can be run
 // on to its cap from its own face while it runs. On the hands it becomes the queue entry it would have been had it
 // been queued first (tap until its cap, at Next's front, or a running When ready entry held on to the cap); on a
 // person's lane an always rule where a new lane rule goes. Not offered on the last stage, on a rule's tap, or idle.
@@ -8,11 +8,11 @@ import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import { townStep } from "../fixtures/town";
 import type { Card, Order, QueueEntry, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { tapUntil } from "../src/game/queue";
-import { untilDone } from "../src/game/untildone";
-import { Cards } from "../src/ui/cards";
-import { NewMarks } from "../src/game/marks";
+import { Catalog } from "../src/game/page/catalog";
+import { tapUntil } from "../src/game/mixes/queue";
+import { untilDone } from "../src/game/cards/untildone";
+import { Cards } from "../src/ui/cards/cards";
+import { NewMarks } from "../src/game/lessons/marks";
 import { pageRig } from "./personrig";
 
 install();

@@ -1,5 +1,5 @@
 LEAVES (a person leaves the town: docs/design/week-three-plan.md, item 4; blind tests from this part and
-api/contract/ alone, item 5, against app/tests/engine_contract/MUTANTS_leaves.txt). The inverse of THE TOWN'S MIX's
+api/contract/ alone, item 5, against app/tests/engine_contract/leaves/MUTANTS_leaves.txt). The inverse of THE TOWN'S MIX's
 Join (engine/joins.py). Where this part and an entry above disagree, this part holds. Examples name ids only; who
 leaves, when and why is content's.
 

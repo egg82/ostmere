@@ -1,10 +1,10 @@
-// The glow offered while the reveal is busy waits its turn there (ui/fresh.ts); a control out of sight takes no turn
-// (ui/reveal.ts), so its turn comes at once. Then it must take the glow, not offer again: day one's playthrough hit
+// The glow offered while the reveal is busy waits its turn there (ui/feedback/fresh.ts); a control out of sight takes no turn
+// (ui/feedback/reveal.ts), so its turn comes at once. Then it must take the glow, not offer again: day one's playthrough hit
 // "Maximum call stack size exceeded" in the opening, Glow.offer -> Reveal.effect -> (out of sight, run now) -> offer.
 // The fake DOM's nodes have empty rects, so every node here is out of sight.
 import { install } from "./fake-dom";
-import { Glow } from "../src/ui/fresh";
-import { Reveal } from "../src/ui/reveal";
+import { Glow } from "../src/ui/feedback/fresh";
+import { Reveal } from "../src/ui/feedback/reveal";
 
 install();
 

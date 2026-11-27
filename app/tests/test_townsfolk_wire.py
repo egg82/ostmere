@@ -6,10 +6,10 @@ from functools import cache
 import pytest
 
 from ashfall_app import engine as e
-from ashfall_app.api import content_models as cm
+from ashfall_app.api.world import content_models as cm
 from ashfall_app.api import convert
 from ashfall_app.api import models as w
-from ashfall_app.api.line_models import WhenCause
+from ashfall_app.api.world.line_models import WhenCause
 from ashfall_app.api.service import Game
 from ashfall_app.opening.schema import to_rules
 from ashfall_app.saves.ruleset import ruleset

@@ -1,10 +1,10 @@
 // The fixture's rule-lesson path (fixtures/steps.ts "ruleoffer", then "ruleon" once a rule is set) reaches the rule
-// lesson's last step: a rule at work shows the mark that step points at (ui/rules.ts), which the lesson's own target finds.
+// lesson's last step: a rule at work shows the mark that step points at (ui/rules/rules.ts), which the lesson's own target finds.
 import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
-import { FIRST_RULE, LESSONS } from "../src/game/lessons";
-import { RulesTab } from "../src/ui/rules";
+import { FIRST_RULE, LESSONS } from "../src/game/lessons/lessons";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 

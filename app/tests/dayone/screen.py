@@ -1,5 +1,5 @@
 """What the page states and draws on the human-paced player's day, read through the page's own rules, mirrored here from
-client/src/game/shown.ts (currentAim, the chips and the hands strip) and ui/ledger.ts: the aim stated at each view
+client/src/game/page/shown.ts (currentAim, the chips and the hands strip) and ui/ledger/ledger.ts: the aim stated at each view
 (the last aim in content order whose `after` the view's unlocks hold), and the Ashfall-specific mechanics drawn
 (docs/decisions.md, "The screen arrives when it means something"). The page's own tests hold those rules; these read
 when they fire in play. Aims and mechanics are named by id or kind, never by text."""

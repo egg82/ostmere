@@ -124,7 +124,7 @@ come true. Everything else about the rhythm of play is taste, which the simulato
   up, durations up, rates toward zero (`contract/text-and-numbers.txt`, "Text and numbers").
 - **Display:** a figure shows the fewest digits that tell it apart (a rate of 2 reads `2/min`, never `2.00/min`, and a
   rate that is not zero never reads as zero); a store's name is capitalised where it leads a row and lowercase inside
-  a sentence; one formatter (`game/format.ts`) and one label lookup (`game/catalog.ts`) produce them, each with a client test.
+  a sentence; one formatter (`game/page/format.ts`) and one label lookup (`game/page/catalog.ts`) produce them, each with a client test.
 
 **The UI speaks plainly, in numbers; the story keeps its voice**: story voice in the UI reads strangely, even in this
 style of game. UI text is the `ui.*` entries and
