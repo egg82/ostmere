@@ -1,4 +1,4 @@
-"""Invariant 118, the wire half (api/contract/fights.txt, "FIGHTS"; engine DESIGN.txt, "View"): Strength.sources carries each held
+"""Invariant 118, the wire half (api/contract/fights.txt, "FIGHTS"; engine design/, "View"): Strength.sources carries each held
 entry once, source the card's id and share_bp = h(c) with amount_bp what that share gives, and share_bp null on every
 other entry, a permanent entry the same card's outcome landed included. Built on the real opening as
 tests/test_fights_wire.py is, with the fight card gather_wood also holding 2500 on the hand."""

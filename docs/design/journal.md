@@ -249,7 +249,7 @@ it.
 `SavePresentation.newest_day_read` is the newest day the player has turned to, which only grows; a day past it is
 unread and dots the Journal button. The creatures and places sections, their unlocks and their numbers are unchanged.
 The `days` entries and notes that were the days pages before the written days are retired through the release lock
-(`renames.toml`); a save keeps their unlocks, and their loader-made triggers go (engine `DESIGN.txt`, "Retired").
+(`renames.toml`); a save keeps their unlocks, and their loader-made triggers go (`engine/design/`, "Retired").
 
 ## Marks on the page
 

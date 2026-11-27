@@ -1,4 +1,4 @@
-"""The two instants a prestige phase brings, solved off the XP segment as a level-up is (DESIGN.txt, "PRESTIGE
+"""The two instants a prestige phase brings, solved off the XP segment as a level-up is (engine/design/, "PRESTIGE
 PHASES"): TOP_OUT, where a skill's XP reaches its phase's top and its topped_at is set, and CARRY_END, where the carry
 window closes and its XP stops. None under rules with no prestige."""
 from dataclasses import replace

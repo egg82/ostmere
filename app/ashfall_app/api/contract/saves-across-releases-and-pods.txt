@@ -1,6 +1,6 @@
 SAVES ACROSS RELEASES AND PODS
   A save written under older rules (a deploy changed the content) is carried over, never refused: the server rebases
-  it when it is next read (engine DESIGN.txt, "Rebase") and answers under the current rules, with any lines new
+  it when it is next read (engine design/, "Rebase") and answers under the current rules, with any lines new
   content landed at the save's own time first. What the current rules no longer have is dropped from the save (one log
   line, save.dropped, names the save and how many ids of each kind went), and a stored log line whose text key the
   content no longer has is left out of the history served. Each decision, advance and open is one transaction holding the save's

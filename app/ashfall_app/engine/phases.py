@@ -1,4 +1,4 @@
-"""A skill's prestige phase: its state and the XP rules phases read (DESIGN.txt, "PRESTIGE PHASES").
+"""A skill's prestige phase: its state and the XP rules phases read (design/prestige-phases.txt, "PRESTIGE PHASES").
 
 XP climbs on one segment across every phase. Phase n's top is n spans of the curve up to rules.prestige.top_level
 (phase_top). At its top the skill's shown level stops and waits for the player's click (prestige.Prestige); XP keeps

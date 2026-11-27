@@ -1,5 +1,5 @@
 """The 2 AM test (dayone/parity.py) with finds on the trip's completion count landing while the player is away: the
-fixture chapter's trip gains FINDS finds, one at every second trip (a trigger on AtLeast(CardCount(trip), n), engine DESIGN "BANKED
+fixture chapter's trip gains FINDS finds, one at every second trip (a trigger on AtLeast(CardCount(trip), n), engine design/ "BANKED
 TIME", "Finds"), and the trip's own landings are measured beside the comfort's. A trip first shown after the visit,
 which nothing could mix, is the control. Not asserted: that the babysitter ends level. With the trip in the mix the
 comfort comes later than the babysitter's by what the trip drinks, which is the fixture's chapter, not the measure."""

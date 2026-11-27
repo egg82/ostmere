@@ -1,4 +1,4 @@
-"""What cards, chips, triggers and unlocks do to a save. Semantics: DESIGN.txt, part "CARDS", and "Chips" through
+"""What cards, chips, triggers and unlocks do to a save. Semantics: engine/design/, part "CARDS", and "Chips" through
 "Unlocks".
 
 Every function returns a rebuilt save (rates recomputed at save.time) or reads only.
@@ -50,7 +50,7 @@ def unmet_conditions(save: Save, rules: Rules, card: CardId) -> tuple[Condition,
                               for store, q in input_rest(save, rules, c) if store_value(save, store) < q]
     found += [cond for cond in c.requires if not is_true(save, rules, cond)]
     pause = next((p for p in save.pauses if p.runner == card), None)
-    if pause is not None and pause.store not in card_makes(c):   # a full pause holds no tap (DESIGN.txt, "FULL OUTPUT")
+    if pause is not None and pause.store not in card_makes(c):   # a full pause holds no tap (design/full-output.txt, "FULL OUTPUT")
         found.append(AtLeast(StoreValue(pause.store), pause.resume_at, pause.resume_at))
     return tuple(found)
 
@@ -83,10 +83,10 @@ def tap_work_speed(save: Save, rules: Rules, card: CardId) -> int:
 def tap(save: Save, rules: Rules, verb: TapCard, by_player: bool) -> Save:
     """The save after tapping verb.card at save.time. by_player: locked, unknown, completed, a busy lane or a speed of
     0 raises InvalidVerbError. Otherwise an order, the queue or an Outcome: any of those changes nothing. An unready
-    card changes nothing either (from the player it is a failed tap, which emits no line: DESIGN.txt, "Failed
+    card changes nothing either (from the player it is a failed tap, which emits no line: engine/design/, "Failed
     tap"). A ready tap takes nothing at its start: it runs the card at a full share from its current work to the next
-    completion, every line (inputs and outcome stores included) at that share (DESIGN.txt, "One bar"). A fresh tap is
-    bounded at that completion; only retap.settle lets it repeat (DESIGN.txt, "REPEATING TAPS")."""
+    completion, every line (inputs and outcome stores included) at that share (design/cards.txt, "One bar"). A fresh tap is
+    bounded at that completion; only retap.settle lets it repeat (design/repeating-taps.txt, "REPEATING TAPS")."""
     refusal = _refusal(save, rules, verb.card)
     if refusal is None and tap_seconds(save, rules, verb.card) is None:
         refusal = f"card {verb.card} cannot run: its speed is 0"
@@ -118,7 +118,7 @@ def interrupt(save: Save, rules: Rules, lane: LaneId) -> Save:
     """A ready tap whose card stops mid-completion (paused by a dry store, a requires turning false, or its speed
     falling to 0) ends at once: the lane is freed, the card keeps its work and any Pause, nothing lands and no line is
     emitted. The dry rule then runs again over what runs. Orders and the queue evaluate after it, as after a landing.
-    A card whose work has reached its boundary is never interrupted: it has landed (DESIGN.txt, "Inputs against a
+    A card whose work has reached its boundary is never interrupted: it has landed (engine/design/, "Inputs against a
     dry store")."""
     return rebuild(_free(save, lane), rules)
 
@@ -155,18 +155,18 @@ def effective_cap(save: Save, rules: Rules, card: CardId) -> int | None:
 
 
 def is_completed(save: Save, rules: Rules, card: CardId) -> bool:
-    """The card has a cap and its completions have reached it: in the Completed set (DESIGN.txt, "Caps")."""
+    """The card has a cap and its completions have reached it: in the Completed set (design/cards.txt, "Caps")."""
     return counts.is_completed(save, rules, card)
 
 
 def greyed(save: Save, rules: Rules, mix: MixId) -> bool:
-    """The saved mix, flattened, holds a completed card (DESIGN.txt, "Greyed mix")."""
+    """The saved mix, flattened, holds a completed card (design/cards.txt, "Greyed mix")."""
     return counts.greyed(save, rules, mix)
 
 
 def starved(save: Save, rules: Rules, store: StoreId) -> bool:
     """The store has run dry while something waits on it: a runner that is not a spent card is paused on it, or a tap a
-    true order or the queue head names is blocked by an AtLeast on its value (DESIGN.txt, "Starved line", "SPENT")."""
+    true order or the queue head names is blocked by an AtLeast on its value (engine/design/, "Starved line", "SPENT")."""
     if store_value(save, store) != 0:
         return False
     paused = [p.runner for p in save.pauses if p.store == store]
@@ -246,7 +246,7 @@ def _paid(save: Save, rules: Rules, st: StoreState, o: Outcome) -> StoreState:
 
 def first_shown(save: Save, rules: Rules) -> tuple[Save, tuple[LineKey, ...]]:
     """The save with every chip shown now marked seen, and the on_line of each shown for the first time in the save
-    (DESIGN.txt, "Chips")."""
+    (design/core.txt, "Chips")."""
     now = shown_chips(save, rules)
     first = {c.id for c, seen in zip(rules.chips, save.chips_seen) if c.id in now and not seen}
     if not first:
@@ -257,7 +257,7 @@ def first_shown(save: Save, rules: Rules) -> tuple[Save, tuple[LineKey, ...]]:
 
 def off_said(save: Save, rules: Rules, i: int) -> tuple[Save, tuple[LineKey, ...]]:
     """Chip i stopped being shown: its off line, the next of off_lines in its bag (rotation.bagged, keyed by the chip),
-    counted in chips_seen (DESIGN.txt, "Chips"). None for a chip with no off lines."""
+    counted in chips_seen (design/core.txt, "Chips"). None for a chip with no off lines."""
     chip, seen = rules.chips[i], save.chips_seen[i]
     if not chip.off_lines:
         return save, ()
@@ -266,7 +266,7 @@ def off_said(save: Save, rules: Rules, i: int) -> tuple[Save, tuple[LineKey, ...
 
 
 def _end_retired_taps(save: Save, rules: Rules) -> Save:
-    """A tap of a card just retired ends at once, keeping its work, as an interrupt does (DESIGN.txt, "Retired")."""
+    """A tap of a card just retired ends at once, keeping its work, as an interrupt does (design/cards.txt, "Retired")."""
     for ls in save.lanes:
         if ls.card is not None and counts.is_retired(save, rules, ls.card):
             save = _free(save, ls.lane)

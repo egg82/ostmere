@@ -1,4 +1,4 @@
-"""Invariant 114 (engine DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS": "The entries", "Instants", "Codec"): a held entry
+"""Invariant 114 (engine design/entries-held.txt, "ENTRIES HELD WHILE A CARD RUNS": "The entries", "Instants", "Codec"): a held entry
 aims only at sides and is never stored. No threat explanation and no rate, work or lane speed Explanation lists one;
 s.modifiers and every LaneState.speed of a save hold none; and rules without while_running keep the digest, the
 manifest and the save text the pins below hold (re-taken when a CardDef field went, which changes every digest)."""

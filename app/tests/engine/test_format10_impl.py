@@ -1,4 +1,4 @@
-"""FORMAT 10: a chip's off lines take turns (engine DESIGN.txt, "Chips"). Save.chips_seen counts, 0 before the chip
+"""FORMAT 10: a chip's off lines take turns (engine design/core.txt, "Chips"). Save.chips_seen counts, 0 before the chip
 first shows and then 1 plus the off lines it has said; each hide says the next draw of a shuffle bag over off_lines,
 each line once a round and none twice in a row. UPGRADES[9] turns the flags into counts. The bag is the page's own
 draw (client/src/game/fights.ts, bagged): client/fixtures/bag_cases.json holds draws taken from it."""

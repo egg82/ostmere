@@ -22,7 +22,7 @@ class Trip:
     supply: StoreId
     share_bp: int = BP // 2
     """The trip's share of the mix; the mix's other cards are scaled to leave it. Run dry, it pauses and its share
-    goes to the rest of the mix until the supply refills (DESIGN.txt, "SPENT")."""
+    goes to the rest of the mix until the supply refills (design/spent.txt, "SPENT")."""
     reserve_for: tuple[CardId, ...] = ()
     """The cards the player keeps a reserve of the supply for (reserve_move): ones whose take the dry store's handover
     does not leave room for, such as a long tap that would run dry while the trip drinks beside it."""
@@ -249,7 +249,7 @@ def rule_let_go(v: View, rules: Rules, save: Save, trip: Trip) -> bool:
 
 
 def paused_dry(rules: Rules, save: Save, card: CardId) -> bool:
-    """The card holds a Pause on a store it takes. A full pause, on a store it pays (engine DESIGN.txt, "FULL OUTPUT"),
+    """The card holds a Pause on a store it takes. A full pause, on a store it pays (engine design/full-output.txt, "FULL OUTPUT"),
     is no supply running short, so no share is tuned for it."""
     pays = {a.store for c in rules.cards if c.id == card for a in c.outcome.stores}
     return any(p.runner == card and p.store not in pays for p in save.pauses)
@@ -478,7 +478,7 @@ def reserve_move(v: View, rules: Rules, save: Save, trip: Trip) -> Move | None:
 
 def queue_comforts(v: View, save: Save, chapter: Chapter) -> Move | None:
     """When ready on each comfort that shows, whether or not its inputs are in yet: the queue carries it across an
-    absence (DESIGN.txt, "BANKED TIME", "Comfort"). The queue's head is never passed over, so its comfort entries are
+    absence (design/banked-time.txt, "BANKED TIME", "Comfort"). The queue's head is never passed over, so its comfort entries are
     kept soonest ready first (ready now, then by ready time), and one showing no ready time is not queued (the page
     offers When ready only with one, client game/queue.ts) and goes last if it already is: either would hold back a
     comfort that is ready. The order is set as each new comfort is queued (one SetQueue), never re-sorted on its own,

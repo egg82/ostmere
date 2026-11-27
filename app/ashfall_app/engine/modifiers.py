@@ -6,7 +6,7 @@ One rate is one line of one runner (a standing action or a card): a make, a cost
             / (base_den * BP ** (2 + len(muls)) * run.den)
 
 base / base_den is the line's rate at a 100% share: a flow's per_hour over 1, or a card's lump per completion over its
-work_s, whoever runs it (DESIGN.txt, "Rate form").
+work_s, whoever runs it (design/cards.txt, "Rate form").
 
 rounded once, down for makes and XP and up for costs, so rounding never favours the player and a non-zero cost never
 rounds to free. Additive entries sum first (two +10% are +20%); multiplicative entries then multiply in (they model
@@ -41,7 +41,7 @@ class RateRef:
 @dataclass(frozen=True)
 class WorkRef:
     """A card's work speed: how fast its one bar fills, tapped or mixed, and so how fast its lump lines run
-    (DESIGN.txt, "Work", "Rate form"). Not a store's rate."""
+    (engine/design/, "Work", "Rate form"). Not a store's rate."""
 
     card: CardId
 
@@ -49,14 +49,14 @@ class WorkRef:
 @dataclass(frozen=True)
 class LaneSpeed:
     """Every line on `lane` at once: each make, cost and XP of what runs there, and each card's work. "Tired halves
-    bar speed" is one MUL_BP entry aimed here (DESIGN.txt, "Speed")."""
+    bar speed" is one MUL_BP entry aimed here (design/core.txt, "Speed")."""
 
     lane: LaneId
 
 
 @dataclass(frozen=True)
 class StoreCap:
-    """How much a store holds (DESIGN.txt, "Store caps"): its StoreDef.cap under the entries aimed here, rounded down.
+    """How much a store holds (design/core.txt, "Store caps"): its StoreDef.cap under the entries aimed here, rounded down.
     Only raises (validation), so no store ever holds more than its cap. Not a rate: modified_rate never reads it."""
 
     store: StoreId
@@ -64,7 +64,7 @@ class StoreCap:
 
 @dataclass(frozen=True)
 class SideStrength:
-    """How strong a side is (DESIGN.txt, "FIGHTS"): SideDef.base under the entries aimed here, as for a StoreCap,
+    """How strong a side is (design/fights.txt, "FIGHTS"): SideDef.base under the entries aimed here, as for a StoreCap,
     rounded down. Anything may aim here, a chip may lower it. Not a rate: modified_rate never reads it."""
 
     side: SideId
@@ -114,7 +114,7 @@ def total_change_bp(stack: tuple[Modifier, ...], target: Target) -> int:
 
 
 def lowers_cap(m: Modifier) -> bool:
-    """An entry aimed at a StoreCap that would lower it: add_bp below 0, mul_bp below BP (DESIGN.txt, "Store caps")."""
+    """An entry aimed at a StoreCap that would lower it: add_bp below 0, mul_bp below BP (design/core.txt, "Store caps")."""
     return isinstance(m.target, StoreCap) and m.amount_bp < (BP if m.kind is ModifierKind.MUL_BP else 0)
 
 
@@ -128,15 +128,15 @@ class RunKind(Enum):
     PAUSED = "paused"
     """Stopped because `store` ran dry; resumes when the store refills (api.py, 'Running dry')."""
     YIELDED = "yielded"
-    """A mix card while the hands run a tap: 0/1, its share kept and shown (DESIGN.txt, "Lanes")."""
+    """A mix card while the hands run a tap: 0/1, its share kept and shown (design/core.txt, "Lanes")."""
     WAITING = "waiting"
     """A mix card whose requires do not all hold: 0/1, `condition_index` names the first unmet one; it runs again the
-    instant they hold (DESIGN.txt, "Requires in the mix")."""
+    instant they hold (design/cards.txt, "Requires in the mix")."""
     GREYED = "greyed"
-    """Every card of the active mix while it holds a completed card: 0/1 (DESIGN.txt, "Greyed mix")."""
+    """Every card of the active mix while it holds a completed card: 0/1 (design/cards.txt, "Greyed mix")."""
     SPENT = "spent"
     """A running mix's card paused on `store`, a store nothing in play can make again: 0/1, its share yielded to the
-    rest of its mix on its lane (DESIGN.txt, "SPENT")."""
+    rest of its mix on its lane (design/spent.txt, "SPENT")."""
 
 
 @dataclass(frozen=True)
@@ -174,7 +174,7 @@ class Explanation:
     per_hour: int
     gained: tuple[SpentShare, ...] = ()
     """The paused and spent cards whose shares this line's card receives, each with its part: share_bp is the saved share plus
-    their sum (DESIGN.txt, "SPENT", "Explain"). Empty for every other line."""
+    their sum (design/spent.txt, "SPENT", "Explain"). Empty for every other line."""
 
 
 def modified_rate(

@@ -1,4 +1,4 @@
-"""The town's mix (engine DESIGN.txt, "THE TOWN'S MIX"): unit tests written beside the implementation, to develop it.
+"""The town's mix (engine design/towns-mix.txt, "THE TOWN'S MIX"): unit tests written beside the implementation, to develop it.
 The contract tests of invariants 90 to 97 are written blind elsewhere."""
 from dataclasses import replace
 

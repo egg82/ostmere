@@ -1,5 +1,5 @@
 """Random small worlds with town lanes, a leave and stopped standings, read through advance against an oracle written
-from engine DESIGN.txt: SPENT (invariants 133, 134, every paused card a giver) and LEAVES (a stopped standing is no maker, a left lane's cards
+from engine design/: SPENT (invariants 133, 134, every paused card a giver) and LEAVES (a stopped standing is no maker, a left lane's cards
 are out of play, a town mix the leave empties never takes the hands). A seeded slice: each chunk is a fixed range of
 seeds, so a failure names its seed."""
 import random

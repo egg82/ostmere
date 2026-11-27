@@ -1,0 +1,34 @@
+CUT-IN (a glowing step tapped while the queue or a rule holds the hands). Where this part and an entry above disagree,
+this part holds.
+
+FIT PASS
+- An instance of Lanes and the player's tap (Command: TapCard is unchanged) plus the existing interrupt (a tap ends
+  where it stands, its work kept). No new state, verb or event: a cut-in is a player's verb, so the forecast (which
+  assumes no player) and everything that runs while the player is away are unchanged.
+- The page's glow already marks the one obvious next step (CardDef.glows, from the content's `glows`). The defect: a
+  short visit finds that step ready while the hands run a queued build or a rule's task, so the step waits a whole
+  absence for hands the player's own plan holds.
+
+CHOICES
+- decisions.cuts_in(save, rules, card): card glows, is on HANDS, has 0 completions and would start were the hands
+  free (ready, speed above 0), and the hands run another card whose task holds (decisions.holds: were the hands free,
+  the controlling verb would tap it again). The player's TapCard of such a card interrupts the hands' task
+  (work.interrupt) and taps the card; no evaluation follows a player's tap, so the task does not retake the hands.
+  When the step lands, evaluation taps the held task again from its kept work. CardView.cuts_in serves it, so the
+  page draws the card tappable, with the glow, on a busy lane.
+- A glowing step never cuts into a hand tap: the player chose that tap. A cure does (CURE CUT-IN), and the hand tap
+  goes to the queue's front.
+
+INVARIANTS (cut-in; numbered on from 108)
+108. A player's TapCard of a card with cuts_in True does not raise for the busy lane, leaves the interrupted card's
+    work as it stood, and once the step lands the controlling verb taps the interrupted card again. With cuts_in False
+    on a busy lane the tap raises InvalidVerbError (invariant 20).
+
+REJECTED, AND WHY (cut-in)
+- The queue holding its next start while a glowing step is ready: it helps only a player still on the page when the
+  hands free, and an absent player's queued plan stalls for every hour a step sits ready (one never tapped stalls it
+  for good, with nothing on screen saying why). Played on the week-one routes it stalled a queue through a night's
+  absence and moved one route's B7 hours later.
+- Cutting into any task, the player's own taps included: the interrupted tap would sit half done with nothing to take
+  it up again.
+

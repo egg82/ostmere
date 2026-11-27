@@ -163,7 +163,7 @@ Totals: 159 planted, 145 red at once, 14 survived a pass: 12 killed, 2 equivalen
       r (runs_out_at from save.active): killed by
         engine/test_engine_flows.py::test_a_rule_mix_runs_with_its_runs_out_at
 21 rebase         planted 22, red 21, 1 equivalent
-      planted in a scratch reference rebase written from DESIGN.txt beside the engine (the suite was written before
+      planted in a scratch reference rebase written from engine/design/ beside the engine (the suite was written before
       the implementation), test_rebase.py whole, without -x
       absolute rescale (work * W' // W): equivalent, since c * W * BP * W' / W is whole, so it equals the formula
 

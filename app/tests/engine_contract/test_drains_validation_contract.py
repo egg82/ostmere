@@ -1,4 +1,4 @@
-"""Drains, part five: validation (engine DESIGN.txt, "DRAINS", CHOICES, "Validation"): InvalidRulesError naming the card and
+"""Drains, part five: validation (engine design/drains.txt, "DRAINS", CHOICES, "Validation"): InvalidRulesError naming the card and
 the store for a drain on an unknown store, a quantity below 1, a store also in the card's makes, costs, inputs, outcome
 stores or fight lines, or drained twice. Written blind from that part and the public interface."""
 import pytest

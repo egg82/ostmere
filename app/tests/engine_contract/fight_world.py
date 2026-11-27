@@ -1,4 +1,4 @@
-"""A small world with one fight card and one standing fight, built from the engine's public types only (DESIGN.txt,
+"""A small world with one fight card and one standing fight, built from the engine's public types only (design/fights.txt,
 "FIGHTS"). Amounts are whole multiples of Q so every hand-written twin line below is exact."""
 from dataclasses import replace
 
@@ -54,7 +54,7 @@ def hand(runner: CardId | ActionId, kind: FlowKind, store: StoreId, bp: int) -> 
 
 
 def hand_odds(p: int, t: int) -> tuple[Modifier, ...]:
-    """The odds entries written by hand onto the fight-free twin, per DESIGN.txt: win on makes, loss on the rest."""
+    """The odds entries written by hand onto the fight-free twin, per engine/design/: win on makes, loss on the rest."""
     lose, win = loss_bp(p, t), BP - loss_bp(p, t)
     M, C = FlowKind.MAKE, FlowKind.COST
     return (hand(HUNT, M, PELT, win), hand(HUNT, M, LOOT, win), hand(HUNT, C, STASH, lose),

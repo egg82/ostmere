@@ -1,4 +1,4 @@
-"""Her lane's task as a rate on day two's own content (engine DESIGN.txt, "REPEATING TAPS", invariants 75 and 76): from
+"""Her lane's task as a rate on day two's own content (engine design/repeating-taps.txt, "REPEATING TAPS", invariants 75 and 76): from
 a typical play's save at B3, hours with nobody deciding equal the per-landing engine's, with her always rule alone and
 with a rule over it that switches her task, and her lane lands only where her task changes. The per-landing engine is
 this one with retap.settle doing nothing, started from the same save with her tap bounded at its next completion, as

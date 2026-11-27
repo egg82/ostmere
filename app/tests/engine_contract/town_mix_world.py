@@ -1,4 +1,4 @@
-"""Fixture rules for the town's mix contract tests (engine DESIGN.txt, "THE TOWN'S MIX", invariants 90-97). Built from the
+"""Fixture rules for the town's mix contract tests (engine design/towns-mix.txt, "THE TOWN'S MIX", invariants 90-97). Built from the
 engine's public types only. Three ruled lanes: la and lb are people (each joins by a trigger's Join), lc is cure-shaped
 and never joins. Every card takes 10 s a completion at full speed (a capped one, ac, takes 50 s)."""
 from collections.abc import Mapping

@@ -1,4 +1,4 @@
-"""Invariant 183 (engine DESIGN.txt, "GROUPS (pooled lanes)", "Validation"): InvalidRulesError for each listed rule, one
+"""Invariant 183 (engine design/groups.txt, "GROUPS (pooled lanes)", "Validation"): InvalidRulesError for each listed rule, one
 message per rule, and none for valid rules."""
 import re
 from typing import Any

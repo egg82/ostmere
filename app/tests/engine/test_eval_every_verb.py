@@ -1,4 +1,4 @@
-"""Evaluation applies every verb that can act (DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS"): two lanes
+"""Evaluation applies every verb that can act (design/townsfolk.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS"): two lanes
 driven at one instant, a tap order beside the queue's head, a tap at speed 0 skipped, a chip turning that evaluates,
 and a queued switch's mix at a pop past the cap. Each failed under one verb per evaluation."""
 from ashfall_app.engine import (

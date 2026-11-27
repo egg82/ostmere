@@ -1,5 +1,5 @@
 """A forecast handed an earlier forecast's path (engine forecast.py, `kept`) takes the instants it already resolved
-when the save is on that path, and gives the answer a forecast without it gives (DESIGN.txt, "Forecast"). The page
+when the save is on that path, and gives the answer a forecast without it gives (engine/design/, "Forecast"). The page
 asks for a forecast every minute, each from the save a minute on: without the path each one resolved its every instant
 again (issue 400)."""
 import importlib

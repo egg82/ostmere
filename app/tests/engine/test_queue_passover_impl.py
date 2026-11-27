@@ -1,4 +1,4 @@
-"""DESIGN.txt, "Orders", "Never ready": a queue entry whose tap nothing will ever make ready (no ready time) waits where
+"""engine/design/, "Orders", "Never ready": a queue entry whose tap nothing will ever make ready (no ready time) waits where
 it is and the entries behind it run; with nothing else runnable the hands are idle because nothing can run."""
 from ashfall_app.engine import (
     BP, HANDS, QUANTITY_SCALE as Q, Amount, AtLeast, CardCount, CardDef, CardId, PacingCurve, QueueEntry, Rules, Save,

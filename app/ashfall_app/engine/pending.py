@@ -1,4 +1,4 @@
-"""The triggers still ahead and when each lands if nothing changes: what the page states as the next step (DESIGN.txt,
+"""The triggers still ahead and when each lands if nothing changes: what the page states as the next step (design/core.txt,
 "Pending triggers"). Reads only."""
 from collections.abc import Collection
 from dataclasses import dataclass

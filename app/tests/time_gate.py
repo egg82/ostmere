@@ -9,7 +9,9 @@ closed port) counts like work: give the code an injected clock or a tiny timeout
 
 A shared fixture (class, module, package or session scope) is timed on its own against FIXTURE_CEILING_S, by name, and
 its setup is taken out of the test's charge: which test meets it first changes with ordering and sharding, so charging
-it there would make the gate's verdict land on a different test from run to run. Its teardown still lands on the last
+it there would make the gate's verdict land on a different test from run to run. The same holds for pytest.ini's hang
+guard: a shared fixture's setup runs under a guard of FIXTURE_CEILING_S, then the test gets a fresh one, so the first
+test in a process is not killed for fixtures it shares with the rest. Its teardown still lands on the last
 test that used it, so shared teardowns stay cheap. A fixture set up for a playthrough test is the play itself, and is
 not timed. After a shared fixture is built, the heap is frozen out of the cyclic collector (`freeze_caches`), so the
 next full collection does not walk that cache and charge it to whichever test is running.
@@ -94,6 +96,9 @@ def pytest_fixture_setup(fixturedef: pytest.FixtureDef[object]) -> Generator[Non
     if fixturedef.scope == "function":
         yield
         return
+    guarded = Shared.item if Shared.depth == 0 else None
+    if guarded:
+        rearm_hang_guard(guarded, FIXTURE_CEILING_S)
     Shared.depth += 1
     start = time.perf_counter()
     try:
@@ -104,6 +109,8 @@ def pytest_fixture_setup(fixturedef: pytest.FixtureDef[object]) -> Generator[Non
         Shared.depth -= 1
         if Shared.depth == 0:
             Shared.total += spent
+        if guarded:
+            rearm_hang_guard(guarded)
     if timed(Shared.item) and fixture_too_slow(fixturedef.argname, spent):
         pytest.fail(f"fixture {fixturedef.argname} ({fixturedef.scope} scope) took {spent:.2f}s to set up, over the "
                     f"{FIXTURE_CEILING_S}s shared-fixture ceiling (tests/time_gate.py): make it cheaper", pytrace=False)
@@ -133,14 +140,15 @@ def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo[None]) ->
                            f"speed it up or split it")
 
 
-def rearm_hang_guard(item: pytest.Item) -> None:
-    """pytest-timeout's timer covers the whole protocol, so a second timing gets the full guard of its own."""
+def rearm_hang_guard(item: pytest.Item, seconds: float | None = None) -> None:
+    """pytest-timeout's timer covers the whole protocol, so a second timing gets the full guard of its own, and a shared
+    fixture's setup one of its own (`seconds`)."""
     hook = item.config.pluginmanager.hook
     if item.config.pluginmanager.has_plugin("timeout"):
         settings = importlib.import_module("pytest_timeout")._get_item_settings(item)
         if settings.timeout and not settings.func_only:
             hook.pytest_timeout_cancel_timer(item=item)
-            hook.pytest_timeout_set_timer(item=item, settings=settings)
+            hook.pytest_timeout_set_timer(item=item, settings=settings if seconds is None else settings._replace(timeout=seconds))
 
 
 @pytest.hookimpl(tryfirst=True)

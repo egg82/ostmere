@@ -1,4 +1,4 @@
-"""Banked time (engine DESIGN.txt, "BANKED TIME", invariants 88-89): a trip is an uncapped card with inputs, run in the
+"""Banked time (engine design/banked-time.txt, "BANKED TIME", invariants 88-89): a trip is an uncapped card with inputs, run in the
 mix or tapped. Written from the contract and the public interface only, on fixture rules; every expected number follows
 from the documented arithmetic (a mix share s runs a card at s/BP of full speed; an input is a cost line of its amount
 per work_s at that speed).

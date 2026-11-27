@@ -1,0 +1,40 @@
+THE END (recorded in the save). Where this part and an entry above disagree, this part holds.
+
+FIT PASS
+- An instance of Triggers (docs/systems.md): a condition that holds once per save, recorded at the first instant it is
+  true and never reset, which is invariant 29's rule. Two things keep it off TriggerDef: its condition reads the read
+  model (every ledger line covered: covered, falling and starved), which the order vocabulary cannot solve for, and it
+  records a time, where `fired` holds booleans. Making it a trigger would take an AllCovered subject and a conjunction
+  in the order vocabulary that every order could then watch (change_time, latches, READY): more engine than one fact.
+- The unlock set (only grows) was the other home weighed: an engine-granted Unlock would latch with no new field, but
+  it carries no time, and the page must tell "just now" from "long ago"; an unlock is also something the player can
+  see and use, which the end is not.
+- How games do it: a completion flag with its time in the save (an achievement's unlock time), checked where the
+  state changes (Nystrom's Observer chapter uses achievements as its example). The engine is pure, so the check runs
+  at the tail of every resolved instant, as triggers do, rather than by a listener.
+
+CHOICES (the end)
+- The end: Rules.end names the content's end feature (data, where the moment is authored; validation: a known
+  feature). Save.ended_at is None until the first resolved instant (new_save's time 0, each event instant, each
+  decision's instant) at which the feature is unlocked; it is then that instant's time and never changes. The unlock
+  set changes only at resolved instants, so the first resolved instant it holds at is the first second it holds.
+  View.ended_at serves it. The check runs only while the end is unrecorded.
+- FORMAT is 3 (Save.ended_at). Every FORMAT 2 save raises StateFormatError; its rules digest changed as well
+  (Rules.end), so no older save could decode under these rules even with the field omitted.
+
+INVARIANTS (the end; numbered on from 44)
+45. First instant: over every resolved instant of a run, ended_at is None while rules.end has never been unlocked, and
+    equals the time of the first instant it is; with rules.end None it is always None.
+46. Never clears: once set, ended_at is unchanged by every later advance and decision.
+
+REJECTED, AND WHY (the end)
+- The page deciding the end from two live facts (the end feature and all_covered), with a page-life latch: a reload
+  forgot the latch (the dusk went back to day while a line was starved) and could not tell an end a moment ago from
+  one long ago (the card came at once and the end lines were skipped).
+- A boolean: the page needs when, to replay the end lines only for an end that has just happened.
+- Recording the end at a request's time (in the API, after an advance): a plain advance spanning the end would date it
+  to the request, and splitting time would move it (invariant 1).
+- Omitting ended_at from the encoding while None, to keep FORMAT 2 saves decoding: their digest changes with Rules.end
+  anyway, and a save made under rules with no end could already be past it, so the first advance would date the end
+  to the reload.
+

@@ -3,7 +3,7 @@ rack, with flows, inputs, outcome stores, requires, raises and starts), standing
 opening, and scenarios that play every verb on them. Built from the engine's public types only; nothing here calls an
 engine function while generating.
 
-Every world passes "Validation of cards" (DESIGN.txt): a store appears once across a card's makes, costs, inputs and
+Every world passes "Validation of cards" (engine/design/): a store appears once across a card's makes, costs, inputs and
 outcome stores, requires are plain thresholds, an uncapped card's outcome is stores only with at most one line, a capped card has no lines or one per completion of its base cap, raises name capped
 cards, and no HANDS completion starts a HANDS card. Mixes hold HANDS cards only."""
 import os
@@ -343,7 +343,7 @@ def timeline(save: Save, r: Rules, offsets: tuple[int, ...], events: int = 4) ->
 
 
 def rule_keys(r: Rules) -> set[str]:
-    """Every line key the rules can emit (DESIGN.txt, "Lines"; CardDef.lines, outcomes, chips)."""
+    """Every line key the rules can emit (design/core.txt, "Lines"; CardDef.lines, outcomes, chips)."""
     found: set[str] = set()
     for c in r.cards:
         found |= set(c.lines) | set(c.outcome.lines) | set(c.finished.lines)

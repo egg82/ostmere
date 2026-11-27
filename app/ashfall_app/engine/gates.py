@@ -1,4 +1,4 @@
-"""What the unlock set and the chips let through: who may run, be seen, or change a rate. Reads only; DESIGN.txt,
+"""What the unlock set and the chips let through: who may run, be seen, or change a rate. Reads only; design/core.txt,
 "Unlocks", "Chips" and "Store caps". work.py exposes the same functions to the rest of the engine."""
 from math import prod
 

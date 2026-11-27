@@ -56,7 +56,7 @@ def test_her_lane_starts_on_the_rule_her_arrival_installs():
 
 
 def test_each_answer_sets_its_walk_as_a_one_off_never_a_start():
-    """Engine DESIGN.txt, "Content": a start on a busy lane changes nothing, so the story would wait on a step no one
+    """Engine engine/design/, "Content": a start on a busy lane changes nothing, so the story would wait on a step no one
     takes. The hands' walk is queued, hers is a rule above her task."""
     offer = next(x for x in to_rules(with_day_two()).offers if x.id == "o_cart")
     go, she_goes = offer.answers

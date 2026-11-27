@@ -1,5 +1,5 @@
 """The check on an order card's band: a rule on the hands whose hold covers one completion costs a latch turn and a
-landing every time (taps on the hands never repeat: engine DESIGN.txt, "REPEATING TAPS", "Who may repeat"), which a
+landing every time (taps on the hands never repeat: engine design/repeating-taps.txt, "REPEATING TAPS", "Who may repeat"), which a
 draining store turns into an instant a minute all day. Raises ValueError naming the entry (refs.fail)."""
 from typing import TYPE_CHECKING
 

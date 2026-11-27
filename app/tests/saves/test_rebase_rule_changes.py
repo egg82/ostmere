@@ -1,5 +1,5 @@
 """A save read under new content carries the rebase instant's rule changes, so the rule runs list a rule new content
-installed from the load (engine DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS", "Rebase"); an exact read
+installed from the load (engine design/townsfolk.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS", "Rebase"); an exact read
 carries none. No database: the read itself (saves/load.py)."""
 from datetime import UTC, datetime
 

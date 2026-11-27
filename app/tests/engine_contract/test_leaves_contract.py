@@ -1,4 +1,4 @@
-"""A person leaves the town, part one: what the leave changes and what it leaves alone (engine DESIGN.txt, "LEAVES",
+"""A person leaves the town, part one: what the leave changes and what it leaves alone (engine design/leaves.txt, "LEAVES",
 invariants 148-152; week-three plan, items 4 and 5). Written blind from that part and the public interface; the `kills`
 marker names the rows of MUTANTS_leaves.txt each test must turn red for. The world is leaves_world's: la leaves at 40 with
 its ac tap (started at 20, due at 70) under way; every expectation is exact, or an equality with the same world where

@@ -1,5 +1,5 @@
 """Where each offer stands, read off the unlock set: shown, answered, and by which answer. Reads only. Semantics:
-DESIGN.txt, "Offers", "AnswerOffer", "The answer's card"."""
+design/townsfolk.txt, "Offers", "AnswerOffer", "The answer's card"."""
 from .answers import AnswerKind, AnswerOffer
 from .unlocked import is_unlocked
 from .ids import AnswerId, CardId, OfferId
@@ -47,7 +47,7 @@ def can_answer(save: Save, rules: Rules, verb: AnswerOffer) -> bool:
 
 def resolved(save: Save, rules: Rules, verb: AnswerKind) -> AnswerOffer | None:
     """The AnswerOffer `verb` applies now: the first open offer of its kind in rules order, answered with its answer of
-    the role; None when no offer of the kind is open. Resolved when chosen, never stored (DESIGN.txt, "OFFER KINDS")."""
+    the role; None when no offer of the kind is open. Resolved when chosen, never stored (design/offer-kinds.txt, "OFFER KINDS")."""
     for offer in rules.offers:
         if offer.kind == verb.kind and is_shown(save, rules, offer.id) and not is_answered(save, rules, offer.id):
             return next((AnswerOffer(offer.id, a.id) for a in offer.answers if a.role == verb.role), None)

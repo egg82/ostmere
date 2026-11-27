@@ -1,6 +1,6 @@
 """Plain builders for the prestige contract tests: a small world with one skill that trains by itself (a standing
 action, one XP unit a second), a card outside that skill for nodes to aim at, and a track of nodes per skill. Built from
-the engine's public types only (DESIGN.txt, part "PRESTIGE PHASES"). No Hypothesis here.
+the engine's public types only (design/prestige-phases.txt, part "PRESTIGE PHASES"). No Hypothesis here.
 
 With CURVE and TOP_LEVEL a phase spans SPAN = 300 XP, so K reaches phase 1's top at second 300 and the next phase's top
 at second 600; XP never reaches that (its ceiling is one unit below, at second 599); the carry window decides

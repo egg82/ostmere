@@ -136,7 +136,7 @@ sink. Roots as week 1 measured (15-27%).
 
 ## Odds targets (combat)
 
-loss_bp = T / (T + P) (engine `DESIGN.txt`, "FIGHTS"). "Watch" is the watch shares' entries at the shares the
+loss_bp = T / (T + P) (`engine/design/`, "FIGHTS"). "Watch" is the watch shares' entries at the shares the
 typical policy sets (n4 at half, the others off), "ring" the palisade's stages built.
 
 | Fight | Prepared | P : T | Loss share | Expected losses in 24 h |
@@ -154,14 +154,14 @@ measurably fewer pack fights over day nine to night 14 than one that leaves the 
 the rats.
 
 **`hurt` with a draining cure (G7, G8; applied).** No fixed take gives a cure tappable at every shown level that
-clears in one tap with hurts stacking (engine `DESIGN.txt`, "DRAINS", FIT PASS), so `b7.toml` uses a drain and the
+clears in one tap with hurts stacking (`engine/design/`, "DRAINS", FIT PASS), so `b7.toml` uses a drain and the
 loader's fractions: `hurt` stays whole items, cap 3; `hunt_wolf` still wounds 1; `heal` costs
 `{ items_per_hour = 1, every_hours = 4 }` (one hurt every 4 h, the designed rate); the `hurt` chip's `when` takes
 `{ value = 1, every = 4 }` with release the same (shows from a quarter hurt, about 3 h for a first hurt); `poultice`
 moves `hurt` from `inputs` to `drains = [{ store = "hurt", items = 3 }]` (one tap clears any level, and taps whenever
 the chip shows), keeping its clay and roots as inputs. The store is never drawn: the chip is its face (G8's answer).
 The chip sits at a quarter, not lower, because `heal` pauses at 0 and resumes only at one hour of its cost, a quarter
-hurt: a lower chip could show with nothing healing it (engine `DESIGN.txt`, "DRAINS", KNOWN GAPS). All retunes of
+hurt: a lower chip could show with nothing healing it (`engine/design/`, "DRAINS", KNOWN GAPS). All retunes of
 released b7 ids, Safe under the release lock.
 
 ## The 2 AM test

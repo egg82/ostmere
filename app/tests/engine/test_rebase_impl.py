@@ -1,6 +1,6 @@
 """The rebase's implementation choices beside the blind contract suite (engine_contract/test_rebase.py): the manifest,
 the format chain, dropping what the new rules lack wherever the save names it, and the steps that keep what a save
-earned (DESIGN.txt, part SAVES ACROSS RELEASES)."""
+earned (engine/design/, part SAVES ACROSS RELEASES)."""
 import json
 from dataclasses import replace
 

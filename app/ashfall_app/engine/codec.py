@@ -1,6 +1,6 @@
 """The save as text: canonical, so it round-trips exactly and equal saves encode to equal strings.
 
-The server stores this string as the save (saves.state). Semantics: DESIGN.txt, "Codec".
+The server stores this string as the save (saves.state). Semantics: engine/design/, "Codec".
 stdlib json, sorted keys, no whitespace, a format number and the rules digest inside, and no checksum: the page never
 edits the text, an unkeyed hash stops no deliberate edit, and transport already checks bytes. Tamper resistance, if a
 page-held save ever needs it, is a keyed MAC the server adds outside the engine (the key is configuration).
@@ -87,7 +87,7 @@ def _enc_rules(rules: Rules) -> Json:
 
 
 def manifest(rules: Rules) -> Json:
-    """The slice of the rules a later rebase needs (DESIGN.txt, "Manifest"), as plain JSON."""
+    """The slice of the rules a later rebase needs (design/saves-across-releases.txt, "Manifest"), as plain JSON."""
     return derived(rules, "_manifest", _manifest)
 
 
@@ -160,7 +160,7 @@ def verb_from_json(value: Json) -> Verb:
 
 
 def _without_holds(value: Json) -> Json:
-    """A SaveMix logged before FORMAT 9 as it is logged now: its mix's empty "holds" dropped (DESIGN.txt, "Codec")."""
+    """A SaveMix logged before FORMAT 9 as it is logged now: its mix's empty "holds" dropped (engine/design/, "Codec")."""
     if isinstance(value, dict) and value.get("@") == "SaveMix" and isinstance(mix := value.get("mix"), dict) \
             and mix.get("holds") == []:
         return {**value, "mix": {k: v for k, v in mix.items() if k != "holds"}}
@@ -191,7 +191,7 @@ def _manifest(rules: Rules) -> Json:
 
 def _manifest_offer(o: OfferDef) -> Json:
     """An offer's ids; a kinded one adds its kind and its answers' roles in answer order (an unkinded one is written as
-    it was before kinds, so rules that use none keep their manifest text: DESIGN.txt, "OFFER KINDS")."""
+    it was before kinds, so rules that use none keep their manifest text: design/offer-kinds.txt, "OFFER KINDS")."""
     found: dict[str, Json] = {"id": str(o.id), "answers": [str(a.id) for a in o.answers]}
     if o.kind is not None:
         found |= {"kind": str(o.kind), "roles": [str(a.role) for a in o.answers]}

@@ -38,7 +38,7 @@ type PlanVerb = SwitchMix | SaveMix | DeleteMix | SetOrders | SetQueue | TapCard
 def switch(save: Save, rules: Rules, verb: SwitchMix) -> Save:
     """Make a saved mix the player's own (save.active). Switching to the active mix changes nothing. A greyed mix may
     be made active by the player (nothing in it runs). While an order's mix runs, this sets only the mix that comes
-    back (DESIGN.txt, "Order mix")."""
+    back (design/cards.txt, "Order mix")."""
     if verb.mix == save.active:
         return save
     return with_running_mix(save, rules, replace(save, active=verb.mix))
@@ -60,7 +60,7 @@ def apply_order_verb(save: Save, rules: Rules, verb: OrderVerb) -> tuple[Save, t
 def controlling_verb(save: Save, rules: Rules) -> OrderVerb | None:
     """The verb evaluation applies next, from the first of its sources that has one: the answer orders, the tap orders
     above Next, the queue's entry when it can act, the tap orders under Next, then the queue's entry that waits
-    (DESIGN.txt, "Orders", "Order mix", "Next's row"; TOWNSFOLK, INSTALLED RULES AND OFFERS, "Evaluation applies every
+    (engine/design/, "Orders", "Order mix", "Next's row"; TOWNSFOLK, INSTALLED RULES AND OFFERS, "Evaluation applies every
     verb")."""
     for source in (_answer_order_verb, _tap_above, _ready_queue_verb, _tap_below, _queue_verb):
         verb = source(save, rules)
@@ -90,7 +90,7 @@ def _tap_below(save: Save, rules: Rules) -> TapCard | None:
 
 def _tap_order_verb(save: Save, rules: Rules) -> TapCard | None:
     """The first TapCard that can act (ready, and its speed above 0) listed by an order that is on, orders in order and
-    each order's actions in list order; taps that cannot act are skipped, never chosen (DESIGN.txt, "OR ELSE")."""
+    each order's actions in list order; taps that cannot act are skipped, never chosen (design/or-else.txt, "OR ELSE")."""
     for _, verb, latch in listed(save.orders, save.latches):
         if rule_on(latch) and isinstance(verb, TapCard) and _can_act(save, rules, verb):
             return verb
@@ -113,7 +113,7 @@ def _queue_verb(save: Save, rules: Rules) -> OrderVerb | None:
 
 def _ready_queue_verb(save: Save, rules: Rules) -> TapCard | AnswerOffer | None:
     """The controlling queue entry's tap or answer when it can act now and no order's mix above Next runs: then it comes
-    before the orders under Next, whose mix it yields as any tap does (DESIGN.txt, "Next's row"). A switch is never
+    before the orders under Next, whose mix it yields as any tap does (design/nexts-row.txt, "Next's row"). A switch is never
     this: the queue's mix runs by plan.running_mix_id, and its no-op verb is read last (_queue_verb)."""
     verb = plan.live_queue_verb(save, rules)
     running = plan.mix_order(save, rules)
@@ -126,7 +126,7 @@ def _ready_queue_verb(save: Save, rules: Rules) -> TapCard | AnswerOffer | None:
 
 def _resumes(save: Save, rules: Rules, verb: OrderVerb | None) -> bool:
     """`verb` taps a HANDS card stopped mid-completion (a cure cut in on it, or a dry store stopped it). As a tap it held
-    the hands over any order's mix, so it takes them back over one (DESIGN.txt, "CURE CUT-IN")."""
+    the hands over any order's mix, so it takes them back over one (design/cure-cut-in.txt, "CURE CUT-IN")."""
     if not isinstance(verb, TapCard):
         return False
     c = index(rules).cards.get(verb.card)
@@ -147,7 +147,7 @@ def cuts_in(save: Save, rules: Rules, card: CardId) -> bool:
 def _glow_cuts_in(save: Save, rules: Rules, card: CardId) -> bool:
     """`card` glows, is on the hands, has never completed and would start were they free, and the task is one the queue
     or an order would start again once `card` lands (holds), or one an order names (_ordered), so the cut-in loses
-    nothing (DESIGN.txt, "Cut-in")."""
+    nothing (design/entries-held.txt, "Cut-in")."""
     c = index(rules).cards.get(card)
     if c is None or not c.glows or c.lane != HANDS:
         return False
@@ -160,14 +160,14 @@ def _glow_cuts_in(save: Save, rules: Rules, card: CardId) -> bool:
 
 def _ordered(save: Save, card: CardId) -> bool:
     """An order taps `card`, true or not: a stage that drinks the store its own order watches has dropped that order's
-    latch by the middle of the stage, which does not make the stage a hand tap (DESIGN.txt, "ORDER CARD ON A STAGED
+    latch by the middle of the stage, which does not make the stage a hand tap (engine/design/, "ORDER CARD ON A STAGED
     BUILD")."""
     return any(TapCard(card) in o.actions for o in save.orders)
 
 
 def cure_cuts_in(save: Save, rules: Rules, card: CardId) -> bool:
     """A player's tap of `card` now takes the hands from the task they run: `card` is on the hands
-    and a cure for a chip shown now, the task is not one, and `card` would start were the hands free (DESIGN.txt,
+    and a cure for a chip shown now, the task is not one, and `card` would start were the hands free (design/cure-cut-in.txt,
     "CURE CUT-IN")."""
     c = index(rules).cards.get(card)
     if c is None or c.lane != HANDS:
@@ -182,7 +182,7 @@ def cure_cuts_in(save: Save, rules: Rules, card: CardId) -> bool:
 def cut_in(save: Save, rules: Rules) -> Save:
     """The hands' task interrupted where it stands, its work kept; a task no true order or queue entry taps goes to the
     queue's front as the page's When ready entry for its current completion (installs.queued), so it is taken up
-    again (DESIGN.txt, "CURE CUT-IN")."""
+    again (design/cure-cut-in.txt, "CURE CUT-IN")."""
     running = lane_state(save, HANDS).card
     assert running is not None, "a cut-in needs a task on the hands"
     return requeued(interrupt(save, rules, HANDS), rules, running)
@@ -250,14 +250,14 @@ def _applied(save: Save, rules: Rules, verb: PlanVerb) -> tuple[Save, bool]:
 
 def failed_tap(save: Save, rules: Rules, verb: Verb) -> CardId | None:
     """The card when `verb` is a player's TapCard that apply_verb accepted on `save` and its card is unready there: a
-    failed tap, which changed nothing (DESIGN.txt, "Failed tap"); else None."""
+    failed tap, which changed nothing (engine/design/, "Failed tap"); else None."""
     return verb.card if isinstance(verb, TapCard) and blocker(save, rules, verb.card) is not None else None
 
 
 def _kept_latch(save: Save, rules: Rules, order: Order) -> Latch:
     """The latch of the first order in save.orders equal to `order` (guards included), matched as rulelog.py matches
     them, so a kept or moved rule holds its place in every band; else latch_now of its `when` and of each guard, for a
-    new or edited one (DESIGN.txt, "Rule changes", "RULE GUARDS")."""
+    new or edited one (engine/design/, "Rule changes", "RULE GUARDS")."""
     order = unplaced(order)
     for old, on in zip(map(unplaced, save.orders), save.latches):
         if old == order:

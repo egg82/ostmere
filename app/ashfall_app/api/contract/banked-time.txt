@@ -1,6 +1,6 @@
 BANKED TIME
   Where production past a cap goes: trips, comforts and arrivals, each a card or an offer the wire already carries
-  (engine DESIGN.txt, "BANKED TIME"). Nothing new on the wire: no model, field, feature or text key. A trip is a
+  (engine design/banked-time.txt, "BANKED TIME"). Nothing new on the wire: no model, field, feature or text key. A trip is a
   CardInfo with an uncapped card whose Card.needs list its supplies; a comfort is a capped craft; an arrival is an
   OfferInfo whose answer queues a make-room one-off (OFFERS; "Queued one-off").
   THE CLIENT MAY:

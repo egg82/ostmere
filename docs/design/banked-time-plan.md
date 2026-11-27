@@ -6,7 +6,7 @@ Their content is in `content/` (`team/banked-time-open.md`, questions BT1–BT6,
 only what the code needs. Beats are named by id. Sizes: **S** under a day of agent work, **M** a few days, **L** a
 week or more.
 
-Interface: engine `DESIGN.txt`, "BANKED TIME", and `api/contract/banked-time.txt`, "BANKED TIME". An implementer gets one item,
+Interface: `engine/design/`, "BANKED TIME", and `api/contract/banked-time.txt`, "BANKED TIME". An implementer gets one item,
 those two sections and this file.
 
 ## Measured
@@ -41,7 +41,7 @@ cap"), so a long enough absence runs them all, and the babysitter runs them the 
 | "Lost to caps" | Simulator only | Never served: time away is shown as what got done, never as what was missed |
 
 Nothing new in the engine: no type, field, verb, event kind, Save field or system. Rejected shapes are in
-`DESIGN.txt`, "REJECTED, AND WHY (banked time)": a bank of idle hours, speed bought with time, overflow spilling
+`engine/design/`, "REJECTED, AND WHY (banked time)": a bank of idle hours, speed bought with time, overflow spilling
 into another store, a separate expedition runner, a hands tap rule to re-send trips, and capped trips.
 
 ## Work, by system
@@ -65,7 +65,7 @@ three's content; items 6–9 can follow it.
    fails, which is the check's control. Accept: a planted fixture with a held trip passes, the same without the trip
    fails.
 3. **The trip shape on the engine** (**S**, tests, blind). Engine-contract tests for invariants 87–89
-   (`DESIGN.txt`, "BANKED TIME") on fixture rules, written from the interface by an agent that has not read the
+   (`engine/design/`, "BANKED TIME") on fixture rules, written from the interface by an agent that has not read the
    engine. No engine code should change; if a test goes red, that is an engine bug and lands findings-first (strict
    xfail, then the fix). Accept: each test has a planted control (a hold that leaks one unit past its level; a
    find's trigger read off the visit time; a trip that pays while paused) that turns it red.
@@ -98,7 +98,7 @@ three's content; items 6–9 can follow it.
 
 ## What this leaves for later, and where it plugs in
 
-Each is a KNOWN GAP in engine `DESIGN.txt`, "BANKED TIME". Backup on a trip is a support card on each member's ruled
+Each is a KNOWN GAP in `engine/design/`, "BANKED TIME". Backup on a trip is a support card on each member's ruled
 lane while the trip runs, adding to the trip's side strength; it needs a stack entry conditional on another card
 running, decided by the first expedition with backup. Stance moves to that same decider. Wide expeditions are a share
 of the town's mix, once the town has one. Study that takes materials (BT6) is the trip's shape and needs nothing new.

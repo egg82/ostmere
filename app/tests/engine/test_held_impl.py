@@ -1,4 +1,4 @@
-"""Entries held while a card runs (engine DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS", invariants 110-118): the
+"""Entries held while a card runs (engine design/entries-held.txt, "ENTRIES HELD WHILE A CARD RUNS", invariants 110-118): the
 implementation's own tests beside the blind contract suite."""
 from dataclasses import replace
 

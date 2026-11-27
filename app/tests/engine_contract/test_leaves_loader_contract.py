@@ -1,4 +1,4 @@
-"""A person leaves the town at the loader (engine DESIGN.txt, "LEAVES", CHOICES "Content (the loader)"). Written blind
+"""A person leaves the town at the loader (engine design/leaves.txt, "LEAVES", CHOICES "Content (the loader)"). Written blind
 from that part and the loader's public functions; the `kills` marker names the rows of MUTANTS_leaves.txt each test
 must turn red for. Uses retire_world's chapter: t_helper is its one ruled lane, t_burn a standing action."""
 import re

@@ -1,4 +1,4 @@
-"""A goal stint whose card runs out of input hands the hands back at that instant (engine DESIGN.txt, "Queue mix"): the
+"""A goal stint whose card runs out of input hands the hands back at that instant (engine design/cards.txt, "Queue mix"): the
 entry leaves the queue, the player's own mix runs on, and the rule log says why (Ended.DRY)."""
 from ashfall_app import engine as e
 from ashfall_app.engine import BP, CardId, CardShare, Mix, MixId, QueueEntry, SaveMix, SetQueue, SwitchMix

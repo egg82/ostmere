@@ -1,4 +1,4 @@
-"""DESIGN.txt, "CURE CUT-IN": a card cures a chip when it moves the chip's store toward clearing it, by the chip's own
+"""design/cure-cut-in.txt, "CURE CUT-IN": a card cures a chip when it moves the chip's store toward clearing it, by the chip's own
 condition: up for a chip that shows while the store is low (AtMost), down for one that shows while it is high (AtLeast)."""
 from ashfall_app.engine import (
     BP, QUANTITY_SCALE as Q, Amount, AtLeast, AtMost, CardDef, CardId, ChipDef, ChipId, Flow, Outcome, PacingCurve,

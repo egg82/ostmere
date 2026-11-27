@@ -1,4 +1,4 @@
-"""Invariant 111, the mix half (engine DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS": "The held share h(c)", rules 2 and
+"""Invariant 111, the mix half (engine design/entries-held.txt, "ENTRIES HELD WHILE A CARD RUNS": "The held share h(c)", rules 2 and
 3; "Completion and locking"): a card in the running mix of its own layer holds its flattened share when its Run is FULL,
 and nothing while it is in a mix that does not run, locked, on an unjoined lane, greyed,
 completed or retired. The running mix is read as the engine runs it (an order's over the player's), never off

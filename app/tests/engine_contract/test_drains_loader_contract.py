@@ -1,4 +1,4 @@
-"""Drains, part six: the loader's fractions and drains (engine DESIGN.txt, "FRACTIONS AT THE LOADER", invariant 132).
+"""Drains, part six: the loader's fractions and drains (engine design/drains.txt, "FRACTIONS AT THE LOADER", invariant 132).
 Written blind from that part, the entry types (opening/entries.py) and the loader's public functions; the `kills`
 marker names the rows of MUTANTS_drains.txt each test must turn red for.
 

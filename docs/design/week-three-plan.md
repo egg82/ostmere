@@ -44,7 +44,7 @@ Order: 1-5 first (they change no content; 2 and 5 blind, beside 1 and 4); 8-10 w
 `day_sixteen.toml`; 6 runs alongside each chapter; 7 before `day_nineteen.toml` ships; 12 needs 1, 3, 4 and 6-10, and its
 last chapter needs 7; 13-15 follow the content; 11 with the last chapter.
 
-1. **A share on a spent store yields** (**M**, engine; interface first in `DESIGN.txt`, a new section "SPENT", a
+1. **A share on a spent store yields** (**M**, engine; interface first in `engine/design/`, a new section "SPENT", a
    CHOICES entry and its REJECTED list). A mix card paused dry on a store that no unlocked card or standing can make
    (a pool, or a store whose every unlocked maker is itself spent, resolved as a fixpoint) is spent: its share is
    handed to the rest of its mix in proportion to their shares, rounded down once, the remainder idle as today; each
@@ -56,17 +56,17 @@ last chapter needs 7; 13-15 follow the content; 11 with the last chapter.
    point (`decisions.md`: a re-tune is only ever set off by something the player chose). Fits into: Mixes, Stores and
    caps, Modifiers. Rejected: idling (the 2 AM test fails at every pool's end, and the player must re-tune for a season);
    greying the mix (a season's end would stop saved mixes); retiring the card (the next season brings it back, and a
-   retired card greys its mix); a hidden redistribution (`DESIGN.txt`'s rule against a number with no source). Accept:
+   retired card greys its mix); a hidden redistribution (`engine/design/`'s rule against a number with no source). Accept:
    invariants 16 and 19 still pass; new invariants as engine-contract tests: a pool emptying mid-mix raises the other
    cards' shares in proportion at that instant and nowhere else; explain names the source; a refill restores the saved
    shares at its instant; a store with a running maker pauses and yields until its resume; a store whose only maker is
    spent is spent; on a fixture with a pool, the 2 AM test passes where it fails before the change; a planted engine
    whose yield follows the store rather than the pause (the share back before the hourly resume) goes red.
-2. **Blind contract tests for item 1** (**S**, tests), by an agent that never reads item 1's code: from `DESIGN.txt`
+2. **Blind contract tests for item 1** (**S**, tests), by an agent that never reads item 1's code: from `engine/design/`
    and the contract alone, with a `MUTANTS.txt` (yields on a refillable store; yields across lanes or mixes; keeps the
    yield after a refill; ignores the fixpoint; rounds up; stores the yield in the save). Accept: each mutant goes red;
-   ambiguities logged and answered in `DESIGN.txt` before item 1 merges.
-3. **A season's end retires its chores** (**S**, engine and loader; interface first in `DESIGN.txt`, beside "Installed
+   ambiguities logged and answered in `engine/design/` before item 1 merges.
+3. **A season's end retires its chores** (**S**, engine and loader; interface first in `engine/design/`, beside "Installed
    rule"). An outcome part `retire_orders = [card ids]` removes every order, the player's own included, whose task taps
    one of the named cards; each removal is logged by the rule log (`engine/rulelog.py`), so the Rules tab's Lately
    block says the rule ended with its season. The loader refuses a named card that is not the cure of a chip whose
@@ -74,11 +74,11 @@ last chapter needs 7; 13-15 follow the content; 11 with the last chapter.
    are offered again while their chip shows uncovered. The chore's leftover state is emptied by content (a standing
    drain on its own pool, the visitor's idiom). Fits into: Standing orders, Triggers, Chronicle and unwrap (the rule
    log). Rejected: leaving the rules (`decisions.md`: the rule goes away when its season ends); an outcome part that
-   takes stores (rejected in `DESIGN.txt`, FIGHTS; the visitor's idiom does it). Accept: on fixture rules, a turn
+   takes stores (rejected in `engine/design/`, FIGHTS; the visitor's idiom does it). Accept: on fixture rules, a turn
    removes exactly the orders tapping the named cures and logs each; an order tapping anything else survives; the
    order card is offered again at the chip's next showing; a planted retirement naming a non-chore card fails the
    loader, naming it.
-4. **A person leaves the town** (**M**, engine; interface first in `DESIGN.txt`, a new section "LEAVES", beside
+4. **A person leaves the town** (**M**, engine; interface first in `engine/design/`, a new section "LEAVES", beside
    `engine/joins.py`). An outcome part `leaves = [{lane, stops = [standing ids]}]`: the lane's person leaves at that
    instant. Their lane stops (its tap or task ends; work in progress is dropped, never paid), the orders on that lane
    are removed and logged, their shares leave the town's mix (nobody else's shares change: each person's shares are
@@ -94,7 +94,7 @@ last chapter needs 7; 13-15 follow the content; 11 with the last chapter.
    with the leave already past loads; a planted engine that greys the town's mix on a leave goes red.
 5. **Blind contract tests for item 4** (**S**, tests), as item 2, with a `MUTANTS.txt` (greys the town's mix; moves the
    leaver's shares to another lane; pays the task in progress; leaves the lane's orders; keeps the listed standings
-   running). Accept: each mutant goes red; ambiguities answered in `DESIGN.txt` before item 4 merges.
+   running). Accept: each mutant goes red; ambiguities answered in `engine/design/` before item 4 merges.
 6. **The simulator through week 3** (**M**, tests). Week 2's routes played on from S4's saved ends (`tests/weektwo/`,
    `ends.py`) through the four chapters to the visit night 21's step lands in: policies that accept the content order
    cards (both joint projects', the ruled lane's staged build, the reap and cover cards), answer the arrival offers by

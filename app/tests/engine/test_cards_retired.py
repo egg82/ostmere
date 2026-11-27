@@ -1,4 +1,4 @@
-"""Retired cards (DESIGN.txt, CARDS, "Retired"): an Outcome unlocks Unlock(RETIRED, card) and the card is out of play
+"""Retired cards (engine/design/, CARDS, "Retired"): an Outcome unlocks Unlock(RETIRED, card) and the card is out of play
 exactly as a completed one is. Tests written from that contract text."""
 from typing import Literal
 

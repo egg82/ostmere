@@ -1,6 +1,6 @@
 """Rule guards on a share of a store's cap (docs/design/rule-guards.md, "Contract (blind)", statements 9 and 10;
 "Guards": a guard keeps a band, a store's maximum rising). A guard is read exactly as a `when` is, so its share levels
-read as the quantities engine DESIGN.txt "SHARE LEVELS" gives, band of one item included; `_amounts` is that table,
+read as the quantities engine design/share-levels.txt "SHARE LEVELS" gives, band of one item included; `_amounts` is that table,
 and the expected switches are worked from those quantities."""
 
 from hypothesis import given, strategies as st

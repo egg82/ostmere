@@ -1,4 +1,4 @@
-"""A ruled lane (engine DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS", "Ruled lane", "Lane order"): the
+"""A ruled lane (engine design/townsfolk.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS", "Ruled lane", "Lane order"): the
 player never taps it, the queue never names it, rules drive it exactly as an unruled lane, and the view says which
 rule's task it runs."""
 from dataclasses import replace

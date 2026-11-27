@@ -1,4 +1,4 @@
-"""Offer kinds (engine DESIGN.txt, part "OFFER KINDS", invariants 98-107): an AnswerKind order answers the first open
+"""Offer kinds (engine design/offer-kinds.txt, part "OFFER KINDS", invariants 98-107): an AnswerKind order answers the first open
 offer of its kind by role, every offer of the kind it can, as each shows."""
 import json
 from collections.abc import Callable

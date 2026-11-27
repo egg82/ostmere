@@ -81,7 +81,7 @@ def retuned_roots(v: View, orders: tuple[Order, ...], offered: Order | None) -> 
     """Take stock asks for more roots than the roots rule keeps: once the content offers the rule re-tuned to it
     (`offered`: its order card, offered when the larder can hold it), the player takes it in the old rule's place.
     Before the offer the rule is left alone: raised past the roots cap it would never let go, and its forage would hold
-    the hands for good (an always-true order starves the mix: engine DESIGN.txt, "Orders")."""
+    the hands for good (an always-true order starves the mix: engine design/core.txt, "Orders")."""
     stock = cards(v).get(TAKE_STOCK)
     need = next((n.quantity for n in stock.needs if n.store == ROOTS), None) if stock is not None else None
     if offered is None or need is None or offered in orders:
@@ -94,7 +94,7 @@ def retuned_roots(v: View, orders: tuple[Order, ...], offered: Order | None) -> 
 def queued(v: View, queue: tuple[QueueEntry, ...], completions: dict[str, int],
            queueable: tuple[str, ...] = QUEUEABLE, behind_hands: tuple[str, ...] = ()) -> Move | None:
     """When ready on the first unready queueable step with a known ready time not already waiting; the queue kept in
-    order of ready time, since its head waits (DESIGN.txt, "Orders": the queue is the plan). `behind_hands`: steps
+    order of ready time, since its head waits (design/core.txt, "Orders": the queue is the plan). `behind_hands`: steps
     also queued when ready but for the hands tapping another card, to start when that tap ends."""
     have = {e.verb.card for e in queue if isinstance(e.verb, TapCard)}
     ready: dict[str, int] = {c.card: v.time if c.blocker is None else c.blocker.ready_at or v.time for c in v.cards}

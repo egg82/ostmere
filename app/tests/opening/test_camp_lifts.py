@@ -1,4 +1,4 @@
-"""The Camp's held levels and lifts (engine DESIGN.txt, "THE CAMP") with day two merged, as test_day_two.py loads it:
+"""The Camp's held levels and lifts (engine design/camp.txt, "THE CAMP") with day two merged, as test_day_two.py loads it:
 a save past day one's lift reaches day two's levels (invariant 72), no lift rounds past the next held level (69), and
 either of Camp 8's lifting cards lifts it, the same (71). Levels are named by number, cards by id."""
 from dataclasses import replace

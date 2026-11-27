@@ -3,7 +3,7 @@
 Spoilers: this file is under `content/` and never shown to the owner. It picks up where `day-one.md` ends (B3, somewhere in
 the long grey story day 2) and runs through the evening, the second night and story day 3 to B4. Its data twin is
 `beats.yaml`'s `day_two:` list (ids, gates, shape fields); its canon is C-promise-18 and C-beat-80 to C-beat-86 in
-`canon.jsonl` (tentative until the lead confirms); its decisions are D-82 to D-91. **Every number below is a target**:
+`canon/` (tentative until the lead confirms); its decisions are D-82 to D-91. **Every number below is a target**:
 the simulator's routes set them, and the line state lists are generated from those routes, not written by hand.
 Schema, engine and page work are in `docs/design/day-two-plan.md` (spoiler-free); this file says what they must carry.
 

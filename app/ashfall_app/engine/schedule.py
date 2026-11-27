@@ -68,8 +68,8 @@ def _pop_events(save: Save, rules: Rules) -> list[Event]:
 
 def settled_entries(save: Save, rules: Rules) -> tuple[int, ...]:
     """The indices of dead queue entries whose `until` holds and cannot fall: a revival would pop them at once, so
-    they pop now (DESIGN.txt, "Greyed mix"); and every entry answering an answered offer or tapping a completed card,
-    whatever its `until` (DESIGN.txt, "Dead", "Greyed mix")."""
+    they pop now (design/cards.txt, "Greyed mix"); and every entry answering an answered offer or tapping a completed card,
+    whatever its `until` (engine/design/, "Dead", "Greyed mix")."""
     return tuple(i for i, e in enumerate(save.queue) if _gone(save, rules, e.verb) or (
         is_dead(save, rules, e.verb) and not can_fall(e.until) and is_true(save, rules, e.until)))
 
@@ -112,7 +112,7 @@ def _resume_now(save: Save, rules: Rules) -> list[Event]:
 
 
 def _full_events(save: Save, rules: Rules) -> list[Event]:
-    """A STORE_LIMIT now while a card is full, subject the last full card's first outcome store (DESIGN.txt, "FULL
+    """A STORE_LIMIT now while a card is full, subject the last full card's first outcome store (engine/design/, "FULL
     OUTPUT", "When it runs"): a store reaching its cap is one already, a store standing at its cap is not."""
     found = full_cards(save, rules)
     if not found:
@@ -241,7 +241,7 @@ def _chip_events(save: Save, rules: Rules) -> list[Event]:
 def _ready_events(save: Save, rules: Rules) -> list[Event]:
     """A card a true order or the controlling queue entry would tap turns ready (later than now) while it could be
     tapped; and, when the firing cap suspended evaluation at this instant, one second on for every such card already
-    ready, and one more for the verbs with no card that could act, so the hands never idle on the cap (DESIGN.txt,
+    ready, and one more for the verbs with no card that could act, so the hands never idle on the cap (engine/design/,
     "Evaluation after a cascade", both entries)."""
     found: list[Event] = []
     pos = index(rules).card_pos
@@ -261,7 +261,7 @@ def _ready_events(save: Save, rules: Rules) -> list[Event]:
 
 def _cardless_waits(save: Save, rules: Rules) -> bool:
     """A verb with no card could act: a true order's AnswerOffer or AnswerKind that can act, or, while no order's mix
-    above Next runs, a controlling queue entry's AnswerOffer that can act (DESIGN.txt, "Next's row")."""
+    above Next runs, a controlling queue entry's AnswerOffer that can act (design/nexts-row.txt, "Next's row")."""
     if any(rule_on(latch) and isinstance(o.then, (AnswerOffer, AnswerKind)) and acting(save, rules, o.then) is not None
            for o, latch in zip(save.orders, save.latches)):
         return True

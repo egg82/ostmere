@@ -1,4 +1,4 @@
-"""Fixture rules and readers for the drains contract tests (engine DESIGN.txt, "DRAINS (a take forgiven at 0) AND
+"""Fixture rules and readers for the drains contract tests (engine design/, "DRAINS (a take forgiven at 0) AND
 FRACTIONS AT THE LOADER", invariants 121-132). Built from the engine's public names only.
 
 One store x is drained, by card CURE (work_s 100, a drain of 10 items by default: x moves at 0.1 item a second while the

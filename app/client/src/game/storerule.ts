@@ -71,7 +71,7 @@ export function buildRule(rule: StoreRule, q: number, level = false): Condition 
     value_of_cap: isShare(rule.n), release_of_cap: isShare(m) };
 }
 
-/** Where a level stands among the store's whole items under a cap of `cap` items, as the engine reads it (DESIGN.txt,
+/** Where a level stands among the store's whole items under a cap of `cap` items, as the engine reads it (design/share-levels.txt,
  * "SHARE LEVELS"): side "on", the shown amount at or past which the rule holds (at or under for "below", at or over
  * for "reaches"); side "off", the shown amount at which it lets go. */
 export function shownAt(l: Level, test: Test, side: "on" | "off", cap: number): number {

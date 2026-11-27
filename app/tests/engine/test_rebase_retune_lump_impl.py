@@ -1,4 +1,4 @@
-"""A retune across a release (engine DESIGN.txt, "Rebase" step 5, invariant 51) keeps a card's bar at its fraction,
+"""A retune across a release (engine design/, "Rebase" step 5, invariant 51) keeps a card's bar at its fraction,
 tapped or mixed, so the lump its work pays still totals exactly one completion's amount and a beat waiting on that
 amount fires. The shape of a format 7 save mid-walk while tired, whose walk's work_s doubles in the new rules."""
 import json

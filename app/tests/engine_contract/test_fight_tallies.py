@@ -1,4 +1,4 @@
-"""Invariants 81 (timing does not matter), 84 (tallies) and 86 (no instant), from DESIGN.txt, "FIGHTS", alone."""
+"""Invariants 81 (timing does not matter), 84 (tallies) and 86 (no instant), from design/fights.txt, "FIGHTS", alone."""
 from dataclasses import replace
 
 from hypothesis import given, strategies as st
