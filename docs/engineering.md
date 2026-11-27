@@ -237,7 +237,12 @@ suite still runs in seconds.
   needed a simulation to catch, while the nightly lane caught balance breaks on `main`; that is why they live there.
 - **Week two's chapters play on from saved ends, so its job grows by one chapter per chapter**
   (`app/tests/weektwo/ends.py`): each chapter starts from the saved end of the one before, and the rebased saves are
-  read, not replayed from the start. The saves are not in git: `python tools/chapter_saves.py --write` (from `app/`,
+  read, not replayed from the start. Writing a rebased save does not replay from the start either: it takes typical's
+  save at the end of the chapter before (`rebased.CHECKPOINT`), rebases it onto the chapter's old rules (dropping what
+  they lack), then replays typical's decisions after it under those rules, so it costs one chapter's decisions however
+  deep the chapter. Where later content acts before that checkpoint, its effects on what the old rules share stay in the
+  save while its ids go: the save has the old build's shape, not a fresh old-build player's numbers
+  (`app/tests/weektwo/rebased.py`). The saves are not in git: `python tools/chapter_saves.py --write` (from `app/`,
   with `PYTHONPATH=.`, about 11 minutes) writes them under `~/.cache/ashfall/chapter-saves/`, one directory per chapter, named by that
   chapter's key (`app/tests/weektwo/keys.py`): a hash of the shared inputs (the engine, the opening's loader and shared
   data, the shape of the rules with its numbers masked, the code that plays every chapter), the chapter's own files and
