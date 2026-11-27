@@ -46,7 +46,7 @@ check them.
    `cast_checks.py` refuses it in any text that is not the casting outcome's own lines, a later label, or an owner gated
    on a feature of that role.
 10. **Spoilers.** Commit messages, PR text, test names and readout text name beats, lines and offers by id, never by
-    what happens. Nothing checks this.
+    what happens. A squash merge keeps the branch's commit messages, so they count as PR text. Nothing checks this.
 
 ## Mechanical steps
 
@@ -61,6 +61,11 @@ check them.
 - A new gate goes in `app/tools/gates.sh` **and** the "Structural gates" table in `docs/engineering.md` (via
   `doc-delta.txt`).
 - A held-list entry that gains its field leaves the list in the same change; a count is never raised.
+- A `requires` reads only an unlock, never a card count or a store: read a build's completion through a trigger that
+  unlocks a feature once it holds.
+- A store granted by a trigger counts as used up only once every trigger granting it has fired (`api/goals/sources.py`),
+  so a later `after_time` grant leaves the cards that need it with no shown source until then. Refill a store at a
+  turn through a standing on a one-item pool instead.
 - Run the full unit shards (`python -m tools.shards a|b|c` from `app/`) and `app/tools/gates.sh`.
 - Readouts: never replay locally. A pull request plays the chapters it touches; pull its readouts with
   `python -m tools.readouts_pull <run-id>` and read the diff before committing.

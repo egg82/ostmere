@@ -52,4 +52,4 @@ if __name__ == "__main__":
         sys.exit(check())
     if len(sys.argv) < 2:
         sys.exit("usage: python -m tools.shards a|b|c|--check [pytest args]")
-    os.execvp(sys.executable, [sys.executable, "-m", "pytest", *shard_args(sys.argv[1]), *sys.argv[2:]])
+    os.execvp(sys.executable, [sys.executable, "-m", "pytest", *SELECT, *shard_args(sys.argv[1]), *sys.argv[2:]])
