@@ -9,7 +9,7 @@ IMPL-QUESTIONS: places the cards interface was ambiguous, and the reading the im
 4. New helper modules, not interface changes: counts (completions/cap/greyed, below rates), cardsides and sides (which
    stores a runner makes/costs), plan (dead verbs, controlling queue entry, candidates), requires (first unmet
    requires).
-5. [ANSWERED: validation refuses a chip effect aimed at a StoreCap; none in the content (DESIGN.txt, "Store caps").] A chip's effects aimed at StoreCap: a chip stops being shown when its latch releases, which would lower the cap
+5. [ANSWERED: validation refuses a chip effect aimed at a StoreCap; none in the content (design/core.txt, "Store caps").] A chip's effects aimed at StoreCap: a chip stops being shown when its latch releases, which would lower the cap
    under a full store, against "may only raise, nothing is clamped". Allowed, and what then holds? Tests cover
    raises from the starting stack, Outcome.modifiers (outcome, finished, trigger) only.
 6. [ANSWERED: every completion lands the outcome's modifiers, so the stack grows each time.] An `outcome` that carries a StoreCap modifier on a card with cap n lands it at each of the n completions: does the

@@ -1,4 +1,4 @@
-"""Invariants 158 and 161 (engine DESIGN.txt, "HELD SPEED ...": "Dry pause drops it"): a standing holder paused on a dry
+"""Invariants 158 and 161 (engine design/held-speed.txt, "HELD SPEED ...": "Dry pause drops it"): a standing holder paused on a dry
 store loses its entries at that instant and every line on its HeldSpeed lanes is rebuilt there; they return at the instant
 its Pause resumes; of several holders eating one store that runs short, the dry rule pauses them in reverse rules order and
 stops at the first pause that brings the store's net to 0 or above, so the earlier ones keep theirs; and timing does not

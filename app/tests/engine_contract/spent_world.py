@@ -1,4 +1,4 @@
-"""Fixture rules and readers for the SPENT contract tests (engine DESIGN.txt, "SPENT", invariants 133-141). Built from the
+"""Fixture rules and readers for the SPENT contract tests (engine design/spent.txt, "SPENT", invariants 133-141). Built from the
 engine's public names and the part's documented additions only; the additions are read through the helpers below, so
 the one place that names a field the engine does not have yet is this file.
 

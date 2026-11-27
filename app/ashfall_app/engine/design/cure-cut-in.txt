@@ -1,0 +1,47 @@
+CURE CUT-IN (a cure for a chip shown now, tapped by the player while the hands run a task). Where this part and an
+entry above disagree, this part holds.
+
+FIT PASS
+- An instance of CUT-IN (a player's verb; interrupt, work kept) with a second kind of card that may cut in, and of the
+  Queued one-off for taking a task up again. No new state, verb or event. The reading of a cure is the cures gate's,
+  moved into the engine so both read one thing (cure_reading.cures_chip).
+- A cure moves the store its chip watches toward clearing the chip, by the chip's own condition: a chip that shows
+  while the store is low (at_most) is cured by a card that puts the store up (cure_reading.puts_up), one that shows
+  while it is high (at_least) by a card that takes from it (cure_reading.takes: its inputs, its cost lines, and the
+  cost lines of the standing actions it unlocks). No card is named; a card that moves the store the wrong way makes
+  the chip worse and is not a cure.
+- The defect: a hands task runs to its end at the speed it started with, so a chip that shows during a long stage
+  (half an hour, or three hours) had no cure in reach until it ended (docs/decisions.md, "Every bad state has a cure
+  in reach"), while some chips cost something every second they show.
+
+CHOICES
+- decisions.cure_cuts_in(save, rules, card): card is on HANDS, a cure for a chip shown now (cure_reading.cures_shown),
+  the hands run another card that is not itself a cure for a shown chip, and card would start were the hands free.
+  decisions.cuts_in, and so CardView.cuts_in, is the glowing step's rule or this one. The player's tap of such a card
+  interrupts the task (work.interrupt) and taps the card (decisions.cut_in).
+- The interrupted task is taken up again: a task a true order or a queue entry taps is left to it; any other (a hand
+  tap) goes to the queue's front as the page's When ready entry for its current completion (installs.queued), so
+  after the cure lands the queue starts it from its kept work, behind any tap order that is true then. A true order's
+  mix does not hold it back: as a tap it held the hands over that mix, so the queue's entry for a HANDS card stopped
+  mid-completion acts while an order's mix runs (decisions._resumes; a dry store's requeued tap alike).
+- An order's cure does not cut in; it waits for the task to land, as before. Every drawn landing then still comes true
+  with nobody there (docs/decisions.md, "Leaving and coming back always pays").
+
+INVARIANTS (cure cut-in; 109, then 120 after the file's highest)
+109. With a chip shown and a cure for it ready, a player's TapCard of the cure on a busy HANDS lane leaves the
+    interrupted card's work as it stood and runs the cure; the interrupted card is then tapped by an order or a queue
+    entry, and is at the queue's front if none tapped it before. An order's cure never cuts in. A cure never cuts into
+    a cure, and with no chip shown the busy-lane tap raises as invariant 20.
+120. A card is a cure for a chip exactly when it puts up the chip's store and the chip is at_most, or takes from it and
+    the chip is at_least; the cut-in (109) and the cures gate read this one answer.
+
+REJECTED, AND WHY (cure cut-in)
+- Every hands build stage under the cure window: either many more stages (more taps, and the released completion-count
+  triggers on builds would move) or less work per build (every band moves).
+- Builds off the hands: building would stop costing the player's time, which the economy prices in.
+- An order's cure cutting in too: played on the routes, a rule's cut-in broke the landing a page had drawn for the
+  task it paused (the plumbing checks), and moved day two's exact cap loss and two visits' decisions. KNOWN GAP: a
+  present player can cure mid-stage where a rule waits for the stage's end, a small edge for attention (the 2 AM
+  test's babysitter does not tap cures, so it does not measure it). Closing it needs drawn landings read off the
+  forecast, which would see a rule's cut-in.
+

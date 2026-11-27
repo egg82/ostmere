@@ -1,4 +1,4 @@
-"""Invariant 111, the tap half (engine DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS": "The held share h(c)", rules 1 and
+"""Invariant 111, the tap half (engine design/entries-held.txt, "ENTRIES HELD WHILE A CARD RUNS": "The held share h(c)", rules 1 and
 the One bar clause; "Cut-in and interrupt"): h(c) = BP while any lane holds a tap of c, whoever ran it, bounded or
 repeating; a share the tap yields holds nothing; a task interrupted with its work kept holds nothing until it is tapped
 again; a card both tapped and in the running mix counts once, at BP."""

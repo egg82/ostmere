@@ -1,4 +1,4 @@
-"""Groups as authored (engine DESIGN.txt, "GROUPS (pooled lanes)", "Content"): the checks on pooled lanes, groups, marks
+"""Groups as authored (engine design/groups.txt, "GROUPS (pooled lanes)", "Content"): the checks on pooled lanes, groups, marks
 and unmarked joins, and the unlocks a person's move into their group carries. Raises ValueError naming the entry
 (refs.fail)."""
 from typing import TYPE_CHECKING

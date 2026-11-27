@@ -2,7 +2,7 @@
 mid-bar, a raised cap, a tap mid-bar and a greyed mix round-trip exactly (a recorded end:
 test_cards_end.py); equal saves and
 only equal saves encode alike; any text encode did not give for these rules, an older format's envelope included, raises
-StateFormatError (DESIGN.txt, "Codec"; codec.py)."""
+StateFormatError (engine/design/, "Codec"; codec.py)."""
 import json
 import re
 

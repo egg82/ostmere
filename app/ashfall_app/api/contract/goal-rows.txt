@@ -10,7 +10,7 @@ GOAL ROWS (docs/design/worth-a-change.md, "The payoff, shown before and after"; 
     above 0 or a store goal's target is over its LedgerLine.cap.
   - per_hour: the store's net (unclamped, and a tap of the hands set aside, so it can differ from its LedgerLine), or
     the XP per hour every runner training the skill gives. Each runner runs at its effective share: a paused or spent
-    card's share is already handed to the rest of its mix (engine DESIGN.txt, "SPENT"), as is in_per_hour's.
+    card's share is already handed to the rest of its mix (engine design/spent.txt, "SPENT"), as is in_per_hour's.
   - limit: the first store, in running order, that a runner moving the goal (a maker of the store, a runner training
     the skill) is paused or spent on, among the stores view.ledger draws, with in_per_hour, its makers' lines alone;
     null when none is, and the goal's own line binds it, and null for a goal already met. Running order is the
@@ -20,7 +20,7 @@ GOAL ROWS (docs/design/worth-a-change.md, "The payoff, shown before and after"; 
     row: watched store_value {store: row.store}, value row.target. A level row: watched skill_level {skill: row.skill},
     value the level counted across prestige phases, (phase - 1) * (top_level - 1) + row.target for the skill's phase
     (row.target in phase 1 and when the rules have no prestige), which is what a skill_level condition reads (engine
-    DESIGN.txt, "PRESTIGE PHASES"). While the rates as set hold, the condition is false before lands_at and true from
+    design/prestige-phases.txt, "PRESTIGE PHASES"). While the rates as set hold, the condition is false before lands_at and true from
     lands_at on; it is the `until` of a goal stint (GOAL STINTS below).
   THE CLIENT MAY, in the mix editor and the condition editor, compare a dry run's goal_rows with the live view's by
   (kind, store, skill, target) and list each row whose shown time or limit the edit changes: the goal (ui.goal.store,

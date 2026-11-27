@@ -1,0 +1,94 @@
+SHARE LEVELS (a store rule's level as a share of the store's cap: issue #65). Where this part and an entry above
+disagree, this part holds.
+
+FIT PASS
+- An instance of Conditions, a Specification given an explicit field: AtLeast and AtMost gain value_of_cap and
+  release_of_cap, each saying that its level is basis points of the watched store's cap now (gates.store_cap) rather
+  than a quantity. No new subject, condition kind, event or state. A share level becomes the quantity it stands for
+  at the instant the condition is read, and everything after that reads the quantity as before.
+- The defect it answers: a rule's levels were quantities fixed when it was written, so every rule went stale as its
+  store's cap rose, and a rule written at full silently stopped meaning full.
+
+CHOICES (share levels)
+- Shape: value_of_cap and release_of_cap, bool, default False, and left out of the codec's text while False (as
+  Mix.layer is), so every save, logged verb and rules digest encodes as before: FORMAT is unchanged, nothing is
+  rebased and no save is migrated. A level whose flag is False is today's quantity. Each level has its own flag, so
+  "under 12, until full" is one condition. A share level is allowed only on a StoreValue subject and only in
+  0..BP; anything else is refused (InvalidVerbError from SetOrders and SetQueue). Only the save's orders and queue
+  hold one: a chip's, a trigger's or a card's condition with a share level is refused (InvalidRulesError), so
+  content, blockers, pending triggers and cure readings read quantities alone.
+- Reading: wherever a condition is read (is_true, its rise and fall times, the latch SetOrders sets), each share
+  level b is turned into a quantity off the cap at that instant. With Q one item, C = cap // Q (the cap in whole
+  items, as the page shows it) and k = value // Q (the store's whole items, as the page shows them), the store's
+  whole items are compared with the exact share x = b * C / BP, which is never rounded:
+    at_most's value     holds while k <= x          value   = (floor(x) + 1) * Q - 1
+    at_most's release   lets go once k >= x         release = ceil(x) * Q - 1
+    at_least's value    holds once k >= x           value   = ceil(x) * Q
+    at_least's release  lets go once k <= x         release = (floor(x) + 1) * Q
+  So both levels of a share are reached at the level itself, from either side: "down to a quarter" holds at a quarter
+  and under, "until empty" lets go once the store shows 0, and "full" is reached at C, the cap's whole items, which
+  the store always can reach. A quarter of a 10-item cap holds an at_most at 2 and under and an at_least at 3 and
+  over: each is exactly true of the amount the page shows. An amount level keeps today's reading, the page's "under
+  n" and "until under m" numbering included (api/contract/the-client-may.txt, "a store rule").
+- Rounding to whole items, not to the exact cap: the page shows whole items and words a share without a number, so
+  a level crossed between two shown amounts would come on at an amount that reads as the wrong side of it; and a cap
+  raised by a multiplier need not be whole items, so the exact cap could be a fraction of an item above the full the
+  page shows.
+- Hysteresis: a condition holding a share level keeps a band of at least one item between its read quantities. Whole
+  items can bring two levels together: a quarter and half of a 4-item cap read as 1 and 2, and an at_most on at 1
+  and under that lets go at 2 would flip at the quantity 2 items, every second the store moves across it. An amount
+  level and a share level can also pass each other as the cap rises. So when the read release is less than one item
+  past the read value, it moves to one item past it, but never beyond the store's range: an at_most's release is
+  then max(release, value, min(value + Q, C * Q - 1)), so it lets go at full at the latest; an at_least's is
+  min(release, value, max(value - Q, Q)), so it lets go once the store shows 0 at the latest. Only a value level
+  within one item of full or empty leaves no room, and that condition is a plain threshold. A condition of amount
+  levels alone is read as before, plain thresholds included.
+- The cap changing mid-rule: a cap only rises (Store caps), and only at an instant where something else fires (an
+  outcome's raise at a completion). Share levels are read afresh at each read, so a rule's quantities move with the
+  cap at that instant, and the pending check after the raise sees each latch against the new quantities. A latch is
+  never reset: it keeps its state, and the new quantities decide its next change. "Up to full, until half", on at 10
+  of 10 when the cap rises to 15, stays on until the store falls to 7 (half of 15 is 7.5); "up to full, until three
+  quarters" in the same place lets go at that instant (10 is under 11.25). "Down to a quarter, until full", on and
+  filling, now fills to the new full. A latch that is off rises at the instant only if the store is already past
+  its new value.
+- Rule changes: orders are matched by equality, so a share level and an amount level that read the same quantity
+  today are different orders, and editing one into the other latches it afresh (latch_now).
+- What a rule reads back (rulelog's on_level, the ledger, goal rows) reads the store, not the level, and is
+  unchanged.
+
+INVARIANTS (share levels; numbered on from 162. amount(c, s) is c with each share level replaced by the quantity the
+reading table gives under store_cap at s, and its flags False.)
+162. Read at the cap now: for any save s and condition c holding a share level, is_true(s, r, c) ==
+     is_true(s, r, amount(c, s)), and change_time(s, r, c, latch) == change_time(s, r, amount(c, s), latch) for
+     either latch.
+163. The same share across a raise: a share level crosses at the same share of the whole-item cap before and after
+     the cap rises, while an amount level crosses at the same quantity.
+164. Full and empty: an at_least whose value is BP of the cap holds exactly while the store's whole items equal the
+     cap's; an at_most whose value is 0 of the cap holds exactly while the store shows 0 whole items; an at_least
+     whose release is 0 of the cap lets go exactly once the store shows 0.
+165. Unchanged for amounts: a condition with both flags False encodes to the text it had before the flags existed,
+     and behaves as before.
+166. Validation: a share level on any subject but a StoreValue, or outside 0..BP, or a release on the wrong side of
+     a value in the same form, raises InvalidVerbError from SetOrders and SetQueue; a share level and an amount level
+     are never compared there. One in a chip, trigger or card condition raises InvalidRulesError.
+167. A band of one item: a condition holding a share level, whose read value leaves room for it, lets go at least
+     one item past where it comes on, and never past full (at_most) or under nothing shown (at_least).
+
+REJECTED, AND WHY (share levels)
+- A subject for the store's fullness (StoreShare, read in basis points): a rule with one amount level and one share
+  level would have no shape, and a fullness subject could not round to whole items without knowing which side of
+  the level each comparison is on.
+- A level type (a quantity or a share) on value and release: a scalar union on the wire, which a generated client
+  types as an untyped object.
+- One flag for the whole condition: each level is either a number or a share (issue #65), and "under 12, until full"
+  is the case that wants both.
+- Rewriting the saved quantities when a cap rises: a second writer of save.orders, and an order matched by equality
+  would become another order, losing its latch, at every raise.
+- Reading levels that meet as a plain threshold: the store moves across one quantity every second, so the rule's mix
+  would switch at every second; one more item of band costs a level the player wrote one item, and only where whole
+  items had already moved it.
+- Rounding the share to the nearest item: a quarter of 10 would read as 3 for an at_most, which then holds at 3,
+  above a quarter. Comparing the shown amount with the exact share is right on both sides.
+- Share levels in content: nothing in the content asks for one, and every reader of the rules' conditions (blockers,
+  pending triggers, cure readings) would then need the cap.
+

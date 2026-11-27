@@ -1,6 +1,6 @@
 """The end: recorded once, at the first resolved instant where rules.end is unlocked.
 
-Semantics: DESIGN.txt, "The end". Every instant the engine resolves (new_save's, each event instant, a decision's) ends
+Semantics: design/end.txt, "The end". Every instant the engine resolves (new_save's, each event instant, a decision's) ends
 here, and the unlock set changes only at such instants, so the first one the feature is unlocked at is when it first is.
 """
 from dataclasses import replace

@@ -1,6 +1,6 @@
 """The yield and spent stores: a running mix's card holding a Pause gives its share to the rest of its mix on its lane,
 in proportion to their saved shares, and a card paused on a store nothing in play can make again reads SPENT. Derived
-from the save at one instant, never stored (DESIGN.txt, "SPENT")."""
+from the save at one instant, never stored (design/spent.txt, "SPENT")."""
 from collections.abc import Callable
 
 from .cardsides import card_makes
@@ -24,11 +24,11 @@ type Maker = tuple[Runner, Unlock, frozenset[StoreId]]
 type Entry = tuple[CardId, int, Run]
 
 GIVES = frozenset({RunKind.SPENT, RunKind.PAUSED})
-"""The Runs of a mix card holding a Pause: a giver (DESIGN.txt, "SPENT", "Giver")."""
+"""The Runs of a mix card holding a Pause: a giver (design/spent.txt, "SPENT", "Giver")."""
 
 
 def spent_stores(save: Save, rules: Rules) -> frozenset[StoreId]:
-    """The largest S such that every maker in play of each store in S takes from a store of S at 0 (DESIGN.txt,
+    """The largest S such that every maker in play of each store in S takes from a store of S at 0 (design/spent.txt,
     "SPENT", "Spent stores"): found by removing, until nothing changes, each store with a maker taking from none."""
     return _SPENT.get(save, rules, lambda: _spent(save, rules))
 
@@ -67,7 +67,7 @@ def _fixed_point(rules: Rules, empty: frozenset[StoreId], live: dict[StoreId, li
 
 
 def unmade(save: Save, rules: Rules, store: StoreId) -> bool:
-    """No maker in play can make the store (Makers): a pool, which only outcomes fill (DESIGN.txt, "FULL OUTPUT")."""
+    """No maker in play can make the store (Makers): a pool, which only outcomes fill (design/full-output.txt, "FULL OUTPUT")."""
     return not any(_in_play(save, rules, runner, u) for runner, u, _ in _makers(rules).get(store, ()))
 
 
@@ -112,7 +112,7 @@ def _all_makers(rules: Rules) -> dict[StoreId, list[Maker]]:
 
 
 def spend(save: Save, rules: Rules, entries: tuple[Entry, ...]) -> tuple[Entry, ...]:
-    """`entries` with each PAUSED run on a spent store made SPENT, a full pause never (DESIGN.txt, "FULL OUTPUT", "Run");
+    """`entries` with each PAUSED run on a spent store made SPENT, a full pause never (design/full-output.txt, "FULL OUTPUT", "Run");
     the store set is read only when a run is paused dry."""
     cards = index(rules).cards
     dry = {card for card, _, run in entries if run.kind is RunKind.PAUSED and run.store not in card_makes(cards[card])}
@@ -128,7 +128,7 @@ def yielded(entries: tuple[Entry, ...], lane_of: Callable[[CardId], LaneId]
             ) -> tuple[tuple[Entry, ...], dict[CardId, tuple[SpentShare, ...]]]:
     """The entries at their effective shares, and each receiver's gains in the mix order of the givers: on each lane,
     every card r that is no giver gains floor(s_k * s_r / Rsum) from each giver k, Rsum those cards' saved shares
-    summed; nothing moves while Rsum is 0 (DESIGN.txt, "SPENT", "The yield")."""
+    summed; nothing moves while Rsum is 0 (design/spent.txt, "SPENT", "The yield")."""
     if not any(run.kind in GIVES for _, _, run in entries):
         return entries, {}
     gains: dict[CardId, tuple[SpentShare, ...]] = {}

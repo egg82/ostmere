@@ -1,4 +1,4 @@
-"""Invariant 96 (engine DESIGN.txt, "THE TOWN'S MIX": "Join", "Town share", "Verbs", "Reserved ids"): what rules and
+"""Invariant 96 (engine design/towns-mix.txt, "THE TOWN'S MIX": "Join", "Town share", "Verbs", "Reserved ids"): what rules and
 verbs the engine refuses. Each refusal has an accepted control beside it."""
 from collections.abc import Callable
 from dataclasses import replace

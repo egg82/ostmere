@@ -13,7 +13,7 @@ RULE RUNS
   on the next Step. A set_orders keeps the on or off of every rule it moves or keeps, so a rule running inside its
   band goes on running; a new or edited rule starts from its `when` alone. Saves not written since this field start
   empty.
-  Ended by the game: RuleRun gains ended, null, or season (a season's turn removed the rule: engine DESIGN.txt,
+  Ended by the game: RuleRun gains ended, null, or season (a season's turn removed the rule: engine design/townsfolk.txt,
   "Retired chores") or left (its person left the town: LEAVES). An ended entry is kept after its rule leaves
   View.orders, with off_at the time it was removed and off_level as for a let-go, until 8 newer entries push it out;
   it matches no rule in View.orders. A rule that never came on before it was removed gets an entry too, with starts 0
@@ -34,7 +34,7 @@ RULE RUNS
   `when`, as Next words it) and under it the facts, joined by " · ": ui.stint.ran {d} (off_at - on_at, only with an
   on_at) and ui.stint.landed {ago} (frame time - off_at).
   New text keys (Content.text_entries): ui.stint.ran {d} | ui.stint.landed {ago}   an ended stint's facts.
-  Dry stint: a stint whose card ran out of input (engine DESIGN.txt, "Queue mix") is handed back, not held: its entry
+  Dry stint: a stint whose card ran out of input (engine design/cards.txt, "Queue mix") is handed back, not held: its entry
   leaves view.queue and the player's mix runs on. It gets an entry with ended "dry" like an ended stint's, its until not
   holding, off_at the instant it left; made is [].
   THE CLIENT MAY word it as the ended stint's line and, in place of ui.stint.landed, ui.stint.dry {ago} (frame time -

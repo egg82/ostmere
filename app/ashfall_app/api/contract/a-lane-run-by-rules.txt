@@ -1,12 +1,12 @@
 A LANE RUN BY RULES
   A townsperson who works is a lane whose LaneInfo.ruled is true: its task is set by the player's rules, never by
-  their tap (engine DESIGN.txt, "Ruled lane"). Content: LaneInfo {lane, label_key, ruled, later_labels: [LaneLabel
+  their tap (engine design/townsfolk.txt, "Ruled lane"). Content: LaneInfo {lane, label_key, ruled, later_labels: [LaneLabel
   {after: Unlock, label_key}], name_key}, name_key the person's name or null (Text and numbers, {<lane>}); the lane's label is the label_key of the last of later_labels whose `after`
   view.unlocked holds, else label_key (for every lane, ruled or not). View: LaneBar {lane, running_card,
   completes_at, order}, `order` the index into view.orders of the rule whose task the lane runs now: the first i
   with view.orders_on[i] true, view.order_states[i] not passed_over, and a tap_card of running_card; null while the
   lane is free or no rule taps what it runs. completes_at is when the running tap ends; null while the lane is free
-  and while it repeats its task (a rule that would start the same card again at each completion: engine DESIGN.txt,
+  and while it repeats its task (a rule that would start the same card again at each completion: engine design/repeating-taps.txt,
   "REPEATING TAPS"), when the running card's Card.bar has no limit and is sampled modulo bar_total as a mix bar is.
   - tap_card from the player of an uncapped card whose CardInfo.lane is a ruled lane: 422 invalid_decision, nothing
     written. Rules may tap it; a queue entry may not (set_queue with one is 422: the queue is the hands' plan). A
@@ -17,7 +17,7 @@ A LANE RUN BY RULES
     from the moment it is set and never lets go. Rules on a lane act first match: at each of the lane's landings the
     first rule that is on and whose card is ready starts it, so a rule below the always rule acts only while the
     always rule's card cannot.
-  - A story moment may set a rule (an installed rule, engine DESIGN.txt, "Installed rule"), and only one shape: an
+  - A story moment may set a rule (an installed rule, engine design/townsfolk.txt, "Installed rule"), and only one shape: an
     always rule on a ruled lane, which the page draws and edits as below. It arrives in view.orders at the top or
     the end, like a rule the player set, and is theirs to edit, move or remove; once removed that moment never sets
     it again. rule_runs lists it from the moment it arrives, on at once (also when it arrives at a load that carried
@@ -29,7 +29,7 @@ A LANE RUN BY RULES
   - A tap_card entry is one run of its card: tap_card c until c's card_count reaches one past the runs planned before
     it (c's completions, plus 1 while a lane's running_card is c, or the until of c's last entry in view.queue if
     higher), so an entry for a card a lane runs now adds a run after that tap. More runs are more entries. An entry is
-    checked when its turn comes: one whose card cannot run then waits (engine DESIGN.txt, "Never ready"), and one whose
+    checked when its turn comes: one whose card cannot run then waits (engine design/cards.txt, "Never ready"), and one whose
     card reached its cap leaves view.queue at that instant. Each entry's runs are its until less the runs planned
     before it, the tap under way included.
   - In Next, a tap_card entry that adds no run after the tap a lane runs (its card some view.lanes entry's

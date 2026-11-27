@@ -1,4 +1,4 @@
-"""People leaving as content (engine DESIGN.txt, "LEAVES", "Content"), on fixtures/leaves.toml merged onto the opening
+"""People leaving as content (engine design/leaves.txt, "LEAVES", "Content"), on fixtures/leaves.toml merged onto the opening
 alone: the first person leaves with the standing action they brought, and the loader refuses a leave anywhere but a
 trigger's or an answer's outcome, of a lane that is not ruled, twice, beside a join of the same lane, or stopping
 something that is not a standing action. Each refusal is the fixture edited, beside the control that loads."""

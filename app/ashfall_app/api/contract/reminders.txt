@@ -28,7 +28,7 @@ REMINDERS
   reminder is due from the latest visit.
   The hands-free notice: one notification to each of the account's browsers with it on, when a long task the player
   gave the hands of the account's latest save (the most recently written, not deleted) is done and nothing they
-  planned comes next (engine DESIGN.txt, "Forecast", Hands free), at a local hour inside the browser's notification
+  planned comes next (engine design/, "Forecast", Hands free), at a local hour inside the browser's notification
   times (a notice due outside them waits for the next run that finds them open, and is claimed only then; a browser
   outside its times when the claim is made gets none of that notice), unless the player gave that work less than
   reminders/hands_free.json's min_busy_s game seconds before, or the save was written at or after that moment (a page

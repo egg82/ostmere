@@ -1,4 +1,4 @@
-"""The entries a card or a standing action holds while it runs, on a side or a lane's speed (DESIGN.txt, "ENTRIES HELD
+"""The entries a card or a standing action holds while it runs, on a side or a lane's speed (engine/design/, "ENTRIES HELD
 WHILE A CARD RUNS", "HELD SPEED"): derived from the save's discrete state wherever the stack is read, never stored.
 Reads only the lanes' taps, the running mixes, the unlock set and the pauses, never a rate, so building the stack never
 recurses into rates.running."""

@@ -1,4 +1,4 @@
-Wrong implementations of GROUPS (engine DESIGN.txt, "GROUPS (pooled lanes)", invariants 179-183), to plant one at a time
+Wrong implementations of GROUPS (engine design/groups.txt, "GROUPS (pooled lanes)", invariants 179-183), to plant one at a time
 in a scratch copy; a test written blind from that part alone must go red for each. Record each run below the list as
 MUTANTS_drains.txt does. `@kills(row)` on a test claims the row.
 

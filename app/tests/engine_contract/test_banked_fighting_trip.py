@@ -1,4 +1,4 @@
-"""Banked time with a fight on the trip (engine DESIGN.txt, "BANKED TIME", "A fighting trip", and "FIGHTS"): a trip is an
+"""Banked time with a fight on the trip (engine design/, "BANKED TIME", "A fighting trip", and "FIGHTS"): a trip is an
 uncapped card with inputs; give it FightDef(the hands' side, ...) and its supplies are taken whole whatever the odds,
 its makes (a flow and a lump) scale by the share won, and its finds, which read CardCount, count trips made, won or
 lost. Written from the contract and the public interface only, on fixture rules.

@@ -1,4 +1,4 @@
-"""Groups as data (engine DESIGN.txt, "GROUPS (pooled lanes)"): the fields, their codec and digest absence at defaults,
+"""Groups as data (engine design/groups.txt, "GROUPS (pooled lanes)"): the fields, their codec and digest absence at defaults,
 and validation. Nothing runs differently yet: the running is the next slice's. Each refusal has the good case
 (`world`) beside it."""
 from dataclasses import replace

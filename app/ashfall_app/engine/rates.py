@@ -1,5 +1,5 @@
 """What runs now: each runner's share and Run (grey, pauses, waits, yield), and every line's
-rate, a card's lump lines included (DESIGN.txt, "Rate form").
+rate, a card's lump lines included (design/cards.txt, "Rate form").
 
 All of it is a function of the save's values at save.time and its discrete state, never of history.
 """
@@ -37,9 +37,9 @@ class Running:
     each tapped card (BP, on its lane), in the order running-dry pauses read backwards: standing in rules order, then
     the hands (the mix in mix order, then a tapped card), then the other lanes in rules order; the running town mix's
     cards come after the hands' mix and before the taps. A card both mixed and
-    tapped appears once, as its tap at BP: its mix share is yielded with the rest of the mix (DESIGN.txt, "One
+    tapped appears once, as its tap at BP: its mix share is yielded with the rest of the mix (engine/design/, "One
     bar"). A mix card's share is its effective one, its saved share plus `gained`, what it receives from paused and
-    spent cards (DESIGN.txt, "SPENT")."""
+    spent cards (design/spent.txt, "SPENT")."""
 
     shares: dict[Runner, int]
     runs: dict[Runner, Run]
@@ -171,7 +171,7 @@ def _all_flow_touch(rules: Rules) -> dict[StoreId, frozenset[Runner]]:
 
 def exact_contribution(save: Save, rules: Rules, runner: Runner, store: StoreId, share: int, run: Run) -> Fraction:
     """What `runner` adds to `store` per second, exactly: a flow's rate, or a lump's amount per completion times the
-    card's work speed over its work per completion, the rate its card's work pays it at (DESIGN.txt, "Rate form")."""
+    card's work speed over its work per completion, the rate its card's work pays it at (design/cards.txt, "Rate form")."""
     card = index(rules).cards.get(CardId(runner))
     ref = RateRef(runner, FlowKind.MAKE if store in makes(rules, runner) else FlowKind.COST, store)
     if card is None or not has_lump(card, ref):
@@ -220,7 +220,7 @@ _STANDING: PartsMemo[tuple[StandingDef, ...]] = PartsMemo()
 
 
 def unlocked_standing(save: Save, rules: Rules) -> tuple[StandingDef, ...]:
-    """The standing actions that run: unlocked, and not stopped by a leave (DESIGN.txt, "LEAVES")."""
+    """The standing actions that run: unlocked, and not stopped by a leave (design/leaves.txt, "LEAVES")."""
     return _STANDING.get((rules, save.unlocked), lambda: _unlocked_standing(save, rules))
 
 

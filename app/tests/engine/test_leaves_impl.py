@@ -1,4 +1,4 @@
-"""A person leaves the town (engine DESIGN.txt, "LEAVES"): unit tests written beside the implementation. The contract
+"""A person leaves the town (engine design/leaves.txt, "LEAVES"): unit tests written beside the implementation. The contract
 tests of invariants 148 to 155 are written blind elsewhere."""
 from dataclasses import replace
 

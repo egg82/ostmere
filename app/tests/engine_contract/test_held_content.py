@@ -1,4 +1,4 @@
-"""The content side of invariants 116 and 117 (engine DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS": "Release lock",
+"""The content side of invariants 116 and 117 (engine design/entries-held.txt, "ENTRIES HELD WHILE A CARD RUNS": "Release lock",
 "Content"): a card entry's while_running list reaches the engine card in declaration order; the schema refuses an amount below 1;
 the loader has no check of its own, so the engine's validation names the card and the side."""
 from typing import Any

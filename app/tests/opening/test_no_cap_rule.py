@@ -1,6 +1,6 @@
 """A new save starts with no cap rule (docs/decisions.md, "Hitting a cap is a rule for the player to write"): the
 shipped content's new save holds no order and no queued one-off, on the engine and on the wire, and two days left
-alone install none. The only rules content can install are a ruled lane's always rule (engine DESIGN.txt, "Installed
+alone install none. The only rules content can install are a ruled lane's always rule (engine design/, "Installed
 rule"), an arrival's first task among them."""
 from ashfall_app import engine as e
 from tests.game_client import GameClient

@@ -1,0 +1,100 @@
+OFFER KINDS (answering a later offer by rule). Where this part and an entry above disagree, this part holds. Examples
+name ids only.
+
+FIT PASS
+- An instance of Offers (a Type Object: the kind is data on the offer, as the answer is) and of Standing orders (one
+  more order verb, as AnswerOffer was). No new system, no new state: an offer's state is still its three unlocks.
+- How games do it: a quest log answering "every offer of this type" is a filter over the log (Nystrom's Type Object:
+  the kind is the shared breed), applied by a rule that names the breed and not a member; a Command that names a
+  category and resolves to a member when it runs is Command plus late binding.
+
+CHOICES (offer kinds)
+- OfferDef gains `kind: KindId | None` (default None) and AnswerDef `role: RoleId | None` (default None); KindId and
+  RoleId are new NewTypes. A kind groups offers that ask the same question; a role names what an answer means in it
+  ("yes", "no"), the same in every offer of the kind. Validation (InvalidRulesError): an offer with a kind has a role
+  on every answer, no two of its answers share a role, and every offer of that kind has the same set of roles (their
+  order and ids may differ); an offer without a kind has no role on any answer. A kind with one offer is valid.
+- AnswerKind(kind: KindId, role: RoleId), an OrderVerb and a Verb (the player's decide refuses it, below). It can act
+  while some offer of `kind` is open (shown, not answered). Applying it applies AnswerOffer(o, a) where o is the first
+  open offer of `kind` in rules.offers order and a is o's answer whose role is `role`: the same unlocks, outcome and
+  lines as that AnswerOffer, nothing else. It is resolved when chosen, not stored: nothing in the save names o or a.
+- Never dead: is_dead is False for an AnswerKind, so an order holding one is never PASSED_OVER (its state is ON while
+  its latch is true, WAITING while it is not), and it keeps answering each later offer of the kind as it shows. A rule
+  that has nothing to answer simply cannot act, as an AnswerOffer of a not-yet-shown offer cannot.
+- Evaluation: the controlling verb's first source stays "the answer orders", now the first order whose latch is true
+  and whose verb is an AnswerOffer that can act or an AnswerKind that can act, in the orders' own order; an AnswerKind
+  is chosen as the AnswerOffer it resolves to. The evaluation loop already runs on after each firing, so two open
+  offers of one kind are answered at one instant, each a firing under the firing cap. An offer shows only when an
+  outcome lands, which evaluates, so a true AnswerKind answers an offer at the instant it shows, and one whose latch
+  rises later answers at that LATCH, exactly as an AnswerOffer order does ("No new event", above). The cap's READY
+  at T + 1 counts an AnswerKind that can act as it counts an AnswerOffer that can act.
+- Refusals. A player's decide of an AnswerKind raises InvalidVerbError (the player answers an offer, by id). SetQueue
+  raises InvalidVerbError for an entry holding one: the queue's head is never passed over and an AnswerKind is never
+  dead, so a head that had nothing to answer would hold every entry behind it for good. SetOrders accepts an
+  AnswerKind whose kind and role are declared by some offer (one with no open offer yet is accepted: planning ahead);
+  an undeclared kind, or a role the kind does not have, raises InvalidVerbError.
+- Covered: an AnswerKind covers no store. Decision context records an order's answer as it does an AnswerOffer's,
+  with the resolved AnswerOffer's ids, since that is what was applied.
+- Codec: FORMAT stays 8 and no upgrade is added. A manifest offer gains `kind` (the kind id) and `roles` (the role
+  ids, in the offer's answer order, so roles[i] belongs to answers[i]) only when the offer has a kind; an offer
+  without one is written as before, {"id", "answers"}, and the reader accepts both shapes. Likewise the rules
+  encoding leaves a None `kind` or `role` out, so rules that use no kind keep their digest, their manifest text and
+  every save's encoding: a format 8 text decodes as it did, and a text from before this part reads as every offer
+  unkinded, which is what it was. (The plan called for a format upgrade that adds none; with the optional keys there
+  is nothing for one to do, and a bump would change the FORMAT every released save and test is pinned to.) AnswerKind
+  joins the codec's classes and _VERB_TYPES; Save's fields are unchanged (app/tests/held/save_fields.json).
+- Rebase: an offer may gain, lose or change its kind and its answers' roles; step 4 drops an AnswerKind (an order's
+  action, the order going when none is left) whose kind and role no offer of the new rules has, so every AnswerKind a
+  save keeps is one SetOrders would accept under them.
+- Content (the loader, app/ashfall_app/opening): OfferEntry gains `kind` (optional) and AnswerEntry `role` (optional).
+  The loader fails, naming the offer, for a role on an offer without a kind, a kinded offer's answer without a role,
+  two answers of one offer with one role, and two offers of one kind whose role sets differ. Day three's arrival
+  offer and day five's carry the arrival kind; the engine and the loader are tested on a fixture chapter.
+
+INVARIANTS (offer kinds)
+98. Answer both ways, by kind: for a save where offers o1..on of kind k are open at T (rules order), a true order
+    "AfterTime(0) -> AnswerKind(k, r)" at the front of its answer orders, and each o_i's answer of role r being a_i,
+    the evaluation at T gives a save with the stores, cards, lanes, unlocked, modifiers and fired of the save given
+    AnswerOffer(o1, a1), then AnswerOffer(o2, a2) ... AnswerOffer(on, an) at T, and the same lines in the same order;
+    their orders differ only by that order.
+99. Second at the instant it shows: with AnswerKind(k, r) held by a true order, an offer of k that shows at T (an
+    outcome landing at T) is answered at T with its answer of role r, whether or not an earlier offer of k was open,
+    and one that shows after the earlier ones were answered is answered likewise; the rule is still in save.orders.
+100. Open only: an AnswerKind answers no offer of its kind that is not shown, none already answered, and none of
+    another kind; with no open offer of the kind a true order holding it changes nothing.
+101. By role: the answer given is the one whose role is r, wherever it stands among the offer's answers, and offers of
+    one kind that list their answers in different orders are answered with the same meaning.
+102. First open: of several open offers of a kind, the earliest in rules.offers is answered first, whatever the order
+    in which they showed.
+103. Never dead: order_states for a true order holding an AnswerKind is ON, never PASSED_OVER, before and after every
+    offer of its kind is answered.
+104. Refusals: decide of an AnswerKind raises InvalidVerbError; SetQueue with an entry holding one raises
+    InvalidVerbError; SetOrders with an undeclared kind or a role the kind lacks raises InvalidVerbError, and with a
+    declared pair is accepted whether or not an offer of the kind is open.
+105. Validation: InvalidRulesError for a role on an unkinded offer, a kinded offer's answer with no role, two answers
+    of one offer with one role, and two offers of one kind with different role sets.
+106. Codec: for rules with no kind, encode, the digest and the manifest text are those of the engine before this part;
+    for rules with kinds, decode(encode(s, r), r) == s, the manifest's offers carry kind and roles, and rebase of a
+    save written under rules without the kind into rules that give a kinded offer one is accepted and loses nothing;
+    rebase into rules where no offer has a kind and role a rule of the save answers drops that rule.
+
+REJECTED, AND WHY (offer kinds)
+- Resolving the AnswerKind to the offer at SetOrders and storing an AnswerOffer: it names one offer, which is the
+  defect (a later offer cannot be named when the rule is set).
+- A per-offer rule the player sets when the offer shows: the player cannot name an offer not yet shown, and an offer
+  that shows while they are away would wait for a visit, which is something lost because they were away.
+- Content installing the next offer's answer from the first answer: the first answer would decide the second for the
+  player, and an install is a tap rule.
+- A kind as a Save field or a manifest-wide list: the offers already carry it, and a second list is a second place
+  for it to disagree.
+- A format bump and upgrade for an empty addition: the optional keys make the upgrade a no-op and move the FORMAT
+  every released save and pinned test names.
+- Matching roles by answer position: reordering answers in one offer would flip what a saved rule means. Roles are
+  ids, equal across the kind's offers.
+- AnswerKind in SetQueue: see Refusals.
+
+KNOWN GAPS (offer kinds)
+- A rule for a kind answers the first open offer of it with one role, so two offers of a kind cannot be answered
+  differently by one rule; the player answers one of them by id and the rule answers the rest. Decided by: the first
+  pair of offers of a kind the player wants answered differently.
+

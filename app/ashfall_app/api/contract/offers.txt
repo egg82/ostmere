@@ -1,6 +1,6 @@
 OFFERS
   Someone asks the player something, with two or more answers; it waits until answered and never expires (engine
-  DESIGN.txt, "Offers"). Content.offer_infos: [OfferInfo {offer, text_key, kind, line_keys, answers: [AnswerInfo {answer,
+  design/townsfolk.txt, "Offers"). Content.offer_infos: [OfferInfo {offer, text_key, kind, line_keys, answers: [AnswerInfo {answer,
   label_key, cost_key, change_bp, gains: [AnswerGain {store, quantity}], role}], askers, cause, waiting_key, expiry_key,
   permanence_key}] in content order, kind the group of offers that ask the same question and role what
   an answer means in it (both null on an offer outside any kind; a kinded offer has a role on every answer, and every

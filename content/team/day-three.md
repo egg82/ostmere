@@ -3,7 +3,7 @@
 Spoilers: this file is under `content/` and never shown to the owner. It picks up where `day-two.md` ends (B4, on story day 3)
 and runs through story day 3's evening, the third night and story day 4 to B5, on the fourth night. It also places day
 two's sinks (below) and gives the arc from B5 through B7, the end of week 1. Its data twin is `beats.yaml`'s
-`day_three:` list; its canon is C-promise-19 and C-beat-87 to C-beat-93 in `canon.jsonl` (tentative until the lead
+`day_three:` list; its canon is C-promise-19 and C-beat-87 to C-beat-93 in `canon/` (tentative until the lead
 confirms); its decisions are D-93 to D-102. **Every number below is a target**: the simulator's routes set them
 (`day-three-numbers.md`), and the line state lists are generated from those routes. Engineering's side is
 `docs/design/day-three-plan.md` (spoiler-free); the sinks' shapes are `docs/design/banked-time-plan.md`'s, answered in

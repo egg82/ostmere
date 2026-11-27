@@ -1,4 +1,4 @@
-"""The content checks on fights (combat-plan item 6, engine DESIGN.txt "FIGHTS"), on the built Rules: ids and fields
+"""The content checks on fights (combat-plan item 6, engine design/fights.txt "FIGHTS"), on the built Rules: ids and fields
 only, never text. Each refusal names the failing id (refs.fail). `check_fight_content` runs the four; they read
 nothing when the content declares no fight."""
 from collections.abc import Iterator

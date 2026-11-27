@@ -1,4 +1,4 @@
-"""DESIGN.txt, part "CURE CUT-IN": a cure for a chip shown now, tapped by the player, takes the hands from the task they
+"""design/cure-cut-in.txt, part "CURE CUT-IN": a cure for a chip shown now, tapped by the player, takes the hands from the task they
 run; the task keeps its work, and one no order or queue entry taps goes to the queue's front, so it is taken up again
 once the cure lands. An order's cure never cuts in (a drawn landing comes true while the player is away); a cure never
 cuts into a cure, and with no chip shown a cure waits for free hands."""

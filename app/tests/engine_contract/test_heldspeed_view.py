@@ -1,4 +1,4 @@
-"""Invariant 118, the engine half, with standing holders (engine DESIGN.txt, "HELD SPEED ...": "View"): View.held lists
+"""Invariant 118, the engine half, with standing holders (engine design/held-speed.txt, "HELD SPEED ...": "View"): View.held lists
 the standing holders that run too, after the cards, in rules.standing order, each with share_bp BP and the entries the stack
 holds for it, `card` holding the runner's id; a paused or locked one is not listed and a standing action with no entry
 never is."""

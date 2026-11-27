@@ -1,4 +1,4 @@
-Wrong readings of share levels (engine DESIGN.txt, "SHARE LEVELS", invariants 162-167), to plant one at a time in a
+Wrong readings of share levels (engine design/share-levels.txt, "SHARE LEVELS", invariants 162-167), to plant one at a time in a
 scratch copy; a test written from that part alone must go red for each. Rows are claimed by `@kills(row)` markers on
 test_share_levels_*.py. Record each run below the list as MUTANTS_drains.txt does.
 

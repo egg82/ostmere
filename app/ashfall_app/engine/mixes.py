@@ -3,7 +3,7 @@
 Shares are basis points of the player's time (the HANDS lane), or in a town mix of one person's time (MixLayer). A
 mix's components sum to at most BP (10_000), a town mix's per lane; the remainder is idle, shown as idle, never silently given to another card. A paused, waiting or
 greyed card's unused share idles too, but for a paused card, whose share the rest of its mix on its lane runs, named
-as a source (DESIGN.txt, "SPENT"). A mix holding a completed card is greyed whole (DESIGN.txt,
+as a source (design/spent.txt, "SPENT"). A mix holding a completed card is greyed whole (design/cards.txt,
 "Greyed mix").
 """
 from dataclasses import dataclass
@@ -19,7 +19,7 @@ MAX_MIXES = 64   # saved mixes in a save: SaveMix past it is InvalidVerbError (c
 class MixLayer(Enum):
     """Whose time a mix's shares are shares of: the player's (HANDS) or each person's own, the person being the lane a
     card is on (TOWN). Read from a mix's cards, and for a mix with none from Mix.layer or the joins that make it
-    (plan.mix_layer; DESIGN.txt, "THE TOWN'S MIX")."""
+    (plan.mix_layer; design/towns-mix.txt, "THE TOWN'S MIX")."""
 
     HANDS = "hands"
     TOWN = "town"
@@ -28,7 +28,7 @@ class MixLayer(Enum):
 @dataclass(frozen=True)
 class CardShare:
     """A card at share_bp of this mix (0 <= share_bp <= BP). The card runs continuously at that share: its work fills
-    at the share's speed and its lines run at that share (DESIGN.txt, "Rate form")."""
+    at the share's speed and its lines run at that share (design/cards.txt, "Rate form")."""
 
     card: CardId
     share_bp: int
@@ -37,7 +37,7 @@ class CardShare:
 @dataclass(frozen=True)
 class SpentShare:
     """The part, share_bp, of paused or spent card `card`'s saved share that a receiving card of its mix runs now
-    (DESIGN.txt, "SPENT", "Giver"). Never saved: a function of the save at an instant."""
+    (design/spent.txt, "SPENT", "Giver"). Never saved: a function of the save at an instant."""
 
     card: CardId
     share_bp: int
@@ -59,7 +59,7 @@ class Mix:
     """A named, saved mix.
 
     layer: TOWN on a mix that was a town mix when it was emptied, so it stays one while it holds no card (a mix with
-    cards is read from them). SaveMix and a leave set it; the value a verb carries is replaced (DESIGN.txt, "THE
+    cards is read from them). SaveMix and a leave set it; the value a verb carries is replaced (engine/design/, "THE
     TOWN'S MIX")."""
 
     id: MixId
@@ -72,7 +72,7 @@ class SwitchMix:
     """Verb: make the saved mix `mix` the active one, the player's own. Switching to the already-active mix changes
     nothing. To a greyed mix: the player's switch is accepted (the mix stays greyed, nothing runs); the queue's cannot
     act. An order's SwitchMix is not applied: its mix runs over the player's while the order's condition holds
-    (DESIGN.txt, "Greyed mix", "Order mix")."""
+    (design/cards.txt, "Greyed mix", "Order mix")."""
 
     mix: MixId
 
@@ -80,7 +80,7 @@ class SwitchMix:
 def flatten_shares(mixes: tuple[Mix, ...], mix: MixId) -> tuple[CardShare, ...]:
     """The cards a mix runs, at their effective shares, in depth-first declaration order.
 
-    Compositional (DESIGN.txt, "Nested mix share"). Raises InvalidVerbError on an unknown mix id or a nesting cycle.
+    Compositional (design/core.txt, "Nested mix share"). Raises InvalidVerbError on an unknown mix id or a nesting cycle.
     """
     return tuple(CardShare(a, s) for a, s in _flat({m.id: m for m in mixes}, mix, (), {}).items())
 

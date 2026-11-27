@@ -14,7 +14,7 @@ class EventKind(IntEnum):
     rules.cards."""
     COMPLETION = 2
     """A capped card's work reaches its next completion, tapped or mixed (an uncapped card's completions are rates,
-    never events: DESIGN.txt, "Completions"). sequence: the card's index in rules.cards."""
+    never events: design/cards.txt, "Completions"). sequence: the card's index in rules.cards."""
     TAP_DONE = 3
     """A lane's tapped card reaches its next completion (after its COMPLETION, if capped). sequence: the lane's index, HANDS first, then rules.lanes."""
     LEVEL_UP = 4
@@ -38,11 +38,11 @@ class EventKind(IntEnum):
     them (latches.py). sequence: index in save.orders."""
     QUEUE_POP = 11
     """The controlling queue entry's `until` turns true (the first live entry), or a dead entry's `until` that cannot
-    fall turns true (it settles: DESIGN.txt, "Greyed mix"). sequence: 0."""
+    fall turns true (it settles: design/cards.txt, "Greyed mix"). sequence: 0."""
     READY = 12
     """A TapCard named by a true order or by the controlling queue entry, unlocked, not completed and on a free lane,
-    turns ready: orders and the queue evaluate (DESIGN.txt, "Orders"). Also at T + 1 for every such card already ready
-    when the firing cap suspended evaluation at T (DESIGN.txt, "Evaluation after a cascade"), and one at T + 1, with
+    turns ready: orders and the queue evaluate (design/core.txt, "Orders"). Also at T + 1 for every such card already ready
+    when the firing cap suspended evaluation at T (engine/design/, "Evaluation after a cascade"), and one at T + 1, with
     sequence len(rules.cards) and subject '', for the verbs with no card that could act then. sequence: the card's
     index in rules.cards."""
 

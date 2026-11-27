@@ -1,4 +1,4 @@
-"""Repeating taps (engine DESIGN.txt, part "REPEATING TAPS", invariants 75 to 79): a lane whose rule would start the
+"""Repeating taps (engine design/repeating-taps.txt, part "REPEATING TAPS", invariants 75 to 79): a lane whose rule would start the
 same card again at each completion runs it as a rate, with no instant per completion, and lands where the
 per-landing engine would have switched its task.
 

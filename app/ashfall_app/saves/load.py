@@ -1,5 +1,5 @@
 """A stored save read under a pod's rules (api/contract/saves-across-releases-and-pods.txt, "Saves across releases and pods"): decoded exactly when
-it is under them already, else rebased forward (engine DESIGN.txt, "Rebase"). A save last written under a later
+it is under them already, else rebased forward (engine design/, "Rebase"). A save last written under a later
 content release is not rebased at all: this pod is the older one mid-deploy, and a rebase back to its rules (which can
 succeed when the change was only numbers) must not overwrite the newer release's. A save that
 cannot be read is Unavailable, so nothing is written and the page asks again."""

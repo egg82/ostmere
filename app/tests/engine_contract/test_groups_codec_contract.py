@@ -1,4 +1,4 @@
-"""Invariant 182 (engine DESIGN.txt, "GROUPS (pooled lanes)", "Codec", "Rebase"): what a game with no group encodes, and
+"""Invariant 182 (engine design/groups.txt, "GROUPS (pooled lanes)", "Codec", "Rebase"): what a game with no group encodes, and
 what a game with one round-trips. The committed saves' hashes, the rules digest and the golden saves are the other half
 of the invariant's proof and are other suites'."""
 from dataclasses import replace

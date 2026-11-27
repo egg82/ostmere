@@ -1,4 +1,4 @@
-"""Fixture rules and readers for the held-speed contract tests (engine DESIGN.txt, "HELD SPEED, AND ENTRIES HELD BY
+"""Fixture rules and readers for the held-speed contract tests (engine design/, "HELD SPEED, AND ENTRIES HELD BY
 STANDING ACTIONS", invariants 156-161 and the amended 114). Built from the engine's public names only; the new ones
 (HeldSpeed, StandingDef.while_running) are looked up when a fixture is built, never when a test module imports.
 
@@ -94,7 +94,7 @@ def by_hand(lane: LaneId, amount_bp: int, source: str = "by-hand") -> Modifier:
 
 
 def at(e: "eng.Explanation", m: Modifier) -> Modifier:
-    """`m` as an Explanation lists it: aimed at the explained line itself (DESIGN.txt, "HELD SPEED", "The entries")."""
+    """`m` as an Explanation lists it: aimed at the explained line itself (design/held-speed.txt, "HELD SPEED", "The entries")."""
     return replace(m, target=e.ref)
 
 

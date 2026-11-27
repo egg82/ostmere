@@ -1,5 +1,5 @@
 LEAVES
-  A person may leave the town at a story moment (engine DESIGN.txt, "LEAVES"), for good. Unlock categories gain left
+  A person may leave the town at a story moment (engine design/leaves.txt, "LEAVES"), for good. Unlock categories gain left
   (id a lane): that lane's person has left. The people present (THE TOWN'S MIX) are the ruled lanes whose joined
   unlock view.unlocked holds and whose left unlock it does not.
   At that moment, in the same Step: the lane is gone from view.lanes; its cards are in neither view.cards nor

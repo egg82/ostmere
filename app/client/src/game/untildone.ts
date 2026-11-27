@@ -2,7 +2,7 @@
 // have been had the player planned it first, its work kept. On the hands (or any lane that is not ruled), a queue entry
 // tapping it until its cap, at Next's front (where it would stand, running), or the running When ready entry held on to
 // the cap; on a ruled lane, where the queue may not go, an always rule tapping it, placed as a new lane rule goes.
-// Either re-taps it at each landing and lets go at the cap (engine DESIGN.txt, "Orders", "Ruled lane").
+// Either re-taps it at each landing and lets go at the cap (engine design/, "Orders", "Ruled lane").
 import type { Card, Decision, Order, View } from "../api/types";
 import type { Catalog } from "./catalog";
 import { ALWAYS, newRuleAt } from "./lanes";

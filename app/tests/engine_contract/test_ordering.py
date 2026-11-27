@@ -227,7 +227,7 @@ _HELD_MIX_LATCH = Scenario(
      (0, SetOrders((Order(AtLeast(SkillLevel(SK), 2, 1), SwitchMix(mix_id(0))),)))),
     SwitchMix(mix_id(1)), (1,))
 """A cap of one firing: k0 reaches level 2 at 1 by a LEVEL_UP, which is the instant's one firing, so the mix order's
-latch change past it waits (DESIGN.txt, "Firing cap")."""
+latch change past it waits (engine/design/, "Firing cap")."""
 
 
 def _definition(a: Save, rules: Rules, c: AfterTime | AtLeast | AtMost) -> bool | None:
@@ -252,7 +252,7 @@ def _definition(a: Save, rules: Rules, c: AfterTime | AtLeast | AtMost) -> bool 
 def test_latch_state_matches_its_definition(sc: Scenario):
     """Invariants 14, 13: at every resolved save a latch is what _definition says, or keeps its state in the band. The
     one exception is the cap's: past the firing cap a mix order's latch change waits for the next instant where
-    something else fires (DESIGN.txt, "Firing cap"), so a mix order's latch may disagree only when the last cascade
+    something else fires (engine/design/, "Firing cap"), so a mix order's latch may disagree only when the last cascade
     reached the cap and, if it came after the played save, the latch already disagreed the same way there."""
     from contract_gen import play
     s = play(sc)

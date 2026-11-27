@@ -1,4 +1,4 @@
-"""Invariants 111 and 112, the card states (engine DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS": "Why paused, waiting and
+"""Invariants 111 and 112, the card states (engine design/entries-held.txt, "ENTRIES HELD WHILE A CARD RUNS": "Why paused, waiting and
 yielded count 0", "Pause"): a mix card paused on a dry store or waiting on a requires holds nothing, and holds again at
 the instant it resumes or its requires holds; the dry rule reads the stack the pauses so far leave."""
 from ashfall_app.engine import BP, FlowKind, RateRef, RunKind, advance, explain, segment, view

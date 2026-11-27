@@ -1,4 +1,4 @@
-"""A fight runner's odds as stack entries (DESIGN.txt, "FIGHTS", "The odds entries"): derived from the strengths wherever
+"""A fight runner's odds as stack entries (design/fights.txt, "FIGHTS", "The odds entries"): derived from the strengths wherever
 the effective stack is read, never stored, except in a HANDS tap's LaneState.speed, which keeps what it started at."""
 from .cards import FightDef
 from .fightlines import ODDS_PREFIX, fight_costs, fight_makes

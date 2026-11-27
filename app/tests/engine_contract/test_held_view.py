@@ -1,4 +1,4 @@
-"""Invariant 118, the engine half (engine DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS": "View"): View.held lists exactly
+"""Invariant 118, the engine half (engine design/entries-held.txt, "ENTRIES HELD WHILE A CARD RUNS": "View"): View.held lists exactly
 the cards with h(c) > 0, in rules.cards order, each with share_bp = h(c) and entries equal to its held entries in the
 stack; explain_strength (and so FightView.power) lists the held entries among its adds with their "held:" source. The
 wire half is test_held_wire.py."""

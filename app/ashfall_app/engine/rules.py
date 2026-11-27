@@ -37,11 +37,11 @@ class SkillDef:
 class StandingDef:
     """A standing action: runs at a full share whenever unlocked, outside the mix and every lane (a fire burning, a
     body getting hungry). Never a card, never tapped or mixed: it is not work the player does. Rules with opening None
-    start every standing action at time 0 (DESIGN.txt, "Standing", "Instant 0").
+    start every standing action at time 0 (design/core.txt, "Standing", "Instant 0").
 
     makes and costs per hour, and the skill it trains (skill None: xp_per_hour 0). It may not both make and cost the
     same store, nor list one store twice in makes or in costs; a card holds the same rule over its makes, costs,
-    inputs and outcome stores (DESIGN.txt, "Validation of cards").
+    inputs and outcome stores (design/cards.txt, "Validation of cards").
     """
 
     id: ActionId
@@ -51,7 +51,7 @@ class StandingDef:
     xp_per_hour: int = 0
     fight: FightDef | None = None
     while_running: tuple[Held, ...] = ()
-    """Sides and lane speeds it raises while it runs and is not paused (DESIGN.txt, "HELD SPEED"; the codec leaves
+    """Sides and lane speeds it raises while it runs and is not paused (design/held-speed.txt, "HELD SPEED"; the codec leaves
     the field out while empty)."""
 
 
@@ -81,31 +81,31 @@ class Rules:
     lanes: tuple[LaneDef, ...] = ()
     """Lanes besides HANDS, which always exists and is never declared (declaring it is invalid)."""
     cards: tuple[CardDef, ...] = ()
-    """Every card, in the order a mix's dry pauses and same-instant events read them (DESIGN.txt, "Same instant")."""
+    """Every card, in the order a mix's dry pauses and same-instant events read them (design/core.txt, "Same instant")."""
     chips: tuple[ChipDef, ...] = ()
     triggers: tuple[TriggerDef, ...] = ()
     opening: tuple[Unlock, ...] | None = None
     """The unlock set a new save starts with; every id not in it is locked until an Outcome unlocks it. None means
     nothing is gated: every id counts as unlocked (rules with no opening, such as engine tests and the simulator's
-    bare economies). DESIGN.txt, "Unlocks"."""
+    bare economies). design/core.txt, "Unlocks"."""
     end: FeatureId | None = None
     """The content's end feature: the end is the first instant it is unlocked, recorded as Save.ended_at. None: these
-    rules have no end. DESIGN.txt, "The end"."""
+    rules have no end. design/end.txt, "The end"."""
     offers: tuple[OfferDef, ...] = ()
-    """Every offer, in the order the view lists them (DESIGN.txt, "Offers")."""
+    """Every offer, in the order the view lists them (design/townsfolk.txt, "Offers")."""
     sides: tuple[SideDef, ...] = ()
-    """Every side a fight can name, in rules order (DESIGN.txt, "FIGHTS")."""
+    """Every side a fight can name, in rules order (design/fights.txt, "FIGHTS")."""
     threats: tuple[ThreatDef, ...] = ()
     """Every threat of a roster, in rules order."""
     prestige: PrestigeDef | None = None
-    """The numbers every skill's phases read (DESIGN.txt, "PRESTIGE PHASES"); None: these rules have no prestige."""
+    """The numbers every skill's phases read (design/prestige-phases.txt, "PRESTIGE PHASES"); None: these rules have no prestige."""
     nodes: tuple[NodeDef, ...] = ()
     """Every skill's prestige track, in rules order; a skill's track is its nodes in this order."""
 
 
 def validate_rules(rules: Rules) -> None:
     """Raise InvalidRulesError if the rules break any constraint documented on the types above, or reference an
-    unknown store or skill, including the card rules (DESIGN.txt, "Validation of cards"). Every other engine function
+    unknown store or skill, including the card rules (design/cards.txt, "Validation of cards"). Every other engine function
     assumes rules that pass this; on rules that do not, their behaviour is unspecified. Standing action ids and card ids
     share one namespace (Runner): one id names one rate owner."""
     runners = [a.id for a in rules.standing] + [c.id for c in rules.cards]

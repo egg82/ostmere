@@ -1,4 +1,4 @@
-"""DESIGN.txt, part "CUT-IN": a glowing step the player taps while the queue or a rule holds the hands takes them, the
+"""design/cut-in.txt, part "CUT-IN": a glowing step the player taps while the queue or a rule holds the hands takes them, the
 held task keeps its work and is taken up again once the step lands; a hand tap and a step that does not glow are never
 cut into."""
 import pytest

@@ -1,4 +1,4 @@
-"""Groups as authored (opening/groups.py, engine DESIGN.txt, "GROUPS (pooled lanes)", "Content"), on
+"""Groups as authored (opening/groups.py, engine design/groups.txt, "GROUPS (pooled lanes)", "Content"), on
 fixtures/groups.toml merged onto the opening alone: a pooled lane, its member's unmarked join, a mark and an unmarking
 load into the engine's fields; an unmarked join or unmarking unlocks the group's cards; the loader refuses what it
 refuses beside the control that loads. Each refusal is the fixture edited."""

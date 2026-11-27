@@ -5,7 +5,7 @@ A card's cap is not a goal here: a capped card is a tap, not a mix.
 
 A mix's XP rate into a skill is the engine's own rate formula (engine/modifiers.py: base, modifiers, share) summed over
 the mix's ready cards that train it, a card that could not run now giving its share to the rest of its mix as SPENT
-does (engine DESIGN.txt, "SPENT"). It is read at the visit's instant, so it leaves out what an order or a tap takes
+does (engine design/spent.txt, "SPENT"). It is read at the visit's instant, so it leaves out what an order or a tap takes
 from the mix later and an input running dry; the readout prints how far the kept mix's rates came true over each absence."""
 from dataclasses import dataclass
 

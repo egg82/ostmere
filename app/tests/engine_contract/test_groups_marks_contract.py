@@ -1,4 +1,4 @@
-"""Invariant 181 and the choices on joins and marks (engine DESIGN.txt, "GROUPS (pooled lanes)", "Join", "Mark")."""
+"""Invariant 181 and the choices on joins and marks (engine design/groups.txt, "GROUPS (pooled lanes)", "Join", "Mark")."""
 from dataclasses import replace
 
 from ashfall_app.engine import (

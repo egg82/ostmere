@@ -1,5 +1,5 @@
 """Every canon id (`C-<area>-<n>`) and decision id (`D-<n>`) cited anywhere in the repo's text is a row of
-`content/canon.jsonl` or `content/decisions.jsonl`, and both files keep their row shape, so a new lead can take the
+`content/canon/` (one file per area) or `content/decisions.jsonl`, and both keep their row shape, so a new lead can take the
 seat from them alone (docs/research/studio-team.md, "What it means here").
 
 A canon row's source is `file#heading`: the file is under `content/`, or under the repo root when it starts with
@@ -44,6 +44,17 @@ def rows(path: Path) -> list[dict[str, object]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
+def canon_rows(content: Path) -> list[dict[str, object]]:
+    """Every canon row, area by area (file name order), each area's rows in file order."""
+    return [row for path in sorted((content / "canon").glob("*.jsonl")) for row in rows(path)]
+
+
+def misfiled(content: Path) -> list[str]:
+    """Canon rows sitting in a file that is not their area's."""
+    return [f"{path.name}: {r.get('id')} is area {r.get('area')!r}"
+            for path in sorted((content / "canon").glob("*.jsonl")) for r in rows(path) if r.get("area") != path.stem]
+
+
 def dangling(found: dict[str, str], known: set[str]) -> list[str]:
     return sorted(f"{where}: {token} has no row" for token, where in found.items() if token not in known)
 
@@ -82,7 +93,7 @@ def duplicates(table: Sequence[Mapping[str, object]]) -> list[str]:
 
 
 def known_ids() -> set[str]:
-    return {str(r["id"]) for name in ("canon.jsonl", "decisions.jsonl") for r in rows(CONTENT / name)}
+    return {str(r["id"]) for r in [*canon_rows(CONTENT), *rows(CONTENT / "decisions.jsonl")]}
 
 
 def test_every_cited_id_has_a_row() -> None:
@@ -92,8 +103,9 @@ def test_every_cited_id_has_a_row() -> None:
 
 
 def test_canon_rows_keep_their_shape_and_sources() -> None:
-    canon = rows(CONTENT / "canon.jsonl")
+    canon = canon_rows(CONTENT)
     assert len(canon) >= 290, f"read {len(canon)} canon rows: too few"
+    assert not misfiled(CONTENT), "\n".join(misfiled(CONTENT))
     assert not canon_problems(canon, CONTENT, REPO), "\n".join(canon_problems(canon, CONTENT, REPO))
 
 
@@ -122,3 +134,7 @@ def test_the_gate_fails_on_planted_faults(tmp_path: Path) -> None:
     broken: list[dict[str, object]] = [{"id": "D-1", "decision": "d", "why": "w"}, {**row, "id": "D-2", "status": "x"},
                                        {**row, "id": "D-3", "date": ""}, {**row, "id": "D-4", "extra": 1}]
     assert len(decision_problems(broken)) == 7
+    (tmp_path / "canon").mkdir()
+    (tmp_path / "canon" / "beat.jsonl").write_text(json.dumps(good) + "\n" + json.dumps({**good, "id": "C-world-1", "area": "world"}) + "\n")
+    assert canon_rows(tmp_path) == [good, {**good, "id": "C-world-1", "area": "world"}]
+    assert misfiled(tmp_path) == ["beat.jsonl: C-world-1 is area 'world'"]

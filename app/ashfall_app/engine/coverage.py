@@ -1,7 +1,7 @@
 """Which ledger lines need the player: covered, falling and starved, read off a save at its time. Reads only.
 
 The read model's ledger (view.py) and View.all_covered read it, so "every line white" is one rule. Semantics:
-DESIGN.txt, "Read model" and "Starved line".
+engine/design/, "Read model" and "Starved line".
 """
 from .answers import AnswerKind, AnswerOffer
 from .cardsides import card_makes, outcome_stores
@@ -21,7 +21,7 @@ from .work import starved
 
 def covered(save: Save, rules: Rules, store: StoreId) -> bool:
     """Some order's verb (latched or not) or the queue's controlling entry makes this store, a dead verb covering
-    nothing; or a card paused full pays it, and resumes as it falls (DESIGN.txt, "FULL OUTPUT", "Read model")."""
+    nothing; or a card paused full pays it, and resumes as it falls (design/full-output.txt, "FULL OUTPUT", "Read model")."""
     return store in _COVERING.get(save, rules, lambda: _covering(save, rules)) or _held_full(save, rules, store)
 
 

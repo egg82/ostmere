@@ -1,7 +1,7 @@
 """Two kinds of offer on a test chapter (fixtures/offerkinds.toml) merged after the shipped ones: one whose answers
 start a card, one whose answers start nothing and install a modifier. The loader carries each answer's modifier, an
 answer lands it in its target's explain() with the answer as source, and the simulator's policy answers both kinds by hand
-(day two's own offer, a card kind, and a modifier kind; docs/design/day-three-plan.md, item 5; engine DESIGN.txt, "Offers")."""
+(day two's own offer, a card kind, and a modifier kind; docs/design/day-three-plan.md, item 5; engine design/townsfolk.txt, "Offers")."""
 from functools import cache
 from pathlib import Path
 

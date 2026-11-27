@@ -13,7 +13,7 @@ class LaneLabelEntry(Entry):
 
 class LaneEntry(Entry):
     """A lane besides the hands. ruled: a townsperson who works, whose task the player's rules set; its cards have no
-    skill and no XP, and fill the camp store as hands cards do (engine DESIGN.txt, "Ruled lane")."""
+    skill and no XP, and fill the camp store as hands cards do (engine design/townsfolk.txt, "Ruled lane")."""
 
     id: str
     label_key: str
@@ -29,7 +29,7 @@ class LaneEntry(Entry):
     """How a ruled lane's person coming and going is written: in its outcome's story line, or a day's mention (people.py)."""
     pooled: bool = False
     """A group, not a person: a ruled lane its members' shared cards sit on. `label_key` is the group's name on screen; it
-    has no `name_key` and no `told` (engine DESIGN.txt, "GROUPS (pooled lanes)")."""
+    has no `name_key` and no `told` (engine design/groups.txt, "GROUPS (pooled lanes)")."""
     notable: bool = False
     """A person the story keeps: the only kind a close call (close_call_entries.py) is about. Authored, never inferred."""
     group: str | None = None
