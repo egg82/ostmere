@@ -469,14 +469,48 @@ jobs:
   # directory per chapter under that chapter's key (tests/weektwo/keys.py). Each job starts from the last nightly's saves
   # (`publish-ends`) and writes only the chapters whose key is new, so a change to one chapter replays that chapter and the
   # ones after it, not the chain from day one. No route's chain reads another's and no heavy-step reading needs another, so
-  # each part writes its routes' ends or a readings part (ends.READINGS), uploads what it wrote, and the readers restore the
+  # each part writes its routes' ends, a rebased group or a readings part, uploads what it wrote, and the readers restore the
   # cache and merge the parts' artifacts over it; test_weektwo_saved.py fails if a saved file is in no part. The jobs that
-  # read the saves fail, not replay, when they are missing (ASHFALL_REQUIRE_SAVED). Typical's rebased saves and its readings
-  # start from typical's saved ends, so `chapter-saves-rebased` and `chapter-saves-readings` run once typical's last
-  # link has written them. A route whose chain runs past one job's cap is written in links (chapter_saves.LINKS), each its
-  # own job after the one before: `chapter-saves-typical-a`, `chapter-saves-sharp-a` to `-c` and `chapter-saves-whenever-a`
-  # to `-c`, each starting from the ends the link before uploaded. They share these steps (the YAML anchor), set by PART,
-  # NAMES and AFTER (the part whose artifact a link starts from).
+  # read the saves fail, not replay, when they are missing (ASHFALL_REQUIRE_SAVED).
+  # Which chapters each part holds is planned from each chapter's measured cost (`saves-plan`, tools/saves_plan.py, the
+  # table tools/ci_costs.json), so a chapter added re-splits them with no edit here. A route's chain is cut into links, link
+  # k of every route in `chapter-saves-link-k` after `-(k-1)`, starting from the ends the link before uploaded (AFTER); a
+  # rank the plan has no link for runs one idle leg, so every rank passes. The rebased groups and the readings parts start
+  # from typical's saved ends, so they run once the last rank has. The ranks are the links a chain may have
+  # (saves_plan.RANKS): a plan that needs more fails `saves-plan` and tests/test_saves_plan.py until a job is added by
+  # copying the last. The steps are shared (the YAML anchor) and set by PART, NAMES and AFTER.
+  saves-plan:
+    needs: changes
+    if: needs.changes.outputs.full == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      rank1: ${{ steps.plan.outputs.rank1 }}
+      rank2: ${{ steps.plan.outputs.rank2 }}
+      rank3: ${{ steps.plan.outputs.rank3 }}
+      rank4: ${{ steps.plan.outputs.rank4 }}
+      rank5: ${{ steps.plan.outputs.rank5 }}
+      rank6: ${{ steps.plan.outputs.rank6 }}
+      rank7: ${{ steps.plan.outputs.rank7 }}
+      rank8: ${{ steps.plan.outputs.rank8 }}
+      rebased: ${{ steps.plan.outputs.rebased }}
+      readings: ${{ steps.plan.outputs.readings }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/requirements*.txt
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt -r app/requirements-dev.txt
+      - id: plan
+        working-directory: app
+        run: |
+          PYTHONPATH=. python -m tools.saves_plan > "$RUNNER_TEMP/plan.json"
+          jq -r '.ranks | to_entries[] | "rank\(.key + 1)=\(.value | tojson)"' "$RUNNER_TEMP/plan.json" >> "$GITHUB_OUTPUT"
+          jq -r '"rebased=\(.rebased | tojson)", "readings=\(.readings | tojson)"' "$RUNNER_TEMP/plan.json" >> "$GITHUB_OUTPUT"
+
   chapter-saves:
     needs: changes
     if: needs.changes.outputs.full == 'true'
@@ -494,15 +528,19 @@ jobs:
       NAMES: ${{ matrix.names }}
       AFTER: ""
     steps: &chapter-saves-steps
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - if: env.NAMES != ''
+        uses: actions/checkout@v4
+      - if: env.NAMES != ''
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
           cache-dependency-path: app/requirements*.txt
       - name: Install dependencies
+        if: env.NAMES != ''
         run: pip install -r app/requirements.txt -r app/requirements-dev.txt
       - name: The last nightly's saved ends
+        if: env.NAMES != ''
         uses: actions/cache/restore@v4
         with:
           path: chapter-saves
@@ -516,6 +554,7 @@ jobs:
           path: chapter-saves
       - name: Saves, written where today's key is new (${{ env.NAMES }})
         id: write
+        if: env.NAMES != ''
         working-directory: app
         run: |
           touch "$RUNNER_TEMP/stamp"
@@ -524,122 +563,141 @@ jobs:
           test -n "$(find "$ASHFALL_SAVES_ROOT" -name manifest.json -newer "$RUNNER_TEMP/stamp")"
           echo "$PART" > "$ASHFALL_SAVES_ROOT/part-$PART.txt"
           { echo "files<<EOF"; find "$ASHFALL_SAVES_ROOT" -type f -newer "$RUNNER_TEMP/stamp"; echo EOF; } >> "$GITHUB_OUTPUT"
-      - uses: actions/upload-artifact@v4
+      - if: env.NAMES != ''
+        uses: actions/upload-artifact@v4
         with:
           name: chapter-saves-${{ env.PART }}
           path: ${{ steps.write.outputs.files }}
           retention-days: 1
 
-  chapter-saves-typical-a:
-    needs: changes
-    if: needs.changes.outputs.full == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
-      PART: typical-a
-      NAMES: typical-a
-      AFTER: ""
-    steps: *chapter-saves-steps
-
-  chapter-saves-typical-b:
-    needs: chapter-saves-typical-a
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
-      PART: typical-b
-      NAMES: typical-b
-      AFTER: "typical-a"
-    steps: *chapter-saves-steps
-
-  chapter-saves-typical-c:
-    needs: chapter-saves-typical-b
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
-      PART: typical-c
-      NAMES: typical-c
-      AFTER: "typical-b"
-    steps: *chapter-saves-steps
-
-  chapter-saves-sharp-a:
-    needs: changes
-    if: needs.changes.outputs.full == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
-      PART: sharp-a
-      NAMES: sharp-a
-      AFTER: ""
-    steps: *chapter-saves-steps
-
-  chapter-saves-sharp-b:
-    needs: chapter-saves-sharp-a
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
-      PART: sharp-b
-      NAMES: sharp-b
-      AFTER: sharp-a
-    steps: *chapter-saves-steps
-
-  chapter-saves-sharp-c:
-    needs: chapter-saves-sharp-b
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
-      PART: sharp-c
-      NAMES: sharp-c
-      AFTER: sharp-b
-    steps: *chapter-saves-steps
-
-  chapter-saves-whenever-a:
-    needs: changes
-    if: needs.changes.outputs.full == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
-      PART: whenever-a
-      NAMES: whenever-a
-      AFTER: ""
-    steps: *chapter-saves-steps
-
-  chapter-saves-whenever-b:
-    needs: chapter-saves-whenever-a
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
-      PART: whenever-b
-      NAMES: whenever-b
-      AFTER: whenever-a
-    steps: *chapter-saves-steps
-
-  chapter-saves-whenever-c:
-    needs: chapter-saves-whenever-b
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
-      PART: whenever-c
-      NAMES: whenever-c
-      AFTER: whenever-b
-    steps: *chapter-saves-steps
-
-  chapter-saves-rebased:
-    needs: chapter-saves-typical-c
+  chapter-saves-link-1:
+    needs: saves-plan
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        part: [rebased-early, rebased-late, rebased-later]
+        include: ${{ fromJSON(needs.saves-plan.outputs.rank1) }}
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: ${{ matrix.part }}
+      NAMES: ${{ matrix.names }}
+      AFTER: ${{ matrix.after }}
+    steps: *chapter-saves-steps
+
+  chapter-saves-link-2:
+    needs: [saves-plan, chapter-saves-link-1]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.saves-plan.outputs.rank2) }}
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: ${{ matrix.part }}
+      NAMES: ${{ matrix.names }}
+      AFTER: ${{ matrix.after }}
+    steps: *chapter-saves-steps
+
+  chapter-saves-link-3:
+    needs: [saves-plan, chapter-saves-link-2]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.saves-plan.outputs.rank3) }}
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: ${{ matrix.part }}
+      NAMES: ${{ matrix.names }}
+      AFTER: ${{ matrix.after }}
+    steps: *chapter-saves-steps
+
+  chapter-saves-link-4:
+    needs: [saves-plan, chapter-saves-link-3]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.saves-plan.outputs.rank4) }}
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: ${{ matrix.part }}
+      NAMES: ${{ matrix.names }}
+      AFTER: ${{ matrix.after }}
+    steps: *chapter-saves-steps
+
+  chapter-saves-link-5:
+    needs: [saves-plan, chapter-saves-link-4]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.saves-plan.outputs.rank5) }}
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: ${{ matrix.part }}
+      NAMES: ${{ matrix.names }}
+      AFTER: ${{ matrix.after }}
+    steps: *chapter-saves-steps
+
+  chapter-saves-link-6:
+    needs: [saves-plan, chapter-saves-link-5]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.saves-plan.outputs.rank6) }}
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: ${{ matrix.part }}
+      NAMES: ${{ matrix.names }}
+      AFTER: ${{ matrix.after }}
+    steps: *chapter-saves-steps
+
+  chapter-saves-link-7:
+    needs: [saves-plan, chapter-saves-link-6]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.saves-plan.outputs.rank7) }}
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: ${{ matrix.part }}
+      NAMES: ${{ matrix.names }}
+      AFTER: ${{ matrix.after }}
+    steps: *chapter-saves-steps
+
+  chapter-saves-link-8:
+    needs: [saves-plan, chapter-saves-link-7]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.saves-plan.outputs.rank8) }}
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: ${{ matrix.part }}
+      NAMES: ${{ matrix.names }}
+      AFTER: ${{ matrix.after }}
+    steps: *chapter-saves-steps
+
+  chapter-saves-rebased:
+    needs: [saves-plan, chapter-saves-link-8]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        part: ${{ fromJSON(needs.saves-plan.outputs.rebased) }}
     env:
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
     steps:
@@ -676,21 +734,16 @@ jobs:
           path: ${{ steps.write.outputs.files }}
           retention-days: 1
 
-  # The typical route's heavy-step readings (ends.READINGS), each part read from typical's saved end, so a part pays for
+  # The typical route's heavy-step readings (planned by tools/saves_plan.py), each part read from typical's saved end, so a part pays for
   # its own steps and not for replaying typical's play to reach them.
   chapter-saves-readings:
-    needs: chapter-saves-typical-c
+    needs: [saves-plan, chapter-saves-link-8]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        part: [readings-early, readings-twelve-a, readings-twelve-b, readings-twelve-c, readings-twelve-d, readings-twelve-e,
-               readings-twelve-f, readings-fifteen-a, readings-fifteen-b, readings-fifteen-c, readings-sixteen-a,
-               readings-sixteen-b, readings-sixteen-c, readings-eighteen, readings-nineteen-a, readings-nineteen-b,
-               readings-twentytwo-a, readings-twentytwo-b, readings-twentytwo-c, readings-twentytwo-d,
-               readings-twentythree-a, readings-twentythree-b, readings-twentyfive-a, readings-twentyfive-b,
-               readings-twentyfive-c]
+        part: ${{ fromJSON(needs.saves-plan.outputs.readings) }}
     env:
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
     steps:
@@ -777,8 +830,7 @@ jobs:
   # The saved chain's first link (tests/weekone_saved): week one's saved ends equal the plays week one's job made,
   # compared on the same play, not a replay; plays nothing, so it runs the moment both jobs are done.
   playthrough-week-one-saved:
-    needs: [chapter-saves, chapter-saves-readings, chapter-saves-typical-c, chapter-saves-sharp-c, chapter-saves-whenever-c,
-            chapter-saves-rebased, playthrough-week-one]
+    needs: [chapter-saves, chapter-saves-readings, chapter-saves-link-8, chapter-saves-rebased, playthrough-week-one]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -834,8 +886,7 @@ jobs:
   # (tests/weektwo/ends.py), one job per shard (tools/weektwo_shards.py, the names from `shards-cover`): a play and its
   # readers are in one shard, and within it share one xdist worker (tests/weektwo/conftest.py, `group_by_play`).
   playthrough-week-two:
-    needs: [chapter-saves, chapter-saves-readings, chapter-saves-typical-c, chapter-saves-sharp-c, chapter-saves-whenever-c,
-            chapter-saves-rebased, shards-cover]
+    needs: [chapter-saves, chapter-saves-readings, chapter-saves-link-8, chapter-saves-rebased, shards-cover]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -893,8 +944,7 @@ jobs:
   # is its own. The nightly saves on main, which is where every pull request restores from; a dispatch on a branch saves for
   # the pull requests based on it.
   publish-ends:
-    needs: [changes, chapter-saves, chapter-saves-readings, chapter-saves-typical-c, chapter-saves-sharp-c,
-            chapter-saves-whenever-c, chapter-saves-rebased]
+    needs: [changes, chapter-saves, chapter-saves-readings, chapter-saves-link-8, chapter-saves-rebased]
     if: needs.changes.outputs.full == 'true' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -1102,17 +1152,17 @@ jobs:
       - playthrough-whole-game
       - publish-ends
       - playthrough
+      - saves-plan
       - chapter-saves
       - chapter-saves-readings
-      - chapter-saves-typical-a
-      - chapter-saves-typical-b
-      - chapter-saves-typical-c
-      - chapter-saves-sharp-a
-      - chapter-saves-sharp-b
-      - chapter-saves-sharp-c
-      - chapter-saves-whenever-a
-      - chapter-saves-whenever-b
-      - chapter-saves-whenever-c
+      - chapter-saves-link-1
+      - chapter-saves-link-2
+      - chapter-saves-link-3
+      - chapter-saves-link-4
+      - chapter-saves-link-5
+      - chapter-saves-link-6
+      - chapter-saves-link-7
+      - chapter-saves-link-8
       - chapter-saves-rebased
       - playthrough-week-one
       - playthrough-week-one-saved
@@ -1153,9 +1203,9 @@ jobs:
           echo "$NEEDS" | jq -e --arg code "$CODE" --arg full "$FULL" --arg matrix "$MATRIX" --arg ends "$ENDS" '
             ["tests", "shards-cover", "mutant-plants", "playthrough-smoke", "engine-bench", "pyright",
              "client", "app-image"] as $per_pr
-            | ["playthrough", "chapter-saves", "chapter-saves-readings", "chapter-saves-typical-a", "chapter-saves-typical-b",
-               "chapter-saves-typical-c", "chapter-saves-sharp-a", "chapter-saves-sharp-b", "chapter-saves-sharp-c",
-               "chapter-saves-whenever-a", "chapter-saves-whenever-b", "chapter-saves-whenever-c",
+            | ["playthrough", "saves-plan", "chapter-saves", "chapter-saves-readings", "chapter-saves-link-1",
+               "chapter-saves-link-2", "chapter-saves-link-3", "chapter-saves-link-4", "chapter-saves-link-5",
+               "chapter-saves-link-6", "chapter-saves-link-7", "chapter-saves-link-8",
                "chapter-saves-rebased", "playthrough-week-one", "playthrough-week-one-saved",
                "playthrough-week-two"] as $full_run
             | (["changes"] + (if $code == "true" then $per_pr else ["docs"] end)

@@ -32,6 +32,12 @@ class Outcome:
     detail: str
 
 
+def _module(name: str) -> str:
+    """The test module `test_journal_<name>.py`, wherever its subject directory keeps it."""
+    (found,) = HERE.glob(f"*/test_journal_{name}.py")
+    return f"{SUITE}/{found.relative_to(HERE).as_posix()}"
+
+
 def bracketed() -> dict[str, list[str]]:
     """MUTANTS.txt's row number to the test modules its brackets name."""
     text = (HERE / "MUTANTS.txt").read_text().split("Equivalent (")[0]
@@ -40,7 +46,7 @@ def bracketed() -> dict[str, list[str]]:
         found = re.match(r"\s?(\d+) ", chunk)
         names = re.findall(r"\[([a-z_, ]+)\]", chunk)
         if found and names:
-            rows[found.group(1)] = [f"{SUITE}/test_journal_{n.strip()}.py" for n in names[-1].split(",")]
+            rows[found.group(1)] = [_module(n.strip()) for n in names[-1].split(",")]
     return rows
 
 

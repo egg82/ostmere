@@ -1,4 +1,4 @@
-// The "was it seen" probe (docs/research/story-to-the-eyes.md, "The 'was it seen' probe"), injected into the game page
+// The "was it seen" probe (docs/research/design/story-to-the-eyes.md, "The 'was it seen' probe"), injected into the game page
 // before it loads (Playwright addInitScript). It watches every story line instance that shows (the band's `.lines li`
 // and, where a build has them, `.card-line`) and, through that line's reading window, records whether it was
 //   visible: its box wholly in the viewport, the page visible, and elementFromPoint at its start, middle and end hitting

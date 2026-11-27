@@ -23,7 +23,8 @@ def served(shipped_opening: Opening) -> dict[str, OfferInfo]:
 
 def hidden_gated(o: Opening) -> OfferEntry:
     hidden = {s.id for s in o.stores if s.hidden}
-    return next(x for x in o.offers if x.gate.subject_kind == "store" and x.gate.id in hidden)
+    return next(x for x in o.offers if x.gate.subject_kind == "store" and x.gate.id in hidden
+                and any(c.unlock_kind == "answered" for c in x.requires))
 
 
 def test_the_fields_are_served_as_authored(shipped_opening: Opening, served: dict[str, OfferInfo]) -> None:

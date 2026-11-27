@@ -721,7 +721,7 @@ All picked from the packs by `sprite-catalog` first; drawn only where the kit la
 - **Journal sketches:** ash-deer, greycoat (each by the sketch-test method, looked at before it ships); the warm
   ground's page gains two later lines, no new drawing.
 - **The map:** the first sheet (plan item 5): the Hollow, the road over the ridge, the far hills unlabelled, by the
-  Widman stamps (`docs/research/art-sourcing.md`).
+  Widman stamps (`docs/research/art/art-sourcing.md`).
 - **Stages:** 53_clear, 54_frost_night, 55_deer, 56_hall_walls, 57_hall_table, 58_rows_black, 59_rime_ring,
   60_choir, 61_pair, 62_empty_place, 63_far_hills, 64_road_over, 65_lamp_road_end, 66_two_marks.
 

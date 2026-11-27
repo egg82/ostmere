@@ -74,7 +74,7 @@ feeling they must babysit it, staying up at 2 AM for a timer to set up the next 
   lesson is kept once, skippable; its line is UI voice ("The UI speaks plainly, in numbers", below), and its note never covers the card the countdown is on. The edge of the written content has one end card (`end_card` in `opening.toml`), which the loader puts on the last shipped chapter's `end_feature`. The dusk card
   that said this at the end, minutes before any countdown, is retired: the player had nothing on screen to tie it to.
   Why: a reviewer took the wait after dusk for the end of the game and left
-  (`docs/research/galaxy-review.md`).
+  (`docs/research/design/galaxy-review.md`).
 - **The quiet stretch before the end shows the light going** (2026-10-18, after a cold tester left 13 s into it, 25 s
   before the end). The last step's lines keep the evening to themselves, since end lines that follow at once read as
   rushed; but the stretch is never a still screen: the scene moves into its dusk grade over the evening, so a player
@@ -165,7 +165,9 @@ made, named in the journal and still open there, as Ironsworn writes a vow down.
 beat that sets it against something else the player values (food, a person, another promise), and the player picks
 what to give up; "no good option" is allowed, as in the Witcher's quests. Breaking it is a legal choice whose price
 is shown and is higher than declining would have been. The dilemma waits for the player and resolves while they are
-there.
+there. How a dilemma reads a promise: the offer names it in `tests`, its answers that give it up name it in `breaks`
+and retire the card it queued, and it is shown while that card runs, so the player is there for it. Both answers carry
+a sourced modifier, so the price of each is on screen.
 
 **The game doesn't pull its punches, and never cheats** (owner: "not pull our punches. If there's no reason to").
 The reaction to aim for, in the owner's words: "oh, fuck, damnit, now what?" rather than "well that doesn't seem
