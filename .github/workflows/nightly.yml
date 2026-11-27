@@ -63,9 +63,12 @@ jobs:
   # refreshes them: one pull request from a fixed branch, updated each night. The verdict file it uploads first is what lets
   # `release` pass for this run. The only job here that writes to the repository, and the pull request it opens runs no CI
   # of its own (a GITHUB_TOKEN push starts no workflow): the orchestrator starts it before merging.
+  # The same pull request carries the chapter-save cost table (app/tools/ci_costs.json, refreshed from the last runs' logs by
+  # tools/ci_costs.py) whenever it changed, so tests/test_saves_plan.py reads the new costs on that pull request: a jump
+  # that puts a planned job over its cap is a red pull request. A table refresh that fails measures nothing and holds nothing.
   refresh-readouts:
     needs: [full, tests-deep, ci-health]
-    if: always() && needs.full.result == 'failure' && github.ref == 'refs/heads/main'
+    if: always() && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -78,6 +81,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: decide
+        if: needs.full.result == 'failure'
         run: >
           python3 app/tools/nightly_verdict.py decide --full-only "${{ needs.full.outputs.readouts_only }}"
           --deep "${{ needs.tests-deep.result }}" --health "${{ needs.ci-health.result }}"
@@ -89,17 +93,20 @@ jobs:
           path: ${{ runner.temp }}/verdict
           retention-days: 14
       - if: steps.decide.outputs.refresh == 'true'
-        run: |
-          (cd app && python3 -m tools.readouts_pull "$GITHUB_RUN_ID")
+        run: (cd app && python3 -m tools.readouts_pull "$GITHUB_RUN_ID")
+      - name: Chapter-save costs, from the last runs' logs
+        continue-on-error: true
+        run: cd app && python3 -m tools.ci_costs
+      - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -B "$BRANCH"
-          git add app/tests/readouts
-          if git diff --cached --quiet; then echo "the readouts on main already match this run's"; exit 0; fi
+          git add app/tests/readouts app/tools/ci_costs.json
+          if git diff --cached --quiet; then echo "the readouts and chapter-save costs on main already match this run's"; exit 0; fi
           git diff --cached --name-only | python3 app/tools/nightly_verdict.py body > "$RUNNER_TEMP/body.md"
-          git commit -m "Refresh readouts from nightly $GITHUB_RUN_ID"
+          title="$(git diff --cached --name-only | python3 app/tools/nightly_verdict.py title --run "$GITHUB_RUN_ID")"
+          git commit -m "$title"
           git push --force origin "$BRANCH"
-          title="Refresh readouts from nightly $GITHUB_RUN_ID"
           number=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
           if [ -n "$number" ]; then
             gh pr edit "$number" --title "$title" --body-file "$RUNNER_TEMP/body.md"
