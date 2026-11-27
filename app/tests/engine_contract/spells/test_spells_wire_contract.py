@@ -10,6 +10,7 @@ import pytest
 from ashfall_app import engine as e
 from ashfall_app.api import models as w
 from ashfall_app.api.service import Game
+from ashfall_app.opening.chain_entries import ChainEntry
 from ashfall_app.opening.fight_entries import SideEntry, ThreatEntry
 from ashfall_app.opening.schema import Opening, load_opening, to_rules
 from ashfall_app.saves.interface import Played
@@ -45,9 +46,11 @@ def rules() -> e.Rules:
 
 @cache
 def game() -> Game:
+    chain = ChainEntry(runner=RAID, reach=REACH, link_line_keys=list(KEYS))
     o = shipped().model_copy(update={"sides": [*shipped().sides, SideEntry(id=HAND, label_key="side.hand", base=300)],
-                                     "threats": [*shipped().threats, ThreatEntry(id=WOLF, label_key="threat.wolf", base=100)]})
-    return Game(o, replace(ruleset(o, "test", 1), rules=rules()))
+                                     "threats": [*shipped().threats, ThreatEntry(id=WOLF, label_key="threat.wolf", base=100, members=MEMBERS)],
+                                     "cards": [c.model_copy(update={"chain": chain}) if c.id == WORKING else c for c in shipped().cards]})
+    return Game(o, replace(ruleset(shipped(), "test", 1), rules=rules()))
 
 
 @pytest.fixture(autouse=True, scope="module")

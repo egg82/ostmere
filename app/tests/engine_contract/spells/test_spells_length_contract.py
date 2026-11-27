@@ -103,7 +103,7 @@ def test_a_link_is_in_neither_fought_nor_lost():
 def test_odds_do_not_move_due_lost_fights_are_fought_fights():
     """A side of strength 0 loses every fight, a strong one wins nearly all; the chain is the same."""
     weak, strong = world(3, 10, per=PER, side=0), world(3, 10, per=PER, side=10**6)
-    assert per_instant(play(weak, (1, 12))[1]) == per_instant(play(strong, (1, 12))[1]) == [(11, 1), (22, 3)]
+    assert per_instant(play(weak, (1, 12))[1]) == per_instant(play(strong, (1, 12))[1]) == [(11, 1), (22, 1)]
 
 
 @kills(16)

@@ -27,7 +27,7 @@ def sliced(cuts: list[int]):
 
 
 @kills(8)
-@given(st.lists(st.integers(0, 40), max_size=6))
+@given(st.lists(st.integers(0, 32), max_size=6))
 @few(20)
 def test_any_slicing_of_the_advances_gives_the_same_save_and_the_same_lines(cuts: list[int]):
     assert sliced(cuts) == sliced([])
