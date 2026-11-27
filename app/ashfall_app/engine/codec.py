@@ -23,7 +23,7 @@ from .lanes import TapCard
 from .mixes import CardShare, Mix, MixLayer, SubMix, SwitchMix
 from .offers import AnswerDef, OfferDef
 from .modifiers import (
-    FlowKind, LaneSpeed, Modifier, ModifierKind, RateRef, SideStrength, StoreCap, ThreatStrength, WorkRef,
+    ChainReach, FlowKind, LaneSpeed, Modifier, ModifierKind, RateRef, SideStrength, StoreCap, ThreatStrength, WorkRef,
 )
 from .orders import (
     AfterTime, AtLeast, AtMost, CardCount, GuardedLatch, Order, QueueEntry, Running, SkillLevel, StoreValue, Unlocked,
@@ -46,7 +46,7 @@ type Json = None | bool | int | str | list[Json] | dict[str, Json]
 _CLASSES: dict[str, Callable[..., object]] = {c.__name__: c for c in (
     Save, StoreState, SkillState, PhaseState, ParkedRank, Segment, Mix, CardShare, SubMix, SwitchMix, TapCard, Pause, Order,
     QueueEntry, AtLeast, AtMost, AfterTime, StoreValue, SkillLevel, CardCount, Unlocked, Running, GuardedLatch, Modifier,
-    RateRef, WorkRef, LaneSpeed, StoreCap, SideStrength, ThreatStrength, Unlock, LaneState, CardState, CascadeLimit, AnswerOffer, AnswerKind,
+    RateRef, WorkRef, LaneSpeed, StoreCap, SideStrength, ThreatStrength, ChainReach, Unlock, LaneState, CardState, CascadeLimit, AnswerOffer, AnswerKind,
 )}
 _OUTCOMES = _CLASSES | {c.__name__: c for c in (
     Outcome, Amount, CapRaise, RuleInstall, Join, Mark, Leave, OfferDef, AnswerDef, WhileRunning, HeldSpeed)}
@@ -210,7 +210,8 @@ _OMITTED_AT_DEFAULT: dict[tuple[str, str], object] = {
     ("AtLeast", "value_of_cap"): False, ("AtLeast", "release_of_cap"): False,
     ("AtMost", "value_of_cap"): False, ("AtMost", "release_of_cap"): False,
     ("LaneDef", "pooled"): False, ("LaneDef", "group"): None, ("Join", "own_split"): True,
-    ("LaneState", "own_split"): True}
+    ("LaneState", "own_split"): True, ("ThreatDef", "members"): 1, ("FightDef", "chained"): None,
+    ("CardDef", "chain"): None}
 """Fields left out of the encoding while at their default, so a save or a logged verb written before the field existed
 keeps its text and decodes with it."""
 

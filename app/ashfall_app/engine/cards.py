@@ -28,7 +28,9 @@ class FightDef:
     side and threat name the strengths whose ratio is the odds. lost: the tally store, one unit per lost fight.
     fought: the tally of all fights (a standing fight only; a card counts its completions). per_hour: a standing fight's
     fights per hour in rate units (RATE_SCALE per fight per hour), > 0 there and 0 on a card, whose rate is its
-    completions. loses: per lost fight, taken from a store. wounds: per lost fight, added to a store."""
+    completions. loses: per lost fight, taken from a store. wounds: per lost fight, added to a store. chained: the tally
+    of the links chains resolved for this standing fight on a group threat (design/spells.txt, "SPELLS"; the codec leaves
+    it out while None)."""
 
     side: SideId
     threat: ThreatId
@@ -37,6 +39,19 @@ class FightDef:
     per_hour: int = 0
     loses: tuple["Amount", ...] = ()
     wounds: tuple["Amount", ...] = ()
+    chained: StoreId | None = None
+
+
+@dataclass(frozen=True)
+class ChainDef:
+    """The Component that makes a card a working with a chain (design/spells.txt, "SPELLS"): at each completion it
+    resolves min(due, reach, room) of `runner`'s due fights, each a won link with its own line. runner: a standing fight
+    on a group threat. reach: the base reach (>= 1), under the entries aimed at ChainReach(card). lines: link i, from 1,
+    emits lines[min(i, len(lines)) - 1]; at least one."""
+
+    runner: ActionId
+    reach: int
+    lines: tuple[LineKey, ...]
 
 
 @dataclass(frozen=True)
@@ -200,6 +215,9 @@ class CardDef:
     drains: tuple[Amount, ...] = ()
     """Takes of up to `quantity` per completion, paid as inputs are and forgiven at 0: they never pause the card or
     refuse its tap (design/drains.txt, "DRAINS"; the codec leaves the field out while empty)."""
+    chain: ChainDef | None = None
+    """The chain each completion resolves; every completion of the card is then an event (design/spells.txt, "SPELLS";
+    the codec leaves the field out while None)."""
 
 
 @dataclass(frozen=True)

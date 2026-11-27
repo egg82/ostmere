@@ -86,14 +86,16 @@ def resolve_instant(save: Save, rules: Rules, arrivals: list[Event], must_evalua
                 suspended = True
                 continue
             before = save
-            save, changed = handle(save, rules, event, repeats.emit, landing_cards(save, rules, work.values()))
+            room = rules.max_firings_per_instant - firings - 1
+            save, changed, links = handle(save, rules, event, repeats.emit, landing_cards(save, rules, work.values()),
+                                          room=room)
             save = save if save is before else with_running_mix(before, rules, save)
             if save is before:
                 idle |= {key} if event.kind is EventKind.STORE_LIMIT else set()
             else:
                 idle.clear()
             must_evaluate = must_evaluate or changed
-            firings += 1
+            firings += 1 + links
             if firings > _SETTLE_GUARD:
                 raise RuntimeError(f"engine bug: instant t={save.time} did not settle")
         elif must_evaluate:
