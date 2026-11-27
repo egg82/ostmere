@@ -17,7 +17,10 @@ COOKS: dict[str, Who] = {
     "n16": (SHEETS + "npc1.png", 0), "n17": (SHEETS + "npc1.png", 5), "n18": (SHEETS + "npc2.png", 1), "n19": (SHEETS + "npc1.png", 3),
     "n20": (SHEETS + "npc4.png", 0), "n21": (SHEETS + "npc4.png", 1), "n22": (SHEETS + "npc4.png", 6),
 }
-"""Who stands at the fire for the road crew's pot and fish: the pair, the four and the three."""
+"""Who stands at the fire for the pot and fish: the road crew's pair, the four and the three, and those of them the
+hearth crew holds."""
+HEARTH_COOKS = {"n19", "n21"}
+"""The two of them the smallest-crew rule put in the hearth crew; the rest cook with the road crew."""
 HEARTH_REAPERS = {"n8", "n10"}
 """The two of the reapers who work in the hearth crew; the others reap with the field crew."""
 FISH = "n14"
@@ -43,7 +46,7 @@ def crew_layers() -> list[Layer]:
                      when=_while(n, "g_hearth_reap" if n in HEARTH_REAPERS else "g_field_reap"))
                for n, who in REAPERS.items()]
     cooking = [Layer(id=f"figure_{n}_at_the_pot", img=person(who, COOK_AT[n][2], COOK_AT[n][:2]),
-                     when=_while(n, "g_road_fungus_stew"))
+                     when=_while(n, "g_hearth_fungus_stew" if n in HEARTH_COOKS else "g_road_fungus_stew"))
                for n, who in COOKS.items() if n != FISH]
     fishing = Layer(id=f"figure_{FISH}_fishing", img=person(COOKS[FISH], FISH_AT[2], FISH_AT[:2]),
                     when=_while(FISH, "g_road_fog_fish"))
