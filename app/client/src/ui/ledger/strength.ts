@@ -17,11 +17,11 @@ function sourceName(catalog: Catalog, id: string): string {
 
 /** The sheet's rows: `owner` as its heading, then an entry per source with its amount; the base has no source and is the
  * number. An entry that carries a share (week two's entries held while a card runs) shows it between source and amount. */
-export function strengthItems(catalog: Catalog, strength: Strength, owner: string): HTMLElement[] {
+export function strengthItems(catalog: Catalog, strength: Strength, owner: string, base: string = UI.fightBase): HTMLElement[] {
   const rows = strengthRows(strength, catalog.content.scales.bp, (id) => sourceName(catalog, id), (bp) => catalog.format.change(bp), (bp) => catalog.format.share(bp));
   return [el("li", "fight-owner", owner), ...rows.map((r) => {
     const li = el("li", "fight-entry");
-    li.append(el("span", "fight-source", r.source ?? catalog.text.get(UI.fightBase)), ...(r.share === null ? [] : [el("span", "fight-share", r.share)]), el("span", "fight-amount", r.amount));
+    li.append(el("span", "fight-source", r.source ?? catalog.text.get(base)), ...(r.share === null ? [] : [el("span", "fight-share", r.share)]), el("span", "fight-amount", r.amount));
     return li;
   })];
 }

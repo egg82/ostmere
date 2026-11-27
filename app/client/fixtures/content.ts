@@ -402,7 +402,7 @@ const MAKES: Record<string, string[]> = { gather: ["wood"], tend: ["stone"], woo
 const card = (id: string, lane: string, presentation: "narrative" | "action" | "craft", inputs: Content["card_infos"][number]["inputs"] = []) => ({
   card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, variant_of: null, change_bp: [], kept: [], work_s: 5, inputs,
   makes: MAKES[id] ?? [], takes: inputs.map((i) => i.store), reach: null, skill_needs: [],
-  step_needs: [], glows: id === "stand", fight: null, replaced_by: id === "tend" ? "look" : null,
+  step_needs: [], glows: id === "stand", fight: null, chain: null, replaced_by: id === "tend" ? "look" : null,
 });
 
 export const fixtureContent: Content = {
@@ -425,7 +425,7 @@ export const fixtureContent: Content = {
   ],
   side_infos: [{ side: "hands", label_key: "side.hands" }],
   find_infos: [{ line_key: "line.find", store: "wood", quantity: 12 * Q }],
-  threat_infos: [{ threat: "wolves", label_key: "threat.wolves" }, { threat: "raiders", label_key: "threat.raiders" }],
+  threat_infos: [{ threat: "wolves", label_key: "threat.wolves", members: 1 }, { threat: "raiders", label_key: "threat.raiders", members: 1 }],
   standing_infos: [{ action: "raiders", label_key: "standing.raiders", skill: null, fight: { side: "hands", threat: "raiders", loses: [{ store: "stone", quantity: 2 * Q }], wounds: [], won_line_keys: [], lost_line_keys: [], loss_pool: null, loss_notes: null, on_loss_key: null } }],
   card_infos: [
     card("stand", "hands", "narrative"),

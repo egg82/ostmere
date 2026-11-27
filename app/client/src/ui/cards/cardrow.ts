@@ -8,6 +8,7 @@ import { CardNeeds } from "./cardneeds";
 import { UI } from "../../game/page/text";
 import { el, tapFeedback } from "../dom";
 import { FightPanel, seatFight } from "../ledger/fightpanel";
+import { ChainLine } from "./chainline";
 import type { PartContext } from "../part";
 import type { WhenReady } from "./whenready";
 
@@ -29,6 +30,8 @@ export interface Row {
   doneShown?: boolean;
   /** The odds under a fight card (fightpanel.ts), else null. */
   fight: FightPanel | null;
+  /** A working's reach under its tap (chainline.ts), else null. */
+  chain?: ChainLine | null;
   /** The upside line of a card that feeds a side's strength, which leads to it (bonus.ts), else null. */
   bonus: Bonus | null;
   /** The upside line of a card that feeds no side, else null. */
@@ -68,6 +71,7 @@ export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card, onTa
     id: card.card, node, tap, count: el("span", "card-count"), needs: new CardNeeds(ctx, card.card), ready: whenReady.make(card.card, node),
     fill: el("span", "card-fill"), foot: el("span", "card-foot"), card, done: false, doneAt: 0,
     fight: info?.fight ? new FightPanel(catalog, info.fight) : null, bonus: null, upside: null,
+    chain: info?.chain ? new ChainLine(catalog, card.card) : null,
   };
   const head = el("span", "card-head");
   head.append(el("span", "card-title", catalog.label(info?.label_key)), row.count);
@@ -91,8 +95,9 @@ export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card, onTa
   pressable(tap, node);
   if (onTap) node.append(tap, ...(row.bonus ? [row.bonus.line] : []));   // a choice among cards: the upside line beside the tap, as seatFight seats it
   else if (row.fight) seatFight(node, tap, row.ready, row.fight, row.bonus);
-  else if (row.bonus) seatFight(node, tap, row.ready, null, row.bonus);
+  else if (row.bonus || row.chain) seatFight(node, tap, row.ready, null, row.bonus);
   else node.append(tap, row.ready);
+  if (row.chain) node.append(row.chain.root);
   return row;
 }
 

@@ -1,8 +1,9 @@
 """The content's fight and find infos, from the rules' fights and the opening's entries (contract/fights.txt, "FIGHTS")."""
 from ... import engine as e
-from ...opening.entries import FightEntry
+from ...opening.entries import CardEntry, FightEntry
 from ...opening.schema import Opening
 from ..world import content_models as cm
+from .chain_models import ChainInfo
 
 
 def fight_info(f: e.FightDef | None, entry: FightEntry | None) -> cm.FightInfo | None:
@@ -21,3 +22,10 @@ def find_infos(o: Opening) -> list[cm.FindInfo]:
     return [cm.FindInfo(line_key=t.outcome.found_line_key, store=t.outcome.stores[0].store,
                         quantity=e.units(t.outcome.stores[0].items))
             for t in o.triggers if t.outcome.found_line_key is not None]
+
+
+def chain_info(c: CardEntry) -> ChainInfo | None:
+    """A working's chain as the page reads it (contract/spells.txt, "SPELLS")."""
+    if c.chain is None:
+        return None
+    return ChainInfo(runner=c.chain.runner, link_line_keys=list(c.chain.link_line_keys))

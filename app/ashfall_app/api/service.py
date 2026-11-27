@@ -30,7 +30,7 @@ from .rules.mixrows import MixNumbers
 from .goals.levels import levels
 from .world.scenestores import scene_stores
 from .rules.ruledry import order_dry
-from .goals.fight_infos import fight_info, find_infos
+from .goals.fight_infos import chain_info, fight_info, find_infos
 from .goals.goals import goals
 from .world.line_causes import line_infos, offer_cause, worded_stores
 from .world.line_models import PeopleBand, PeopleInfo
@@ -78,7 +78,7 @@ class Game:
         open_goals = goals(save, rules, v, self._goals)
         return convert.view(save, v, sources(save, rules, v, self._sources), open_goals,
                             goal_rows(save, rules, v, open_goals), order_dry(save, rules, v), store_rows(save, rules, v),
-                            levels(save, rules, v, scene_stores()))
+                            levels(save, rules, v, scene_stores()), e.chain_views(save, rules))
 
     def forecast(self, played: Played, stop: Callable[[], bool]) -> w.ForecastAnswer:
         """The save's forecast from now (it replays hours of the save, so it has its own call: contract/forecast.txt,
@@ -136,7 +136,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                                   group_key=s.group_key)
                      for s in o.stores],
         side_infos=[cm.SideInfo(side=s.id, label_key=s.label_key) for s in o.sides],
-        threat_infos=[cm.ThreatInfo(threat=t.id, label_key=t.label_key) for t in o.threats],
+        threat_infos=[cm.ThreatInfo(threat=t.id, label_key=t.label_key, members=t.members) for t in o.threats],
         find_infos=find_infos(o),
         standing_infos=[cm.StandingInfo(action=a.id, label_key=a.label_key, skill=a.skill,
                                         fight=fight_info(standing_fights.get(e.ActionId(a.id)), a.fight)) for a in o.standing],
@@ -150,7 +150,8 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                          if r.subject_kind == "skill_level" and r.test == "at_least" and r.id is not None],
             step_needs=[cm.StepNeed(card=r.id, count=r.value) for r in c.requires
                         if r.subject_kind == "card_count" and r.test == "at_least" and r.id is not None],
-            glows=c.glows, fight=fight_info(card_fights.get(e.CardId(c.id)), c.fight), replaced_by=replacements.get(c.id))
+            glows=c.glows, fight=fight_info(card_fights.get(e.CardId(c.id)), c.fight), replaced_by=replacements.get(c.id),
+            chain=chain_info(c))
             for c in o.cards],
         chip_infos=chip_infos(o, rules),
         feature_infos=[feature_info(o, f) for f in o.features],

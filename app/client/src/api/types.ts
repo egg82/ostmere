@@ -28,6 +28,7 @@ export type ErrorCode = S["ErrorCode"];
 export type FeatureCard = S["FeatureCard"];
 export type FeedbackRequest = S["FeedbackRequest"];
 export type Fight = S["Fight"];
+export type Chain = S["Chain"];
 export type Goal = S["Goal"];
 export type GoalRow = S["GoalRow"];
 export type StoreRow = S["StoreRow"];

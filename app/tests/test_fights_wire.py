@@ -61,7 +61,7 @@ def primed() -> None:
 def test_the_content_serves_the_sides_threats_and_each_runners_fight():
     c = game().content()
     assert [x for x in c.side_infos if x.side == "hand"] == [cm.SideInfo(side="hand", label_key="side.hand")]
-    assert [x for x in c.threat_infos if x.threat == "wolf"] == [cm.ThreatInfo(threat="wolf", label_key="threat.wolf")]
+    assert [x for x in c.threat_infos if x.threat == "wolf"] == [cm.ThreatInfo(threat="wolf", label_key="threat.wolf", members=1)]
     info = cm.FightInfo(side="hand", threat="wolf", loses=[cm.Amount(store="fullness", quantity=3 * Q)],
                         wounds=[cm.Amount(store="nails", quantity=2 * Q)], won_line_keys=[], lost_line_keys=[],
                         loss_pool=None, loss_notes=None, on_loss_key=None)

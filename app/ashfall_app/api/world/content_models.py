@@ -4,6 +4,7 @@ from enum import StrEnum
 
 from pydantic import BaseModel
 
+from ..goals.chain_models import ChainInfo
 from ..goals.fight_models import SideInfo as SideInfo, ThreatInfo as ThreatInfo
 from .feature_models import FeatureCard as FeatureCard, FeatureInfo
 from .find_models import FindInfo as FindInfo
@@ -154,6 +155,8 @@ class CardInfo(BaseModel):
     """The one glow lands on it the first time it is ready while its lane is free (contract/)."""
     fight: FightInfo | None
     """Set on a fight card (contract/fights.txt, "FIGHTS")."""
+    chain: ChainInfo | None
+    """Set on a working with a chain (contract/spells.txt, "SPELLS")."""
     replaced_by: str | None
     """The card that takes this one's place once it retires, when the content names one: a greyed mix is fixed by the swap."""
 

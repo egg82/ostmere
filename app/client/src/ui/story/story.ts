@@ -11,7 +11,7 @@
 // aim and the strip.
 import type { JournalDay, LogLine, Mention, View } from "../../api/types";
 import { DayMentions } from "../../game/town/people";
-import { awayLines, pastLines, type Placement } from "../../game/book/awaylines";
+import { awayLines, liveLines, pastLines, type Placement } from "../../game/book/awaylines";
 import { entries, lostPool, poolLine, type Window } from "../../game/ledger/fights";
 import { toppedSince } from "../../game/skills/prestige";
 import { jobLine, newJobs } from "../../game/town/newjobs";
@@ -212,7 +212,7 @@ export class Story implements Part {
   /** Each line's node in the strip, in order (null: a key with no text, or a line not for the strip). `queued`: the
    * arrival queue paces them. `away`: a return's lines, placed by game/book/awaylines.ts. */
   append(lines: LogLine[], queued = false, away: { view: View; prev: View | null } | null = null): Array<HTMLElement | null> {
-    const where = away ? awayLines(this.ctx.catalog, lines, away.view, away.prev) : lines.map((): Placement => "band");
+    const where = away ? awayLines(this.ctx.catalog, lines, away.view, away.prev) : liveLines(this.ctx.catalog, lines);
     return this.place(lines.map((l) => l.key), true, queued, where, lines.map((l) => l.at));
   }
 
