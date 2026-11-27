@@ -1,4 +1,4 @@
-"""The check on retired chores (week-three-plan item 3; engine DESIGN.txt, "Retired chores", "Content"): only a season's
+"""The check on retired chores (week-three-plan item 3; engine design/townsfolk.txt, "Retired chores", "Content"): only a season's
 turn retires orders, and only on a chore's cure, a chore being a chip whose store only a season's standing makes.
 Raises ValueError naming the entry (refs.fail)."""
 from typing import TYPE_CHECKING

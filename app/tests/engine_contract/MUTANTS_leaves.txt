@@ -1,4 +1,4 @@
-Wrong implementations of a leave (engine DESIGN.txt, "LEAVES", invariants 148-155; week-three plan, items 4 and 5) and of
+Wrong implementations of a leave (engine design/leaves.txt, "LEAVES", invariants 148-155; week-three plan, items 4 and 5) and of
 the retired chores beside it (invariants 142-147), to plant one at a time in a scratch copy; a test written blind from
 those parts alone must go red for each. Rows are claimed by `@kills(row)` markers on the tests of leaves_world.py's and
 retire_world.py's suites: test_leaves_*.py and test_retire_*.py. Record each run below the list as MUTANTS_drains.txt
@@ -58,7 +58,7 @@ RETIRED CHORES (retire_orders; "Installed rule" / "Retired chores")
 33 ended too often   a SetOrders removal is logged as ended (SEASON or LEFT).                              [143]
 
 RUNS
-- Suites test_leaves_*.py (rows 1-20) and test_retire_*.py (rows 21-33), written blind from DESIGN.txt and contract/
+- Suites test_leaves_*.py (rows 1-20) and test_retire_*.py (rows 21-33), written blind from engine/design/ and contract/
   alone. Run: python -m tools.mutate_suite leaves|retire --run (specs tools/leaves_mutants/, tools/retire_mutants/:
   mNN.py is a row's mutant, mNNa.py ... its further variants, each planted alone). Each run also runs the other suite
   and the implementation's own tests (engine/test_leaves_impl.py, engine/test_retired_chores_impl.py,

@@ -93,7 +93,7 @@ type Subject = Annotated[
 
 class AtLeast(BaseModel):
     """value_of_cap, release_of_cap: that level is basis points (0..10000) of the watched store's cap now, not a
-    quantity; on a store_value, in orders and queue entries only (contract/the-client-may.txt, "a store rule"; engine DESIGN.txt,
+    quantity; on a store_value, in orders and queue entries only (contract/the-client-may.txt, "a store rule"; engine design/share-levels.txt,
     "SHARE LEVELS")."""
 
     kind: Literal["at_least"] = "at_least"
@@ -184,7 +184,7 @@ class Order(BaseModel):
     when: Condition
     then: OrderVerb
     unless: list[Condition] = Field(default=[], max_length=MAX_UNLESS)
-    """Guards, each the condition that blocks the rule (engine DESIGN.txt, "RULE GUARDS")."""
+    """Guards, each the condition that blocks the rule (engine design/rule-guards.txt, "RULE GUARDS")."""
     or_else: list[OrderVerb] = Field(default=[], max_length=MAX_OR_ELSE)
     """Fallback actions, tried after `then` in this order."""
     below_next: bool = False

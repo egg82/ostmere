@@ -1,6 +1,6 @@
 """Dropping: every reference a save holds to an id its manifest declared and the new rules lack, taken out of it.
 
-Semantics: DESIGN.txt, "Rebase", steps 3 and 4. What goes with a gone id: an order or queue entry whose condition names one,
+Semantics: engine/design/, "Rebase", steps 3 and 4. What goes with a gone id: an order or queue entry whose condition names one,
 an action naming one (the order goes when none is left), a modifier aimed at one, a pause of or on one, a mix's share
 of a gone card, a lane's tap of one, and its unlock. An id the manifest never declared is left as it is (an order may
 name a card no rules have: "Orders").

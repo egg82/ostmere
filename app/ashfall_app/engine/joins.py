@@ -1,5 +1,5 @@
 """What a Join does to a save: the person is present, and the lane's always task becomes its share in the town mix.
-Semantics: DESIGN.txt, "THE TOWN'S MIX", "Join"."""
+Semantics: design/towns-mix.txt, "THE TOWN'S MIX", "Join"."""
 from dataclasses import replace
 
 from .cards import Join

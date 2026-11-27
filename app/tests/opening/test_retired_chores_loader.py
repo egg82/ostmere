@@ -1,4 +1,4 @@
-"""Retired chores as content (engine DESIGN.txt, "Retired chores", "Content"), on fixtures/chores.toml merged onto the
+"""Retired chores as content (engine design/townsfolk.txt, "Retired chores", "Content"), on fixtures/chores.toml merged onto the
 opening alone: the next turn retires the clearing card's orders, and the loader refuses retire_orders anywhere but a
 season's turn and on a card that cures no chore. Each refusal is the fixture edited, beside the control that loads."""
 from pathlib import Path

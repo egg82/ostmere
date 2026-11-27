@@ -3,19 +3,17 @@ of the answer whose outcome unlocks it, never from text typed per bonus."""
 import pytest
 
 from ashfall_app.api.content_models import Content
-from ashfall_app.api.service import Game
-from ashfall_app.opening.schema import CHAPTERS, load_opening
-from ashfall_app.saves.ruleset import ruleset
+from ashfall_app.opening.schema import Opening
+from tests.shipped_ruleset import ShippedRuleset
 
 
 @pytest.fixture(scope="module")
-def content() -> Content:
-    o = load_opening(chapters=CHAPTERS)
-    return Game(o, ruleset(o, "dev", 1)).content()
+def content(shipped_opening: Opening, shipped_ruleset: ShippedRuleset) -> Content:
+    return shipped_ruleset.make_game(shipped_opening, shipped_ruleset.rs).content()
 
 
-def test_a_feature_carries_the_cost_text_and_changes_of_its_answer(content: Content):
-    answers = {(u.id): a for x in load_opening(chapters=CHAPTERS).offers for a in x.answers for u in a.outcome.unlocks
+def test_a_feature_carries_the_cost_text_and_changes_of_its_answer(content: Content, shipped_opening: Opening):
+    answers = {(u.id): a for x in shipped_opening.offers for a in x.answers for u in a.outcome.unlocks
                if u.unlock_kind == "feature" and a.outcome.modifiers}
     served = {f.feature: f for f in content.feature_infos if f.effect_key}
     assert served and set(served) == set(answers)

@@ -1,4 +1,4 @@
-"""When each skill's levels and each store's fills land if the player changes nothing (DESIGN.txt, "Forecast").
+"""When each skill's levels and each store's fills land if the player changes nothing (engine/design/, "Forecast").
 
 A view's next_level_at and fills_at hold under the current segments only: an order that comes on, a tap that ends or
 a store that runs dry changes them at the next event. A forecast resolves instant after instant with nobody deciding,
@@ -76,7 +76,7 @@ class Forecast:
     the row's "tops out in". At most one per skill, since only the player's click lifts a top. A skill already at its
     top, a mastered one (prestige.mastered: no click waits at its top), and every skill under rules with no prestige,
     are absent. Its level_ups end at that top: the levels its
-    carried XP passes wait for the click and are not level-ups (DESIGN.txt, "PRESTIGE PHASES")."""
+    carried XP passes wait for the click and are not level-ups (design/prestige-phases.txt, "PRESTIGE PHASES")."""
     hands_free_at: int | None = None
     """The first instant the player's work stops holding the hands (handsfree.py: no tap the player started runs on
     HANDS and the queue is empty), after the forecast began with it holding them; None when it did not (already free)

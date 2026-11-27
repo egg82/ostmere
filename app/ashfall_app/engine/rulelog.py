@@ -1,6 +1,6 @@
 """Rule starts and let-gos: an order's `when` latch turning true (it comes on) or false (it lets go) across one instant
-or one decision (DESIGN.txt, "Rule changes"; a guard pausing it is not one: "RULE GUARDS"), and an order the game
-removed (DESIGN.txt, "Retired chores", "Logged"). Orders have no id, so a change names the order itself, unplaced, matched
+or one decision (engine/design/, "Rule changes"; a guard pausing it is not one: "RULE GUARDS"), and an order the game
+removed (design/townsfolk.txt, "Retired chores", "Logged"). Orders have no id, so a change names the order itself, unplaced, matched
 across the two saves by equality: a reorder or a move past Next keeps it, an edit makes it another order."""
 from dataclasses import dataclass
 from enum import Enum

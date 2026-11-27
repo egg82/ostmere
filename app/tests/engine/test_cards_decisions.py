@@ -1,4 +1,4 @@
-"""The cards decisions of DESIGN.txt, part "CARDS", each on a small world: landing at the boundary, a tap whose speed
+"""The cards decisions of design/cards.txt, part "CARDS", each on a small world: landing at the boundary, a tap whose speed
 is 0, the evaluation after a cascade, dead queue entries, the run precedence, the store-once and requires validation,
 and a pause that outlives its tap."""
 from dataclasses import replace
@@ -59,7 +59,7 @@ def test_the_dry_rule_passes_over_a_landing_card_and_pauses_the_rest():
 
 def test_a_tap_at_speed_zero_is_refused_and_a_hands_tap_keeps_its_start_speed():
     """A speed of 0 at the start refuses the tap; a chip stopping the hands mid-tap leaves the tap at its start speed
-    to its landing (DESIGN.txt, "Speed")."""
+    to its landing (design/core.txt, "Speed")."""
     slow = Modifier(LaneSpeed(HANDS), ModifierKind.MUL_BP, 0, SourceId("tired"))
     r = world([CardDef(C, 100, lines=(LineKey("c.tap"),))])
     s = new_save(r, (slow,))

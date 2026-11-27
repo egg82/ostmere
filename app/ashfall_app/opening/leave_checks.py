@@ -1,4 +1,4 @@
-"""The check on people leaving (week-three-plan item 4; engine DESIGN.txt, "LEAVES", "Content"): only a trigger's or an
+"""The check on people leaving (week-three-plan item 4; engine design/leaves.txt, "LEAVES", "Content"): only a trigger's or an
 answer's outcome has a person leave, each a ruled lane left once across the content, each stop a standing action, and
 never a lane the same outcome joins. Raises ValueError naming the entry (refs.fail)."""
 from typing import TYPE_CHECKING

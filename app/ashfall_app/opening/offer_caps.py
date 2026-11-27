@@ -114,7 +114,7 @@ class Chain:
 
     def cap_modifiers(self, done: frozenset[str]) -> "list[ModifierEntry]":
         """The modifiers of the outcomes done and of the camp levels landed. The camp's levels land in order (engine
-        DESIGN.txt, "THE CAMP"), and a held level lands when its lifting card finishes, the bar waiting just under it:
+        design/camp.txt, "THE CAMP"), and a held level lands when its lifting card finishes, the bar waiting just under it:
         so once the highest lifted level a certain card lifts has landed, every level below has, each lifting card
         finished, and what that needed (the chain of those cards) was done too."""
         camp = self.o.camp

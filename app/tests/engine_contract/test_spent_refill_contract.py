@@ -1,4 +1,4 @@
-"""SPENT for a store a maker refills (engine DESIGN.txt, "SPENT", "Giver", "The instant, and the hour", invariants 134,
+"""SPENT for a store a maker refills (engine design/spent.txt, "SPENT", "Giver", "The instant, and the hour", invariants 134,
 136, 138 and 139): a paused card's share yields by the one rule whatever can refill its store, from the pause to its
 resume. EAT at 4000 costs p at 4000 * 360 units a second, so its resume level is an hour of that, 5_184_000_000 units
 (1440 items); R1 at 2500 and R2 at 1500 make z and w at their share. MUTANTS_spent.txt names the wrong implementations

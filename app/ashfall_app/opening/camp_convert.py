@@ -1,4 +1,4 @@
-"""The camp's cap steps and the card lifts they make, from the authored levels (engine DESIGN.txt, "THE CAMP"). Pure."""
+"""The camp's cap steps and the card lifts they make, from the authored levels (engine design/camp.txt, "THE CAMP"). Pure."""
 from dataclasses import replace
 from typing import TYPE_CHECKING
 
@@ -21,7 +21,7 @@ def camp_cap(camp: "CampEntry") -> int:
 
 
 def camp_chain(camp: "CampEntry") -> list[tuple[int, str | None, int]]:
-    """The camp cap's steps in order (engine DESIGN.txt, "THE CAMP"): (level n, the lifting card or None for the step
+    """The camp cap's steps in order (engine design/camp.txt, "THE CAMP"): (level n, the lifting card or None for the step
     to_camp_n, the raise in bp). Each step's target is exact, the least add that reaches a level or the greatest that
     stays under a held one, and its raise is that target less the previous step's, so the raises telescope."""
     first = next((i for i, lv in enumerate(camp.levels) if lv.held and lv.lifted_by), None)

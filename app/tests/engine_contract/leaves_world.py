@@ -1,4 +1,4 @@
-"""Fixture rules for the leaves contract tests (engine DESIGN.txt, "LEAVES", invariants 148-155), built from the engine's
+"""Fixture rules for the leaves contract tests (engine design/leaves.txt, "LEAVES", invariants 148-155), built from the engine's
 public names and the stated interface only. The names a leave adds (Leave, UnlockKind.LEFT, Ended) are reached through
 the functions below, at call time, so a module that tests them collects before they exist.
 
@@ -48,7 +48,7 @@ AFTER_MIXES = {
     TM: Mix(TM, (CardShare(B1, 5000), CardShare(B2, 5000))),
     HM: MIX_HANDS,
 }
-"""Every saved mix as it stands once la's shares have left (DESIGN.txt, LEAVES, CHOICES step 4)."""
+"""Every saved mix as it stands once la's shares have left (engine/design/, LEAVES, CHOICES step 4)."""
 
 
 def _card(c: CardId, lane: LaneId, work_s: int = 10, **kw: Any) -> CardDef:

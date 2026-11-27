@@ -1,4 +1,4 @@
-"""An order card on the hands (a lane whose taps are never repeated, engine DESIGN.txt "REPEATING TAPS", "Who may
+"""An order card on the hands (a lane whose taps are never repeated, engine design/repeating-taps.txt "REPEATING TAPS", "Who may
 repeat") costs a latch turn and a landing every time its rule holds, so one hold has to cover more than one completion:
 its band, release over value, is at least BAND_TAPS times what one completion puts in the store. A one-item band on a
 one-item yield turned a rule on and off about once a minute while the roots drained, ~8,400 instants a game day."""

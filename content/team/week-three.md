@@ -80,7 +80,7 @@ measured) and about a day in on sharp (204.7). Today its share pauses dry and id
 the next Drift's turn, three weeks on. Two rules forbid that: a re-tune is only ever set off by something the player
 chose, and nothing finishes into idleness; and the babysitter re-tunes at 336 h exactly while the whenever player
 re-tunes a day later, which is the 2 AM test failing. The engine never redistributes a share by hand-wave
-(`DESIGN.txt`: "a hidden redistribution is a number with no source"), so the rule is a visible one: **a card paused dry
+(`engine/design/`: "a hidden redistribution is a number with no source"), so the rule is a visible one: **a card paused dry
 on a store that no unlocked card or standing can make (a pool, or a store whose every maker is itself spent) is spent;
 its share goes to the rest of its mix in proportion, each receiving line's explanation naming the spent card as a
 source; an outcome that refills the store takes the share back at that instant.** The player's own mix, as saved, is

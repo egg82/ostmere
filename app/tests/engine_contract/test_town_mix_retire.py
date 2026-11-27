@@ -1,4 +1,4 @@
-"""Engine DESIGN.txt, "THE TOWN'S MIX", "Uncapped only", and "Greyed mix": a retired card stops only its own share in a
+"""Engine engine/design/, "THE TOWN'S MIX", "Uncapped only", and "Greyed mix": a retired card stops only its own share in a
 town mix (idle for that person, never handed to another); a hands mix holding one is greyed whole."""
 from ashfall_app.engine import (
     BP, QUANTITY_SCALE as Q, AfterTime, CardId, CardShare, Mix, Order, Outcome, SaveMix, SwitchMix, TriggerDef, TriggerId, Unlock,

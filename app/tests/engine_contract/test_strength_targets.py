@@ -1,5 +1,5 @@
 """Invariants 82 (its strength half: raising entries never lower a strength) and 83 (no entry aimed at a ThreatStrength
-outside a trigger's outcome, and no save's ThreatStrength falls), from DESIGN.txt, "FIGHTS", alone. Each refusal is
+outside a trigger's outcome, and no save's ThreatStrength falls), from design/fights.txt, "FIGHTS", alone. Each refusal is
 paired with a valid control, so a validator that refuses everything cannot pass."""
 from collections.abc import Callable
 from dataclasses import replace

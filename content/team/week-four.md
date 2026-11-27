@@ -252,14 +252,14 @@ pack fights than one that moves it to the post.
 ### Into the Ashwood (fit pass)
 
 **What it is:** the first expeditions: walks over the ridge into the dead forest, out and back, bringing timber and
-fungus, finding things, and training a new skill. **Instance of:** the trip (`docs/design/banked-time-plan.md`; DESIGN
+fungus, finding things, and training a new skill. **Instance of:** the trip (`docs/design/banked-time-plan.md`; design/banked-time.txt
 "BANKED TIME": an uncapped hands card with inputs, run in the mix, finds as triggers on a completion count), with a town
 twin on any lane (week three's `{lane}_clear_road`), and a count store every walk adds to (`meals`'s and
 `track_laid`'s idiom) so finds read one number whoever walked. **Fits into:** Cards, Triggers, Stores, the Pacing curve
 (one more skill), Town map and world map (places by unlock), Expeditions (its first content: the row's first slice as
 built). No engine work. Rejected: a roster of who goes (backup) now: each walk is one person alone, the player or a
-townsperson, until the first expedition whose fight needs a side made of who goes (R3's companions at B28; DESIGN
-"BANKED TIME", KNOWN GAPS, "Who goes"; D-158); a capped trip per destination (greys the mix at 03:00, DESIGN's
+townsperson, until the first expedition whose fight needs a side made of who goes (R3's companions at B28; design/banked-time.txt
+"BANKED TIME", KNOWN GAPS, "Who goes"; D-158); a capped trip per destination (greys the mix at 03:00, the engine design's
 rejection); finds on each card's own count (a find would wait on whoever the player happened to send).
 
 | Store | Cap | Drawn | Notes |
@@ -445,7 +445,7 @@ else: no job is dangerous in the numbers, none can kill, and each pays as its ti
 
 **A39 (`go_wallow`, "Go after them").** A glowing one-off on the hands (`only_player = "story"`, cap 1, 3600 s, 2
 smoked), shown at `still_clock` ≥ 66 once I7 with Lucy's line, unready with its countdown to `still_clock` 72 (576 h),
-queueable When ready. Its finish is B20. It is a story fight: no FightDef, no odds, no roll (DESIGN "FIGHTS": a beat's
+queueable When ready. Its finish is B20. It is a story fight: no FightDef, no odds, no roll (design/fights.txt "FIGHTS": a beat's
 outcome never carries odds). There is no other answer: Lucy asks the room, and the card is the player standing up. The
 choice is when. Rejected: an offer whose no defers B20 forever (a spine lock); a fight card whose loss is B20 (a beat
 that rolls, and a player with good odds would never die).
@@ -545,14 +545,14 @@ writing (issue #29).
 
 Dying on purpose is never the best route: a death pays nothing, and a hunt lost is its supplies gone and its catch
 missing. Rejected: a death that takes stores or levels (the guardrail); a death as an engine event or a respawn timer
-(no instant per fight, DESIGN "FIGHTS"); deaths on the walks (they are not fights, and deaths come only from fights the
+(no instant per fight, design/fights.txt "FIGHTS"); deaths on the walks (they are not fights, and deaths come only from fights the
 player chose); a light-tier companion's death on a loss (FIGHTS' KNOWN GAP "Whole losses that are people" stays open:
 nobody goes with the player in week four).
 
 ### The boar hunt (fit pass)
 
 **What it is:** going back for the boar, as often as the player likes, now that dying is a thing they come back from.
-**Instance of:** a fighting trip (DESIGN "BANKED TIME": a trip card carrying a FightDef on the hands' side; week three's
+**Instance of:** a fighting trip (design/banked-time.txt "BANKED TIME": a trip card carrying a FightDef on the hands' side; week three's
 deer). **Fits into:** Cards, Combat, the Kept field above. No engine work.
 
 | Card | Lane | Opened by | Bar (s) | Takes | Won share makes | On loss | Skill |

@@ -1,4 +1,4 @@
-"""The Camp's entries: the bar to work toward and its levels (engine DESIGN.txt, "THE CAMP")."""
+"""The Camp's entries: the bar to work toward and its levels (engine design/camp.txt, "THE CAMP")."""
 from pydantic import Field
 
 from .entries import Entry, ModifierEntry
@@ -21,7 +21,7 @@ class CampLevelEntry(Entry):
     lifted_by: list[str] = []
     """The capped cards any one of whose finish lifts a held level: the loader adds a raise of the camp store's cap to
     each card's `finished`, so the bar fills on and the level lands. Two or more are alternatives an offer's answers
-    unlock (engine DESIGN.txt, "THE CAMP"). A lifted level may be any level, and lands what it names."""
+    unlock (engine design/camp.txt, "THE CAMP"). A lifted level may be any level, and lands what it names."""
 
 
 class CampEntry(Entry):

@@ -1,5 +1,5 @@
 """What a tap of a card still takes of its input stores: its whole inputs per completion and the rest of the current
-one (DESIGN.txt, "Inputs against a dry store"). Reads only."""
+one (design/cards.txt, "Inputs against a dry store"). Reads only."""
 from . import counts, gates
 from .cards import CardDef
 from .ids import CardId, StoreId

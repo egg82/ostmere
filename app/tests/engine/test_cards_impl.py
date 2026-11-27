@@ -1,5 +1,5 @@
 """The cards part end to end on small rules: one bar, rate-form lumps, taps, failed taps, interrupts, caps,
-greyed mixes, starved lines, the view and the codec (DESIGN.txt, part "CARDS")."""
+greyed mixes, starved lines, the view and the codec (design/cards.txt, part "CARDS")."""
 import pytest
 
 from ashfall_app.engine import (

@@ -56,7 +56,7 @@ def _bad_rules():
         "standing action makes and costs one store": replace(g, standing=(StandingDef(FIRE, (Flow(S1, 50),), (Flow(S1, 20),)),)),
         "store twice in makes": with_card(replace(a0, makes=(Flow(S0, 5), Flow(S0, 6)))),
         "store twice in costs": with_card(replace(a0, costs=(Flow(S1, 5), Flow(S1, 6)))),
-        # the card rules (DESIGN.txt, "Validation of cards")
+        # the card rules (design/cards.txt, "Validation of cards")
         "work_s zero": with_card(replace(a0, work_s=0)),
         "card cap zero": with_card(replace(a0, cap=0)),
         "card on an undeclared lane": with_card(replace(a0, lane=LaneId("nope"))),

@@ -1,4 +1,4 @@
-"""A running-mix change re-decides only the pauses it can move (engine DESIGN.txt, "Running dry"): those on a store a
+"""A running-mix change re-decides only the pauses it can move (engine design/, "Running dry"): those on a store a
 card of the old or the new running mix makes or costs. A pause on any other store stands until its RESUME, so a store
 held empty for good is not re-paused, and its consumers rebuilt, at every mix change (issue 400)."""
 import pytest

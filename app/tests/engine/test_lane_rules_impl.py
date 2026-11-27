@@ -1,4 +1,4 @@
-"""LaneRules (engine DESIGN.txt, "Lane rules"): the count of orders the player set on a ruled lane, read only by a
+"""LaneRules (engine design/, "Lane rules"): the count of orders the player set on a ruled lane, read only by a
 trigger's when, fired at the decision that sets one."""
 from dataclasses import replace
 

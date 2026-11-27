@@ -1,4 +1,4 @@
-"""FORMAT 8: a hands tap keeps its start speed on its LaneState (engine DESIGN.txt, "Speed"), and UPGRADES[7] adds
+"""FORMAT 8: a hands tap keeps its start speed on its LaneState (engine design/core.txt, "Speed"), and UPGRADES[7] adds
 speed None to every lane, so a tap a format 7 save began reads the live stack to its end, as it did then."""
 import json
 

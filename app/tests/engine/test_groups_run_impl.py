@@ -1,4 +1,4 @@
-"""Groups run (engine DESIGN.txt, "GROUPS (pooled lanes)", "How a group's split runs", "Join", "Mark"): the first
+"""Groups run (engine design/groups.txt, "GROUPS (pooled lanes)", "How a group's split runs", "Join", "Mark"): the first
 member starts the group's split, a later one adds output under it, a mark moves a person between their own split and
 the group's and never touches a share, and a tap on a member takes that person from the crew."""
 import pytest

@@ -1,4 +1,4 @@
-"""Fixture rules for the groups contract tests (engine DESIGN.txt, "GROUPS (pooled lanes)", invariants 179-183). Built
+"""Fixture rules for the groups contract tests (engine design/groups.txt, "GROUPS (pooled lanes)", invariants 179-183). Built
 from the engine's public types and that part alone.
 
 G is a pooled lane (the group); P1-P3 are people whose `group` is G; Q1 is a person with no group. Every card is

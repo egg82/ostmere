@@ -1,4 +1,4 @@
-"""Retired chores (engine DESIGN.txt, "Installed rule", "Retired chores", invariants 142-147; week-three plan, items 3
+"""Retired chores (engine design/townsfolk.txt, "Installed rule", "Retired chores", invariants 142-147; week-three plan, items 3
 and 5). Written blind from that part and the public interface; the `kills` marker names the rows of MUTANTS_leaves.txt
 each test must turn red for. retire_world's turn at 100 names c1 and r1 (the cures) while both are mid-task; c2 and r2
 (same lanes, same store) and the mix and queue entry stand beside them. The loader's half is test_retire_loader_contract."""

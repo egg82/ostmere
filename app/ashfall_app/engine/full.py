@@ -1,4 +1,4 @@
-"""The full rule (DESIGN.txt, "FULL OUTPUT"): a fillable card drawing a pool whose every outcome store is full pauses,
+"""The full rule (design/full-output.txt, "FULL OUTPUT"): a fillable card drawing a pool whose every outcome store is full pauses,
 keeping its inputs, and resumes once one of those stores has room for a whole completion of it. A full pause is a Pause
 on a store its card makes.
 """

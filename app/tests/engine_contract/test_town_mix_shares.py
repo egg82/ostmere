@@ -1,4 +1,4 @@
-"""Invariants 90 and 91 (engine DESIGN.txt, "THE TOWN'S MIX": "Town share", "Rates on a joined lane", "Uncapped only",
+"""Invariants 90 and 91 (engine design/towns-mix.txt, "THE TOWN'S MIX": "Town share", "Rates on a joined lane", "Uncapped only",
 "No XP"). A share in a town mix is basis points of one person's own time; a tap on the person's lane yields their
 shares; a card on a ruled lane carries no skill and no XP line. Expected numbers come from the documented arithmetic:
 a make of one whole item per second at a share of s basis points moves a store by s * Q / BP per second."""

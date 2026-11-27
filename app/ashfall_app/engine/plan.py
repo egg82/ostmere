@@ -32,7 +32,7 @@ def is_dead(save: Save, rules: Rules, verb: OrderVerb) -> bool:
 
 def is_stuck(save: Save, rules: Rules, verb: OrderVerb) -> bool:
     """A tap whose card nothing will make ready under the current rates (a blocker with no ready time): its entry is kept
-    and the ones behind it run (DESIGN.txt, "Never ready")."""
+    and the ones behind it run (design/cards.txt, "Never ready")."""
     from .work import blocker  # deferred: work -> plan
     if not isinstance(verb, TapCard) or verb.card not in index(rules).cards:
         return False
@@ -68,7 +68,7 @@ def live_queue_verb(save: Save, rules: Rules) -> OrderVerb | None:
 
 def queue_mix_id(save: Save, rules: Rules) -> MixId | None:
     """The saved hands mix the controlling queue entry switches to, when that entry is a SwitchMix: it runs over the
-    player's own until the entry pops, as an order's mix does while latched (DESIGN.txt, "Queue mix")."""
+    player's own until the entry pops, as an order's mix does while latched (design/cards.txt, "Queue mix")."""
     i = first_live_entry(save, rules)
     verb = None if i is None else save.queue[i].verb
     if not isinstance(verb, SwitchMix) or verb.mix not in {m.id for m in save.mixes}:
@@ -89,7 +89,7 @@ def candidates(save: Save, rules: Rules) -> tuple[CardId, ...]:
 def mix_layer(rules: Rules, mixes: tuple[Mix, ...], mix: MixId) -> MixLayer:
     """HANDS when every card the mix holds (nested mixes flattened) is on HANDS, TOWN when every card is on a ruled
     lane; a mix holding none is TOWN when a join of the rules makes it or its `layer` says so, else HANDS. InvalidVerbError
-    for a mix of both or of a card on neither (DESIGN.txt, "THE TOWN'S MIX", "Layer")."""
+    for a mix of both or of a card on neither (design/towns-mix.txt, "THE TOWN'S MIX", "Layer")."""
     cards = index(rules).cards
     lanes: set[LaneId] = set()
     for s in flatten_shares(mixes, mix):
@@ -112,7 +112,7 @@ def _layer_of(save: Save, rules: Rules, mix: MixId) -> MixLayer:
 
 def _mix_rule(save: Save, rules: Rules, layer: MixLayer) -> tuple[int, MixId] | None:
     """The first order that is on and lists a SwitchMix to a saved mix of `layer` that is not greyed, as (its index,
-    the first such mix it lists): the order whose mix runs over the player's (DESIGN.txt, "Order mix", "OR ELSE").
+    the first such mix it lists): the order whose mix runs over the player's (engine/design/, "Order mix", "OR ELSE").
     Orders of the other layer never change this layer's running mix."""
     saved = {m.id for m in save.mixes}
     for i, a, latch in listed(save.orders, save.latches):
@@ -123,13 +123,13 @@ def _mix_rule(save: Save, rules: Rules, layer: MixLayer) -> tuple[int, MixId] | 
 
 
 def next_placed(save: Save) -> bool:
-    """Some rule sits under Next: the row is off the bottom (DESIGN.txt, "Next's row")."""
+    """Some rule sits under Next: the row is off the bottom (design/nexts-row.txt, "Next's row")."""
     return any(o.below_next for o in save.orders)
 
 
 def on_side(save: Save, below: bool) -> Save:
     """`save` with the rules on the other side of Next off (their latches false), for the readers that walk the orders
-    in sequence to read one side at a time; `save` itself above a Next at the bottom (DESIGN.txt, "Next's row")."""
+    in sequence to read one side at a time; `save` itself above a Next at the bottom (design/nexts-row.txt, "Next's row")."""
     if not below and not next_placed(save):
         return save
     return replace(save, latches=tuple(on if o.below_next is below else False for o, on in zip(save.orders, save.latches)))
@@ -137,7 +137,7 @@ def on_side(save: Save, below: bool) -> Save:
 
 def under_next(save: Save, rules: Rules) -> Save:
     """on_side(save, below=True), and while the queue has the hands (next_runs) the rules tapping on them off too: they
-    wait for the entry (DESIGN.txt, "Next's row")."""
+    wait for the entry (design/nexts-row.txt, "Next's row")."""
     side = on_side(save, below=True)
     if not next_runs(save, rules):
         return side
@@ -149,7 +149,7 @@ def under_next(save: Save, rules: Rules) -> Save:
 
 def _hands_rule(save: Save, rules: Rules) -> tuple[int, MixId] | None:
     """The order whose hands mix runs: the first on above Next; else, while the queue runs no mix, the first on under
-    Next (DESIGN.txt, "Next's row")."""
+    Next (design/nexts-row.txt, "Next's row")."""
     above = _mix_rule(on_side(save, below=False), rules, MixLayer.HANDS)
     if above is not None or not next_placed(save) or queue_mix_id(save, rules) is not None:
         return above
@@ -205,7 +205,7 @@ def running_mix_id(save: Save, rules: Rules) -> MixId | None:
 
 def running_town_mix_id(save: Save, rules: Rules) -> MixId | None:
     """The town mix running now: the mix of town_mix_order's order; None when nobody runs shares (the town has no
-    mix of the player's own: DESIGN.txt, "THE TOWN'S MIX", "Running town mix")."""
+    mix of the player's own: design/towns-mix.txt, "THE TOWN'S MIX", "Running town mix")."""
     def build() -> MixId | None:
         rule = _mix_rule(save, rules, MixLayer.TOWN)
         return None if rule is None else rule[1]
@@ -214,7 +214,7 @@ def running_town_mix_id(save: Save, rules: Rules) -> MixId | None:
 
 def lane_order(save: Save, rules: Rules, lane: LaneId) -> int | None:
     """The index of the first order that is on and lists a tap, not dead, of the card `lane` runs now; None while the
-    lane is free or no such order exists (DESIGN.txt, "Lane order"). Presentation only."""
+    lane is free or no such order exists (engine/design/, "Lane order"). Presentation only."""
     card = next(ls.card for ls in save.lanes if ls.lane == lane)
     if card is None:
         return None
@@ -223,14 +223,14 @@ def lane_order(save: Save, rules: Rules, lane: LaneId) -> int | None:
 
 
 class OrderState(Enum):
-    """Where an order stands now, as evaluation sees it (DESIGN.txt, "Orders", "Order mix")."""
+    """Where an order stands now, as evaluation sees it (engine/design/, "Orders", "Order mix")."""
 
     ON = "on"
     """A mix order whose mix runs (mix_order), or a tap order whose condition holds."""
     WAITING = "waiting"
     """Its condition does not hold (its `when` latch is false)."""
     PAUSED = "paused"
-    """Its `when` latch is true and a guard's latch is true (DESIGN.txt, "RULE GUARDS")."""
+    """Its `when` latch is true and a guard's latch is true (design/rule-guards.txt, "RULE GUARDS")."""
     OUTRANKED = "outranked"
     """A mix order whose condition holds while an earlier mix order's mix runs (mix_order); a tap order whose condition
     holds while its card's lane runs the task of an earlier order (lane_order)."""
@@ -238,7 +238,7 @@ class OrderState(Enum):
     """Every action it lists is dead (is_dead): it cannot act whatever its condition."""
     BEHIND_NEXT = "behind_next"
     """A rule under Next that acts on the hands, whose condition holds while the queue has them (next_runs): it would
-    otherwise be on, or be outranked by nothing but the queue's mix (DESIGN.txt, "Next's row")."""
+    otherwise be on, or be outranked by nothing but the queue's mix (design/nexts-row.txt, "Next's row")."""
 
 
 def order_states(save: Save, rules: Rules) -> tuple[OrderState, ...]:

@@ -70,7 +70,7 @@ replay would have to rebuild the body the route class already holds).
 How these stand today, moved from their rows in `systems.md`.
 
 Saves: a save under older rules is rebased when it next loads (format upgrades chained, then what the current rules
-lack dropped: engine `DESIGN.txt`, "Rebase"), by data it carries (a manifest of the rules it was written under):
+lack dropped: `engine/design/`, "Rebase"), by data it carries (a manifest of the rules it was written under):
 forward-only with no per-change flags. Content may rename or remove any id; a save loses its progress under an id that
 went, and never fails to load for it. A change that should carry a save across (a rename worth keeping progress for,
 a retroactive change) is a step on the upgrade chain (`app/ashfall_app/engine/upgrade.py`). Stored in Postgres (`app/ashfall_app/db/tables.py`): the save's state
@@ -82,7 +82,7 @@ rows and deletes the manifests no row names (`app/ashfall_app/saves/strip.py`). 
 load and never written by an older build than last wrote it (`app/ashfall_app/saves/load.py`). A long absence is caught
 up in bounded slices (Game Loop's catch-up, bailing after a budget): each request advances for at most a few seconds of
 wall time, writes and commits that slice, and the page asks again until one reaches now
-(`app/ashfall_app/saves/service.py`; engine `DESIGN.txt`, "Bounded advance"; contract/catching-up.txt, "Catching up"). So that a
+(`app/ashfall_app/saves/service.py`; `engine/design/`, "Bounded advance"; contract/catching-up.txt, "Catching up"). So that a
 night away opens caught up, as an idle game does, the minutely job advances each recently played save that has fallen
 behind and keeps the result beside the row, keyed on the row it began from; a step loading that very row continues
 from it, and any other row makes it stale (`app/ashfall_app/saves/ahead.py`). A busy save's night can cost minutes of

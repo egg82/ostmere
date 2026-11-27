@@ -1,6 +1,6 @@
 # Combat, first slice: open content questions
 
-Engineering's side is `docs/design/combat-plan.md` and engine `DESIGN.txt`, "FIGHTS". These are the story and numbers
+Engineering's side is `docs/design/combat-plan.md` and `engine/design/`, "FIGHTS". These are the story and numbers
 calls the slice needs before its content file (plan item 8) can be written. Each names its recommendation; the lead
 decides, and anything that needs the owner goes to him spoiler-free in the words given.
 
