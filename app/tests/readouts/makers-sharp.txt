@@ -12,6 +12,10 @@
     d1-2   made       1  at cap   8%  make_bay 100
   bay2
     d3-5   made       1  at cap  28%  make_bay2 100
+  bay2_mid
+    d3-5   made     480  at cap  28%  bay2_mid 100
+    d6-9   made    1920  at cap 100%  bay2_mid 100
+    d10+   made    2320  at cap 100%  bay2_mid 100
   bay_clock
     d1-2   made     240  at cap  17%  bay_clock 100
     d3-5   made    1440  at cap 100%  bay_clock 100
@@ -156,6 +160,9 @@
     d10+   made      35  at cap  28%  hunt_wolf 85, hunt_bear 15
   hut
     d6-9   made       1  at cap   0%  make_hut 100
+  hut_mid
+    d6-9   made      80  at cap   4%  hut_mid 100
+    d10+   made    2320  at cap 100%  hut_mid 100
   morning_13
     d10+   made    2000  at cap  86%  morning_13 100
   n1_worked

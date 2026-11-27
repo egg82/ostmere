@@ -165,7 +165,9 @@ made, named in the journal and still open there, as Ironsworn writes a vow down.
 beat that sets it against something else the player values (food, a person, another promise), and the player picks
 what to give up; "no good option" is allowed, as in the Witcher's quests. Breaking it is a legal choice whose price
 is shown and is higher than declining would have been. The dilemma waits for the player and resolves while they are
-there.
+there. How a dilemma reads a promise: the offer names it in `tests`, its answers that give it up name it in `breaks`
+and retire the card it queued, and it is shown while that card runs, so the player is there for it. Both answers carry
+a sourced modifier, so the price of each is on screen.
 
 **The game doesn't pull its punches, and never cheats** (owner: "not pull our punches. If there's no reason to").
 The reaction to aim for, in the owner's words: "oh, fuck, damnit, now what?" rather than "well that doesn't seem
