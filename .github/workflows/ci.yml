@@ -651,7 +651,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        part: [rebased-early, rebased-late, rebased-later]
+        part: [rebased-early, rebased-late, rebased-later, rebased-latest]
     env:
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
     steps:
@@ -702,7 +702,7 @@ jobs:
                readings-sixteen-b, readings-sixteen-c, readings-eighteen, readings-nineteen-a, readings-nineteen-b,
                readings-twentytwo-a, readings-twentytwo-b, readings-twentytwo-c, readings-twentytwo-d,
                readings-twentythree-a, readings-twentythree-b, readings-twentyfive-a, readings-twentyfive-b,
-               readings-twentyfive-c]
+               readings-twentyfive-c, readings-twentyseven-a, readings-twentyseven-b, readings-twentyseven-c]
     env:
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
     steps:

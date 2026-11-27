@@ -40,7 +40,8 @@ ROUTES = frozenset(name for names in SAVED.values() for name in names) - LINKED
 """Every route with a saved end written whole, in one part named for it."""
 REBASED: dict[str, tuple[str, ...]] = {"rebased-early": ("eight", "nine", "eleven", "twelve"),
                                        "rebased-late": ("fifteen", "sixteen", "eighteen", "nineteen"),
-                                       "rebased-later": ("twentytwo", "twentythree")}
+                                       "rebased-later": ("twentytwo", "twentythree"),
+                                       "rebased-latest": ("twentyfive",)}
 """typical's rebased saves (ends.rebased_path), by part: each chapter's save, replayed from the decisions of typical's
 saved end at it, so a part needs typical's ends and not typical's play from the start."""
 ALL = ROUTES | frozenset(ends.READINGS) | frozenset(REBASED) | frozenset(LINKS)
