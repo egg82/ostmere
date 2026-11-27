@@ -72,14 +72,16 @@ After merging a pull request that changes a readout, the merging session runs `p
 `app/tests/readouts/ANCHOR` against the owner's direction (`docs/design/drift-judge.md`). Nothing in CI runs it or
 calls a model.
 
-A job whose readout differs from its committed text fails after uploading what the code now renders;
-`python -m tools.readouts_pull <run-id>` (from `app/`) copies a red run's readouts into `app/tests/readouts/` to commit.
-Readouts are refreshed from CI, never replayed locally: push, let the pull request's run go red (each job whose readout
-differs leaves a `readouts-new-*` artifact and fails), pull, commit. A default pull request produces the readouts of the
-chapters it touches; tests that read a chapter's own readings, rebased save or saved end are the full run's. The nightly
-refreshes the rest in its own pull request, so the `playthroughs` label (the full run: every chapter from the last
-nightly's saves, replaying only the chapters whose key is new) is for a change whose wider effect must be read before
-merge, not a routine step.
+A readout that differs from its committed text is uploaded as a `readouts-new-*` artifact by the job that played it
+(`.github/actions/readout-differs`, `app/tools/nightly_verdict.py report`). On a pull request the job stays green: the
+files and the pull command are listed in the job summary, and the orchestrator reads the diff before merging. On a push to
+`main`, the nightly and a manual dispatch the same step fails the job. A failed test fails the job on every event.
+`python -m tools.readouts_pull <run-id>` (from `app/`) copies a run's readouts into `app/tests/readouts/`.
+Pull requests do not commit readouts and nothing refreshes them locally: the nightly refreshes main's in its own pull
+request, so they lag by up to a day. A default pull request produces the readouts of the chapters it touches; tests that
+read a chapter's own readings, rebased save or saved end are the full run's, so the `playthroughs` label (the full run:
+every chapter from the last nightly's saves, replaying only the chapters whose key is new) is for a change whose wider
+effect must be read before merge, not a routine step.
 
 ## Patterns
 

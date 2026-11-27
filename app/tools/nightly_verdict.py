@@ -5,6 +5,8 @@ Standard library only: the workflow runs it without installing anything. Subcomm
 
   verdict      a readout job's own record (.github/actions/readout-verdict): did every step before the drift step
                succeed, and which readouts changed. Written as JSON under --out.
+  report       a readout job's last step (.github/actions/readout-differs): list the readouts that differ in the job log and
+               summary with the pull command; exit 1 unless the event is `pull_request`, where they are read, not gated.
   readouts-only  ci-ok's decision from `toJSON(needs)` and the downloaded verdicts: prints `only=true` or `only=false`.
   decide       the nightly's decision from the called workflow's `only` and the other nightly jobs' results: prints
                `refresh=true|false`, and writes the nightly's verdict file when true.
@@ -68,6 +70,20 @@ def held(conclusion: str, run_id: str, directory: Path) -> bool:
     return not (v.get("readouts_only") is True and str(v.get("run")) == run_id)
 
 
+def report(event: str, run_id: str, readouts: Path, summary: Path | None) -> int:
+    names = sorted(p.name for p in readouts.rglob("*") if p.is_file()) if readouts.is_dir() else []
+    if not names:
+        return 0
+    text = "".join(f"readout differs from its committed text: {n}\n" for n in names)
+    text += f"pull: cd app && python -m tools.readouts_pull {run_id}\n"
+    sys.stdout.write(text)
+    if summary:
+        with summary.open("a") as f:
+            f.write("### Readouts that differ from their committed text\n\n" + "".join(f"- `{n}`\n" for n in names)
+                    + f"\nPull them with `cd app && python -m tools.readouts_pull {run_id}`.\n")
+    return 0 if event == "pull_request" else 1
+
+
 def body(paths: list[str]) -> str:
     ids = sorted(Path(p).stem for p in paths if p.endswith(".txt"))
     return "Readouts that differ from their committed text, pulled from the nightly's `readouts-new-*` artifacts:\n\n" + "".join(f"- `{i}`\n" for i in ids)
@@ -96,6 +112,11 @@ def main(argv: list[str]) -> int:
     h.add_argument("--conclusion", default="")
     h.add_argument("--run", default="")
     h.add_argument("--verdict", type=Path, required=True)
+    rp = sub.add_parser("report")
+    rp.add_argument("--event", required=True)
+    rp.add_argument("--run", required=True)
+    rp.add_argument("--readouts", type=Path, required=True)
+    rp.add_argument("--summary", type=Path)
     sub.add_parser("body")
     a = ap.parse_args(argv)
     if a.cmd == "verdict":
@@ -112,6 +133,8 @@ def main(argv: list[str]) -> int:
         if held(a.conclusion, a.run, a.verdict):
             print(f"HOLDING: the last nightly on main ({a.conclusion or 'none'}, run {a.run or '-'}) failed for more than readouts.", file=sys.stderr)
             return 1
+    elif a.cmd == "report":
+        return report(a.event, a.run, a.readouts, a.summary)
     else:
         sys.stdout.write(body(sys.stdin.read().split()))
     return 0
