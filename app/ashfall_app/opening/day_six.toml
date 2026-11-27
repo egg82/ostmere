@@ -65,6 +65,7 @@ unlocks = [
 # Staged on the hands, queued When ready, a pelt a stage; its last stage (SL14) makes rest a fifth faster.
 [[cards]]
 id = "pelt_bedding"
+site = { layer = "pelt_in_bay_3" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_pelt_bedding"
@@ -133,6 +134,7 @@ line_keys = ["l_pelt_kept"]
 
 [[cards]]
 id = "give_pelt"
+site = { layer = "turned_pelt" }
 only_player = "story"
 presentation = "narrative"
 label_key = "c_give_pelt"
@@ -319,6 +321,7 @@ outcome = { line_keys = ["l_night_7"], unlocks = [{ unlock_kind = "feature", id 
 # with B6; its first hunt keeps G2 after G1. Its finish lifts Camp 12 and lands the chapter's end feature.
 [[cards]]
 id = "sit_fire_7"
+site = { layer = "fire_lit" }
 only_player = "story"
 presentation = "narrative"
 label_key = "c_sit_fire_7"

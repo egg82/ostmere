@@ -24,6 +24,7 @@ orders = [{ tap_card = "n11_first_over", first = true }]
 
 [[cards]]
 id = "cut_over"
+site = { no_site = "the old road lies up the valley outside the palisade, above where a figure may stand in the scene; its layers show the cut, no one stands at it" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_cut_over"
@@ -91,6 +92,7 @@ outcome = { doings = ["n12"], line_keys = ["l_cloth_1", "l_cloth_2"], unlocks = 
 
 [[cards]]
 id = "road_cloths"
+site = { no_site = "the old road lies up the valley outside the palisade, above where a figure may stand in the scene; its layers show the cut, no one stands at it" }
 lane = "n12"
 presentation = "craft"
 label_key = "c_road_cloths"
@@ -224,6 +226,7 @@ outcome = { line_keys = ["l_night_21"], unlocks = [{ unlock_kind = "action", id 
 # the clock itself, so its countdown shows from T12 (week two's A32).
 [[cards]]
 id = "sit_road_end"
+site = { no_site = "the old road lies up the valley outside the palisade, above where a figure may stand in the scene; its layers show the cut, no one stands at it" }
 only_player = "story"
 presentation = "narrative"
 label_key = "c_sit_road_end"

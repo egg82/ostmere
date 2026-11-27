@@ -99,6 +99,7 @@ base = 5
 # death and costs only the smoked carried out (no loses, no wounds).
 [[cards]]
 id = "hunt_boar"
+site = { no_site = "the hunt goes out past the wall and the meat is carried in; the hunt is not in the camp" }
 only_player = "self"
 presentation = "action"
 label_key = "c_hunt_boar"
@@ -303,6 +304,7 @@ outcome = { line_keys = ["l_post_door"], unlocks = [{ unlock_kind = "card", id =
 
 [[cards]]
 id = "post_door"
+site = { no_site = "the post stands at the warm patch, out past the wall, which the scene does not draw" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_post_door"
@@ -476,6 +478,7 @@ whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no
 
 [[cards]]
 id = "dig_midden"
+site = { layer = "midden_pit" }
 only_player = "story"
 presentation = "action"
 label_key = "c_dig_midden"
@@ -518,6 +521,7 @@ whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no
 
 [[cards]]
 id = "pull_wall"
+site = { no_site = "the ruin's leaning wall is backdrop and not a layer of its own" }
 only_player = "story"
 presentation = "action"
 label_key = "c_pull_wall"
@@ -560,6 +564,7 @@ whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no
 
 [[cards]]
 id = "steam_hole"
+site = { no_site = "worked at the warm stream, which lies on the low ground behind the wall stub, off the scene; the scene poses its work at the gap's mouth, the way down to it" }
 only_player = "story"
 presentation = "action"
 label_key = "c_steam_hole"

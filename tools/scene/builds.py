@@ -69,6 +69,7 @@ BUILDS: Mapping[str, tuple[str, ...]] = {
     "pyre": ("pyre",),
     "hall": ("hall_1", "hall_2", "hall_3", "hall_4", "hall_hearth", "hall_smoke"),
     "n6_posts": ("n6_posts",),
+    "midden": ("midden_pit",),
     "road": ("road_1", "road_2", "road_3", "road_4", "road_over_1", "road_over_2", "road_cloths"),
 }
 """Each build and the layers that are it: its states, its parts, what it carries."""
@@ -100,8 +101,12 @@ RETIRED: Mapping[str, tuple[str, str]] = {
 `until` (`retire`). Authored, never read off an id."""
 
 PELTS = "the layer is the pelt store's stock (`store:pelt`), shown while the store holds pelts and the hall's roof takes pelts"
+TALLY = "the town's tally board: the content reads it again in a later chapter (`B12`), so it is not outgrown"
+PIT = "a dug pit stays dug: nothing in the content fills it"
 SNARES = "the snare line is worked all game: day sixteen's `reset_snares` sets it again"
 KEPT: Mapping[str, str] = {
+    "tally_board": TALLY,
+    "midden": PIT,
     "pelt_pegged_1": PELTS,
     "pelt_pegged_2": PELTS,
     "snare_1": SNARES,
@@ -113,7 +118,7 @@ KEPT: Mapping[str, str] = {
 
 HELD_UNDECIDED: frozenset[str] = frozenset({
     "campfire", "larder_floor", "watch_ring", "plot", "gap_ring", "cellar", "damp_wood_1", "dry_wood_1", "wood_drying",
-    "larder", "smoke_rack", "woodstack", "woodshed_1", "stakes", "ash_heap", "tally_board", "birch_log", "pyre", "hall",
+    "larder", "smoke_rack", "woodstack", "woodshed_1", "stakes", "ash_heap", "birch_log", "pyre", "hall",
     "n6_posts", "road",
 })
 """Builds not yet judged against the content as outgrown or kept: may only shrink. A build leaves it by gaining a row in
