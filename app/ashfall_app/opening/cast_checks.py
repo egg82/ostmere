@@ -5,6 +5,7 @@ import re
 from collections.abc import Iterable
 from typing import TYPE_CHECKING
 
+from ..engine import HANDS
 from .casts import cast_outcomes, casts, role_features
 from .entries import ConditionEntry, UnlockEntry
 from .refs import fail, outcomes
@@ -22,7 +23,7 @@ def check_casts(o: "Opening") -> None:
     for where, out in outcomes(o):
         if out.casts and where not in once:
             fail(where, "only a trigger's or an answer's outcome casts a role")
-    lanes = {x.id for x in o.lanes}
+    lanes = {HANDS, *(x.id for x in o.lanes)}
     town = {tc.id for tc in o.town_cards}
     named: set[str] = set()
     for where, c in casts(o):
