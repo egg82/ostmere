@@ -4,7 +4,7 @@ fight won and lost, served on its FightInfo, listed in Content.line_infos, and c
 every side strength's source has a label the fight panel shows."""
 import pytest
 
-from ashfall_app.api.content_models import Content
+from ashfall_app.api.world.content_models import Content
 from ashfall_app.api.service import Game
 from ashfall_app.opening.checks import check_opening
 from ashfall_app.opening.line_kinds import line_keys

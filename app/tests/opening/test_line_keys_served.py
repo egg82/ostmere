@@ -7,7 +7,7 @@ import typing
 import pytest
 from fastapi.testclient import TestClient
 
-from ashfall_app.api.content_models import Content
+from ashfall_app.api.world.content_models import Content
 from ashfall_app.engine import Rules
 from ashfall_app.main import create_app
 from tests.opening.playthrough import opening, opening_rules

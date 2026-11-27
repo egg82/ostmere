@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from ashfall_app.api.content_models import AnswerInfo, Content
+from ashfall_app.api.world.content_models import AnswerInfo, Content
 from ashfall_app.api.service import Game
 from ashfall_app.engine import QUANTITY_SCALE
 from ashfall_app.opening.clocks import clock_ids

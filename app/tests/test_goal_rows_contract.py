@@ -1,4 +1,4 @@
-"""Blind contract tests of View.goal_rows (api/contract/goal-rows.txt, "Goal rows"; api/goalrows.py and setrates.py public
+"""Blind contract tests of View.goal_rows (api/contract/goal-rows.txt, "Goal rows"; api/goals/goalrows.py and setrates.py public
 surface only). Written from the contract, never the implementation, and checked against real engine saves: a row's
 `lands_at` is judged by advancing the engine itself, its `per_hour` by the engine's own ledger line.
 
@@ -6,8 +6,8 @@ Worlds are tests/engine_contract/spent_world.py's: every card runs one item a se
 Q units to an item, and `standard()` is an eating card (costs pool p, makes y) beside makers of z and w."""
 from dataclasses import replace
 
-from ashfall_app.api import goal_models as g
-from ashfall_app.api.goalrows import goal_rows
+from ashfall_app.api.goals import goal_models as g
+from ashfall_app.api.goals.goalrows import goal_rows
 from ashfall_app.engine import (
     QUANTITY_SCALE as Q, CardId, PacingCurve, Rules, Save, SkillId, StoreId, TapCard, View, advance, decide, new_save,
     value, view, xp,

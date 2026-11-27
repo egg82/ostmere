@@ -3,10 +3,10 @@ part of the day (StoreEntry.clock): a store the player never sees has no amount 
 cause (api/contract/endpoints.txt, "Line causes"; docs/decisions/principles.md, "Progress is stated, never hinted")."""
 import pytest
 
-from ashfall_app.api.content_models import Content
-from ashfall_app.api.decision_models import AtLeast, AtMost, StoreValue
-from ashfall_app.api.line_causes import line_infos
-from ashfall_app.api.line_models import LineCause, WhenCause
+from ashfall_app.api.world.content_models import Content
+from ashfall_app.api.goals.decision_models import AtLeast, AtMost, StoreValue
+from ashfall_app.api.world.line_causes import line_infos
+from ashfall_app.api.world.line_models import LineCause, WhenCause
 from ashfall_app.api.service import Game
 from ashfall_app.opening.face_checks import shown_stores, timed_stores
 from ashfall_app.opening.schema import Opening

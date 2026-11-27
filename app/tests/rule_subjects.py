@@ -13,7 +13,7 @@ Problems name the subject and the minute of play only (CLAUDE.md, "Never spoil t
 from collections.abc import Iterable
 from functools import cache
 
-from ashfall_app.api import content_models as cm
+from ashfall_app.api.world import content_models as cm
 from ashfall_app.api import convert
 from ashfall_app.api import models as w
 from ashfall_app.engine import Save, View

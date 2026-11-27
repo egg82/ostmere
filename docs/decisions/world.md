@@ -95,7 +95,7 @@ How the chronicle stands today, moved from its row in `systems.md`. The unwrap c
   sees reads as the time of day it marks ("after dark", "at first light"), from the store's part of the day
   (`StoreEntry.clock`), the same words a card waiting on it uses; a store the player never sees with no part of the day
   gives no cause, never an amount ("20 day"; `app/tests/opening/test_cause_stores.py`). The cause is served beside the line's kind
-  (`app/ashfall_app/api/line_causes.py`; `app/ashfall_app/api/contract/endpoints.txt`, "Line causes"), read from where the
+  (`app/ashfall_app/api/world/line_causes.py`; `app/ashfall_app/api/contract/endpoints.txt`, "Line causes"), read from where the
   content authors the key, and never parsed from the line. A key is written in one place, or by several levels of one
   skill (a phase's pool), whose cause is the skill alone since the key cannot say which level; any other sharing
   fails the content's load. A rule's entry takes the store's level when it came on or let go; a fight's line from a

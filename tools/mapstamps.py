@@ -35,7 +35,7 @@ FOLDERS = {
     "forest": "Trees/Forest",
     "tree": "Trees/Individual Trees",
 }
-"""Each stamp kind (api/map_models.py, Stamp) and the pack's folder its variants come from."""
+"""Each stamp kind (api/world/map_models.py, Stamp) and the pack's folder its variants come from."""
 
 
 def made(src: Path) -> Image.Image:
