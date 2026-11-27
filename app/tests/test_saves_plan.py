@@ -29,6 +29,24 @@ def with_chapters(extra: int) -> Plan:
     return plan(table, {r: [*c, *added] for r, c in chains.items()}, [*reb, *added], [*reads, *added])
 
 
+def with_measured_chapters(extra: int) -> Plan:
+    """Today's plan with `extra` chapters planted after the last, each with the rows a chapter ships: the costliest measured
+    chapter's end per route, rebased save and readings row."""
+    table, chains, reb, reads = today_inputs()
+    grown = copy.deepcopy(table)
+    added = [f"{NEW}{i}" for i in range(extra)]
+    for c in added:
+        for by in grown["ends"].values():
+            by[c] = max(by.values())
+        grown["rebased"][c] = max(table["rebased"].values())
+        grown["readings"][c] = copy.deepcopy(max(table["readings"].values(), key=lambda r: r["setup_s"] + sum(r["steps_s"])))
+    return plan(grown, {r: [*c, *added] for r, c in chains.items()}, [*reb, *added], [*reads, *added])
+
+
+def over_target(p: Plan) -> set[str]:
+    return {part for part, s in p.jobs() if s > saves_plan.TARGET_S}
+
+
 def test_every_planned_job_is_predicted_within_its_cap_less_the_margin():
     found = saves_plan.today()
     assert len(found.jobs()) > 10, "the plan holds the links, rebased groups and readings parts"
@@ -50,7 +68,10 @@ def test_the_check_sees_a_job_over_the_target_and_chains_over_the_ranks():
 
 
 def test_a_chapter_added_re_splits_the_plan_and_every_job_still_fits():
-    base, grown = saves_plan.today(), with_chapters(6)
+    """Chapters added with their rows (test_today_every_chapter_is_measured... holds every chapter to one): one with no row
+    is planned at the unmeasured figures, which need not fit a job (the test below)."""
+    base, grown = saves_plan.today(), with_measured_chapters(6)
+    assert grown.estimated == ()
     assert problems(grown) == []
     assert len(grown.links) > len(base.links) or grown.ranks() > base.ranks() or len(grown.rebased) > len(base.rebased)
     assert len(grown.rebased) > len(base.rebased) and len(grown.readings) > len(base.readings)
@@ -72,6 +93,19 @@ def test_a_chapter_with_no_measurement_is_planned_at_the_unmeasured_figure_and_n
     assert {f"rebased:{NEW}0", f"readings:{NEW}0"} <= set(found.estimated)
     base = saves_plan.today()
     assert sum(s for _, s in found.jobs()) > sum(s for _, s in base.jobs()), "an unmeasured chapter is never free"
+
+
+def test_a_job_a_chapter_with_no_row_pushes_over_the_target_is_reported_not_assumed_to_fit():
+    found = with_chapters(1)
+    assert f"readings:{NEW}0" in found.estimated
+    assert {line.split(" ")[0] for line in problems(found) if "target" in line} == over_target(found)
+    table, chains, reb, reads = today_inputs()
+    dear = copy.deepcopy(table)
+    dear["unmeasured"]["readings"]["steps_s"] = [saves_plan.TARGET_S]
+    planted = plan(dear, chains, reb, [*reads, f"{NEW}0"])
+    mine = {r.part for r in planted.readings if any(span[0] == f"{NEW}0" for span in r.spans)}
+    assert mine & over_target(planted), "the control: an unmeasured step as dear as a whole job"
+    assert mine & over_target(planted) <= {line.split(" ")[0] for line in problems(planted)}
 
 
 def test_today_every_chapter_is_measured_and_the_table_names_no_chapter_the_code_lacks():
