@@ -31,9 +31,9 @@ SITS_APART = (230, 170)
 """Where the man sits, left of the gap fire, away from them."""
 HUT_WORK = (416, 170)
 """Where the hut is worked from: its left, facing it."""
-BY_FIRE = {"woman": (262, 311), "husband": (384, 310), "brother": (410, 308)}
+BY_FIRE = {"woman": (262, 311), "husband": (378, 310), "brother": (418, 308)}
 """The three at the fire: her on its near side with her back to us, the men past the stool."""
-CHILD_BY_FIRE = (281, 311)
+CHILD_BY_FIRE = (294, 311)
 LIES = (108, 158)
 """His bedroll's top-left: the far side of the camp from them, under the rack, above the larder."""
 N7_GUARD = (WATCH[0] - 3.3 * T, WATCH[1] + 1.4 * T)

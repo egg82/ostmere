@@ -88,7 +88,7 @@ def _check_condition(label: str, cond: str | None) -> None:
     for term in (cond or "always").split("|"):
         for atom in term.split("&"):
             kind = atom.partition(":")[0]
-            if kind not in KINDS or (kind not in ("always", "dark") and ":" not in atom):
+            if kind not in KINDS or (kind not in ("always", "dark", "day") and ":" not in atom):
                 raise ValueError(f"{label}: unknown condition {atom!r}")
 
 
