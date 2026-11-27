@@ -206,12 +206,12 @@ existed; decoding supplies the empty default."""
 
 
 _OMITTED_AT_DEFAULT: dict[tuple[str, str], object] = {
+    ("ThreatDef", "members"): 1, ("FightDef", "chained"): None, ("CardDef", "chain"): None,
     ("Mix", "layer"): MixLayer.HANDS, ("SkillState", "phase"): FIRST_PHASE, ("Order", "below_next"): False,
     ("AtLeast", "value_of_cap"): False, ("AtLeast", "release_of_cap"): False,
     ("AtMost", "value_of_cap"): False, ("AtMost", "release_of_cap"): False,
     ("LaneDef", "pooled"): False, ("LaneDef", "group"): None, ("Join", "own_split"): True,
-    ("LaneState", "own_split"): True, ("ThreatDef", "members"): 1, ("FightDef", "chained"): None,
-    ("CardDef", "chain"): None}
+    ("LaneState", "own_split"): True}
 """Fields left out of the encoding while at their default, so a save or a logged verb written before the field existed
 keeps its text and decodes with it."""
 
