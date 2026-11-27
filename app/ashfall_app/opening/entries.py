@@ -4,6 +4,7 @@ from typing import Literal
 
 from pydantic import Field, model_validator
 
+from .chain_entries import ChainEntry
 from .entry_base import Entry
 from .move_entries import CastEntry, JoinEntry, LeaveEntry, MarkEntry
 from .site_entries import SiteEntry
@@ -63,6 +64,7 @@ class FightEntry(Entry):
     lost: str
     fought: str | None = None
     fights_per_hour: int = Field(default=0, ge=0)
+    chained: str | None = None
     loses: list[ItemAmount] = []
     wounds: list[ItemAmount] = []
     won_line_keys: list[str] = []
@@ -122,9 +124,9 @@ class ConditionEntry(Entry):
 
 class ModifierEntry(Entry):
     """target: "rate" (runner + flow + store), "work" (card), "lane" (lane), "cap" (a store's cap, raised only), or
-    "side" or "threat" (a strength; a threat's only in a trigger's outcome). amount_bp as in the engine."""
+    "side" or "threat" (a strength; a threat's only in a trigger's outcome), "chain" (a card's reach). amount_bp as in the engine."""
 
-    target: Literal["rate", "work", "lane", "cap", "side", "threat"]
+    target: Literal["rate", "work", "lane", "cap", "side", "threat", "chain"]
     id: str
     flow: Literal["make", "cost", "xp"] | None = None
     store: str | None = None
@@ -232,6 +234,7 @@ class CardEntry(Entry):
     finished: OutcomeEntry = OutcomeEntry()
     line_keys: list[str] = []
     fight: FightEntry | None = None
+    chain: ChainEntry | None = None
     while_running: list[WhileRunningEntry] = []
     stake: Literal["side", "speed", "reach"] | None = None
     """What a card that takes stores feeds: "side", a fight's side it holds an entry on while it runs (a later chapter

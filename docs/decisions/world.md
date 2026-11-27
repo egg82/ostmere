@@ -25,7 +25,9 @@ A Tolkien front-of-the-book map: where you are and where things are relative to 
 here). Two scales: the world map reveals as you expand and explore, names appearing as you reach them; the town map
 fills in as you build. Built from engraved stamps (Widman, `docs/research/art/art-sourcing.md`) placed by code: stamps
 never overlap and never repeat until the pool is used, and labels go in clear space beside their place with a dark
-halo, never over another stamp.
+halo, never over another stamp. The one overlap is authored: a place declared `over` another is drawn as a small stamp
+on that place's stamp. A place can be shown unnamed and take its name when a later unlock is reached
+(`labelled_after`). Both are fields on the place, never matched on ids.
 
 ## Art: a drawn, living town over bars
 

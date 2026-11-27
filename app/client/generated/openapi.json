@@ -2507,6 +2507,16 @@
               }
             ]
           },
+          "chain": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ChainInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "replaced_by": {
             "anyOf": [
               {
@@ -2538,6 +2548,7 @@
           "step_needs",
           "glows",
           "fight",
+          "chain",
           "replaced_by"
         ],
         "title": "CardInfo"
@@ -2617,6 +2628,51 @@
           "feature"
         ],
         "title": "CastLane"
+      },
+      "Chain": {
+        "properties": {
+          "card": {
+            "type": "string",
+            "title": "Card"
+          },
+          "runner": {
+            "type": "string",
+            "title": "Runner"
+          },
+          "up_to": {
+            "$ref": "#/components/schemas/Strength"
+          }
+        },
+        "type": "object",
+        "required": [
+          "card",
+          "runner",
+          "up_to"
+        ],
+        "title": "Chain",
+        "description": "One unlocked card with a chain that is not completed, now (contract/spells.txt, \"SPELLS\")."
+      },
+      "ChainInfo": {
+        "properties": {
+          "runner": {
+            "type": "string",
+            "title": "Runner"
+          },
+          "link_line_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Link Line Keys"
+          }
+        },
+        "type": "object",
+        "required": [
+          "runner",
+          "link_line_keys"
+        ],
+        "title": "ChainInfo",
+        "description": "A card's chain: the standing fight whose due fights it resolves (its threat always a group), and the keys its\nlink lines use: link i, from 1, reads link_line_keys[min(i, n) - 1] (contract/spells.txt, \"SPELLS\")."
       },
       "Change": {
         "properties": {
@@ -3537,6 +3593,10 @@
           "lost": {
             "type": "integer",
             "title": "Lost"
+          },
+          "chained": {
+            "type": "integer",
+            "title": "Chained"
           }
         },
         "type": "object",
@@ -3548,7 +3608,8 @@
           "threat_strength",
           "loss_bp",
           "fought",
-          "lost"
+          "lost",
+          "chained"
         ],
         "title": "Fight",
         "description": "One unlocked fight card or standing action, now (contract/fights.txt, \"FIGHTS\")."
@@ -5843,6 +5904,27 @@
               }
             ],
             "title": "Label Key"
+          },
+          "labelled_after": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Unlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "over": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Over"
           }
         },
         "type": "object",
@@ -5852,7 +5934,9 @@
           "east",
           "north",
           "reveal",
-          "label_key"
+          "label_key",
+          "labelled_after",
+          "over"
         ],
         "title": "PlaceInfo",
         "description": "A place on the world map, in content order: drawn once view.unlocked holds `reveal`, at whole cells east and north\nof the town (which stands at 0, 0)."
@@ -7469,12 +7553,17 @@
           "label_key": {
             "type": "string",
             "title": "Label Key"
+          },
+          "members": {
+            "type": "integer",
+            "title": "Members"
           }
         },
         "type": "object",
         "required": [
           "threat",
-          "label_key"
+          "label_key",
+          "members"
         ],
         "title": "ThreatInfo"
       },
@@ -7881,6 +7970,13 @@
             "type": "array",
             "title": "Fights"
           },
+          "chains": {
+            "items": {
+              "$ref": "#/components/schemas/Chain"
+            },
+            "type": "array",
+            "title": "Chains"
+          },
           "goals": {
             "items": {
               "$ref": "#/components/schemas/Goal"
@@ -7942,6 +8038,7 @@
           "queue",
           "offers",
           "fights",
+          "chains",
           "goals",
           "goal_rows",
           "store_rows",

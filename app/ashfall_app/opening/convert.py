@@ -3,7 +3,7 @@ from dataclasses import replace
 from typing import TYPE_CHECKING
 
 from ..engine import (
-    HANDS, ActionId, FightDef, WhileRunning, HeldSpeed, SideDef, SideId, ThreatDef, ThreatId, AnswerDef, AnswerId,
+    HANDS, ActionId, ChainDef, FightDef, WhileRunning, HeldSpeed, SideDef, SideId, ThreatDef, ThreatId, AnswerDef, AnswerId,
     KindId, OfferDef, OfferId, RoleId, Amount, AtLeast, CapRaise, CardDef, CardId, ChipDef, ChipId, FeatureId, Flow,
     LaneDef, LaneId, LineKey, Outcome, PacingCurve, RuleInstall, Rules, SkillDef, SkillId, StandingDef, StoreDef,
     StoreId, StoreValue, TriggerDef, TriggerId, Unlock, Unlocked, UnlockKind,
@@ -36,7 +36,7 @@ def build_rules(o: "Opening") -> Rules:
         skills=tuple(SkillDef(SkillId(s.id)) for s in o.skills),
         standing=tuple(_standing(a) for a in o.standing),
         sides=tuple(SideDef(SideId(s.id), s.base) for s in o.sides),
-        threats=tuple(ThreatDef(ThreatId(t.id), t.base) for t in o.threats),
+        threats=tuple(ThreatDef(ThreatId(t.id), t.base, t.members) for t in o.threats),
         curve=PacingCurve(tuple(units(n) for n in o.curve_items)),
         lanes=tuple(LaneDef(LaneId(x.id), x.ruled, x.pooled, None if x.group is None else LaneId(x.group)) for x in o.lanes),
         cards=tuple(_with_camp(with_lifts(_card(c, cards), lifts), o.camp, ruled) for c in o.cards),
@@ -159,7 +159,8 @@ def _fight(f: "FightEntry | None") -> FightDef | None:
     if f is None:
         return None
     return FightDef(SideId(f.side), ThreatId(f.threat), StoreId(f.lost), None if f.fought is None else StoreId(f.fought),
-                    per_hour(f.fights_per_hour), tuple(amount(a) for a in f.loses), tuple(amount(a) for a in f.wounds))
+                    per_hour(f.fights_per_hour), tuple(amount(a) for a in f.loses), tuple(amount(a) for a in f.wounds),
+                    None if f.chained is None else StoreId(f.chained))
 
 
 def _card(c: "CardEntry", cards: set[str]) -> CardDef:
@@ -170,6 +171,8 @@ def _card(c: "CardEntry", cards: set[str]) -> CardDef:
         outcome=_outcome(c.outcome, cards), cap=c.cap, finished=_outcome(c.finished, cards),
         lines=tuple(LineKey(k) for k in c.line_keys),
         fight=_fight(c.fight),
+        chain=None if c.chain is None else ChainDef(ActionId(c.chain.runner), c.chain.reach,
+                                                    tuple(LineKey(k) for k in c.chain.link_line_keys)),
         glows=c.glows, while_running=_held(c.while_running),
         drains=tuple(amount(a) for a in c.drains))
 

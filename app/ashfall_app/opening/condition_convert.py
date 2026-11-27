@@ -2,7 +2,7 @@
 from typing import TYPE_CHECKING
 
 from ..engine import (
-    HANDS, ActionId, AfterTime, AtLeast, AtMost, CardCount, CardId, Condition, FlowKind, LaneId, LaneRules, LaneSpeed,
+    HANDS, ActionId, AfterTime, AtLeast, AtMost, CardCount, CardId, ChainReach, Condition, FlowKind, LaneId, LaneRules, LaneSpeed,
     Modifier, ModifierKind, RateRef, Runner, Running, SideId, SideStrength, SkillId, SkillLevel, SourceId, StoreCap,
     StoreId, StoreValue, Subject, Target, ThreatId, ThreatStrength, Unlock, Unlocked, UnlockKind, WorkRef, units,
 )
@@ -29,6 +29,8 @@ def modifier(m: "ModifierEntry", cards: set[str]) -> Modifier:
         target = SideStrength(SideId(m.id))
     elif m.target == "threat":
         target = ThreatStrength(ThreatId(m.id))
+    elif m.target == "chain":
+        target = ChainReach(CardId(m.id))
     else:
         target = LaneSpeed(LaneId(HANDS if m.id == HANDS else m.id))
     return Modifier(target, ModifierKind(m.kind), m.amount_bp, SourceId(m.source))

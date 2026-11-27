@@ -56,6 +56,7 @@ orders = [{ tap_card = "n2_mark_road", first = true }]
 # A36 on the hands, A37 on his lane.
 [[cards]]
 id = "mark_road"
+site = { no_site = "the old road lies up the valley outside the palisade, above where a figure may stand in the scene; its layers show the cut, no one stands at it" }
 presentation = "narrative"
 label_key = "c_mark_road"
 work_s = 900
@@ -63,6 +64,7 @@ cap = 1
 
 [[cards]]
 id = "n2_mark_road"
+site = { no_site = "the old road lies up the valley outside the palisade, above where a figure may stand in the scene; its layers show the cut, no one stands at it" }
 twin_of = "mark_road"
 lane = "n2"
 presentation = "narrative"
@@ -149,6 +151,7 @@ outcome = { stores = [{ store = "cleared", items = 1 }] }
 # (SL26's), cord's sink once the hall is up. Stages 7, 8 and 10 carry day nineteen's beats.
 [[cards]]
 id = "cut_road"
+site = { no_site = "the old road lies up the valley outside the palisade, above where a figure may stand in the scene; its layers show the cut, no one stands at it" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_cut_road"
@@ -317,6 +320,7 @@ hand = "ink"
 # A35, a first-of-its-kind step: shown with T5, ready at Arcana 13.
 [[cards]]
 id = "try_stone"
+site = { layer = "beds_3" }
 only_player = "magic"
 presentation = "narrative"
 label_key = "c_try_stone"
@@ -368,6 +372,7 @@ levels = [
 # both would pause until the rime's cap, and this one would hold the head of the queue meanwhile.
 [[cards]]
 id = "warm_beds"
+site = { layer = "beds_3" }
 only_player = "magic"
 presentation = "action"
 label_key = "c_warm_beds"
@@ -562,6 +567,7 @@ whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no
 
 [[cards]]
 id = "cut_steps"
+site = { no_site = "worked at the warm stream, which lies on the low ground behind the wall stub, off the scene; the scene poses its work at the gap's mouth, the way down to it" }
 only_player = "story"
 presentation = "action"
 label_key = "c_cut_steps"
@@ -605,6 +611,7 @@ whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no
 
 [[cards]]
 id = "smoke_hole"
+site = { layer = "hall_4" }
 only_player = "story"
 presentation = "action"
 label_key = "c_smoke_hole"
@@ -647,6 +654,7 @@ whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no
 
 [[cards]]
 id = "dig_beam"
+site = { no_site = "beams are pulled out of the ruin's fallen roof under the far wall stub, which is backdrop and not a layer of its own" }
 only_player = "story"
 presentation = "action"
 label_key = "c_dig_beam"
@@ -689,6 +697,7 @@ whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no
 
 [[cards]]
 id = "reset_snares"
+site = { layer = "snare_4" }
 only_player = "story"
 presentation = "action"
 label_key = "c_reset_snares"
@@ -731,6 +740,7 @@ whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no
 
 [[cards]]
 id = "take_child"
+site = { no_site = "a walk up the ridge, which is far backdrop and past the camp; nothing in the scene stands there" }
 only_player = "story"
 presentation = "action"
 label_key = "c_take_child"
@@ -773,6 +783,7 @@ whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no
 
 [[cards]]
 id = "keep_count"
+site = { layer = "stew_pot" }
 only_player = "story"
 presentation = "action"
 label_key = "c_keep_count"

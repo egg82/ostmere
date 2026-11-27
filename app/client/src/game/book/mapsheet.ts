@@ -21,6 +21,13 @@ export function revealed(catalog: Catalog, view: View): Place[] {
   return catalog.content.places.filter((p) => catalog.unlocked(view, p.reveal.category, p.reveal.id));
 }
 
+/** The name `p` is shown under: its label_key, once any labelled_after it names is held; null before then and for a place with no
+ * name. The place is drawn and listed as soon as it is revealed; only the name waits. */
+export function labelKey(catalog: Catalog, view: View, p: Place): string | null {
+  const after = p.labelled_after;
+  return p.label_key !== null && (after === null || catalog.unlocked(view, after.category, after.id)) ? p.label_key : null;
+}
+
 /** Each place's art (HOME for the town), by place id; a kind the manifest has no art for draws nothing. Every place of
  * the content is walked, revealed or not: the i-th draw of a kind is its bag's (i mod n)-th, the bag shuffled afresh
  * each time it is used up. */

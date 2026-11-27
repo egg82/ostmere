@@ -248,6 +248,8 @@ export const UI = {
   fightSince: "ui.fight.since", // "{fought}{won}{lost}{runner}": a window past three fights, in the arrival queue
   fightWon: "ui.fight.won", // "{runner}": one fight in the arrival queue
   fightLost: "ui.fight.lost", // "{runner}"
+  chainUpTo: "ui.chain.up_to", // "{n}": a working's reach on its face
+  chainBase: "ui.chain.base", // the base row of a reach's sources
   catchingUp: "ui.catching_up", // "{percent}": how far through the time away the server has caught up
 } as const;
 

@@ -201,6 +201,11 @@ Stores and caps: finite everywhere. Past a cap, production is lost on purpose; w
 work that takes stores (trips, comforts, arrivals: Cards and Offers), sized so a day's absence loses at most half
 (`docs/design/banked-time-plan.md`; `engine/design/`, "BANKED TIME").
 
+Finite supply (`app/ashfall_app/opening/finite_checks.py`, #438): a store is finite when every maker of it stops on a
+finite pool; one made through an uncapped maker (a filler card stopping on a town store an uncapped gatherer makes) is
+not. Only tally stores count as progress needs, so a gate on a plain store's value is never checked: a store a gate
+reads must be declared a tally (fixture: `app/tests/supply/`).
+
 Pacing curve: an A/B target, the simulator running two curves side by side. One curve for every skill, its steps never
 shrinking past the shipped ones; a level's pay speeds its skill's work (more made, the same XP), so time per level
 grows with the curve and the loop stays tame (`app/tests/dayone/growth.py`).

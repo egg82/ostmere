@@ -79,7 +79,15 @@ class ThreatStrength:
     threat: ThreatId
 
 
-type Target = RateRef | WorkRef | LaneSpeed | StoreCap | SideStrength | ThreatStrength
+@dataclass(frozen=True)
+class ChainReach:
+    """How far a card's chain reaches (design/spells.txt, "SPELLS"): ChainDef.reach under the entries aimed here, as for a
+    StoreCap, rounded down. Only raises (validation). Not a rate."""
+
+    card: CardId
+
+
+type Target = RateRef | WorkRef | LaneSpeed | StoreCap | SideStrength | ThreatStrength | ChainReach
 
 
 class ModifierKind(Enum):
@@ -116,6 +124,11 @@ def total_change_bp(stack: tuple[Modifier, ...], target: Target) -> int:
 def lowers_cap(m: Modifier) -> bool:
     """An entry aimed at a StoreCap that would lower it: add_bp below 0, mul_bp below BP (design/core.txt, "Store caps")."""
     return isinstance(m.target, StoreCap) and m.amount_bp < (BP if m.kind is ModifierKind.MUL_BP else 0)
+
+
+def lowers_reach(m: Modifier) -> bool:
+    """An entry aimed at a ChainReach that would lower it: add_bp below 0, mul_bp below BP."""
+    return isinstance(m.target, ChainReach) and m.amount_bp < (BP if m.kind is ModifierKind.MUL_BP else 0)
 
 
 def lowers_threat(m: Modifier) -> bool:

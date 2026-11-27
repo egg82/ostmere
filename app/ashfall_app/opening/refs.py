@@ -178,7 +178,7 @@ def _check_modifier(ids: dict[str, list[str]], where: str, m: "ModifierEntry") -
         return
     if m.flow is not None or m.store is not None:
         fail(where, f"a {m.target} modifier takes no flow or store")
-    if m.target == "work":
+    if m.target in ("work", "chain"):
         need(where, "card", m.id, ids["card"])
     elif m.target == "cap":
         need(where, "store", m.id, ids["store"])

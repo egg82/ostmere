@@ -6,7 +6,7 @@ MAP
   What stands where inside the town is not this section.
 
   In the chapter files:
-    [[places]]          id, stamp, at, reveal, label_key
+    [[places]]          id, stamp, at, reveal, label_key, labelled_after, over
       id                a PlaceId, a content id like any other, unique among places
       stamp             the kind of stamp drawn for it, a closed set the page owns art for: "village" | "town" |
                         "city" | "fort" | "stronghold" | "hill_village" | "crossing" | "mountain" | "range" |
@@ -18,17 +18,26 @@ MAP
                         one of feature, card, skill, store, chip, action (some outcome or the start adds it) or
                         entry (a journal page, which its first note writes).
       label_key         optional: the place's name, a text key; absent for a place drawn unnamed (a forest, a range).
+      labelled_after    optional, with a label_key: {unlock_kind, id}, a reveal's kinds. The place is drawn and listed
+                        as soon as it is revealed but unnamed, and takes its label_key once this unlock is held.
+      over              optional: the id of another place on the same cell. The place is drawn as a small stamp on that
+                        place's stamp (one place over each at most); the only way two places hold one cell. Several
+                        places may share a reveal, so one outcome reveals them together.
 
   The opening's checks (each naming the place, never text):
     - a place with no reveal, or a stamp outside the set: refused by the shape.
     - a reveal of another unlock kind; a reveal naming an id its kind does not know; a reveal of a kind other than
       entry that no outcome and not the start adds (nothing would ever reveal it): refused, naming the place.
-    - two places on one cell, in one chapter or across chapters, or a place on the town's cell [0, 0]: refused,
-      naming both places (the one place).
+    - two places on one cell, in one chapter or across chapters, or a place on the town's cell [0, 0], unless one is
+      `over` the other: refused, naming the place that came second.
+    - a labelled_after with no label_key, of a kind outside a reveal's, naming an unknown id, or of a kind other than
+      entry that nothing adds: refused, naming the place.
+    - an over naming no place, a place on another cell, a place that is itself over, or one a second place already sits
+      on; a place cannot be over the town: refused, naming the place.
     - an at outside the reach: refused.
     - a label_key that is not in text: refused by the text checks.
 
-  Content.places: [PlaceInfo {place, stamp, east, north, reveal: Unlock, label_key}], every place in content order
+  Content.places: [PlaceInfo {place, stamp, east, north, reveal: Unlock, label_key, labelled_after: Unlock | null, over: str | null}], every place in content order
   (chapters in load order); empty when no chapter declares one. stamp is a closed enum, Stamp. label_key is null for
   an unnamed place.
 
@@ -48,6 +57,10 @@ MAP
     over every place of the kind in content order, revealed or not, so a place keeps its art as others are revealed,
     and no variant repeats on a sheet until every variant of the kind is used. The town is a village: the first draw
     of that bag is its art, the village places' after it.
+  - draw a place with an `over` as a smaller stamp on the upper right of that place's stamp, on a patch of the sheet's
+    ground that keeps the two engravings apart; the pair is the one crossing of stamp boxes allowed, and the stamp beneath
+    is drawn no smaller for it. A place's label is its label_key only once its labelled_after, if any, is in
+    view.unlocked; before that it is drawn and listed unnamed, so no row, label or tap names it.
   - put each label in clear space beside its place, with a dark halo: the first of the spots tried (right, left,
     below, above, then the same further out) whose box crosses no stamp, no other label and not the sheet's edge. A
     label that finds no such spot is not drawn on the sheet.
@@ -60,7 +73,7 @@ MAP
     stamps undrawn (the labels and the list stay) and is reported to /api/client-errors once.
   THE CLIENT MAY NOT:
   - draw, label or list a place view.unlocked does not reveal, or say how many places are still to find.
-  - draw two stamps whose boxes cross, or a label over a stamp or another label.
+  - draw two stamps whose boxes cross (but an `over` and its place), or a label over a stamp or another label.
   - send anything because of the page: opening it, and tapping rows, cause no decision, advance, dry run or
     presentation write (the lesson's own keep aside).
   - put a place's name only on hover: every label drawn is text on the sheet or in the list.
@@ -105,4 +118,10 @@ MAP
      the browser set to prefer light (the game's one dark theme) and not differing; no name is reachable only by
      hover.
   9. The stamps made by tools/mapstamps.py are looked at, on the sheet, before they ship.
+  10. A fixture place with a labelled_after is served with it and listed unnamed until that unlock is in view.unlocked,
+      then named, and unnamed again for a view without it; a place without the field is named as soon as it is revealed.
+      Planted, each fails the load naming the place: a labelled_after of kind offer, of an unknown feature, of a feature
+      nothing unlocks, with no label_key; an over naming no place, a place on another cell, a place itself over, a second
+      place over one. A fixture outcome revealing several places at once, one over an existing place, serves and lays out
+      all of them: the over stamp inside the sheet and on its place's stamp, the stamp beneath no smaller for it.
 

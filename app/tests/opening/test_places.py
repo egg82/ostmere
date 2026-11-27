@@ -17,6 +17,8 @@ from tests.shipped_ruleset import ShippedRuleset
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "places.toml"
 TEXT = FIXTURE.read_text()
 HAMLET_AT = "at = [2, -1]"
+TOWER_LABEL = 'labelled_after = { unlock_kind = "feature", id = "m_bridge" }'
+BANNER_OVER = 'over = "m_hamlet"'
 WOODS_REVEAL = 'reveal = { unlock_kind = "card", id = "m_scout" }'
 
 
@@ -47,9 +49,15 @@ def test_the_fixture_is_served_in_content_order_with_each_field():
     places = game_of(FIXTURE).content().places
     assert places == [
         PlaceInfo(place="m_hamlet", stamp=Stamp.VILLAGE, east=2, north=-1, reveal=Unlock(category=UnlockKind.FEATURE, id="m_road"),
-                  label_key="m_p_hamlet"),
+                  label_key="m_p_hamlet", labelled_after=None, over=None),
         PlaceInfo(place="m_woods", stamp=Stamp.FOREST, east=-3, north=4, reveal=Unlock(category=UnlockKind.CARD, id="m_scout"),
-                  label_key=None),
+                  label_key=None, labelled_after=None, over=None),
+        PlaceInfo(place="m_tower", stamp=Stamp.FORT, east=4, north=3, reveal=Unlock(category=UnlockKind.FEATURE, id="m_road"),
+                  label_key="m_p_tower", labelled_after=Unlock(category=UnlockKind.FEATURE, id="m_bridge"), over=None),
+        PlaceInfo(place="m_ridge", stamp=Stamp.MOUNTAIN, east=-5, north=-3, reveal=Unlock(category=UnlockKind.FEATURE, id="m_far"),
+                  label_key="m_p_ridge", labelled_after=None, over=None),
+        PlaceInfo(place="m_banner", stamp=Stamp.FORT, east=2, north=-1, reveal=Unlock(category=UnlockKind.FEATURE, id="m_far"),
+                  label_key=None, labelled_after=None, over="m_hamlet"),
     ]
 
 
@@ -66,8 +74,23 @@ PLANTS = {
     "a place on the town's cell": (("at = [-3, 4]", "at = [0, 0]"),),
     "an at past the reach": (("at = [-3, 4]", "at = [-3, 9]"),),
     "a label_key not in text": ((WOODS_REVEAL, WOODS_REVEAL + '\nlabel_key = "m_p_unwritten"'),),
+    "a labelled_after of kind offer": ((TOWER_LABEL, 'labelled_after = { unlock_kind = "offer", id = "m_scout" }'),),
+    "a labelled_after of an unknown feature": ((TOWER_LABEL, 'labelled_after = { unlock_kind = "feature", id = "m_nowhere" }'),),
+    "a labelled_after nothing unlocks": ((TOWER_LABEL, 'labelled_after = { unlock_kind = "feature", id = "m_never" }'),
+                                         ('[[features]]\nid = "m_road"\n', '[[features]]\nid = "m_road"\n\n[[features]]\nid = "m_never"\n')),
+    "a labelled_after with no label_key": (('label_key = "m_p_tower"\n', ""),),
+    "an over naming no place": ((BANNER_OVER, 'over = "m_nowhere"'),),
+    "an over on another cell": ((BANNER_OVER, 'over = "m_woods"'),),
+    "an over naming a place that is itself over": ((BANNER_OVER, 'over = "m_banner"'),),
+    "two places over one": ((BANNER_OVER, BANNER_OVER + '\n[[places]]\nid = "m_flag"\nstamp = "tree"\nat = [2, -1]\n'
+                            'reveal = { unlock_kind = "feature", id = "m_far" }\nover = "m_hamlet"'),),
+    "a shared cell without over": ((BANNER_OVER + "\n", ""),),
 }
-NAMED = {"no reveal": "reveal", "a stamp outside the set": "stamp"}
+NAMED = {"no reveal": "reveal", "a stamp outside the set": "stamp", "a labelled_after of kind offer": "place m_tower",
+         "a labelled_after of an unknown feature": "place m_tower", "a labelled_after nothing unlocks": "place m_tower",
+         "a labelled_after with no label_key": "place m_tower", "an over naming no place": "place m_banner",
+         "an over on another cell": "place m_banner", "an over naming a place that is itself over": "place m_banner",
+         "two places over one": "place m_flag", "a shared cell without over": "place m_banner"}
 
 
 @pytest.mark.parametrize("plant", PLANTS)
@@ -90,7 +113,7 @@ def test_a_reveal_by_a_journal_entry_loads(tmp_path: Path):
                    '[[notes]]\nid = "m_page_note"\nentry = "m_page"\ngate = { test = "after_time", value = 5 }\n'
                    '[[places]]\nid = "m_ford"\nstamp = "crossing"\nat = [1, 1]\nreveal = { unlock_kind = "entry", id = "m_page" }\n'
                    '[text]\nm_page_title = "A page"\nm_page_note = "A ford."\n')
-    assert [p.id for p in load_opening(OPENING, (FIXTURE, second)).places] == ["m_hamlet", "m_woods", "m_ford"]
+    assert [p.id for p in load_opening(OPENING, (FIXTURE, second)).places] == ["m_hamlet", "m_woods", "m_tower", "m_ridge", "m_banner", "m_ford"]
 
 
 # ---------- 3: the shipped content's places ----------

@@ -6,13 +6,13 @@ from .counts import greyed, is_retired
 from .groups import crewed, present
 from .ids import HANDS, CardId, LaneId, MixId, StoreId
 from .index import index
-from .memo import SaveMemo
+from .memo import KeyedMemo, SaveMemo
 from .mixes import CardShare, Mix, SpentShare, flatten_shares
 from .modifiers import Run, RunKind
 from .plan import keep_mix_ids, running_mix_id, running_town_mix_id
 from .requires import first_unmet
 from .rules import Rules
-from .spent import keep_spent, spend, yielded
+from .spent import keep_spent, spend, spent_stores, yielded
 from .state import Save
 
 
@@ -82,12 +82,36 @@ def _mix_entries(save: Save, rules: Rules) -> tuple[Entries, Gains]:
     return yielded(entries, lambda _: HANDS)
 
 
+_TOWN_BUILT: KeyedMemo[tuple[Entries, Gains]] = KeyedMemo()
+"""_town_entries kept across saves (see _town_key): an advance's instants mostly leave all of its inputs as they were."""
+
+
 def _town_entries(save: Save, rules: Rules) -> tuple[Entries, Gains]:
     mix = running_town_mix(save, rules)
     if mix is None:
         return (), {}
+    shares = flatten_shares(save.mixes, mix.id)
+    return _TOWN_BUILT.get((rules, save.unlocked), _town_key(save, rules, shares),
+                           lambda: _town_built(save, rules, mix, shares))
+
+
+def _town_key(save: Save, rules: Rules, shares: tuple[CardShare, ...]) -> tuple[object, ...]:
+    """Everything _town_built reads beyond the rules and the unlock set (the memo's parts, by identity: the joined, left
+    and retired, the maker sets): the running mix's flattened shares (all it reads of save.mixes; its id only asks
+    whether it is greyed, which a town mix, holding no card of the hands, never is); each lane's tap held and own split
+    (busy lanes, crews); who is paused on what; each share's first unmet require (its WAITING run); and, only while a
+    card is paused, the spent stores (read only for a run paused dry)."""
     cards = index(rules).cards
-    shares = present(save, rules, flatten_shares(save.mixes, mix.id))
+    return (shares,
+            tuple((ls.lane, ls.card is not None, ls.own_split) for ls in save.lanes),
+            tuple((p.runner, p.store) for p in save.pauses),
+            tuple(first_unmet(save, rules, cards[s.card]) for s in shares),
+            spent_stores(save, rules) if save.pauses else None)
+
+
+def _town_built(save: Save, rules: Rules, mix: Mix, shares: tuple[CardShare, ...]) -> tuple[Entries, Gains]:
+    cards = index(rules).cards
+    shares = present(save, rules, shares)
     entries = _entries(save, rules, shares, mix.id, lambda card: _busy(save, cards[card].lane))
     return crewed(save, rules, *yielded(entries, lambda card: cards[card].lane))
 
