@@ -221,9 +221,12 @@ start now.
 
 ## Open
 
-- Art, still to test before building on it: movement, a daylight grade, eerie tiles, monsters. Packs to buy if
-  those fall short (research 2026-10-11): Ruined Dungeons ($5, finalbossblues), Inside the Monster's Belly ($5,
-  eldritch), Lich Crusades (Patreon-only, dark characters).
+- Art, tested against the shipped scene. The daylight grade is in (`tools/scene/grades.py`), and beasts from the
+  Monsters pack hold. Gargoyles, skull niches, the catacomb floor and the pink growths sit in the graded palette; the
+  Dark Dimension crystals need a heavier desaturate than the world grade. The pack's stock enemies hold at grain and
+  palette but read as a fantasy party, not eerie, so an eldritch or invented creature needs Inside the Monster's Belly
+  ($5, eldritch). Still unbuilt: movement. The walk frames match the scene's figures; what it takes (paths the client
+  drives, figures sorted by depth, a walkable floor, a from and a to per person) is in issue #31's walking research.
 - Names: the app is **The Breaking of Ostmere** (short form Ostmere; `ostmere.yggdrasil.pub`). Ashfall was
   the name until 2026-10-21 (chosen 2026-10-11 over Afterlight as grimmer; galaxy.click's reviewer read it as a stock
   title). The repo, package and cluster still say ashfall. No subtitle
