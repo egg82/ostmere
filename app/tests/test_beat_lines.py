@@ -1,4 +1,4 @@
-"""A served line says whether it opens a story beat (api/CONTRACT.txt, "Beat lines"): the content's `[beat_lines]`
+"""A served line says whether it opens a story beat (api/contract/endpoints.txt, "Beat lines"): the content's `[beat_lines]`
 decide, never a key's name, and a beat's id is one of content/beats.yaml's."""
 import re
 from pathlib import Path

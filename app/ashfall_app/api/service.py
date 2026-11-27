@@ -80,7 +80,7 @@ class Game:
                             levels(save, rules, v, scene_stores()))
 
     def forecast(self, played: Played, stop: Callable[[], bool]) -> w.ForecastAnswer:
-        """The save's forecast from now (it replays hours of the save, so it has its own call: CONTRACT.txt,
+        """The save's forecast from now (it replays hours of the save, so it has its own call: contract/forecast.txt,
         "Forecast")."""
         save, rules = played.save, self._rs.rules
         shown = tuple(e.StoreId(u.id) for u in save.unlocked if u.kind is e.UnlockKind.STORE)
@@ -193,7 +193,8 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
         line_infos=line_infos(o),
         journal=_journal(o), places=place_infos(o),
         aim_infos=[cm.AimInfo(aim=a.id, text_key=a.text_key,
-                              after=None if a.after is None else convert.unlock(authored.unlock(a.after)))
+                              after=None if a.after is None else convert.unlock(authored.unlock(a.after)),
+                              ends_after=None if a.until is None else convert.unlock(authored.unlock(a.until)))
                    for a in o.aims],
         camp=None if o.camp is None else cm.CampInfo(
             store=o.camp.store, camp_levels=[cm.CampLevel(at=e.units(lv.at_items), pays_key=lv.pays_key, held=lv.held,

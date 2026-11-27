@@ -491,7 +491,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "cook_roots" }] }
 
 # First light on the clock: the morning's first step is on the cards from H1's moment, unready until morning,
 # its countdown the time-driven next beside the levels (never instead of them). The page draws a need on a store the
-# player has never been shown as its countdown alone, with no When ready (docs/design/opening-screen.md, "When ready"):
+# player has never been shown as its countdown alone, with no When ready (docs/design/opening-screen/rules-tab.md, "When ready"):
 # queued, the step would open the snares unseen (the 2 AM test). t_morning's own unlock of the card is then a no-op.
 [[triggers]]
 id = "t_first_light_shown"
@@ -1005,7 +1005,7 @@ offered_after = { unlock_kind = "card", id = "cook_roots" }
 # Labels and lines after the voice pass (content/team/drafts/voice-notes.md); picks in content/team/drafts/selection.md.
 
 # The first line of each story beat, by its id in content/beats.yaml: the page hears a beat open from these, by no
-# key's name (api/CONTRACT.txt, "Beat lines"). One id lists a key per way the beat can be told.
+# key's name (api/contract/endpoints.txt, "Beat lines"). One id lists a key per way the beat can be told.
 [beat_lines]
 H1 = ["l_night_1"]
 H2 = ["l_morning"]

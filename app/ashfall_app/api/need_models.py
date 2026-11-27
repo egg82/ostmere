@@ -30,7 +30,7 @@ class Need(BaseModel):
     """A store a tap of the card needs. quantity: the most its input or any requirement on that store's value asks;
     segment: how much there is, sampled like a ledger line's (served for a locked store too).
     Drawn short while the sample is below quantity; whether the card is ready is still its blocker's to say. gate: drawn
-    in its place while set, the store unnamed (CONTRACT.txt, "Cards"); makers: the cards and standing actions in play
+    in its place while set, the store unnamed (contract/, "Cards"); makers: the cards and standing actions in play
     that make the store; spent: drawn as used up, set while short, nothing in play can make the store again and every
     trigger that grants it has fired."""
 

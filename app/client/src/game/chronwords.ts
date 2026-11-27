@@ -1,5 +1,5 @@
 // The words the chronicle wears: how long the player was away, its filters, how many entries of one a stretch holds,
-// what caused a line (CONTRACT.txt, "Line causes"), worded from the served cause, never from the line, and the "Since
+// what caused a line (contract/endpoints.txt, "Line causes"), worded from the served cause, never from the line, and the "Since
 // you left" chapter's figures as rows (game/chapter.ts). Pure.
 import type { Chapter, Condition, LineCause, View } from "../api/types";
 import type { Catalog } from "./catalog";

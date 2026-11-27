@@ -1,5 +1,5 @@
 // What the page keeps about the player only grows, so a keep sends the page's copy and adopts the merged copy the
-// server answers (api/CONTRACT.txt, AccountPresentation and SavePresentation): another page's keep is seen from the next
+// server answers (api/contract/endpoints.txt, AccountPresentation and SavePresentation): another page's keep is seen from the next
 // keep on, and a keep made while a send was in flight is not lost to its answer. A lesson's keeps go to the save's.
 import type { Account, AccountPresentation, NewSave, SavePresentation } from "../src/api/types";
 import { fixtureContent } from "../fixtures/content";

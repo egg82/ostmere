@@ -1,5 +1,5 @@
 // A card working into full stores (issue 467): it runs on its share (run full) while every store it makes is at its cap,
-// so its work is thrown away; a card that draws a store nothing refills stops instead (Card.full_store, CONTRACT.txt,
+// so its work is thrown away; a card that draws a store nothing refills stops instead (Card.full_store, contract/full-output.txt,
 // "FULL OUTPUT"). Read off the ledger at the view's time; a store with no ledger line is not known full, so neither is the card.
 import type { Card, View } from "../api/types";
 import type { Catalog } from "./catalog";

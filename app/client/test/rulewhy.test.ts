@@ -1,4 +1,4 @@
-// Why a rule is off (docs/design/opening-screen.md, "The Rules tab"; ui/rulewhy.ts): the quiet line under a rule the
+// Why a rule is off (docs/design/opening-screen/rules-tab.md, "The Rules tab"; ui/rulewhy.ts): the quiet line under a rule the
 // server says is off (View.order_states), in the ledger's grammar. A waiting store rule names its level and the store's
 // amount now, which moves with the clock; an outranked one names the rule with the hands; a passed-over one says so; a
 // rule that is on, and a waiting chip's rule, carry no line. Task rules on a side lane get the same line.

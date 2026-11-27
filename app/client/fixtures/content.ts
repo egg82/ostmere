@@ -311,7 +311,7 @@ const text: Record<string, string> = {
   "ui.card.retired": "retired",
   "ui.ledger.full": "full",
   "ui.camp.pays": "level {level}: {pays}",
-  "ui.goal.in": "in {d}", "ui.goal.while": "pauses if out of {store}", "ui.goal.paused": "paused, out of {store}", "ui.goal.lost": "{card}: {n} lost",
+  "ui.goal.in": "in {d}", "ui.goal.while": "pauses if out of {store}", "ui.goal.paused": "paused, out of {store}", "ui.goal.lost": "{card}: {n} lost", "ui.goal.count": "{store}: {n}",
   "ui.ledger.starved": "ran dry",
   "ui.ledger.unfed": "ran dry · {pct} work speed off",
   "ui.queue.when_ready": "When ready", "ui.queue.queued": "in Next", "ui.queue.until_done": "Until done", "ui.queue.running": "under way", "ui.queue.move": "Move up or down", "ui.queue.move_one": "Move one up or down", "ui.queue.once": "{card} once", "ui.queue.runs": "{card} ×{n}", "ui.queue.remove_one": "Remove one", "ui.queue.heading": "Next", "ui.queue.plan": "Plan", "ui.queue.full": "Next is full", "ui.hands.next": "next: {card}", "ui.hands.then": "then {mix}", "ui.hands.until_goal": "until {goal}",
@@ -350,7 +350,7 @@ const text: Record<string, string> = {
   "offer.trade": "[fixture] A third question, asked by one person with a long name?", "answer.keep": "Keep it", "answer.swap": "Swap it away",
   "offer.keep.effect": "[fixture] {pct} rest", "offer.swap.effect": "[fixture] {gain} stone now",
   "line.offer": "[fixture] a line that comes with the offer.",
-  // fights (CONTRACT.txt, "FIGHTS"): the eight ui keys as opening.toml words them, and placeholder names
+  // fights (contract/fights.txt, "FIGHTS"): the eight ui keys as opening.toml words them, and placeholder names
   "ui.fight.odds": "loses {lost} in {of} fights", "ui.fight.odds_pct": "loses {pct}% of fights", "ui.fight.odds_unknown": "odds unknown until fought", "ui.fight.threat_unknown": "unknown", "ui.fight.vs": "{side_name} {power}, {threat_name} {threat}",
   "ui.fight.on_loss": "a loss costs {costs}", "ui.fight.on_wound": "lose, and you're {store} +{n}", "ui.fight.base": "base strength", "ui.fight.tally": "{fought} fought, {lost} lost", "ui.fight.since": "{fought} fought, {lost} lost",
   "ui.fight.won": "{runner}: won", "ui.fight.lost": "{runner}: lost",
@@ -505,7 +505,7 @@ export const fixtureContent: Content = {
     { lane: "mason", label_key: "lane.mason", ruled: true, station: false, later_labels: [], name_key: null, told: "mention", pooled: false, group: null, tied: null },
   ],
   end_line_keys: ["line.end"],
-  line_infos: [   // one cause of each kind (CONTRACT.txt, "Line causes")
+  line_infos: [   // one cause of each kind (contract/endpoints.txt, "Line causes")
     { key: "line.1", kind: "story", cause: null, person: false, mention: null }, { key: "line.2", kind: "story", cause: { kind: "when", when: { kind: "after_time", at: 0 } }, person: false, mention: null },
     { key: "line.3", kind: "tap", cause: { kind: "runner", runner: "stand" }, person: false, mention: null },
     { key: "line.4", kind: "story", cause: { kind: "runner", runner: "look" }, person: false, mention: null }, { key: "line.5", kind: "story", cause: { kind: "when", when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 5 * Q, release: 5 * Q, value_of_cap: false, release_of_cap: false } }, person: false, mention: null },
@@ -520,7 +520,7 @@ export const fixtureContent: Content = {
   aim_infos: [],
   journal: null,
   places: [],
-  people: {   // CONTRACT.txt, "PEOPLE"
+  people: {   // contract/people.txt, "PEOPLE"
     came: [{ at_least: 1, keys: ["came.one.a", "came.one.b"] }, { at_least: 2, keys: ["came.few"] }],
     went: [{ at_least: 1, keys: ["went.one"] }],
   },

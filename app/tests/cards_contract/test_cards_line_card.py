@@ -1,6 +1,6 @@
 """Which card wrote a line ("Lines", engine.Line.card): a completion's own line, its outcome's and finished's lines and a
 failed tap's line name the card, however it was run; a chip's line and a trigger's name none. The page puts a line
-the player's tap wrote on that card (docs/design/opening-screen.md, "Cards")."""
+the player's tap wrote on that card (docs/design/opening-screen/asks-and-cards.md, "Cards")."""
 from ashfall_app.engine import (
     AtLeast, CardCount, CardDef, CardId, ChipDef, ChipId, Line, LineKey, Outcome, StoreDef, StoreId, StoreValue, TriggerDef,
     TapCard, TriggerId, Unlock, UnlockKind, Amount, advance_logged, decide_logged, new_save,

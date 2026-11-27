@@ -58,7 +58,7 @@ export function dropComponent(mix: Mix, index: number, bp: number): Mix {
   return { ...mix, components: withShares({ ...mix, components: kept }, apportion(kept.map((c) => c.share_bp), bp)).components };
 }
 
-/** The first mix's cards, while the view offers it (CONTRACT.txt): the feature is in and no mix exists yet. */
+/** The first mix's cards, while the view offers it (contract/): the feature is in and no mix exists yet. */
 export function firstMixOffer(view: View, catalog: Catalog): string[] | null {
   const offer = catalog.content.first_mix;
   if (view.mixes.length > 0 || !catalog.unlocked(view, "feature", offer.feature)) return null;

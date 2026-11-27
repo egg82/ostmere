@@ -1,4 +1,4 @@
-// What a story beat waits on, on screen (CONTRACT.txt, "Goals"; game/story.ts): the card, the ledger line and the skill
+// What a story beat waits on, on screen (contract/goals.txt, "Goals"; game/story.ts): the card, the ledger line and the skill
 // row it waits on carry the story mark and nothing else does; a store with no line yet is a row of its own in the Camp
 // bar's box; a wait on the clock is a plain line under them, with its time and the store that keeps it moving, or that
 // store alone while it is dry.
@@ -48,6 +48,14 @@ function campRows(view: View): { hidden: boolean; rows: string[] } {
   expect("no goals: the box is hidden", campRows({ ...start, goals: [] }).hidden, true);
   expect("a store with no line yet is a row of its own", campRows({ ...start, goals: [stone] }),
     { hidden: false, rows: [`${catalog.storeLabel("stone")} ${catalog.format.amount(Q, 3 * Q)}`] });
+  const markersOf = (view: View): number => {
+    const { ctx } = testContext(undefined, catalog);
+    const b = new CampBar(ctx);
+    b.update(view);
+    return b.root.querySelectorAll(".goal .camp-next").length;
+  };
+  expect("a store goal's row is marked something new while no wait line is up", markersOf({ ...start, goals: [stone] }), 1);
+  expect("with a wait line up its something new is the story's step: the row carries none", markersOf({ ...start, goals: [stone, clock] }), 0);
 }
 
 function wait(view: View): { hidden: boolean; tag: string; line: string; tabbable: number } {
@@ -73,5 +81,9 @@ function wait(view: View): { hidden: boolean; tag: string; line: string; tabbabl
   expect("a fight's lost tally: its card and the count so far, with no clock", wait({ ...mid, goals: [fight] }).line, `${head} · ${lost}`);
   expect("beside a clock: the count, then its time", wait({ ...mid, goals: [fight, clock] }).line,
     `${head} · ${lost} · ${time} · ${t.fill(UI.goalWhile, { store: wood })}`);
+  const counted = goal({ kind: "clock", store: "wood", target: 3 * Q, value: { start: AT, start_value: Q, rate: 0, limit: null }, at: AT + 2 * 3600, feeds: ["wood"] });
+  const said = t.fill(UI.goalCount, { store: wood, n: f.amount(Q, 3 * Q) });
+  expect("a clock on a stated store: the count, then its time and what keeps it moving", wait({ ...mid, goals: [counted] }).line,
+    `${head} · ${said} · ${time} · ${t.fill(UI.goalWhile, { store: wood })}`);
   expect("the fight's card carries the story mark", [...storyMarks(catalog, { ...mid, goals: [fight] }).cards], ["far_hunt"]);
 }

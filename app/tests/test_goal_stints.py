@@ -1,4 +1,4 @@
-"""Goal stints (CONTRACT.txt, "Goal stints"): a queue entry switching to a mix until a goal row's `until`. The row's
+"""Goal stints (contract/goal-stints.txt, "Goal stints"): a queue entry switching to a mix until a goal row's `until`. The row's
 `until` holds from the instant its lands_at names while the rates hold, and the entry pops there, giving the player's
 own mix back (engine DESIGN.txt, "Queue mix")."""
 from ashfall_app import engine as e

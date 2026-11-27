@@ -52,7 +52,7 @@ Biggest limit up front: nothing found measures what brings a player back on day 
 
 # Part B: What it means for Ostmere
 
-Read: `decisions.md`, `core-loop.md`, `design/opening-screen.md`, and the two research notes on pacing. Nothing under `content/`.
+Read: `decisions.md`, `core-loop.md`, `design/opening-screen/index.md`, and the two research notes on pacing. Nothing under `content/`.
 
 ## Already agrees
 - **"Fun, but never vying for attention":** no daily resets, no offline cap, nothing finishing into idleness, no push by default. This is A2 and A7 done at the rule level: no promised repeat reward, no streak. The "shown in the design" paragraph (no badges, no shop-shaped elements, red lines with their answer beside them) is A2's informational-feedback test written as a visual rule.

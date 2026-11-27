@@ -1,4 +1,4 @@
-"""Wire models of the fights (CONTRACT.txt, "FIGHTS"): the view's, and the content's sides and threats; the conventions
+"""Wire models of the fights (contract/fights.txt, "FIGHTS"): the view's, and the content's sides and threats; the conventions
 in models.py hold here."""
 from enum import StrEnum
 
@@ -26,7 +26,7 @@ class StrengthEntry(BaseModel):
 
 class StoreLevel(BaseModel):
     """A store a lost fight adds to (FightDef.wounds), served though it has no ledger line: the page reads it in whole
-    items rounded up, as a level (CONTRACT.txt, "FIGHTS")."""
+    items rounded up, as a level (contract/fights.txt, "FIGHTS")."""
 
     store: str
     segment: Segment
@@ -34,14 +34,14 @@ class StoreLevel(BaseModel):
 
 class Strength(BaseModel):
     """A side's power or a threat's strength: `value` is what the engine uses; `sources` are every source behind it, the
-    base first, then the sum entries, then the factors, each in stack order (CONTRACT.txt, "FIGHTS")."""
+    base first, then the sum entries, then the factors, each in stack order (contract/fights.txt, "FIGHTS")."""
 
     value: int
     sources: list[StrengthEntry]
 
 
 class Fight(BaseModel):
-    """One unlocked fight card or standing action, now (CONTRACT.txt, "FIGHTS")."""
+    """One unlocked fight card or standing action, now (contract/fights.txt, "FIGHTS")."""
 
     runner: str
     side: str

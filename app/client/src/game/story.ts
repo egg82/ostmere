@@ -1,4 +1,4 @@
-// What the open story beats wait on, as the page marks it (CONTRACT.txt, "Goals"; decisions.md, "Progress is stated,
+// What the open story beats wait on, as the page marks it (contract/goals.txt, "Goals"; decisions.md, "Progress is stated,
 // never hinted"): the cards, the stores' lines and the skills' rows that move the story carry the story mark, and only
 // they, so a bar without it is progress the story does not wait on. Read off View.goals alone.
 import type { Goal, View } from "../api/types";

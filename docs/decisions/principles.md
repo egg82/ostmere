@@ -5,16 +5,16 @@ Product-wide decisions: the words used, attention, progress on screen, choices, 
 ## Words used here
 
 - **Card:** one kind of work the player can do, shown with its bar and what it makes and takes; tapped or mixed alike
-  (`docs/design/opening-screen.md`, "Cards"; below, "The mix").
+  (`docs/design/opening-screen/asks-and-cards.md`, "Cards"; below, "The mix").
 - **Mix:** several cards run at once, each with a share of the hands' time (below, "The mix").
 - **Hands strip:** the one row showing what the hands are doing, the mix's slim view
-  (`docs/design/opening-screen.md`, "The hands strip").
+  (`docs/design/opening-screen/hands-strip.md`, "The hands strip").
 - **Ledger:** the lines of per-hour rates for each store, with when it empties or fills; a falling line no rule covers
-  is red (`docs/design/opening-screen.md`, "Ledger and rules").
+  is red (`docs/design/opening-screen/ledger-and-fights.md`, "Ledger and rules").
 - **Rule / standing order:** a "when X, do Y" line that runs a mix while its condition holds; the docs call it a
   standing order here and in `docs/systems.md`, and a rule in the Rules tab (below, "The mix").
 - **Camp bar:** the bar of the camp's level, filled by work done, with a next marker stating what the next level
-  pays (`docs/design/opening-screen.md`, "One column of attention").
+  pays (`docs/design/opening-screen/attention.md`, "One column of attention").
 - **Unwrap:** what happened since the last visit, shown in order on opening the app (`docs/systems.md`,
   "Chronicle and unwrap").
 
@@ -101,7 +101,7 @@ defect. **The next step is always on screen, with how far along it is** (no play
 days when the next bit of story comes, while a store sits half empty): whatever the next beat waits on (a
 store's amount, a level, a count) shows as the goal with its current value, so a store that holds the story up reads
 as what is next, not as a store like any other. A wait on a card fight's lost tally shows on the wait line as the
-fight's card and the count so far, and the card carries the story mark; the tally is never drawn as a store. A wait on the clock alone shows its countdown. A card shows every
+fight's card and the count so far, and the card carries the story mark; the tally is never drawn as a store. A wait on the clock alone shows its countdown. A wait on a store the content marks `stated` shows its count beside the countdown on the wait line. A card shows every
 requirement that can refuse its tap before the tap: a store as have/need, a level or a step as its row, a night or
 other part of the day as when it opens ("Opens after dark"), any other clock as its countdown; a card the content
 can show with a requirement its face cannot draw fails the build (`app/tests/opening/test_requires_shown.py`, whose

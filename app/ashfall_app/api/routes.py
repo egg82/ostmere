@@ -1,7 +1,7 @@
 """The game API's routes, all under /api: the content, the account and save endpoints (save_routes.py), an account's
 games (games_routes.py), moving an account to another device (device_routes.py) and reminders (reminder_routes.py).
 
-Contract for the client author: CONTRACT.txt beside this file. Errors are errors.py; every route answers through its
+Contract for the client author: contract/ beside this file. Errors are errors.py; every route answers through its
 route class, so each request is logged once and every error is an ApiError."""
 from fastapi import APIRouter, Request, Response
 

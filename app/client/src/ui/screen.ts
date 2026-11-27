@@ -1,4 +1,4 @@
-// The game screen (docs/design/opening-screen.md): on a desktop the left rail, the scene with the story strip under it,
+// The game screen (docs/design/opening-screen/index.md): on a desktop the left rail, the scene with the story strip under it,
 // and the panel beside it (under it on a phone): the hands strip, the asks, then the open tab's panel, Tasks, Town
 // (ui/townview.ts) or Rules once the first rule exists (ui/tabs.ts; each part's seat by frame: ui/partseat.ts). The mix
 // and town editors take the card area's place while open. It owns no game state: it draws each View it is handed and

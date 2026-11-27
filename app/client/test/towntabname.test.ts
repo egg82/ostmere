@@ -1,4 +1,4 @@
-// The town has one name everywhere (CONTRACT.txt, "The town's mix"): the rail's and the phone bar's tab, the Town view's
+// The town has one name everywhere (contract/the-towns-mix.txt, "The town's mix"): the rail's and the phone bar's tab, the Town view's
 // title, the Rules page's switch and a game mix's label read the town's name as the view's unlocks give it (Content.
 // town_later_labels, else ui.town.title), so it changes with the story in one place.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";

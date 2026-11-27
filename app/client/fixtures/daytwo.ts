@@ -1,4 +1,4 @@
-// FIXTURE, never shipped: day two's shapes (CONTRACT.txt, "A lane run by rules" and "Offers"), with placeholder ids,
+// FIXTURE, never shipped: day two's shapes (contract/a-lane-run-by-rules.txt, "A lane run by rules" and "Offers"), with placeholder ids,
 // built on the rest rule's ended camp (steps.ts, restrule).
 //   ruled:    a lane run by rules at work: its always rule taps Chop logs; a one-off rule passed over, a store rule
 //             waiting, and a second always rule outranked by the first; its cards stay out of Tasks and Completed.

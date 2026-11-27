@@ -1,6 +1,6 @@
 """Every store a served cause names (a chronicle line's, an ask's) is one the player is shown, or a clock worded as a
 part of the day (StoreEntry.clock): a store the player never sees has no amount to read, so "20 day" is never a
-cause (api/CONTRACT.txt, "Line causes"; docs/decisions/principles.md, "Progress is stated, never hinted")."""
+cause (api/contract/endpoints.txt, "Line causes"; docs/decisions/principles.md, "Progress is stated, never hinted")."""
 import pytest
 
 from ashfall_app.api.content_models import Content

@@ -1,4 +1,4 @@
-"""A join link as a QR code's modules, for the page to draw (CONTRACT.txt, TransferCode.qr): rows top first, "1" dark,
+"""A join link as a QR code's modules, for the page to draw (contract/moving-to-another-device.txt, TransferCode.qr): rows top first, "1" dark,
 "0" light, no quiet zone. Error correction M at least (segno raises it while the version stays the same), so a phone
 reads it off a screen with glare."""
 import segno

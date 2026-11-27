@@ -1,0 +1,17 @@
+LEAVES
+  A person may leave the town at a story moment (engine DESIGN.txt, "LEAVES"), for good. Unlock categories gain left
+  (id a lane): that lane's person has left. The people present (THE TOWN'S MIX) are the ruled lanes whose joined
+  unlock view.unlocked holds and whose left unlock it does not.
+  At that moment, in the same Step: the lane is gone from view.lanes; its cards are in neither view.cards nor
+  view.completed; their shares are gone from every mix in view.mixes (no mix greys, and nobody else's
+  shares change); the rules that tapped its cards are gone from view.orders, each kept in rule_runs with ended left
+  (RULE RUNS); the standing actions the moment stops are gone from view.standing. A task the person had under way
+  ends unfinished and pays nothing. The moment's lines say what happened. Nothing on Content changes but the unlock
+  category; no decision changes, and a decision naming a card of a lane that has left is refused as for a retired
+  card (tap_card from the player: 422).
+  THE CLIENT MAY:
+  - draw the town strip, the Rules tab's lanes and the scene without the person from the Step that holds the left
+    unlock, after the moment's lines have been revealed.
+  THE CLIENT MAY NOT:
+  - keep a row, a rule or an idle remainder for a person who has left, or draw their cards in the Completed tab.
+

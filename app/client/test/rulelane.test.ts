@@ -1,8 +1,8 @@
-// A ruled lane's section of the Rules tab (CONTRACT.txt, "A lane run by rules"): the rules that tap a card on that
+// A ruled lane's section of the Rules tab (contract/a-lane-run-by-rules.txt, "A lane run by rules"): the rules that tap a card on that
 // lane, under the lane's label, in view.orders order, an always rule worded as ui.rule.always, a passed-over one-off
 // still listed; a new rule on that lane placed just before the lane's first always rule; "outranked by" worded from
 // orders[LaneBar.order] (with the always words when that is an always rule). And the words for a rule or a queue entry
-// that answers an offer (CONTRACT.txt, "Offers").
+// that answers an offer (contract/offers.txt, "Offers").
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureContent, Q } from "../fixtures/content";

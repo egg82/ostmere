@@ -1,4 +1,4 @@
-// The condition editor's subjects past the stores (condition.ts, the full editor; docs/design/opening-screen.md, "The
+// The condition editor's subjects past the stores (condition.ts, the full editor; docs/design/opening-screen/rules-tab.md, "The
 // condition editor"): under When, a Levels row (the Camp and each skill, at the level each stands at now) and a Tasks
 // row (each task in play); and, once one is chosen, its one slider in the levels' place: "Level" for a level, "Times"
 // for a task's count of times done. What is offered is ruleoffers.subjectChoices's; numbers and conditions are

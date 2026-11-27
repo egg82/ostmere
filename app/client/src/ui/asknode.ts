@@ -1,4 +1,4 @@
-// One ask, as the Asks list draws it (ui/asks.ts; CONTRACT.txt, "OFFERS"; docs/design/redesign.md, "Asks"): who
+// One ask, as the Asks list draws it (ui/asks.ts; contract/offers.txt, "OFFERS"; docs/design/redesign.md, "Asks"): who
 // asks, by face and name; the question; "↳" what led to it; one button per answer with its label, its cost text and
 // each figure it moves, before → after (game/asks.ts); then the texts the offer has where it differs from the usual
 // (waiting, expiry, permanence). Anything the content leaves out is not drawn. A tap sends answer_offer.
@@ -73,7 +73,7 @@ function drawWho(ctx: PartContext, who: HTMLElement, view: View, info: OfferInfo
 }
 
 /** An answer's cost text: {d} from takes_s (the text left out while that is null), {pct} from change_bp, as now → after
- * where the offer's shifts name it (game/asks.ts, answerPcts), {gain} from gains (CONTRACT.txt, "OFFERS"). */
+ * where the offer's shifts name it (game/asks.ts, answerPcts), {gain} from gains (contract/offers.txt, "OFFERS"). */
 function costText(ctx: PartContext, info: OfferInfo | undefined, shown: Offer, answer: string): string {
   const { catalog } = ctx;
   const served = info?.answers.find((i) => i.answer === answer);

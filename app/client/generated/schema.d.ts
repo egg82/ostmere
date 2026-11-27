@@ -201,7 +201,7 @@ export interface paths {
         put?: never;
         /**
          * Forecast
-         * @description What lands from now if the player changes nothing (CONTRACT.txt, "Forecast"). Nothing is written; 409
+         * @description What lands from now if the player changes nothing (contract/forecast.txt, "Forecast"). Nothing is written; 409
          *     catching_up while the save is still behind.
          */
         post: operations["forecast"];
@@ -223,7 +223,7 @@ export interface paths {
         /**
          * Mix Rows
          * @description The player's saved mixes on separate numbers as if each ran from now, and the earlier best per goal
-         *     (CONTRACT.txt, "Mix rows"). Nothing is written; 409 catching_up while the save is still behind.
+         *     (contract/mix-rows.txt, "Mix rows"). Nothing is written; 409 catching_up while the save is still behind.
          */
         post: operations["mix_rows"];
         delete?: never;
@@ -570,7 +570,7 @@ export interface components {
         };
         /**
          * AimInfo
-         * @description What a stretch of play is for: one line at the band's top, in content order (CONTRACT.txt, "The client may").
+         * @description What a stretch of play is for: one line at the band's top, in content order (contract/the-client-may.txt, "The client may").
          */
         AimInfo: {
             /** Aim */
@@ -578,6 +578,7 @@ export interface components {
             /** Text Key */
             text_key: string;
             after: components["schemas"]["Unlock"] | null;
+            ends_after: components["schemas"]["Unlock"] | null;
         };
         /** Amount */
         Amount: {
@@ -624,7 +625,7 @@ export interface components {
         /**
          * AnswerKind
          * @description Order verb only (never a Decision): answer the first open offer of `offer_kind` with its answer of `role`
-         *     (CONTRACT.txt, "Offers"). 422 when no offer declares that kind and role.
+         *     (contract/offers.txt, "Offers"). 422 when no offer declares that kind and role.
          */
         AnswerKind: {
             /**
@@ -639,7 +640,7 @@ export interface components {
         };
         /**
          * AnswerOffer
-         * @description Answer a shown, open offer (CONTRACT.txt, "Offers"): 422 when the answer is not one of the offer's, or the
+         * @description Answer a shown, open offer (contract/offers.txt, "Offers"): 422 when the answer is not one of the offer's, or the
          *     offer is not shown or already answered.
          */
         AnswerOffer: {
@@ -666,7 +667,7 @@ export interface components {
         };
         /**
          * ApiError
-         * @description Every error's body (CONTRACT.txt, ERRORS).
+         * @description Every error's body (contract/errors.txt, ERRORS).
          */
         ApiError: {
             code: components["schemas"]["ErrorCode"];
@@ -678,7 +679,7 @@ export interface components {
         /**
          * AtLeast
          * @description value_of_cap, release_of_cap: that level is basis points (0..10000) of the watched store's cap now, not a
-         *     quantity; on a store_value, in orders and queue entries only (CONTRACT.txt, "a store rule"; engine DESIGN.txt,
+         *     quantity; on a store_value, in orders and queue entries only (contract/the-client-may.txt, "a store rule"; engine DESIGN.txt,
          *     "SHARE LEVELS").
          */
         AtLeast: {
@@ -754,7 +755,7 @@ export interface components {
         /**
          * CampInfo
          * @description The bar to work toward: drawn from the ledger line of `store` (never drawn as a ledger line); its level is how
-         *     many of `camp_levels`' `at` the sample has reached (CONTRACT.txt).
+         *     many of `camp_levels`' `at` the sample has reached (contract/).
          */
         CampInfo: {
             /** Store */
@@ -871,7 +872,7 @@ export interface components {
         };
         /**
          * CardPresentation
-         * @description How the page dresses a card; one mechanic under all three (CONTRACT.txt, "Cards").
+         * @description How the page dresses a card; one mechanic under all three (contract/, "Cards").
          * @enum {string}
          */
         CardPresentation: "narrative" | "action" | "craft";
@@ -1147,7 +1148,7 @@ export interface components {
         };
         /**
          * Fight
-         * @description One unlocked fight card or standing action, now (CONTRACT.txt, "FIGHTS").
+         * @description One unlocked fight card or standing action, now (contract/fights.txt, "FIGHTS").
          */
         Fight: {
             /** Runner */
@@ -1167,7 +1168,7 @@ export interface components {
         };
         /**
          * FightInfo
-         * @description The odds a fight card or standing action runs under (CONTRACT.txt, "FIGHTS"): the strengths' ids, and what one lost
+         * @description The odds a fight card or standing action runs under (contract/fights.txt, "FIGHTS"): the strengths' ids, and what one lost
          *     fight costs. The strengths themselves are View.fights.
          */
         FightInfo: {
@@ -1216,7 +1217,7 @@ export interface components {
         /**
          * FirstMix
          * @description The first mix the page offers once `feature` is unlocked and no mix exists: `card_ids` at an even split, saved
-         *     by the player's tap (CONTRACT.txt).
+         *     by the player's tap (contract/).
          */
         FirstMix: {
             /** Feature */
@@ -1281,7 +1282,7 @@ export interface components {
         };
         /**
          * Games
-         * @description The account's saves (CONTRACT.txt, "Games on one account").
+         * @description The account's saves (contract/games-on-one-account.txt, "Games on one account").
          */
         Games: {
             /** Saves */
@@ -1297,8 +1298,8 @@ export interface components {
          * Goal
          * @description One thing an open story beat waits on: a store's amount reaching `target` (store, value), a card's completions
          *     reaching `target` or the card running at target 0 (card), a skill's level reaching `target` (skill), a card's fight
-         *     lost `target` times (fight: card, and its lost tally as store and value), or a wait on the clock alone landing at
-         *     `at`. The page marks the store's line, the card or the skill's row; a store with no line yet, the fight and the
+         *     lost `target` times (fight: card, and its lost tally as store and value), or a wait on the clock landing at
+         *     `at`, which states a store's amount against `target` (store, value) when the content says to. The page marks the store's line, the card or the skill's row; a store with no line yet, the fight and the
          *     clock, it states as a line of their own, the clock's naming what keeps it moving.
          */
         Goal: {
@@ -1334,7 +1335,7 @@ export interface components {
         };
         /**
          * GoalRow
-         * @description How the setup as set moves one goal (CONTRACT.txt, "Goal rows"): a store reaching `target` (store) or a skill
+         * @description How the setup as set moves one goal (contract/goal-rows.txt, "Goal rows"): a store reaching `target` (store) or a skill
          *     reaching level `target` (skill), when it lands at today's rates, and the line that binds it.
          */
         GoalRow: {
@@ -1436,7 +1437,7 @@ export interface components {
         };
         /**
          * KeptInfo
-         * @description One entry a card holds while it runs (CONTRACT.txt, {pct}): on a side's strength or a lane's speed, never both.
+         * @description One entry a card holds while it runs (contract/, {pct}): on a side's strength or a lane's speed, never both.
          */
         KeptInfo: {
             /** Side */
@@ -1475,7 +1476,7 @@ export interface components {
         /**
          * LaneInfo
          * @description Every lane, "hands" included. Its label is the label_key of the last of later_labels whose `after`
-         *     view.unlocked holds, else label_key (CONTRACT.txt, "A lane run by rules").
+         *     view.unlocked holds, else label_key (contract/a-lane-run-by-rules.txt, "A lane run by rules").
          */
         LaneInfo: {
             /** Lane */
@@ -1556,7 +1557,7 @@ export interface components {
         };
         /**
          * Limits
-         * @description What the page's editors stop at (CONTRACT.txt, "Request limits"): a request past one is a 422.
+         * @description What the page's editors stop at (contract/request-limits.txt, "Request limits"): a request past one is a 422.
          */
         Limits: {
             /** Max Orders */
@@ -1619,7 +1620,7 @@ export interface components {
         };
         /**
          * Mention
-         * @description A mention line: `lane`'s person joined or left, counted into the day's one line the page words (CONTRACT.txt,
+         * @description A mention line: `lane`'s person joined or left, counted into the day's one line the page words (contract/people.txt,
          *     "People").
          */
         Mention: {
@@ -1651,7 +1652,7 @@ export interface components {
         };
         /**
          * MergeSummary
-         * @description What joining would bring together (CONTRACT.txt, "Moving to another device").
+         * @description What joining would bring together (contract/moving-to-another-device.txt, "Moving to another device").
          */
         MergeSummary: {
             /** Here */
@@ -1688,7 +1689,7 @@ export interface components {
         };
         /**
          * MixRow
-         * @description One saved mix of the player's own as if it ran from now (CONTRACT.txt, "Mix rows").
+         * @description One saved mix of the player's own as if it ran from now (contract/mix-rows.txt, "Mix rows").
          */
         MixRow: {
             /** Id */
@@ -1734,7 +1735,7 @@ export interface components {
          * @description A store a tap of the card needs. quantity: the most its input or any requirement on that store's value asks;
          *     segment: how much there is, sampled like a ledger line's (served for a locked store too).
          *     Drawn short while the sample is below quantity; whether the card is ready is still its blocker's to say. gate: drawn
-         *     in its place while set, the store unnamed (CONTRACT.txt, "Cards"); makers: the cards and standing actions in play
+         *     in its place while set, the store unnamed (contract/, "Cards"); makers: the cards and standing actions in play
          *     that make the store; spent: drawn as used up, set while short, nothing in play can make the store again and every
          *     trigger that grants it has fired.
          */
@@ -1770,7 +1771,7 @@ export interface components {
         };
         /**
          * NodeInfo
-         * @description One node of `skill`'s prestige track (CONTRACT.txt, "PRESTIGE PHASES"); SkillPrestige.menu_nodes names it.
+         * @description One node of `skill`'s prestige track (contract/prestige-phases.txt, "PRESTIGE PHASES"); SkillPrestige.menu_nodes names it.
          */
         NodeInfo: {
             /** Node */
@@ -1875,7 +1876,7 @@ export interface components {
         /**
          * Order
          * @description A rule. Its actions are `then` followed by `or_else`: the first that can act is the one it runs. While any
-         *     guard in `unless` holds, the rule is paused. Both lists are left out when empty (CONTRACT.txt, "Rule guards").
+         *     guard in `unless` holds, the rule is paused. Both lists are left out when empty (contract/endpoints.txt, "Rule guards").
          */
         Order: {
             when: components["schemas"]["Condition"];
@@ -1899,7 +1900,7 @@ export interface components {
         /**
          * OrderCard
          * @description The prefilled rule offered when a store's line is falling and uncovered: `when` is an at_most on `store`, which
-         *     the page words from ui text (CONTRACT.txt, "Text and numbers"); `then` taps a card.
+         *     the page words from ui text (contract/text-and-numbers.txt, "Text and numbers"); `then` taps a card.
          */
         OrderCard: {
             /** Store */
@@ -1924,7 +1925,7 @@ export interface components {
         };
         /**
          * OrderState
-         * @description Where a rule stands now, so the page can say why one is off (CONTRACT.txt, "THE CLIENT MAY").
+         * @description Where a rule stands now, so the page can say why one is off (contract/the-client-may.txt, "THE CLIENT MAY").
          * @enum {string}
          */
         OrderState: "on" | "waiting" | "outranked" | "paused" | "passed_over" | "behind_next";
@@ -1984,7 +1985,7 @@ export interface components {
         };
         /**
          * Prestige
-         * @description By hand only, never an order's or a queue entry's verb (CONTRACT.txt, "PRESTIGE PHASES"): one rank into `node`
+         * @description By hand only, never an order's or a queue entry's verb (contract/prestige-phases.txt, "PRESTIGE PHASES"): one rank into `node`
          *     on `skill`'s track. At the skill's top it is the click into the next phase; with SkillPrestige.pick_owed it fills
          *     that pick. A refusal is 422 invalid_decision, its message naming why.
          */
@@ -2006,7 +2007,7 @@ export interface components {
         };
         /**
          * ReachInfo
-         * @description What a card with the stake reach fills: its face draws the store against the next stop (CONTRACT.txt, "Cards").
+         * @description What a card with the stake reach fills: its face draws the store against the next stop (contract/, "Cards").
          */
         ReachInfo: {
             /** Store */
@@ -2059,7 +2060,7 @@ export interface components {
         };
         /**
          * RepeatedSwitch
-         * @description The player's own mix switched to `mix_id` `count` times in the window while `chip` showed (CONTRACT.txt,
+         * @description The player's own mix switched to `mix_id` `count` times in the window while `chip` showed (contract/repeats.txt,
          *     "Repeats").
          */
         RepeatedSwitch: {
@@ -2072,7 +2073,7 @@ export interface components {
         };
         /**
          * RepeatedTap
-         * @description A hands card tapped `count` times in the window while the hands ran a mix without it (CONTRACT.txt,
+         * @description A hands card tapped `count` times in the window while the hands ran a mix without it (contract/repeats.txt,
          *     "Repeats").
          */
         RepeatedTap: {
@@ -2105,7 +2106,7 @@ export interface components {
         };
         /**
          * RuleDry
-         * @description A store rule's mix that cannot reach the rule's release for want of a store (CONTRACT.txt, "Dry rules"): the rule
+         * @description A store rule's mix that cannot reach the rule's release for want of a store (contract/dry-rules.txt, "Dry rules"): the rule
          *     holds the hands and the store is dry (`holding`), or no card of the mix makes the store, so the mix may stop short.
          */
         RuleDry: {
@@ -2120,7 +2121,7 @@ export interface components {
          *     until it has let go), each with the amount of the store its condition reads (null for a condition on no store).
          *     `order` is the rule as the save has it now: equal to one of View.orders, unless `ended` is set: the game removed
          *     the rule, at a season's turn or when its person left, at off_at. on_at is null only on an ended rule that never
-         *     came on. `ended` "stint" is a goal stint that popped at its goal (CONTRACT.txt, "Rule runs"): `order` is
+         *     came on. `ended` "stint" is a goal stint that popped at its goal (contract/rule-runs.txt, "Rule runs"): `order` is
          *     {when: its until, then: its switch_mix}, on_at when its mix began to run (null if the goal held as it came to
          *     control), off_at when its goal landed; "dry" is one the game handed back because its card ran out of input: the same,
          *     off_at when it did. `made`, on an ended stint and on a rule whose `then` switches a mix, once it
@@ -2172,7 +2173,7 @@ export interface components {
          * Running
          * @description 1 while the runner runs, else 0. In set_orders, taken only on an order whose every action is a tap_card of a card
          *     on one lane other than the hands, watching a card of another lane (the hands' or another person's); every other
-         *     order's, and every queue entry's, is 422 invalid_decision (CONTRACT.txt, "Decisions").
+         *     order's, and every queue entry's, is 422 invalid_decision (contract/endpoints.txt, "Decisions").
          */
         Running: {
             /**
@@ -2511,7 +2512,7 @@ export interface components {
         /**
          * StoreLevel
          * @description A store a lost fight adds to (FightDef.wounds), served though it has no ledger line: the page reads it in whole
-         *     items rounded up, as a level (CONTRACT.txt, "FIGHTS").
+         *     items rounded up, as a level (contract/fights.txt, "FIGHTS").
          */
         StoreLevel: {
             /** Store */
@@ -2553,7 +2554,7 @@ export interface components {
         /**
          * Strength
          * @description A side's power or a threat's strength: `value` is what the engine uses; `sources` are every source behind it, the
-         *     base first, then the sum entries, then the factors, each in stack order (CONTRACT.txt, "FIGHTS").
+         *     base first, then the sum entries, then the factors, each in stack order (contract/fights.txt, "FIGHTS").
          */
         Strength: {
             /** Value */

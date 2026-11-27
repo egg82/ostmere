@@ -1,4 +1,4 @@
-"""Blind contract tests of View.goal_rows (api/CONTRACT.txt, "Goal rows"; api/goalrows.py and setrates.py public
+"""Blind contract tests of View.goal_rows (api/contract/goal-rows.txt, "Goal rows"; api/goalrows.py and setrates.py public
 surface only). Written from the contract, never the implementation, and checked against real engine saves: a row's
 `lands_at` is judged by advancing the engine itself, its `per_hour` by the engine's own ledger line.
 

@@ -1,4 +1,4 @@
-"""The account and save endpoints (CONTRACT.txt, ENDPOINTS). Each asks the Saves and Accounts systems (services.py)
+"""The account and save endpoints (contract/endpoints.txt, ENDPOINTS). Each asks the Saves and Accounts systems (services.py)
 and answers in the wire models; what a system raises becomes the contract's error (answered)."""
 from collections.abc import Generator
 from contextlib import contextmanager
@@ -201,7 +201,7 @@ def add_unwritten_routes(router: APIRouter, game: Game) -> None:
     @router.post("/saves/{save_id}/forecast", response_model=ForecastAnswer, operation_id="forecast",
                  responses=_FORECAST_ERRORS)
     def forecast(request: Request, save_id: SaveId) -> ForecastAnswer:
-        """What lands from now if the player changes nothing (CONTRACT.txt, "Forecast"). Nothing is written; 409
+        """What lands from now if the player changes nothing (contract/forecast.txt, "Forecast"). Nothing is written; 409
         catching_up while the save is still behind."""
         found = session.account(request)
         with answered(game):
@@ -213,7 +213,7 @@ def add_unwritten_routes(router: APIRouter, game: Game) -> None:
                  responses=_FORECAST_ERRORS)
     def mix_rows(request: Request, save_id: SaveId) -> MixRows:
         """The player's saved mixes on separate numbers as if each ran from now, and the earlier best per goal
-        (CONTRACT.txt, "Mix rows"). Nothing is written; 409 catching_up while the save is still behind."""
+        (contract/mix-rows.txt, "Mix rows"). Nothing is written; 409 catching_up while the save is still behind."""
         found = session.account(request)
         with answered(game):
             saves = services.of(request).saves

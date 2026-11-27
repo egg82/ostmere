@@ -73,7 +73,7 @@ Order: 4, 2-3 and 9 first (they change no content); 6-8 and 10 with `day_eight.t
    ids unchanged; week 2's new lanes join by appending to `lanes`. Fits into: Catalogue (the loader), Cards. Accept: the
    rules digest of every released chapter is byte-identical before and after (the proof the move is structure only);
    the lock passes; a planted entry whose expansion would collide with an existing id fails the loader, naming it.
-5. **The journal's first slice** (**L**, opening, api, client, art; interface first: a section in `CONTRACT.txt`).
+5. **The journal's first slice** (**L**, opening, api, client, art; interface first: a section in `contract/`).
    (a) An `entry` unlock kind; an entry's notes are unlocks of their own (a later note is a later outcome); the loader
    reads a chapter's `[[entries]]` and `[[notes]]` (ids, gates, which hand, a sketch id; text in `[text]`), and the
    content check refuses a note on no entry and an entry with no first note. (b) The page: a Journal sheet from the book
@@ -83,8 +83,8 @@ Order: 4, 2-3 and 9 first (they change no content); 6-8 and 10 with `day_eight.t
    phone, an open spread on desktop; layout seeded per entry; its first use a lesson on its own control. (c) The sketch
    method for the first entries (issue #30, `docs/research/sketch-test/process.md`), each looked at before it
    ships. Fits into: Unlocks (the entry kind), Knowledge (its first real use, as a page reading), Lessons (first use),
-   the page shell (a sheet). Not a system: one caller, nothing to swap. Interface: api `CONTRACT.txt`, "JOURNAL", and
-   `opening-screen.md`, "The journal". Accept: that section's numbered acceptance tests.
+   the page shell (a sheet). Not a system: one caller, nothing to swap. Interface: api `contract/journal.txt`, "JOURNAL", and
+   `opening-screen/journal.md`, "The journal". Accept: that section's numbered acceptance tests.
 6. **The season's turn in content** (**S**, content and a loader check). The turn is an `after_time` trigger; what only
    the season brings is cards drawing a pool the turn fills and standing actions drawing a pool that empties at the next
    turn (the visitor's pause), plus a clock store for season-keyed ramp steps. No season state, no rate modifier (a raise

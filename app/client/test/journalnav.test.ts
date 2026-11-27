@@ -1,4 +1,4 @@
-// Finding a page in a long journal (docs/design/opening-screen.md, "The journal"): Prev and Next stay in a section and say
+// Finding a page in a long journal (docs/design/opening-screen/journal.md, "The journal"): Prev and Next stay in a section and say
 // where they go at its edge, a section's contents lists its pages by title, and the sheet shows the place in the section.
 // The logic runs on synthetic pages (many sections, a book far longer than any shipped); the sheet on the fixture pages:
 // D is a days page, A and C are creatures pages, B is a places page, so the pages run D, A, C, B.

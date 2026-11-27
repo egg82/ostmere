@@ -1,4 +1,4 @@
-"""The town's shown name grows with the story (api/CONTRACT.txt, "The town's mix"): a chapter's town_later_labels are
+"""The town's shown name grows with the story (api/contract/the-towns-mix.txt, "The town's mix"): a chapter's town_later_labels are
 served on the content, and each names an unlock and a text key the content has."""
 import pytest
 

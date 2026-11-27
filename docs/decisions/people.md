@@ -107,7 +107,7 @@ differently. It is taken as modules once habits' cleanup lands, never as a copy 
 
 How people stand today, moved from their row in `systems.md`. Arrival policy is the A/B target. Notables never die. A
 person's name is content beside their lane (`name_key`), which the page fills into any text's `{<lane>}` slot
-(`app/ashfall_app/opening/name_checks.py`; CONTRACT.txt, "Text and numbers"); one name per person in every save for
+(`app/ashfall_app/opening/name_checks.py`; contract/text-and-numbers.txt, "Text and numbers"); one name per person in every save for
 now, the per-save draw from a pool still planned.
 
 **A person who matters is written into the story when they join or leave; the rest are a daily mention.** A journal
@@ -120,7 +120,7 @@ aside, since that person came earlier and was told then (`app/ashfall_app/openin
 person writes no line of their own: the loader gives each outcome that moves one a mention line with no text, so it
 lands in the save's log at the second it happened, and the page words each game day's mentions of a way as one line,
 from the `[people]` bands for how many came or went, drawn by a shuffle bag keyed by the save, the way and the band
-(`app/ashfall_app/opening/people.py`, `app/client/src/game/people.ts`; CONTRACT.txt, "PEOPLE"). The bands are words,
+(`app/ashfall_app/opening/people.py`, `app/client/src/game/people.ts`; contract/people.txt, "PEOPLE"). The bands are words,
 never a count, after A Dark Room, whose arrivals read as a stranger, a family, a group or a convoy by their size. The
 mention is decided in code and written by authored lines: no frequency word anywhere. Every person in the shipped
 chapters is `line`, since each joining so far is a beat with lines of its own. Rejected: a per-person line for everyone, which
@@ -134,7 +134,7 @@ person is in one group). The story sets and clears it, on the join and in a late
 headcount, and the page never sets it. It is not the notable tier: notables never die, a promise to the player, while the
 mark is given and taken by the story, so fusing them would make losing a mark expose a person to death. Content will often
 mark notables; the two fields stay separate. The Town view draws a row per marked person and per group
-(`docs/design/opening-screen.md`, "The Town view"); a group's page may name a person tied to it from an authored field when
+(`docs/design/opening-screen/town-and-book.md`, "The Town view"); a group's page may name a person tied to it from an authored field when
 content has one.
 
 How many things the Town view asks the player to tune (a person keeping their own split, or a group with a joined member

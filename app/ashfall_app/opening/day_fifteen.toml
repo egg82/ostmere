@@ -554,6 +554,7 @@ id = "meals"
 label_key = "store_meals"
 cap_items = 8760
 hidden = true
+stated = true
 
 [[standing]]
 id = "table"
@@ -842,7 +843,7 @@ after = { unlock_kind = "feature", id = "belonging" }
 # ---------- text ----------
 
 # The first line of each story beat, by its id in content/beats.yaml: the page hears a beat open from these, by no
-# key's name (api/CONTRACT.txt, "Beat lines"). One id lists a key per way the beat can be told.
+# key's name (api/contract/endpoints.txt, "Beat lines"). One id lists a key per way the beat can be told.
 [beat_lines]
 B13 = ["l_b13_1"]
 B14 = ["l_b14_1"]

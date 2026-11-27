@@ -1,0 +1,15 @@
+SAVES ACROSS RELEASES AND PODS
+  A save written under older rules (a deploy changed the content) is carried over, never refused: the server rebases
+  it when it is next read (engine DESIGN.txt, "Rebase") and answers under the current rules, with any lines new
+  content landed at the save's own time first. What the current rules no longer have is dropped from the save (one log
+  line, save.dropped, names the save and how many ids of each kind went), and a stored log line whose text key the
+  content no longer has is left out of the history served. Each decision, advance and open is one transaction holding the save's
+  row, so two requests on one save run one after the other, on any pod. Builds are ordered by release: a
+  number CI gives each image build (BUILD_RELEASE, the workflow run number; 0 for a local run), so a later build always
+  has a higher one, even one that changes only numbers. Each save records the release it was last
+  written under. A pod answers 503 save_unavailable (Retry-After) for a save of a later release than its own, and for
+  one whose stored text it cannot read, and writes nothing: mid-deploy the next try reaches a pod of the later release. A save of the
+  pod's own release or an earlier one is read exactly, or rebased forward, and written. A 4xx or 5xx answer writes
+  nothing, except a 409, whose Step is written as an advance; so a decision is applied once, and a 409 or 5xx means
+  it was not, bar one 503: a database switchover that loses the COMMIT (below, ERRORS).
+

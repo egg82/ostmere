@@ -1,4 +1,4 @@
-// The side-holder's lesson (docs/design/opening-screen.md, "Lessons"): a card that holds a side while it runs
+// The side-holder's lesson (docs/design/opening-screen/lessons.md, "Lessons"): a card that holds a side while it runs
 // (CardInfo.kept) adds to that side's strength at its share of the mix, so a mix runs it beside the fight it helps. It
 // starts from that card's face the first time a fight of its side is served and a card that makes the fight is in play,
 // and points at the Mixes control.

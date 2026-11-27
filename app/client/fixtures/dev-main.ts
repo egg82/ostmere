@@ -58,14 +58,14 @@ MANY.n = Number(hash.get("stores") ?? 0);
 if (isSince(phase)) Object.assign(fixtureContent, withSince(fixtureContent));
 const fixture = fixtureApi(phase, hash.has("stale"), hash.has("seen"), hash.has("limited"), hash.has("due"));
 const kept = (hash.get("kept") ?? "").split(",").filter((l) => l.length > 0);
-// #stuck stands in for the server's View.order_dry (CONTRACT.txt, "Dry rules"; tested in tests/test_rule_dry.py): the rule
+// #stuck stands in for the server's View.order_dry (contract/dry-rules.txt, "Dry rules"; tested in tests/test_rule_dry.py): the rule
 // holding the hands cannot let go, and a dry run says the rule being written may stop short.
 const dryOf = (v: View, holding: boolean): View => ({ ...v, order_dry: v.orders.map((o, i) => (!holding || v.order_states[i] === "on" ? (o.then.kind === "switch_mix" ? { store: "stone", holding } : null) : null)) });
 const stuck = hash.has("stuck");
 // #manydone: every card of the content finished, for the Book's Done page at its fullest.
 const manyDone = (v: View): View => (hash.has("manydone") ? { ...v, completed: fixtureContent.card_infos.map((c) => ({ card: c.card, completions: 3 })) } : v);
 // #shares: the first rule's levels as shares of the cap (down to a quarter, until three quarters), the second's until
-// as full (CONTRACT.txt, "Share levels"), for the editor and the rule rows in both forms.
+// as full (contract/endpoints.txt, "Share levels"), for the editor and the rule rows in both forms.
 const share = (o: Order, i: number): Order => (o.when.kind !== "at_most" || i > 1 ? o : { ...o, when: i === 0
   ? { ...o.when, value: 2500, release: 7500, value_of_cap: true, release_of_cap: true } : { ...o.when, release: 10000, release_of_cap: true } });
 const shared = (v: View): View => (hash.has("shares") ? { ...v, orders: v.orders.map(share) } : v);
@@ -73,7 +73,7 @@ const shared = (v: View): View => (hash.has("shares") ? { ...v, orders: v.orders
 const woodGoal = (v: View): View => (!hash.has("goalrows") ? v : { ...v, goal_rows: [{ kind: "store", store: "wood", skill: null, target: 30 * Q,
   lands_at: v.at + 3600, per_hour: 60_000, limit: null, until: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30 * Q, release: 30 * Q, value_of_cap: false, release_of_cap: false } }] });
 // #nextrow: Next's row moved up above the third rule, a Larder build queued, and that rule waiting behind Next
-// (CONTRACT.txt, "Next's row"), for the Rules tab with the row between two rules.
+// (contract/endpoints.txt, "Next's row"), for the Rules tab with the row between two rules.
 const larder = { kind: "at_least" as const, watched: { kind: "card_count" as const, card: "larder" }, value: 1, release: 1, value_of_cap: false, release_of_cap: false };
 const nextRow = (v: View): View => (!hash.has("nextrow") ? v : { ...v, orders: v.orders.map((o, i) => ({ ...o, below_next: i >= 2 })),
   queue: [{ verb: { kind: "tap_card", card: "larder" }, until: larder }], order_states: v.order_states.map((s, i) => (i === 2 && s === "on" ? "behind_next" : s)) });

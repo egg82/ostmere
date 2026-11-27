@@ -1,4 +1,4 @@
-"""A skill's prestige phase on the wire (CONTRACT.txt, "PRESTIGE PHASES"; re-exported from models.py)."""
+"""A skill's prestige phase on the wire (contract/prestige-phases.txt, "PRESTIGE PHASES"; re-exported from models.py)."""
 from pydantic import BaseModel
 
 

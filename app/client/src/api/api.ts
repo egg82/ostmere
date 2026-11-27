@@ -1,4 +1,4 @@
-// The game API (app/ashfall_app/api/CONTRACT.txt) behind one narrow interface, so the page runs against the real
+// The game API (app/ashfall_app/api/contract/) behind one narrow interface, so the page runs against the real
 // server or a fixture (fixtures/fixture-api.ts) without knowing which. The server holds the game; the browser's
 // session cookie names the account, so nothing here carries a state.
 import { reportError, stepHeaders } from "../telemetry";
@@ -18,9 +18,9 @@ export interface GameApi {
   advance(saveId: number): Promise<Step>;
   /** The save as last written, at its own time, not advanced; nothing is written (the front page's picture of a save's camp). */
   savedView(saveId: number): Promise<View>;
-  /** The save advanced to now and what lands from there if the player changes nothing (CONTRACT.txt, "Forecast"). */
+  /** The save advanced to now and what lands from there if the player changes nothing (contract/forecast.txt, "Forecast"). */
   forecast(saveId: number): Promise<ForecastAnswer>;
-  /** The player's saved mixes on separate numbers as if each ran from now, and the earlier best per goal (CONTRACT.txt, "Mix rows"); nothing is written. */
+  /** The player's saved mixes on separate numbers as if each ran from now, and the earlier best per goal (contract/mix-rows.txt, "Mix rows"); nothing is written. */
   mixRows(saveId: number): Promise<MixRows>;
   /** `after`: the Step.decisions the page last saw (409 stale when another page decided since). */
   decide(saveId: number, decision: Decision, after: number): Promise<Step>;
@@ -37,16 +37,16 @@ export interface GameApi {
   makeCode(): Promise<TransferCode>;
   /** New recovery words; the old ones stop working. */
   makeWords(): Promise<RecoveryWords>;
-  /** This browser joins the account a code or words name (CONTRACT.txt, "Moving to another device"); `way`, other than
+  /** This browser joins the account a code or words name (contract/moving-to-another-device.txt, "Moving to another device"); `way`, other than
    * plain only after the player chose it: "move" moves this browser's own games into that account, "keep" leaves them
    * on their old one. */
   join(typed: string, way: JoinWay): Promise<Joined>;
-  /** The account's saves, live and deleted (CONTRACT.txt, "Games on one account"). */
+  /** The account's saves, live and deleted (contract/games-on-one-account.txt, "Games on one account"). */
   games(): Promise<Games>;
   /** Deletes a live save that is not the account's only one; it is held and can be restored. */
   deleteGame(saveId: number): Promise<Games>;
   restoreGame(saveId: number): Promise<Games>;
-  /** The account's browsers, this one first (CONTRACT.txt, "Your devices"). */
+  /** The account's browsers, this one first (contract/your-devices.txt, "Your devices"). */
   devices(): Promise<Devices>;
   /** Signs one browser out; the answer lists what is left. Removing this browser ends its session too. */
   removeDevice(deviceId: number): Promise<Devices>;

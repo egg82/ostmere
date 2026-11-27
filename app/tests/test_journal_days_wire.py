@@ -1,4 +1,4 @@
-"""The journal's written days on the wire (api/CONTRACT.txt, "JOURNAL", "The written days"): a Step carries the
+"""The journal's written days on the wire (api/contract/journal.txt, "JOURNAL", "The written days"): a Step carries the
 written days it composed, an Opened every written day stored before it, each note with its slot, text key, resolved
 hand and sketch; a day not written is never served; the spec names the shapes; and SavePresentation.newest_day_read
 only grows."""

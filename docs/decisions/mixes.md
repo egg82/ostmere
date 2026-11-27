@@ -75,7 +75,7 @@ and you tune it, then hit go.
   gone never reaches 15 and holds the hands. The game does not release it, change the defaults or block Save
   (choice-not-protection.md): the rule's row states the fact ("can't reach 15: out of damp wood"), and the editor
   states beside Save, before it is written, that nothing in the mix makes a store the mix consumes. Server decision
-  (CONTRACT.txt, "Dry rules"); the client words it.
+  (contract/dry-rules.txt, "Dry rules"); the client words it.
 - **No hold on a line**. The Hold, which kept a store at a level by slowing one card of the mix, is
   gone, from the engine to the page. It was left over from protecting players who don't want to play the game
   ("Choice, not protection", `design/choice-not-protection.md`): mixes and rules cover everything met so far,
@@ -123,7 +123,7 @@ and you tune it, then hit go.
   two rules doing the same thing. The full editor keeps all its power, since it is what makes rules handy later; only its first view shrinks.
   The mix editor likewise shows only what an edit changes. Each is first met through a lesson on its real controls
   at the moment it matters, the mix before rules, skippable and never repeated (after the galaxy.click
-  reviewer's mix ran nothing for fifty minutes: `docs/design/opening-screen.md`, "Lessons"); beyond the first rule,
+  reviewer's mix ran nothing for fifty minutes: `docs/design/opening-screen/lessons.md`, "Lessons"); beyond the first rule,
   discovery stays the way in.
 - **The Rules page switches between Mine and Camp** (owner, 2026-11-15): once a second person has hands, a switch at the top of the
   list shows one side at a time, the player's own rules or everyone else's, with the same editor and controls; the camp's
@@ -141,7 +141,7 @@ and you tune it, then hit go.
   it, the bar is that card alone with its time left and a small "then {mix}" names what the hands go back to; a rule's
   or a goal stint's mix is the bar while it runs, with where it lets go and "then {mix}". When the holder lets go, the
   mix returns. Nothing says "paused because…", on a card or the strip: the bar already shows what runs
-  (`docs/design/opening-screen.md`, "The hands strip").
+  (`docs/design/opening-screen/hands-strip.md`, "The hands strip").
 - One mechanism for both layers: your mix runs your day, the town's mix runs its buildings and people.
 - **A person's mix is the simple version of yours, on purpose** (owner, 2026-11-17: "Multiple people is complicated
   enough"). Each person has one split in the one town mix: no saved mixes of their own, and no rule switches it when a
@@ -156,7 +156,7 @@ and you tune it, then hit go.
   clears, never arrival order or a headcount. The player sees their own mix, a page per marked person and a page per
   group; the town mix stays the engine's container and is never a thing named on screen. A group page shows one share
   bar and the crew size as the multiplier beside it; a group of one draws as that person; a big group shows a count with
-  its members a tap away (`docs/design/opening-screen.md`, "The Town view"). Rejected: job tags on per-person cards
+  its members a tap away (`docs/design/opening-screen/town-and-book.md`, "The Town view"). Rejected: job tags on per-person cards
   (content authors a card per person per job, the chore again); a mix per group (a running mix and always rule each, which
   the town mix already declined per person); the mark as an unlock (unlocks only grow); per-member exceptions inside a
   group (a person who cannot do a general job belongs to a group without it); whole-camp switching between town mixes
@@ -246,7 +246,7 @@ runs another tap. While a staged card a tap started is running, its face offers 
 (owner, #464: the moment to decide is right after the first tap). It sends the plan the card would have had were it
 planned before the tap, its work kept: on a lane the queue takes, the entry tapping it to its cap (at Next's front, or
 a running When ready entry held on to the cap); on a person's lane, an always rule tapping it where a new lane rule
-goes, passed over at the cap (`app/ashfall_app/api/CONTRACT.txt`, "UNTIL DONE"). When ready's own default still
+goes, passed over at the cap (`app/ashfall_app/api/contract/until-done.txt`, "UNTIL DONE"). When ready's own default still
 never holds a staged card to its cap (engine DESIGN's REJECTED list).
 
 Modifiers: buildings, tools, spells, prestige, seasons, injuries and supply are all modifiers, and a cap only rises.

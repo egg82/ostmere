@@ -1,4 +1,4 @@
-// What the page points the player at (CONTRACT.txt), read off the view and the content only: a red ledger line's
+// What the page points the player at (contract/), read off the view and the content only: a red ledger line's
 // answer (its order card once offered, else what draws on it most, unless that is the hands' passing tap); the card
 // in play that makes a short need's store; a step need's count; the card the one glow goes to, and the card an idle
 // player is nudged toward; and, after the end, a chip's first-rule lesson entry in the hands strip.
@@ -15,7 +15,7 @@ export function offeredCard(catalog: Catalog, view: View, store: string): OrderC
 }
 
 /** A card for a rising line: its `when` is an at_least and its task takes from the store. It is offered
- * while the line is full or rising, never once a rule on its store and test is set (docs/design/opening-screen.md,
+ * while the line is full or rising, never once a rule on its store and test is set (docs/design/opening-screen/ledger-and-fights.md,
  * "Ledger and rules"). */
 export function risingCard(catalog: Catalog, card: OrderCard): boolean {
   const info = card.then.kind === "tap_card" ? catalog.cards.get(card.then.card) : undefined;
@@ -27,7 +27,7 @@ export function risingLine(line: LedgerLine, at: number): boolean {
   return line.net_per_hour > 0 || (line.cap > 0 && sample(line.segment, at) >= line.cap);
 }
 
-/** A chip's card may be on show (CONTRACT.txt): one that waits for the end (after_end) has the end recorded and its
+/** A chip's card may be on show (contract/): one that waits for the end (after_end) has the end recorded and its
  * lines read (`endBehind`), and no rule is set on its store and test. Once shown, it stays while this holds. */
 export function chipCardOpen(view: View, card: OrderCard, endBehind: boolean): boolean {
   return (!card.after_end || (view.ended_at !== null && endBehind)) && ruleFor(view, card) < 0;

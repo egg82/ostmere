@@ -1,5 +1,5 @@
 """What an open offer's answers do to the lasting changes they make (engine DESIGN.txt, "Answer shifts"; api
-CONTRACT.txt, "OFFERS"). Each AnswerView.shifts has one entry per distinct change of the answer's modifiers, in authored
+contract/offers.txt, "OFFERS"). Each AnswerView.shifts has one entry per distinct change of the answer's modifiers, in authored
 order: the target's total change now and with the answer's entries added, additions summing and multipliers compounding
 as modified_rate combines them; None where entries of one change aim at targets standing differently; empty once given."""
 from dataclasses import replace

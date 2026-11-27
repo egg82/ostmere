@@ -1,4 +1,4 @@
-"""POST /api/feedback (api/CONTRACT.txt): the words a tester sends from the page. Open to a browser with no account
+"""POST /api/feedback (api/contract/): the words a tester sends from the page. Open to a browser with no account
 too (the limit then counts its client address). The text is never logged (service.py)."""
 from typing import Annotated
 

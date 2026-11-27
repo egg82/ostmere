@@ -1,0 +1,22 @@
+YOUR DEVICES
+  A device is a browser that holds a session of the account (one row per session; a join folds a browser's session
+  into the account, so it lists there). Both routes answer Devices {devices: [Device]}, and every answer, errors
+  included, carries Cache-Control: no-store. Neither renews a session. Without a database, 503 save_unavailable.
+  Device {device_id, label, created_at, last_seen_at, this_device}
+    device_id      the session's id, the {device_id} of DELETE. The session's token and its hash are never answered.
+    label          browser and system read from the User-Agent when the session was made ("Firefox on Linux",
+                   "Safari on iPhone"; "Chrome" or "Linux" alone when only one is told); "A browser" when neither
+                   is, and for a session made before labels. The User-Agent itself is not kept.
+    created_at     when the browser got its session.
+    last_seen_at   when it was last used, stored at most once a day.
+    this_device    true for the browser that asked; exactly one row of a list asked by a live session.
+  GET /api/me/devices -> Devices: the account's sessions, this browser first, then the rest by last_seen_at, latest
+    first. An account keeps at most 20 sessions, so at most 20 rows.
+  DELETE /api/me/devices/{device_id} (device_id >= 1) -> Devices: the session ends at once, so that browser's next
+    request has no account (GET /api/me answers account null, a route that needs one 401 no_account), and the list
+    is what is left. Removing this_device signs the asking browser out too: the answer ends its session cookie
+    (Set-Cookie with Max-Age 0) and lists the other rows, none of them this_device. A device_id that is not one of
+    this account's sessions, another account's included, answers 404 not_found exactly as one that does not exist,
+    and changes nothing. A write, so csrf.py's rules hold (403 cross_site, 415 not_json), and, like any DELETE, it does not
+    renew the session. The page offers the removal on every row, this one included, and asks first for this one.
+

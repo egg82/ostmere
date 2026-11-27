@@ -1,4 +1,4 @@
-// Lessons (docs/design/opening-screen.md, "Lessons"): a system taught on its real controls the first time it matters,
+// Lessons (docs/design/opening-screen/lessons.md, "Lessons"): a system taught on its real controls the first time it matters,
 // one step at a time. A lesson is data: an id, when it may start, the control whose showing starts it (its trigger,
 // which carries the lesson's subject in its data attributes), and its steps, each naming the control to highlight
 // (a CSS selector, filled from the subject), its line, and whether a touch or a read ends it. The runner

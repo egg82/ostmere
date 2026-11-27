@@ -1,5 +1,5 @@
 """Postgres text holds no U+0000, so one in a string a request stores would be a 500 at the write. The wire models refuse
-it first (api/CONTRACT.txt, "Request limits"): 422 invalid_decision, before any limit try is spent or anything written."""
+it first (api/contract/request-limits.txt, "Request limits"): 422 invalid_decision, before any limit try is spent or anything written."""
 from typing import Any
 
 import pytest

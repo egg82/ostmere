@@ -1,4 +1,4 @@
-"""View.store_rows on test_goal_rows' fixture world (api/storerows.py; CONTRACT.txt, "Store rows"): each store's net as
+"""View.store_rows on test_goal_rows' fixture world (api/storerows.py; contract/store-rows.txt, "Store rows"): each store's net as
 set, where it heads, and whether a card of the hands' mix touches it. `fell` makes log (3 an hour), `saw` costs log
 (6 an hour) into plank."""
 from ashfall_app import engine as e

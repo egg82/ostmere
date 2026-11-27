@@ -78,7 +78,7 @@ outcome = { unlocks = [{ unlock_kind = "action", id = "kept_24h" }] }
 # ---------- I8: the bowl set out, and the boar hunt ----------
 
 # The evening after the wake. The hunt opens with it: a fight card of the player's own whose losses are told from pools
-# of its own (api/CONTRACT.txt, "LOSS LINES"), never before kept (loss_after).
+# of its own (api/contract/loss-lines.txt, "LOSS LINES"), never before kept (loss_after).
 [[triggers]]
 id = "t_bowl_set"
 when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 8 }

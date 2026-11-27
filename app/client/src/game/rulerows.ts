@@ -1,4 +1,4 @@
-// A rule's entries in the chronicle, read off what the rules did lately (Step.rule_runs, CONTRACT.txt "Rule runs"):
+// A rule's entries in the chronicle, read off what the rules did lately (Step.rule_runs, contract/rule-runs.txt "Rule runs"):
 // each run's last start and last let-go, the rule in the player's words, and as cause the store's level then (a chip's
 // rule or a count or level rule has none: its words already say what it waits on). The runs are a summary, so starts a
 // later start replaced before any page saw them are not entries. Pure.

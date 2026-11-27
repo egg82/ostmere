@@ -1,4 +1,4 @@
-// A spent card on the strip (CONTRACT.txt, "SPENT"): while a card of the running mix is stopped on a store nothing
+// A spent card on the strip (contract/spent.txt, "SPENT"): while a card of the running mix is stopped on a store nothing
 // can make again, the strip's status names the store, whether or not others gain its share (the split that runs now
 // shows the gains: runningnow.test.ts); a mix with no spent card carries no note.
 import { install } from "./fake-dom";

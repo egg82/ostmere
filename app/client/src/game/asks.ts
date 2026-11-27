@@ -1,4 +1,4 @@
-// What an ask says of itself (CONTRACT.txt, "OFFERS"): which asks are open and in what order, who asks, what led to it,
+// What an ask says of itself (contract/offers.txt, "OFFERS"): which asks are open and in what order, who asks, what led to it,
 // and each figure an answer moves, now → once given, read off a dry run of that answer, never computed here. Pure.
 import type { AnswerShift, OfferInfo, View } from "../api/types";
 import type { Catalog } from "./catalog";

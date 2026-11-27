@@ -1,4 +1,4 @@
-"""Two pages on one save, on two pods (CONTRACT.txt: 409 stale, SAVES ACROSS RELEASES AND PODS): a decision names the
+"""Two pages on one save, on two pods (contract/: 409 stale, SAVES ACROSS RELEASES AND PODS): a decision names the
 count it follows and applies once; advances never conflict; requests on one save run one after the other."""
 import threading
 from typing import Any

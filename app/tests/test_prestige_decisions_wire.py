@@ -1,4 +1,4 @@
-"""The prestige verbs and nodes on the wire (api/CONTRACT.txt, "PRESTIGE PHASES"): prestige and undo_pick as
+"""The prestige verbs and nodes on the wire (api/contract/prestige-phases.txt, "PRESTIGE PHASES"): prestige and undo_pick as
 decisions (never order verbs) reaching the engine's verbs, a refusal answered 422 invalid_decision, the row's
 pick_owed and topped_at, and Content.node_infos as the content authors them."""
 import pytest

@@ -1,5 +1,5 @@
 // Stores of one kind of thing (StoreInfo.group_key: the pot's stews) share one ledger row once two or more are drawn: the
-// group's label and its total, which a tap opens to show each kind's own line (CONTRACT.txt, "Ledger"). Only the lines
+// group's label and its total, which a tap opens to show each kind's own line (contract/, "Ledger"). Only the lines
 // the ledger keeps with itself are folded: a line drawn with the asks (red, or full while fed) stays where it is seen.
 import type { LedgerLine } from "../api/types";
 import { sample } from "../game/clock";

@@ -1,4 +1,4 @@
-"""What one request may carry (CONTRACT.txt, "Request limits"). The page reads the ones its editors stop at from Content.limits;
+"""What one request may carry (contract/request-limits.txt, "Request limits"). The page reads the ones its editors stop at from Content.limits;
 the body's own limit is accounts/body_limit.py's."""
 
 from ..engine import MAX_ACTIONS, MAX_GUARDS, MAX_MIXES as MAX_MIXES

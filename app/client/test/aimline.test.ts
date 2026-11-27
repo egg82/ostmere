@@ -1,4 +1,4 @@
-// The aim (ui/aim.ts, game/shown.ts currentAim; CONTRACT.txt, "The client may"): the aim's line states the text of
+// The aim (ui/aim.ts, game/shown.ts currentAim; contract/the-client-may.txt, "The client may"): the aim's line states the text of
 // the last of Content.aim_infos whose `after` view.unlocked holds, from the first view on; a later aim takes its turn
 // in the arrival queue; content with no aims leaves the line empty.
 import { install } from "./fake-dom";
@@ -23,9 +23,9 @@ const content: Content = {
   text_entries: [...fixtureContent.text_entries, { key: "aim.first", text: "first aim" }, { key: "aim.later", text: "later aim" },
     { key: "aim.never", text: "never aim" }],
   aim_infos: [
-    { aim: "first", text_key: "aim.first", after: null },
-    { aim: "later", text_key: "aim.later", after: { category: "card", id: "tend" } },
-    { aim: "never", text_key: "aim.never", after: { category: "feature", id: "not_in_any_view" } },
+    { aim: "first", text_key: "aim.first", after: null, ends_after: null },
+    { aim: "later", text_key: "aim.later", after: { category: "card", id: "tend" }, ends_after: { category: "card", id: "mend" } },
+    { aim: "never", text_key: "aim.never", after: { category: "feature", id: "not_in_any_view" }, ends_after: null },
   ],
 };
 const catalog = new Catalog(content);
@@ -46,6 +46,8 @@ const aimOf = (story: Story): string => story.aim.textContent ?? "";
   const story = new Story(testContext(undefined, catalog).ctx);
   story.update(withCard(mid, "tend"), null);
   expect("a page opened past a later aim's after: that aim at once", aimOf(story), "later aim");
+  story.update(withCard(withCard(mid, "tend"), "mend"), null);
+  expect("its until unlocked: the step is done and the line gives way, not back to an earlier aim", aimOf(story), "");
 }
 
 {

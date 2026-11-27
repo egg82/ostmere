@@ -1,6 +1,6 @@
 """Saves (docs/systems.md): each account's games, held by the server and written on every decision and advance. The
 implementation is service.py, on Postgres; NullSaves answers when the app has no database (every call is unavailable).
-Callers hold this interface, never the implementation. The wire form is the API's (api/CONTRACT.txt); this speaks
+Callers hold this interface, never the implementation. The wire form is the API's (api/contract/); this speaks
 the engine's types."""
 
 from collections.abc import Callable
@@ -18,7 +18,7 @@ from .ruleruns import RuleRun
 RETRY_AFTER_S = 3
 """Mid-deploy, how long a page waits before asking again for a save this pod may not write."""
 MAX_SAVES = 5
-"""The most live saves an account holds (api/CONTRACT.txt, "Games on one account")."""
+"""The most live saves an account holds (api/contract/games-on-one-account.txt, "Games on one account")."""
 KEPT_DAYS = 30
 """How long a deleted save is held before it may be deleted for good."""
 
@@ -116,7 +116,7 @@ class Opened:
     history: tuple[PastLine, ...]
     """Its last HISTORY lines before this open, oldest first."""
     presentation: dict[str, object]
-    """What the page keeps about its teaching, as stored (api/CONTRACT.txt, SavePresentation)."""
+    """What the page keeps about its teaching, as stored (api/contract/endpoints.txt, SavePresentation)."""
     days: tuple[ComposedDay, ...]
     """Its written journal days stored before this open, oldest first, the day in progress with its notes so far;
     `played.days` has those the open's step added to, whole."""

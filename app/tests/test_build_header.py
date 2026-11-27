@@ -1,4 +1,4 @@
-"""Every response names the build that answered (X-Ashfall-Build, api/CONTRACT.txt), errors included."""
+"""Every response names the build that answered (X-Ashfall-Build, api/contract/), errors included."""
 import pytest
 from fastapi.testclient import TestClient
 

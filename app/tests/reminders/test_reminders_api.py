@@ -1,4 +1,4 @@
-"""PUT and DELETE /api/reminders (CONTRACT.txt, "Reminders") through the app, on a database of the test's own."""
+"""PUT and DELETE /api/reminders (contract/reminders.txt, "Reminders") through the app, on a database of the test's own."""
 import pytest
 
 from tests.game_client import GameClient

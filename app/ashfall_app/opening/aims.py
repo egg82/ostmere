@@ -22,3 +22,6 @@ def check_aims(o: "Opening") -> None:
             fail(f"aim {a.id}", "only the first aim takes no after")
         if (a.after.unlock_kind, a.after.id) not in given:
             fail(f"aim {a.id}", f"nothing unlocks {a.after.unlock_kind} {a.after.id}, so the aim before it never ends")
+    for a in o.aims:
+        if a.until is not None and (a.until.unlock_kind, a.until.id) not in given:
+            fail(f"aim {a.id}", f"nothing unlocks {a.until.unlock_kind} {a.until.id}, so the aim never gives way")

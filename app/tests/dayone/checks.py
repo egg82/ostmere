@@ -181,7 +181,7 @@ def one_per_moment(triggers: Iterable[TriggerDef]) -> list[TriggerDef]:
 
 def opens(rules: Rules, unlocks: tuple[Unlock, ...], save: Save, before: Save | None = None) -> bool:
     """An outcome opens something to see: a card, a page part, a skill row, a chip, an offer, a journal entry or note
-    (api/CONTRACT.txt, "JOURNAL"), or a standing action that moves a store on the ledger (a store alone, a retirement, a
+    (api/contract/journal.txt, "JOURNAL"), or a standing action that moves a store on the ledger (a store alone, a retirement, a
     hidden clock are not openings, nor is anything already open in `before`)."""
     shown = {u.id for u in save.unlocked if u.kind is UnlockKind.STORE}
     known: set[Unlock] = set() if before is None else set(before.unlocked)

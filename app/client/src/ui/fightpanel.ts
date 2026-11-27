@@ -1,4 +1,4 @@
-// A fight's odds (docs/design/opening-screen.md, "Fights"; CONTRACT.txt, "FIGHTS"): what the fight is worth, as served.
+// A fight's odds (docs/design/opening-screen/ledger-and-fights.md, "Fights"; contract/fights.txt, "FIGHTS"): what the fight is worth, as served.
 // "1 in 5 lost" (a percentage when no small pair is exact), the two strengths beside it ("yours 12, theirs 9"), each a
 // button that opens its entries, the base first, and what one lost fight costs. A standing fight adds its tally. The
 // card draws it beside its tap (never inside the button), the ledger under a threat's name.

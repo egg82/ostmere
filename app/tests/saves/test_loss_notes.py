@@ -1,4 +1,4 @@
-"""The journal's loss and fold notes (api/CONTRACT.txt, "LOSS LINES", L1-L6), from the composer's public function on
+"""The journal's loss and fold notes (api/contract/loss-lines.txt, "LOSS LINES", L1-L6), from the composer's public function on
 days with no lines of their own, and the lost tallies a step reads at each day's end (saves/journal_tallies.py) on the
 engine contract's small fight world."""
 from ashfall_app import engine as e

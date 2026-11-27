@@ -536,7 +536,7 @@ fight = { side = "gap", threat = "wolf_pack", lost = "pack_lost", fought = "pack
 
 # ---------- B9: the book comes out ----------
 
-# The creature pages come at the first pack fight (api/CONTRACT.txt, "JOURNAL"); the book is declared in the opening.
+# The creature pages come at the first pack fight (api/contract/journal.txt, "JOURNAL"); the book is declared in the opening.
 # Each note is a trigger the loader makes; B9 waits on the three pages.
 [[entries]]
 id = "e_wolf"
@@ -753,7 +753,7 @@ after = { unlock_kind = "feature", id = "drift" }
 # ---------- text ----------
 
 # The first line of each story beat, by its id in content/beats.yaml: the page hears a beat open from these, by no
-# key's name (api/CONTRACT.txt, "Beat lines"). One id lists a key per way the beat can be told.
+# key's name (api/contract/endpoints.txt, "Beat lines"). One id lists a key per way the beat can be told.
 [beat_lines]
 B8 = ["l_b8_1"]
 B9 = ["l_b9_1"]

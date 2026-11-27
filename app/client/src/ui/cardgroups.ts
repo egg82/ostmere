@@ -1,4 +1,4 @@
-// The card panel's lane groups (docs/design/opening-screen.md, "Cards"): one group per lane, the hands first, crafts
+// The card panel's lane groups (docs/design/opening-screen/asks-and-cards.md, "Cards"): one group per lane, the hands first, crafts
 // under one heading below their lane's cards; each group keeps its slots in order, so a card never moves under a finger.
 import type { Catalog } from "../game/catalog";
 import { compareSections, sectionHeading, sectionKey } from "../game/cardsections";

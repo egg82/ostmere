@@ -1,4 +1,4 @@
-"""Wire model of what the next story beats wait on (View.goals; CONTRACT.txt, "Goals"); the conventions in models.py
+"""Wire model of what the next story beats wait on (View.goals; contract/goals.txt, "Goals"); the conventions in models.py
 hold here."""
 from enum import StrEnum
 
@@ -18,8 +18,8 @@ class GoalKind(StrEnum):
 class Goal(BaseModel):
     """One thing an open story beat waits on: a store's amount reaching `target` (store, value), a card's completions
     reaching `target` or the card running at target 0 (card), a skill's level reaching `target` (skill), a card's fight
-    lost `target` times (fight: card, and its lost tally as store and value), or a wait on the clock alone landing at
-    `at`. The page marks the store's line, the card or the skill's row; a store with no line yet, the fight and the
+    lost `target` times (fight: card, and its lost tally as store and value), or a wait on the clock landing at
+    `at`, which states a store's amount against `target` (store, value) when the content says to. The page marks the store's line, the card or the skill's row; a store with no line yet, the fight and the
     clock, it states as a line of their own, the clock's naming what keeps it moving."""
 
     kind: GoalKind
@@ -27,9 +27,11 @@ class Goal(BaseModel):
     card: str | None
     skill: str | None
     target: int
-    """Quantity units (store, fight), completions (card), a level (level); 0 for a clock or a card running."""
+    """Quantity units (store, fight, a clock's counted store), completions (card), a level (level); 0 for a clock with no
+    store or a card running."""
     value: Segment | None
-    """The store's amount, sampled like a ledger line; null unless kind is store or fight (the fight's lost tally)."""
+    """The store's amount, sampled like a ledger line; null unless kind is store or fight (the fight's lost tally), or
+    a clock with a store."""
     at: int | None
     """When the clock lands if nothing changes the segments; null unless kind is clock, or the clock waits on a dry
     store of `feeds`. It holds until next_event_at."""
@@ -46,7 +48,7 @@ class GoalLimit(BaseModel):
 
 
 class RuleDry(BaseModel):
-    """A store rule's mix that cannot reach the rule's release for want of a store (CONTRACT.txt, "Dry rules"): the rule
+    """A store rule's mix that cannot reach the rule's release for want of a store (contract/dry-rules.txt, "Dry rules"): the rule
     holds the hands and the store is dry (`holding`), or no card of the mix makes the store, so the mix may stop short."""
 
     store: str
@@ -56,7 +58,7 @@ class RuleDry(BaseModel):
 
 
 class GoalRow(BaseModel):
-    """How the setup as set moves one goal (CONTRACT.txt, "Goal rows"): a store reaching `target` (store) or a skill
+    """How the setup as set moves one goal (contract/goal-rows.txt, "Goal rows"): a store reaching `target` (store) or a skill
     reaching level `target` (skill), when it lands at today's rates, and the line that binds it."""
 
     kind: GoalKind
@@ -77,4 +79,4 @@ class GoalRow(BaseModel):
     until: AtLeast
     """The condition that holds once the goal lands: at_least store_value `target` (store), or at_least skill_level at
     the counted level `target` is in the skill's phase (level), value and release equal. A goal stint's queue entry
-    takes it as its `until` (CONTRACT.txt, "Goal stints")."""
+    takes it as its `until` (contract/goal-stints.txt, "Goal stints")."""

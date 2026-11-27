@@ -1,4 +1,4 @@
-// What holds the hands, read off the view (docs/design/opening-screen.md, "The hands strip"), so the mix bar can show
+// What holds the hands, read off the view (docs/design/opening-screen/hands-strip.md, "The hands strip"), so the mix bar can show
 // what the hands are actually doing: a tap on the hands (by hand, a When ready step or an answer's queued one-off, a
 // rule's tap, a cut-in), else a rule's mix, else a goal stint's mix, else the player's own mix. Each holder but the
 // player's mix names the mix the hands go back to when it lets go.
@@ -13,7 +13,7 @@ export type Holder =
   | { kind: "stint"; entry: number; then: string | null };
 
 /** The tap holding `lane` (whoever started it), or null while the lane is free: a person's one-off holds their lane as a
- * hands tap holds the hands (CONTRACT.txt, "A lane run by rules"). */
+ * hands tap holds the hands (contract/a-lane-run-by-rules.txt, "A lane run by rules"). */
 export function laneTap(view: View, lane: string): { card: string; endsAt: number | null; order: number | null } | null {
   const bar = view.lanes.find((l) => l.lane === lane);
   return bar?.running_card ? { card: bar.running_card, endsAt: bar.completes_at, order: bar.order } : null;

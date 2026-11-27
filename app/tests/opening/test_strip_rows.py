@@ -4,7 +4,7 @@ pinned stage never grows for the longest line ever written; this is the content 
 
 What the strip shows is read from the page (client/src/game/chronicle.ts, ROUTES: the kinds routed to the Story
 filter), and the rows and the size from client/src/game.css. Lines wrap at spaces only, which can only add rows, never
-hide one. A person's name slot is measured as the name it shows (api/CONTRACT.txt, "Text and numbers", {<lane>})."""
+hide one. A person's name slot is measured as the name it shows (api/contract/text-and-numbers.txt, "Text and numbers", {<lane>})."""
 import re
 import tomllib
 from functools import cache
@@ -15,6 +15,7 @@ from PIL import ImageFont
 
 from ashfall_app.opening.line_kinds import LineKind
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, OPENING, UNWRITTEN
+from tests.contrast import game_css
 
 APP = Path(__file__).resolve().parents[2]
 CLIENT = APP / "client" / "src"
@@ -28,7 +29,7 @@ GUTTER_PX = 16
 
 @cache
 def css_var(name: str) -> str:
-    found = re.search(rf"--{name}:\s*([^;]+);", (CLIENT / "game.css").read_text())
+    found = re.search(rf"--{name}:\s*([^;]+);", game_css())
     assert found, f"game.css defines no --{name}"
     return found.group(1).strip()
 

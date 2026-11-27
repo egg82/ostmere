@@ -1,4 +1,4 @@
-"""Wire models of moving an account to another device (CONTRACT.txt, "Moving to another device"). The conventions of
+"""Wire models of moving an account to another device (contract/moving-to-another-device.txt, "Moving to another device"). The conventions of
 models.py hold here; the refusal's MergeSummary is error_models.py's."""
 from typing import Literal
 

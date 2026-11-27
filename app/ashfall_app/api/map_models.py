@@ -1,4 +1,4 @@
-"""The world map on the wire (CONTRACT.txt, "MAP"): the content's places. Whether one is revealed is view.unlocked's.
+"""The world map on the wire (contract/map.txt, "MAP"): the content's places. Whether one is revealed is view.unlocked's.
 Re-exported from content_models.py."""
 from enum import StrEnum
 

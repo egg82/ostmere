@@ -1,5 +1,5 @@
 """Installed rules (engine DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS": "Installed rule", "Installs land
-once", "A finished one-off rule stays"; invariants 59 and 60; api CONTRACT.txt, "A LANE RUN BY RULES"). Outcome.orders
+once", "A finished one-off rule stays"; invariants 59 and 60; api/contract/a-lane-run-by-rules.txt, "A LANE RUN BY RULES"). Outcome.orders
 lands after `raises` and before `queues` and `starts`: each RuleInstall(c, first) is Order(AfterTime(0), TapCard(c)),
 the first=True ones as one block at the top, the rest appended, each skipped when an equal order is already held,
 every new latch true. Afterwards it is an ordinary rule: removed, it never comes back from the same install."""

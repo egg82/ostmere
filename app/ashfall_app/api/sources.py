@@ -1,4 +1,4 @@
-"""Where each input a card in play needs comes from (View Card.needs' gate and makers; CONTRACT.txt, "Cards"), read off
+"""Where each input a card in play needs comes from (View Card.needs' gate and makers; contract/, "Cards"), read off
 the content's makers (opening/makers.py), the save's fired triggers and the engine's view."""
 from collections.abc import Mapping
 from dataclasses import dataclass

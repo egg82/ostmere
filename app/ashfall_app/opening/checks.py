@@ -267,7 +267,7 @@ def _check_keys(o: "Opening") -> None:
 
 
 def _check_text(o: "Opening") -> None:
-    """Text holds words and named slots, never a digit (api/CONTRACT.txt, "Text and numbers"); every fixed ui key
+    """Text holds words and named slots, never a digit (api/contract/text-and-numbers.txt, "Text and numbers"); every fixed ui key
     exists."""
     for key, text in o.text.items():
         if any(map(str.isdigit, without_slots(text))):

@@ -1,5 +1,5 @@
 // The answer rule's builder reads as a rule for later offers of the kind, not as the offer still waiting
-// (CONTRACT.txt, "Offers"): it says which answer the offer it is worded by was given, and its lead says the buttons
+// (contract/offers.txt, "Offers"): it says which answer the offer it is worded by was given, and its lead says the buttons
 // are for next time. The question no longer takes the open offer's look.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";

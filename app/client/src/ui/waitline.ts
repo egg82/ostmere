@@ -1,6 +1,6 @@
-// The wait line (CONTRACT.txt, "Goals"; decisions.md, "Progress is stated, never hinted"): when a story beat waits on the
+// The wait line (contract/goals.txt, "Goals"; decisions.md, "Progress is stated, never hinted"): when a story beat waits on the
 // clock alone, or on a card's fights lost, one line of plain text at the top of the deck says so: "Something new", the
-// fights lost against the count a card's beat waits on, the time left, and the store whose running dry stops the
+// fights lost against the count a card's beat waits on, a hidden store's count the content says to state, the time left, and the store whose running dry stops the
 // clock, whose line carries the story mark. It names no beat. Not a card and not a control: nothing to tap or focus.
 // Gone while no story beat waits on either.
 import type { Goal, View } from "../api/types";
@@ -15,6 +15,7 @@ export class WaitLine {
   private at: number | null = null;
   private feed: string | null = null;
   private fights: Goal[] = [];
+  private count: Goal | null = null;
 
   constructor(private readonly ctx: PartContext) {
     this.root.hidden = true;
@@ -26,6 +27,7 @@ export class WaitLine {
     this.fights = fights;
     this.at = clock?.at ?? null;
     this.feed = clock?.feeds[0] ?? null;
+    this.count = clock !== null && clock.store !== null && clock.value !== null ? clock : null;
   }
 
   tick(t: number): void {
@@ -39,6 +41,9 @@ export class WaitLine {
     const lost = this.fights.map((g) => text.fill(UI.goalLost, {
       card: catalog.cardLabel(g.card ?? ""), n: format.amount(g.value ? sample(g.value, t) : 0, g.target),
     }));
-    setText(this.root, [title.charAt(0).toUpperCase() + title.slice(1), ...lost, left, feed].filter((s) => s).join(" · "));
+    const counted = this.count === null || this.count.value === null ? "" : text.fill(UI.goalCount, {
+      store: catalog.storeLabel(this.count.store ?? ""), n: format.amount(sample(this.count.value, t), this.count.target),
+    });
+    setText(this.root, [title.charAt(0).toUpperCase() + title.slice(1), ...lost, counted, left, feed].filter((s) => s).join(" · "));
   }
 }

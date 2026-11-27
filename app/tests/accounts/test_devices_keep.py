@@ -1,4 +1,4 @@
-"""Joining without moving (CONTRACT.txt, "Moving to another device", POST /api/join with keep): a browser whose account
+"""Joining without moving (contract/moving-to-another-device.txt, "Moving to another device", POST /api/join with keep): a browser whose account
 holds games signs into the named account and leaves its games on its old one, which stays in the database with its
 recovery words, made by the join when it had none. Through the app on a database of the test's own (devices.py)."""
 from collections.abc import Iterator

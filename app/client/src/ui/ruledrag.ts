@@ -1,4 +1,4 @@
-// Dragging in the Rules tab (docs/design/opening-screen.md, "The Rules tab"): a rule's ≡ to another place among the
+// Dragging in the Rules tab (docs/design/opening-screen/rules-tab.md, "The Rules tab"): a rule's ≡ to another place among the
 // rules drawn with it (the hands' rules, or the town's). Pointer drag (mouse, pen or touch): a ghost follows
 // the pointer and the drop lands where it is let go; a press that moves less than DRAG_PX stays a tap (the node's click).
 import type { View } from "../api/types";

@@ -64,7 +64,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.card.retired",
     "ui.ledger.full",
     "ui.camp.pays",
-    "ui.goal.in", "ui.goal.while", "ui.goal.paused", "ui.goal.lost",
+    "ui.goal.in", "ui.goal.while", "ui.goal.paused", "ui.goal.lost", "ui.goal.count",
     "ui.ledger.starved",
     "ui.heading.mixes",
     "ui.order.add",
@@ -193,4 +193,4 @@ UI_KEYS: tuple[str, ...] = (
     "ui.prestige.picks", "ui.prestige.move", "ui.prestige.move_to", "ui.prestige.move_here", "ui.prestige.parked",
     "ui.prestige.parked_one",
 )
-"""The fixed text the page needs (api/CONTRACT.txt, "Text and numbers")."""
+"""The fixed text the page needs (api/contract/text-and-numbers.txt, "Text and numbers")."""

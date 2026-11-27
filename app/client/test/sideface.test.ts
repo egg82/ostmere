@@ -1,5 +1,5 @@
 // A card that holds a side while it runs says what it gives at its share of the mix on its face, where the share is set
-// (docs/decisions/combat.md, "A card that holds a side"; CONTRACT.txt, {pct}): the face draws the held figure at
+// (docs/decisions/combat.md, "A card that holds a side"; contract/, {pct}): the face draws the held figure at
 // Card.share_bp, rounded down once as the engine rounds it, and the full figure while the card holds no share of the mix.
 // The strength sheet's row for it is the served entry, share beside amount (bonuslink.test.ts).
 import { fakeDocument, type FakeEl, install } from "./fake-dom";

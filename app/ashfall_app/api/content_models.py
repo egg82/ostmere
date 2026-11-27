@@ -26,7 +26,7 @@ class Scales(BaseModel):
 
 
 class Limits(BaseModel):
-    """What the page's editors stop at (CONTRACT.txt, "Request limits"): a request past one is a 422."""
+    """What the page's editors stop at (contract/request-limits.txt, "Request limits"): a request past one is a 422."""
 
     max_orders: int
     max_queue: int
@@ -36,7 +36,7 @@ class Limits(BaseModel):
     max_or_else: int
     """Fallbacks a rule may hold after its first action (Order.or_else)."""
     reserved_mix_prefix: str
-    """A new mix id beginning so is the game's: save_mix of one is a 422 (CONTRACT.txt, "The town's mix")."""
+    """A new mix id beginning so is the game's: save_mix of one is a 422 (contract/the-towns-mix.txt, "The town's mix")."""
 
 
 class TextEntry(BaseModel):
@@ -45,7 +45,7 @@ class TextEntry(BaseModel):
 
 
 class CardPresentation(StrEnum):
-    """How the page dresses a card; one mechanic under all three (CONTRACT.txt, "Cards")."""
+    """How the page dresses a card; one mechanic under all three (contract/, "Cards")."""
 
     NARRATIVE = "narrative"
     """A told step (a cap of a few completions, each with its line)."""
@@ -61,7 +61,7 @@ class Amount(BaseModel):
 
 
 class FightInfo(BaseModel):
-    """The odds a fight card or standing action runs under (CONTRACT.txt, "FIGHTS"): the strengths' ids, and what one lost
+    """The odds a fight card or standing action runs under (contract/fights.txt, "FIGHTS"): the strengths' ids, and what one lost
     fight costs. The strengths themselves are View.fights."""
 
     side: str
@@ -81,7 +81,7 @@ class FightInfo(BaseModel):
 
 
 class ReachInfo(BaseModel):
-    """What a card with the stake reach fills: its face draws the store against the next stop (CONTRACT.txt, "Cards")."""
+    """What a card with the stake reach fills: its face draws the store against the next stop (contract/, "Cards")."""
 
     store: str
     stops: list[int]
@@ -89,7 +89,7 @@ class ReachInfo(BaseModel):
 
 
 class KeptInfo(BaseModel):
-    """One entry a card holds while it runs (CONTRACT.txt, {pct}): on a side's strength or a lane's speed, never both."""
+    """One entry a card holds while it runs (contract/, {pct}): on a side's strength or a lane's speed, never both."""
 
     side: str | None
     lane: str | None
@@ -109,7 +109,7 @@ class CardInfo(BaseModel):
     """CRAFT only: the one upside the card names; the cost is for the player to work out."""
     variant_of: str | None
     """The card this one is a kind of: cards of one variant_of are drawn as one card on the Tasks page, with a picker
-    of the kinds unlocked (CONTRACT.txt, "Cards"); null: a card of its own."""
+    of the kinds unlocked (contract/, "Cards"); null: a card of its own."""
     change_bp: list[int]
     """The modifiers of its outcome (at each completion, as a staged build's), of its finish and held while it runs (at
     its full share), then those its reach pays (triggers on the store it fills), as signed changes in basis points, as
@@ -133,9 +133,9 @@ class CardInfo(BaseModel):
     step_needs: list[StepNeed]
     """The other cards' completions its requirements ask for, in requirement order."""
     glows: bool
-    """The one glow lands on it the first time it is ready while its lane is free (CONTRACT.txt)."""
+    """The one glow lands on it the first time it is ready while its lane is free (contract/)."""
     fight: FightInfo | None
-    """Set on a fight card (CONTRACT.txt, "FIGHTS")."""
+    """Set on a fight card (contract/fights.txt, "FIGHTS")."""
     replaced_by: str | None
     """The card that takes this one's place once it retires, when the content names one: a greyed mix is fixed by the swap."""
 
@@ -147,12 +147,12 @@ class StandingInfo(BaseModel):
     label_key: str
     skill: str | None
     fight: FightInfo | None
-    """Set on a threat that runs on its own (CONTRACT.txt, "FIGHTS")."""
+    """Set on a threat that runs on its own (contract/fights.txt, "FIGHTS")."""
 
 
 class FirstMix(BaseModel):
     """The first mix the page offers once `feature` is unlocked and no mix exists: `card_ids` at an even split, saved
-    by the player's tap (CONTRACT.txt)."""
+    by the player's tap (contract/)."""
 
     feature: str
     card_ids: list[str]
@@ -183,18 +183,20 @@ class ChipInfo(BaseModel):
 
 
 class AimInfo(BaseModel):
-    """What a stretch of play is for: one line at the band's top, in content order (CONTRACT.txt, "The client may")."""
+    """What a stretch of play is for: one line at the band's top, in content order (contract/the-client-may.txt, "The client may")."""
 
     aim: str
     text_key: str
     after: Unlock | None
     """Set from when view.unlocked holds this; null only on the first aim, set from the start. The page shows the last
-    aim whose `after` holds."""
+    aim whose `after` holds, unless that aim's `ends_after` holds too: then it shows no aim."""
+    ends_after: Unlock | None
+    """The unlock that ends this aim's step before a later aim begins; null: it holds until the next aim."""
 
 
 class OrderCard(BaseModel):
     """The prefilled rule offered when a store's line is falling and uncovered: `when` is an at_most on `store`, which
-    the page words from ui text (CONTRACT.txt, "Text and numbers"); `then` taps a card."""
+    the page words from ui text (contract/text-and-numbers.txt, "Text and numbers"); `then` taps a card."""
 
     store: str
     when: Condition
@@ -203,7 +205,7 @@ class OrderCard(BaseModel):
     """Offered only once view.unlocked holds this: the drain the order answers has begun."""
     chip: str | None
     """The chip this card answers (its `when` is that chip's): offered in the hands strip while the chip shows, never
-    under a ledger line (CONTRACT.txt)."""
+    under a ledger line (contract/)."""
     after_end: bool
     """Offered only once view.ended_at is set and the end lines have been read."""
 
@@ -227,7 +229,7 @@ class Content(BaseModel):
     """Every node of every skill's track, in track order; empty when the content has no prestige."""
     lane_infos: list[LaneInfo]
     offer_infos: list[OfferInfo]
-    """Every offer, in content order (CONTRACT.txt, "Offers")."""
+    """Every offer, in content order (contract/offers.txt, "Offers")."""
     offer_kinds: list[OfferKindInfo]
     """Every kind of offer with its role labels, in content order."""
     end_line_keys: list[str]
@@ -237,19 +239,19 @@ class Content(BaseModel):
     sizes its story strip to the tallest it shows and sets each chronicle line by its kind, under its cause."""
     aim_infos: list[AimInfo]
     journal: JournalInfo | None
-    """The book, its pages and their notes (CONTRACT.txt, "JOURNAL"); null until a chapter declares [journal]."""
+    """The book, its pages and their notes (contract/journal.txt, "JOURNAL"); null until a chapter declares [journal]."""
     places: list[PlaceInfo]
-    """Every place on the world map, in content order (CONTRACT.txt, "MAP"); empty when no chapter declares one."""
+    """Every place on the world map, in content order (contract/map.txt, "MAP"); empty when no chapter declares one."""
     camp: CampInfo | None
     people: PeopleInfo | None
-    """The bands a day's mention is worded from (CONTRACT.txt, "People"); null until a chapter declares [people]."""
+    """The bands a day's mention is worded from (contract/people.txt, "People"); null until a chapter declares [people]."""
     first_mix: FirstMix
     town_later_labels: list[LaneLabel]
     """The town's name once `after` is unlocked: the label_key of the last whose `after` view.unlocked holds, else
-    ui.town.title (CONTRACT.txt, "The town's mix")."""
+    ui.town.title (contract/the-towns-mix.txt, "The town's mix")."""
     game_mix_ids: list[str]
     """The mix ids the game makes (the town's mixes its joins make): the game's own, worded by ui.town.title and changed
-    in the town's editor. Every other saved mix is the player's (CONTRACT.txt, "The town's mix")."""
+    in the town's editor. Every other saved mix is the player's (contract/the-towns-mix.txt, "The town's mix")."""
     transfer_code_s: int
     """How long a transfer code works (TransferCode.expires_in_s), for the text that says so ({minutes})."""
 

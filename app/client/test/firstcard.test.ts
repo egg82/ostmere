@@ -1,4 +1,4 @@
-// The first card before its first tap (docs/design/opening-screen.md, "Cards"): the lone card on the screen, never
+// The first card before its first tap (docs/design/opening-screen/asks-and-cards.md, "Cards"): the lone card on the screen, never
 // completed and not under way, is marked `untapped` (only its verb shows, the rest keeps its room); once tapped, or
 // once it is not alone, it is not.
 import { install } from "./fake-dom";

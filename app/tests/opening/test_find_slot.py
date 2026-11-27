@@ -1,4 +1,4 @@
-"""A find's amount (api/CONTRACT.txt, "Text and numbers", {found}): the trigger's outcome names its line with
+"""A find's amount (api/contract/text-and-numbers.txt, "Text and numbers", {found}): the trigger's outcome names its line with
 found_line_key, the content serves the amount as a FindInfo, and the checks hold the slot and the key together."""
 from functools import cache
 

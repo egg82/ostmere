@@ -1,4 +1,4 @@
-"""What the rules did lately, on the wire (CONTRACT.txt, "Rule runs"; re-exported from models.py)."""
+"""What the rules did lately, on the wire (contract/rule-runs.txt, "Rule runs"; re-exported from models.py)."""
 from typing import Literal
 
 from pydantic import BaseModel
@@ -12,7 +12,7 @@ class RuleRun(BaseModel):
     until it has let go), each with the amount of the store its condition reads (null for a condition on no store).
     `order` is the rule as the save has it now: equal to one of View.orders, unless `ended` is set: the game removed
     the rule, at a season's turn or when its person left, at off_at. on_at is null only on an ended rule that never
-    came on. `ended` "stint" is a goal stint that popped at its goal (CONTRACT.txt, "Rule runs"): `order` is
+    came on. `ended` "stint" is a goal stint that popped at its goal (contract/rule-runs.txt, "Rule runs"): `order` is
     {when: its until, then: its switch_mix}, on_at when its mix began to run (null if the goal held as it came to
     control), off_at when its goal landed; "dry" is one the game handed back because its card ran out of input: the same,
     off_at when it did. `made`, on an ended stint and on a rule whose `then` switches a mix, once it

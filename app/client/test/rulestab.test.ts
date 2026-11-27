@@ -1,4 +1,4 @@
-// The Rules tab (docs/design/opening-screen.md, "The Rules tab"; ui/rules.ts, ui/condition.ts): one line per rule;
+// The Rules tab (docs/design/opening-screen/rules-tab.md, "The Rules tab"; ui/rules.ts, ui/condition.ts): one line per rule;
 // changing a rule's levels never gated, writing a new one gated by the taught step; a chip's rule edited with no level
 // and no number; ≡ dragged or moved by key or menu sending the permuted set_orders (task rules keep their places); a
 // mix dropped on a slot, or tapped then a slot, or picked, re-pointing the rule; Otherwise setting the default; the
@@ -347,7 +347,7 @@ expect("a task rule doesn't move", reorderRule(tab, 3, 0), null);
   expect("its heading names the task", one(e.root, ".cond-heading").textContent, "Run Smoke roots when…");
 }
 
-// Share levels (CONTRACT.txt, "Share levels"): a new rule's levels are shares, each picked by name or stepped by five
+// Share levels (contract/endpoints.txt, "Share levels"): a new rule's levels are shares, each picked by name or stepped by five
 // points, and either level switches to an exact number and back, standing where it reads now. An existing rule of
 // numbers switches the same way. Dead wood's cap is 40.
 {

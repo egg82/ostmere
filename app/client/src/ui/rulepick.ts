@@ -1,4 +1,4 @@
-// The Rules tab's mix picker (docs/design/opening-screen.md, "The Rules tab"): choosing a slot's mix, every saved hands mix
+// The Rules tab's mix picker (docs/design/opening-screen/rules-tab.md, "The Rules tab"): choosing a slot's mix, every saved hands mix
 // (a town mix is set by a rule on the town; greyed ones off) with the current one marked, or a new mix.
 import type { Order, View } from "../api/types";
 import { conditionWords, type RuleSlot as Slot } from "../game/orders";

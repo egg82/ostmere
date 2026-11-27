@@ -1,4 +1,4 @@
-"""Accounts and sessions (CONTRACT.txt, ACCOUNTS AND SESSIONS; GET /api/me, POST /api/saves, the presentations)."""
+"""Accounts and sessions (contract/accounts-and-sessions.txt, ACCOUNTS AND SESSIONS; GET /api/me, POST /api/saves, the presentations)."""
 import httpx
 
 from ashfall_app.saves.interface import KEPT_DAYS, MAX_SAVES

@@ -46,7 +46,8 @@ mix changes which goal arrives first.
 the next step but not why, and one asked "so I just click buttons?"). One line just above the art says what the
 current stretch is for, in the story's voice: a goal the player feels, never the task that gets there, and it changes
 when the story moves on, so the next step reads as progress toward something. It is there from the first screen and
-never empty. Each aim is content keyed to the unlock that starts it, and the next aim's start ends it;
+empty only once its `until` holds (its step is done), when the wait line or a goal is the step. Each aim is content
+keyed to the unlock that starts it, and the next aim's start, or its own `until` unlock, ends it;
 nothing reads it from the prose. A plain objective line is genre-standard, so it is not one of the first five minutes'
 Ashfall-specific mechanics ("The screen arrives when it means something"). Held by
 `tests/dayone/test_dayone_aims.py` and the content check in `app/ashfall_app/opening/aims.py`.
@@ -120,7 +121,7 @@ come true. Everything else about the rhythm of play is taste, which the simulato
   gap, so a long job started in a visit is not idle time. The readout marks the visit that reaches
   the edge of written content and each return during a long wait the player chose.
 - **Shape:** every figure comes from the rules, never from text, and rounds the way its kind does: amounts down, costs
-  up, durations up, rates toward zero (`CONTRACT.txt`, "Text and numbers").
+  up, durations up, rates toward zero (`contract/text-and-numbers.txt`, "Text and numbers").
 - **Display:** a figure shows the fewest digits that tell it apart (a rate of 2 reads `2/min`, never `2.00/min`, and a
   rate that is not zero never reads as zero); a store's name is capitalised where it leads a row and lowercase inside
   a sentence; one formatter (`game/format.ts`) and one label lookup (`game/catalog.ts`) produce them, each with a client test.
@@ -132,7 +133,7 @@ the ledger, the rule editor. It is matter-of-fact, the general style of an idle-
 a number ("+10% woodcutting speed", "holds 18, was 12"), never as a word ("a tenth faster", "half again", "twice").
 Not every line leads with a number, and names (skills, stores, cards) stay as they are. Flavour words in a UI string go
 too. Story lines, card lines and aims keep their voice, and phrasing like "half" belongs there. The number is a slot fed
-by a served value (`CONTRACT.txt`, `{pct}`), so it is stated once.
+by a served value (`contract/`, `{pct}`), so it is stated once.
 
 ## The simulator, as built
 

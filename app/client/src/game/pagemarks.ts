@@ -1,4 +1,4 @@
-// The marks on the journal's pages (docs/design/journal.md, "Marks on the page"; CONTRACT.txt, "JOURNAL"): a page's wear
+// The marks on the journal's pages (docs/design/journal.md, "Marks on the page"; contract/journal.txt, "JOURNAL"): a page's wear
 // and its days' event marks, which art each draws and where. Pure: every draw is seeded by the save and the page or
 // day, and a place is chosen against the boxes the page measured, so a page is marked the same each time it is drawn
 // at one size, and no mark is kept over the words.

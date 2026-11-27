@@ -7,7 +7,7 @@ const READ_MS = 20000;   // what waits on the end comes this long after its line
 const RECENT_S = 30;   // an end the page had shown, reloaded within this many game seconds, is replayed; an older one is not
 
 /**
- * The end (CONTRACT.txt, "The end"), keyed on view.ended_at, which the server records once: the end lines go to the
+ * The end (contract/the-end.txt, "The end"), keyed on view.ended_at, which the server records once: the end lines go to the
  * log, the scene is at dusk (scene conditions read the same field), and what waits on the end (an after_end order
  * card) comes once the lines have had READ_MS to be read. An end the page had already shown before a reload (set in
  * the first view, which is the kept game at its own time) is replayed the same way only if it happened under RECENT_S

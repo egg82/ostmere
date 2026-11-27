@@ -1,14 +1,14 @@
-// The story strip's layout (src/game.css; docs/design/opening-screen.md, "One column of attention"): the shown line and
+// The story strip's layout (src/game.css; docs/design/opening-screen/attention.md, "One column of attention"): the shown line and
 // the room of every line share one grid cell and one type size, so the strip is the tallest line's height and no line
 // is cut; none faded or clipped. The Camp bar's next-marker wraps by word rather
 // than truncating, and the first card keeps its hidden parts' room. The layout is CSS, so this reads the rules.
-import { readFileSync } from "node:fs";
+import { readGameCss } from "./gamecss";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
 }
 
-const css = readFileSync("src/game.css", "utf8");
+const css = readGameCss();
 const rule = (selector: string): string => {
   const start = css.indexOf(`\n${selector} {`);
   if (start < 0) throw new Error(`no rule for ${selector}`);

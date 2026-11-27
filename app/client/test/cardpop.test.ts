@@ -1,14 +1,14 @@
-// A completion's "+1" (docs/design/opening-screen.md, "The feedback ladder") never covers a card's title or its need
+// A completion's "+1" (docs/design/opening-screen/feedback.md, "The feedback ladder") never covers a card's title or its need
 // rows, on any frame of its rise: it sits in the room the card's head keeps clear at its right, and rises 12px from
 // there, staying in the head's row. The geometry is CSS, so this computes the boxes from the rules, at a phone's card
 // width (390 wide: two columns of about 170px) and a desktop's.
-import { readFileSync } from "node:fs";
+import { readGameCss } from "./gamecss";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
 }
 
-const css = readFileSync("src/game.css", "utf8");
+const css = readGameCss();
 const rule = (selector: string): string => {
   const start = css.indexOf(`\n${selector} {`);
   if (start < 0) throw new Error(`no rule for ${selector}`);

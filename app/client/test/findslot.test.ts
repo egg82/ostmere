@@ -1,4 +1,4 @@
-// A find's amount ({found}, CONTRACT.txt "Text and numbers") is filled in the line its FindInfo names, from the served
+// A find's amount ({found}, contract/text-and-numbers.txt "Text and numbers") is filled in the line its FindInfo names, from the served
 // quantity in whole items; the same slot in any other text is left as written.
 import { fixtureContent } from "../fixtures/content";
 import { Text } from "../src/game/text";

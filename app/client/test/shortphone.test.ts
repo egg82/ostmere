@@ -2,13 +2,13 @@
 // screen and gives the choices the room the foot's lines took, and the lesson note is small enough to dock in the band above
 // an open editor. Layout is CSS, which fake-dom cannot draw (no container or media queries), so this reads the rules; the
 // measured result is in the branch's before/after renders (the pull request).
-import { readFileSync } from "node:fs";
+import { readGameCss } from "./gamecss";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
 }
 
-const css = readFileSync("src/game.css", "utf8");
+const css = readGameCss();
 /** The text between the `{` that follows `head` and its matching `}`. */
 function block(from: string, head: string): string {
   const at = from.indexOf(head);

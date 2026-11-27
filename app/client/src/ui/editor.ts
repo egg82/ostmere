@@ -1,4 +1,4 @@
-// The mix editor (docs/design/opening-screen.md, "The mix editor"): a name, Save, the split bar, then what the edit
+// The mix editor (docs/design/opening-screen/mixes.md, "The mix editor"): a name, Save, the split bar, then what the edit
 // does: live totals for what it changes (editortotals.ts) and the goals it moves (goaltimes.ts), so a drag of the bar
 // shows its effect without scrolling; one row per entry with what it does at its share; the cards that can join, folded
 // behind one "+ Add" that stays open until tapped again, as cards to tap or drag in; Save as new and Delete at the foot. Save commits and never changes which mix runs (game/mix.ts); ✕ leaves without a
@@ -134,7 +134,7 @@ export class MixEditor {
     if (!this.open || !this.local) return;
     if (this.from !== null && !view.mixes.some((m) => m.id === this.from)) { this.close(); return; }   // deleted
     this.draw();
-    this.preview.schedule();   // the after must be of this view's instant (CONTRACT.txt, dry-run), not the last one's
+    this.preview.schedule();   // the after must be of this view's instant (contract/endpoints.txt, dry-run), not the last one's
   }
 
   private setShares(shares: number[]): void {
@@ -201,7 +201,7 @@ export class MixEditor {
     this.close();
   }
 
-  /** Saves the edit when it differs from the saved mix, then queues it until `until` (CONTRACT.txt, "Goal stints"). */
+  /** Saves the edit when it differs from the saved mix, then queues it until `until` (contract/goal-stints.txt, "Goal stints"). */
   private runUntil(until: Condition): void {
     const view = this.view;
     const mix = this.edited();

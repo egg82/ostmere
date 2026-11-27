@@ -1,0 +1,135 @@
+LOSS LINES
+  A fight card may tell its lost fights from pools of its own (docs/design/week-four-plan.md, item 1): the lines the
+  chronicle labels them with, the card's words for a lost fight, and a note on the journal's day page for each whole
+  lost fight. Nothing here changes a number: the lost tally, the odds and the wasted inputs are FIGHTS' as built, and
+  the engine is unchanged. Which card tells its losses this way is said by authored fields, never by a card's id or
+  name. Fits into Combat (a FightDef's lost tally), Chronicle and unwrap, Knowledge (the composer reads the save's
+  history) and Catalogue (the fields).
+
+  In the chapter files, a card's `fight` table may carry these four fields, all of them or none:
+    loss_pool       [key, ...], at least one: the line keys the chronicle words this card's lost fights from, in
+                    place of lost_line_keys. Log lines like lost_line_keys: each needs its [line_kinds] entry.
+    loss_notes      [key, ...], at least one, no key twice: the journal notes written for its lost fights (below,
+                    "The composer"). Text keys, held to the text checks like any (no digit).
+    on_loss_key     a text key: the card's words for one lost fight.
+    loss_after      a FeatureId: the card may not be unlocked before this feature is.
+
+  The opening's checks. Each refusal fails the load naming the card as "card <id>" (a standing action as "action
+  <id>"), never text:
+    - some of the four fields without the others: refused.
+    - any of them on a standing action's fight: refused, naming the action.
+    - on a card on a townsperson's lane (a ruled lane): refused.
+    - on a card that a town card names in twin_of: refused.
+    - on a card whose only_player is not "self", absent included: refused.
+    - with loses or wounds non-empty: refused (a lost fight here costs only the attempt's inputs and adds no level).
+    - with lost_line_keys non-empty: refused (one pool words the lost fights).
+    - loss_notes holding a key twice: refused.
+    - a loss_pool key, loss_notes key or on_loss_key not in text: refused, naming the key; a loss_pool key with no
+      line kind: refused by the line kinds check, naming the key.
+    - loss_after naming no feature: refused. A card that can be unlocked before loss_after's feature: refused. It can
+      be when the start unlocks it, or when some outcome that unlocks it (a trigger's, a card's or its finish's, an
+      answer's) does not have an outcome unlocking the feature among the outcomes that must have happened before it
+      (the chain of waits unlock_order_checks.py reads). A card's requires does not count: it holds the card unready,
+      not hidden.
+
+  The wire: FightInfo gains three fields.
+    loss_pool       [str] | null
+    loss_notes      [str] | null
+    on_loss_key     str | null
+  On a card carrying the fields, all three are set, as authored and in authored order, and lost_line_keys is [].
+  On every other fight, a card's or a standing action's, all three are null. loss_after is the loader's alone and is
+  not served.
+
+  THE CLIENT MAY:
+  - on a card whose fight has on_loss_key, draw that key's words as its on-loss line, once, under its makes, in place
+    of ui.fight.on_loss and ui.fight.on_wound (such a fight has no loses and no wounds). On every other fight the
+    on-loss line is FIGHTS' as before.
+  - in the chronicle, word each lost entry of a runner whose fight has loss_pool from loss_pool, exactly as FIGHTS
+    words a lost entry from lost_line_keys: the k-th lost fight (k from 0, the runner's first lost fight ever) reads pool[bag[k mod n]], the same seeded bag keyed by
+    the save, the runner, "lost" and floor(k / n), with pool = loss_pool and n its size. Which entries of a window read
+    as lost, the won entries and the summary line (ui.fight.since) are FIGHTS' unchanged. A runner whose fight has no
+    loss_pool words its lost entries as FIGHTS says (its lost_line_keys, else ui.fight.lost), never from any loss_pool.
+  - show a lost fight's aftermath in the scene only as a scene layer the art adds (tools/scene), keyed by its own
+    layer id (a transient id) and shown by the manifest's existing when and until conditions (a store such as the
+    tally, a feature). Nothing on the wire names a pose.
+  - draw a written day's loss and fold notes (below) on its days page like any day note, in their hand, in page order;
+    a fold note's count drawn as digits beside its words in the UI font, as an entry's numbers are, never inside the
+    words.
+  THE CLIENT MAY NOT:
+  - total a runner's lost fights anywhere beyond View.fights' lost: never add up fold counts or loss notes across
+    days, or count them; a fold's count is drawn on its own day's note only.
+  - word a lost entry of a runner with loss_pool from lost_line_keys or ui.fight.lost, or draw a loss_pool line
+    anywhere but that runner's lost entries.
+  - compose a loss or fold note, or draw one a served day does not carry.
+
+  The composer (saves/journal_composer/losses.py, beside saves/journal.py's contract, whose statements hold except
+  where these say otherwise). A loss runner is a card whose fight carries loss_notes. For each, the composer is given
+  its id, its pool (loss_notes, authored order) and `lost`: its lost tally floored to whole fights at the day's end,
+  game second (day + 1) * 86400, read off the save advanced to that second (FIGHTS invariant 81: the same however the
+  steps fell). Its keys are picked by the composer's own hashed draws (Chance), never by the engine.
+    L1. Only a day composed with its end (ended, and not broken off into a gap: a non-null gap, as saves/journal.py's
+        contract sets it) gets loss notes, written at its end
+        after the corrections, runners in id order. A day that broke off gets none; what it owed is owed to the next
+        day that ends.
+    L2. A runner's told count is the number of its loss notes plus the sum of its fold notes' counts, over every
+        stored day before this one. owed = lost - told; at 0 or below nothing is written.
+    L3. owed >= 1: one note, slot "loss", subject the runner's id, its key by L5. owed >= 2: after it, one note, slot
+        "fold", subject the runner's id, key ui.journal.fold, count owed - 1. So each whole lost fight is told once,
+        as a loss note or inside a fold's count, and a day holds at most one loss note and one fold note per runner,
+        however long the absence that wrote it.
+    L4. Loss and fold notes are outside the budget, are not tellings (w(S) is unchanged), are no subject's must, show
+        no subject and hold no mark; the notes before them are those the day has without them. A day whose only notes
+        are these is written.
+    L5. The key. drawn: every note of the stored days and of the page so far, oldest first in page order, of any
+        subject, whose slot is not "fold" and whose key is in the pool, so a trigger subject's note from the pool
+        counts as a draw, and so does a loss note written earlier at this same day's end for a runner before this one
+        in id order when its key is in this pool. size = the pool's size, r = len(drawn) // size, used = the keys in drawn[r * size:]. The
+        candidates are the pool's keys not in used; when used is empty, drawn is not and size >= 2, the last drawn
+        key is not a candidate (no key twice in a row). The key is the candidate whose SHA-256 of the UTF-8 bytes of
+        f"{save_id}|journal|loss|{runner}|{r}|{key}" is smallest, compared as bytes. Each round of size draws uses
+        every key once.
+    L6. Equal arguments give an equal day (statement 1); a day composed again, or in more steps, keeps the loss and
+        fold notes it had (statement 22).
+  JournalDay's DayNote: slot gains "loss" | "fold"; DayNote gains count: int | null, at least 1 on a fold note and null
+  on every other. A loss or fold note's subject is the runner's card id, its hand "pencil", its sketch null. The
+  stored row's note gains "count" on a fold note.
+
+  New text keys (Content.text_entries): ui.journal.fold   a fold note's words; its count is drawn beside them
+
+  Where to test it (the seams; item 2's tests call these and nothing private):
+  - The loader: opening.schema.load_opening(OPENING, (path,)) on a chapter file merged onto the opening; a refusal
+    raises ValueError whose message begins "card <id>: " ("action <id>: ").
+  - The wire: api.service.Game(opening, ruleset).content(), CardInfo.fight; openapi.json names the three fields.
+  - The composer: saves.journal.compose_day(save_id, day, lines, composed, subjects, habits, ended=True,
+    losses=()), losses a tuple of saves.journal.Loss(runner: str, keys: tuple[str, ...], lost: int); Note and
+    ComposedDay as statement 1's, Note gaining count: int | None = None (set on a fold note only); SlotName gains
+    "loss" and "fold". The day's lines and subjects may be empty: loss notes need neither.
+  - The page: game/fights.ts lostPool(fight: FightInfo | null): readonly string[], the pool a runner's lost entries
+    are worded from (loss_pool when set, else lost_line_keys, [] for null), which the chronicle's poolLine draws
+    from; ui/fightpanel.ts FightPanel(catalog, info), whose .fight-loss node holds the on-loss line.
+
+  Rejected, and why:
+  - An event or timer in the engine per lost fight: an instant per fight (engine DESIGN.txt, "FIGHTS", REJECTED).
+  - A loss that takes stores or levels beyond the attempt's inputs, or adds a wounded store: the content's guardrail,
+    held by the loader's loses and wounds refusal.
+  - Telling keyed on the card's id or name: no behaviour from names; the fields say it.
+  - A note per lost fight with no fold: a long absence would write a page of them.
+  - Loss notes at the moment of each loss: the engine has no per-fight instant, and a note placed by when a step
+    happened to look would differ between two ways of stepping the same day; the day's end is the same for both.
+  - The folded fights drawing keys too: a draw nobody reads would only move the bag.
+  - A fold count in the note's words ("three more"): the journal never writes numbers into its notes.
+
+  Acceptance (item 1; item 2's blind tests read this section alone):
+  1. A fixture chapter with a pooled card (the four fields) and a plain fight card loads; Content serves the pooled
+     card's three fields as authored and the plain card's as null.
+  2. Planted, each fails the load naming the card (the action): the fields on a standing fight; on a ruled lane's
+     card; on a card with a town twin; with only_player "fight"; with only_player absent; three of the four; with a
+     wound; with lost_line_keys; a loss_notes key twice; loss_after naming no feature; the card unlocked by a trigger
+     that does not wait on the feature; the card in the start. Control: the fixture loads.
+  3. The chronicle words the pooled card's lost entries only from loss_pool and the plain card's never from it.
+  4. Composer: a day with k whole fights owed writes one loss note and, for k >= 2, one fold note of count k - 1;
+     composing the same day again gives the same notes; a day broken off carries its owed fights to the next day that
+     ends; across rounds no key comes twice in a row and each round uses every key; a trigger subject's note from
+     the pool is the first draw.
+  5. Nothing on the page totals the losses beyond the served lost.
+

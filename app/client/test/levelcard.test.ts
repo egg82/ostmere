@@ -1,4 +1,4 @@
-// A level shows on the card it speeds up (docs/design/redesign.md, "Feel"; CONTRACT.txt, "Skills"): when a skill's
+// A level shows on the card it speeds up (docs/design/redesign.md, "Feel"; contract/, "Skills"): when a skill's
 // level rises, each card a level passed names in LevelPays.speeds, and whose Card.speed rose, shows "{skill} {n} ·
 // {before} → {after}" for 2 s, the times one whole completion at each speed. Nothing on a card the level does not name,
 // nor on one whose speed did not rise. The two times are told apart: a short card keeps the decimals that differ.

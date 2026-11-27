@@ -1,0 +1,59 @@
+RULE RUNS
+  Step.rule_runs [RuleRun {order, starts, on_at, on_level, off_at, off_level, ended}]: what the rules did lately, one
+  entry per rule the save has now (`order` equals one of View.orders) or the game ended (below), the most recent change
+  first, at most 8. A rule is
+  known by its condition and verb, since rules have no id: moving it keeps its entry; editing it makes another rule,
+  whose entry starts the next time it comes on, and the old entry goes, as a removed rule's does.
+    starts     the times it came on (its latch turned true) since its entry began.
+    on_at      game time of its last start; on_level the amount of the store its condition reads then (quantity
+               units), null for a condition on no store.
+    off_at     game time of its last let-go, null until it has let go; off_level as on_level. A let-go before on_at
+               belongs to an earlier run.
+  Kept by the server across advances and decisions, so a rule that comes on and lets go while no page is open is there
+  on the next Step. A set_orders keeps the on or off of every rule it moves or keeps, so a rule running inside its
+  band goes on running; a new or edited rule starts from its `when` alone. Saves not written since this field start
+  empty.
+  Ended by the game: RuleRun gains ended, null, or season (a season's turn removed the rule: engine DESIGN.txt,
+  "Retired chores") or left (its person left the town: LEAVES). An ended entry is kept after its rule leaves
+  View.orders, with off_at the time it was removed and off_level as for a let-go, until 8 newer entries push it out;
+  it matches no rule in View.orders. A rule that never came on before it was removed gets an entry too, with starts 0
+  and on_at and on_level null (on_at is null only there). If the player sets an equal rule again, its next start
+  begins a fresh entry, ended null. Entries the server kept before this field read ended null.
+  THE CLIENT MAY word an ended entry in the Rules tab's Lately block as ui.rule.ended_season {rule} or
+  ui.rule.ended_left {rule}{person} ({person} the name_key of the lane of the card the rule taps), and draw it in
+  the order rule_runs gives. It never offers to edit an ended entry: the rule is gone.
+  New text keys (Content.text_entries): ui.rule.ended_season {rule} | ui.rule.ended_left {rule}{person}   a rule the
+                                    game removed, at a season's turn or when its person left
+  Ended stint: a goal stint (GOAL STINTS) that left view.queue with its until holding gets an entry with ended "stint",
+  order {when: the stint's until, then: its switch_mix}, on_at the instant it came to control (the first queue entry not
+  dead, its mix running; null when its goal already held then), off_at the instant it left. starts is 1 (0 with no
+  on_at); the levels are null. A stint the player removed before its goal held makes no entry. The entry is kept like
+  an ended rule's (8, newest first) and matches no rule in View.orders. The server keeps a stint that has begun to run
+  in the same record, off the wire until it ends.
+  THE CLIENT MAY word an ended stint in Lately as a line ui.stint.entry {mix} {goal} (the mix of `then`, the goal of
+  `when`, as Next words it) and under it the facts, joined by " · ": ui.stint.ran {d} (off_at - on_at, only with an
+  on_at) and ui.stint.landed {ago} (frame time - off_at).
+  New text keys (Content.text_entries): ui.stint.ran {d} | ui.stint.landed {ago}   an ended stint's facts.
+  Dry stint: a stint whose card ran out of input (engine DESIGN.txt, "Queue mix") is handed back, not held: its entry
+  leaves view.queue and the player's mix runs on. It gets an entry with ended "dry" like an ended stint's, its until not
+  holding, off_at the instant it left; made is [].
+  THE CLIENT MAY word it as the ended stint's line and, in place of ui.stint.landed, ui.stint.dry {ago} (frame time -
+  off_at).
+  New text key: ui.stint.dry {ago}   a stint the game handed back.
+  Made: RuleRun gains made [Amount {store, quantity}], [] on every entry but an ended stint's and a rule's whose
+  action (`then`) is a switch_mix, once it has let go. On one, what the save gained while it ran: for each store that
+  a card in the mix (at a share above 0) makes, by its makes or its outcome's stores, both at the instant the stint
+  began to run (the rule came on) and at the instant it popped (the rule let go), that store's amount at the end less
+  its amount at the start, in quantity units. A rule's made is that of its last run: [] from its next start until
+  its next let-go, and from a let-go no recorded start preceded. Net, not gross: what other work took from the store or its
+  cap threw away meanwhile is not counted back, and work on other lanes in the window is counted in, so it is the
+  save's gain in those stores, never a claim about what the mix alone did. Only gains of at least one whole item
+  (QUANTITY_SCALE) are listed, the goal's store first (the store the stint's until or the rule's when reads, when it
+  reads one), then the largest gains, ties in content store order, at most 2. An ended stint with no on_at has made []. Entries the server
+  kept before this field read [].
+  THE CLIENT MAY add the made fact last, after ui.stint.landed (on a rule's entry, after its let-go
+  fact): ui.stint.made {n}{store} for one entry, and ui.stint.made_two {n}{store}{m}{store_b} for two, {n} and {m} in whole items rounded down, {store} and {store_b}
+  the stores' labels as they stand in a sentence; nothing when made is [].
+  New text keys (Content.text_entries): ui.stint.made {n}{store} | ui.stint.made_two {n}{store}{m}{store_b}   what
+                                    an ended stint's save gained while it ran.
+

@@ -1,5 +1,5 @@
 """New accounts are limited: at most 10 an hour from one client address and 200 an hour in all, counted across pods; a
-limit that cannot be counted refuses; only a POST /api/saves that would make an account is counted (CONTRACT.txt,
+limit that cannot be counted refuses; only a POST /api/saves that would make an account is counted (contract/,
 429 rate_limited). The client address is sent both as the connection's peer and as X-Forwarded-For (site.py).
 
 The global count and the window are reached through the counter's rows (db/tables.py `tries`: one row per counted

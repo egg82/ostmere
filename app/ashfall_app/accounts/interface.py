@@ -197,7 +197,7 @@ class Accounts(Protocol):
 
     def join(self, token: str | None, typed: str, merge: bool, address: str, label: str | None = None, *,
              keep: bool = False) -> Joined:
-        """The browser of session `token` (None: no live session) joins the account `typed` names (api/CONTRACT.txt,
+        """The browser of session `token` (None: no live session) joins the account `typed` names (api/contract/moving-to-another-device.txt,
         "Moving to another device"); with `merge`, a browser whose account has progress moves its saves into that
         account; with `keep`, it leaves them on its old account, whose recovery words are made when it has none. A
         new session is labelled `label`. NoSuchCode, ConfirmMerge, MergeFull, Limited; AccountsUnavailable

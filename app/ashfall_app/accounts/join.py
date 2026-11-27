@@ -1,4 +1,4 @@
-"""A join, inside one transaction (api/CONTRACT.txt, "Moving to another device"). T is the account the code or words
+"""A join, inside one transaction (api/contract/moving-to-another-device.txt, "Moving to another device"). T is the account the code or words
 name, D the account of this browser's live session. Both rows are held, lowest id first, before anything is decided,
 and D's saves are held while its progress is read, so a decision landing meanwhile is seen and a new game on either
 waits. The rows are db/joins.py; a code is used up only by a join that goes through. A merge moves only D's own saves,

@@ -1,4 +1,4 @@
-"""Games on one account (CONTRACT.txt, "Games on one account"), through HTTP on one or two pods: the list, a new game
+"""Games on one account (contract/games-on-one-account.txt, "Games on one account"), through HTTP on one or two pods: the list, a new game
 beside the others, the cap and the new-game limit, deleting (never the last live save, never loadable after) and
 restoring, and requests racing each other across pods."""
 import threading

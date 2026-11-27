@@ -1,4 +1,4 @@
-"""A saved mix is bounded (api/CONTRACT.txt, "Request limits") and flattening nested mixes costs a visit per mix, not
+"""A saved mix is bounded (api/contract/request-limits.txt, "Request limits") and flattening nested mixes costs a visit per mix, not
 one per path through them (a mix nesting the one below twice, twenty deep, is a million paths)."""
 from collections.abc import Iterator
 from typing import Any

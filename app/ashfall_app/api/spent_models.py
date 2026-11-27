@@ -1,4 +1,4 @@
-"""A spent card's share on the wire (CONTRACT.txt, "SPENT"; re-exported from models.py)."""
+"""A spent card's share on the wire (contract/spent.txt, "SPENT"; re-exported from models.py)."""
 from pydantic import BaseModel
 
 

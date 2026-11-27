@@ -1,4 +1,4 @@
-// The Rules tab (docs/design/opening-screen.md, "The Rules tab"): every rule the player has, one line each, beside
+// The Rules tab (docs/design/opening-screen/rules-tab.md, "The Rules tab"): every rule the player has, one line each, beside
 // Tasks and Completed. The hands rules, top priority first: ≡ (drag to reorder; tap for Move up · Move down · Remove; arrow keys move it), the condition as a
 // button that opens the condition editor (condition.ts) in the tab, → and the mix slot, which opens a picker. Among
 // them Next, what the queue will tap (nextlist.ts, ordered by nextorder.ts), a row moved like a rule (game/nextrow.ts:

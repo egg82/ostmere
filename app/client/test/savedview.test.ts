@@ -1,4 +1,4 @@
-// savedView asks for a save's stored view with a GET, which writes nothing; it must not be a POST (api/CONTRACT.txt, ENDPOINTS).
+// savedView asks for a save's stored view with a GET, which writes nothing; it must not be a POST (api/contract/endpoints.txt, ENDPOINTS).
 import { httpApi } from "../src/api/api";
 import { fixtureStep } from "../fixtures/steps";
 

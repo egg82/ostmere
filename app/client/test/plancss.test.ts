@@ -1,13 +1,13 @@
 // Next's "+ Plan" lists the saved mixes as Mixes-list rows (.selector-run, ui/stintplan.ts) straight in the Rules tab's
 // list, a flex column: there the row's flex basis (18rem, sized for a row of rows) would be its height, so each row
 // takes its content's height instead (src/game.css), as the rule picker's do. The layout is CSS, so this reads the rules.
-import { readFileSync } from "node:fs";
+import { readGameCss } from "./gamecss";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
 }
 
-const css = readFileSync("src/game.css", "utf8");
+const css = readGameCss();
 /** The body of the first rule whose selector list names `selector`. */
 const ruleFor = (selector: string): string => {
   const found = [...css.matchAll(/^([^{}\n]+)\{([^}]*)\}/gm)].find((m) => (m[1] ?? "").split(",").some((s) => s.trim() === selector));

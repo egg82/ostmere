@@ -52,7 +52,7 @@ class Card(BaseModel):
     """How its mix share runs, whoever runs the card (yielded while it or another card is tapped); the longest-lasting
     of greyed, spent, paused, waiting, yielded when several apply; null when the running mix does not hold it."""
     blocker: Blocker | None
-    """null means a tap now is ready; otherwise what a tap now fails on (a failed tap: CONTRACT.txt)."""
+    """null means a tap now is ready; otherwise what a tap now fails on (a failed tap: contract/)."""
     tap_s: int | None
     """Seconds a tap started now takes; null when its speed is 0. Draw this, not
     CardInfo.work_s, which is the time at full speed."""
@@ -61,20 +61,20 @@ class Card(BaseModel):
     cuts_in: bool
     """A tap now starts it although its lane is busy: a glowing step not yet done, while the hands run a task the queue
     or a rule starts again once it lands, or a cure for a chip shown now, while the hands run a task that is not one
-    (CONTRACT.txt, "Cut-in")."""
+    (contract/cut-in.txt, "Cut-in")."""
     speed: int
     """Work units per second a tap started now runs at: bar_total / speed is one whole completion's time, whatever the
     bar holds (tap_s is the rest of the current one); 0 when tap_s is null."""
     spent_store: str | None
     """The store a spent card is stopped on; null unless run is spent."""
     gained: list[SpentShare]
-    """What each spent card of its mix on its lane gives it now, in mix order; empty when none (CONTRACT.txt, "SPENT")."""
+    """What each spent card of its mix on its lane gives it now, in mix order; empty when none (contract/spent.txt, "SPENT")."""
     crew: int | None
-    """A group card's free members now (CONTRACT.txt, "GROUPS"); null on a card of no pooled lane. While above 0,
+    """A group card's free members now (contract/groups.txt, "GROUPS"); null on a card of no pooled lane. While above 0,
     share_bp and gained are the totals over those members; 0 with no free member."""
     full_store: str | None
     """The store a full pause stopped the card on: every store it fills is full, so it keeps its inputs until one has
-    room (CONTRACT.txt, "FULL OUTPUT"); null on any other card. Its run is paused."""
+    room (contract/full-output.txt, "FULL OUTPUT"); null on any other card. Its run is paused."""
 
 
 class CompletedCard(BaseModel):

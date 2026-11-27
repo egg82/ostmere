@@ -2,12 +2,13 @@
 // (src/ui/headseat.ts). Both are layout, which fake-dom cannot draw (no ResizeObserver, no media match), so this reads
 // the rule and the call; the measured result is in the branch's before/after renders.
 import { readFileSync } from "node:fs";
+import { readGameCss } from "./gamecss";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
 }
 
-const css = readFileSync("src/game.css", "utf8");
+const css = readGameCss();
 const phone = css.slice(css.indexOf("/* The phone frame"), css.indexOf("/* desktop (and a phone in landscape)"));
 expect("the phone block was found", phone.length > 100, true);
 expect("the art and the head leave while an editor has the screen", /\.game\.scene-aside :is\(\.scene-box, \.stage > \.scene-head, \.stage > \.aim\) \{ display: none; \}/.test(phone), true);

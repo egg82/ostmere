@@ -1,4 +1,4 @@
-// The text keys of the Asks list (merged into `UI`, game/text.ts; CONTRACT.txt, "OFFERS").
+// The text keys of the Asks list (merged into `UI`, game/text.ts; contract/offers.txt, "OFFERS").
 export const ASK_KEYS = {
   asks: "ui.asks.heading",
   asksMore: "ui.asks.more", // "{n}": how many open asks wait behind the one shown; opens the whole list

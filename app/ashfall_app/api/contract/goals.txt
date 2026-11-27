@@ -1,0 +1,18 @@
+GOALS (docs/decisions.md, "Progress is stated, never hinted")
+  view.goals is what the open story beats wait on (app/ashfall_app/opening/goals.py: a beat unlocks something, brings
+  or takes someone, or tells lines with no find on them): each store (store, target, value), card (card, target; 0 for
+  the card running), skill level (skill, target) and card fight (kind fight: card, its lost tally as store and value,
+  target lost fights) an open beat waits on that is in play, a require on an unlock
+  standing for what the earliest open trigger giving it waits on; then at most one clock, the soonest wait on the clock
+  alone with a time (at), else one stopped on a dry store, with `feeds`, the shown stores whose running dry stops it
+  (or any clock landing at that same time).
+  The page puts the story mark (the Camp bar's ember ▸, no words) on each such card, ledger line (drawn from then on)
+  and skill row, and on nothing else, so a bar without it is progress no beat waits on; a fight's card carries the mark
+  and the wait line states the count ("{card}: {n} lost", ui.goal.lost, n the fights lost against the count, as ui.store.amount words it) beside the clock's words, "Something new"
+  once; a store with no line yet is a
+  row in the Camp bar's box (its label, value against target, a bar, "something new"), the cards that make it marked;
+  the clock is the wait line, plain text at the top of the deck and no card or control: "Something new", the count of
+  a store the content states (a clock Goal with `store`, `target` and `value`: "{store}: {n}", ui.goal.count, n as
+  ui.store.amount words it), the time left, and the store it runs while there is some, or that store alone while it is
+  dry. Nothing names a beat. `at` holds until next_event_at.
+

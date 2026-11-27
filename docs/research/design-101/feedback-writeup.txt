@@ -94,10 +94,10 @@ and completion cues returned only generic guides).
 # Part B. What it means for Ostmere
 
 Cited by heading: decisions.md "Rewarding at any moment", "Something to watch, any time, for hours", "Fun, but never
-vying for attention"; opening-screen.md cards and strip sections; systems.md "Feedback" row.
+vying for attention"; opening-screen/index.md cards and strip sections; systems.md "Feedback" row.
 
 **Where the design already agrees**
-- Immediate acknowledgement of a refused input: opening-screen.md has a tap that cannot proceed answer "at once and
+- Immediate acknowledgement of a refused input: opening-screen/ has a tap that cannot proceed answer "at once and
   taking no time" with a red glow, the thing that stopped it, and a failed line. This is finding 3 done fully.
 - Effects that do not move layout ("Taps never move the layout; an arrival may, once") and the "pulse means urgency,
   never" rule fit finding 6; the quiet-dot-versus-glow distinction is feedback with information content.
@@ -111,7 +111,7 @@ vying for attention"; opening-screen.md cards and strip sections; systems.md "Fe
   dead" has no ceiling. The evidence says the optimum is medium-high, with extreme worse than none-to-medium and
   amplification harmful. The ladder exists in practice (+1 pop, level-up burst, Camp flourish) but is not written as
   a rule, so later additions can only go up.
-- Gap (finding 4): reduced motion is handled case by case in opening-screen.md, and decisions.md has no policy. The
+- Gap (finding 4): reduced motion is handled case by case in opening-screen/index.md, and decisions.md has no policy. The
   bursts, pops, glows and the dusk grade are not covered by any stated rule, and there is no in-game setting named.
   Nothing states a flash limit.
 - Gap (finding 4, sound): "sound on every reward" next to "sound optional" does not say that sound never carries

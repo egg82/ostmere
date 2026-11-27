@@ -1,4 +1,4 @@
-// What the rules did lately (docs/design/opening-screen.md, "Lately"; ui/rulelately.ts): the Rules tab's last block,
+// What the rules did lately (docs/design/opening-screen/rules-tab.md, "Lately"; ui/rulelately.ts): the Rules tab's last block,
 // from Step.rule_runs, one entry per rule the view still has, in the server's order: the rule's words, then how many
 // times it came on, its last start and (once it has let go since) its last let-go, with the store's level at each and
 // how long ago by the frame's clock. A chip's rule shows no levels. No entries, no block.

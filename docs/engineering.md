@@ -27,7 +27,12 @@ one, or a base without keys, gets the smoke instead: the day-eight plays of the 
 (`@pytest.mark.smoke`); a change every chapter reads, or week one's, also plays the `WHOLE_GAME` shards (`makers`, `tools/weektwo_shards.py`) from the start, so their readouts are read before merge, in `playthrough-whole-game`: a job of its own that waits on `changes` alone and decides for itself (`whole_game` in `tools/pr_plan.py`), with 8 minutes, the 10-minute chain less `changes` and `ci-ok`, since played from the start a route's chain plus readout runs ~265 s and overran the 6 minutes of a job after `slice`. The whole-game playthroughs (`playthrough`, `chapter-saves*`, `playthrough-week-one`,
 `playthrough-week-one-saved`, `playthrough-week-two`, `publish-ends`) are the full run: nightly on `main`, on a manual
 dispatch, and on a pull request labelled `playthroughs`, which is an opt-in and not part of any writer's routine. A red
-nightly holds the next release (`release` fails while the last completed nightly on `main` failed): dispatch Nightly on
+nightly holds the next release (`release` fails while the last completed nightly on `main` failed), unless it is red
+only because readouts differ: each readout job records whether its tests passed and which readouts changed
+(`.github/actions/readout-verdict`), `ci-ok` turns those into `readouts_only` (`app/tools/nightly_verdict.py`; a job with
+no verdict or a failed test is a real failure), and the nightly's `refresh-readouts` job uploads the `nightly-verdict`
+`release` reads and opens or updates one pull request from `bot/readout-refresh` with the pulled files. That pull
+request is made with GITHUB_TOKEN, so it runs no CI until the orchestrator closes and reopens it. Otherwise dispatch Nightly on
 `main` once it is fixed, and re-run the held job when it is green. A pull request builds the
 image and pushes nothing. On `main` the image is pushed by
 digest alone, and once `ci-ok` is green `release` tags that digest `dev` and `main-<sha8>-<commit ts>`, so the deploy
@@ -71,10 +76,10 @@ A job whose readout differs from its committed text fails after uploading what t
 `python -m tools.readouts_pull <run-id>` (from `app/`) copies a red run's readouts into `app/tests/readouts/` to commit.
 Readouts are refreshed from CI, never replayed locally: push, let the pull request's run go red (each job whose readout
 differs leaves a `readouts-new-*` artifact and fails), pull, commit. A default pull request produces the readouts of the
-chapters it touches; tests that read a chapter's own readings, rebased save or saved end are the full run's. To see
-every readout the change can move, including the chapters after the touched one, add the `playthroughs` label: the
-full run plays every chapter from the last nightly's saves and replays only the chapters whose key is new. A red
-nightly's readouts are pulled the same way from its run id.
+chapters it touches; tests that read a chapter's own readings, rebased save or saved end are the full run's. The nightly
+refreshes the rest in its own pull request, so the `playthroughs` label (the full run: every chapter from the last
+nightly's saves, replaying only the chapters whose key is new) is for a change whose wider effect must be read before
+merge, not a routine step.
 
 ## Patterns
 
@@ -142,6 +147,7 @@ for the Python-run gates, `app/client/gates/held/` for the client's. `app/tools/
 | Gate | Limit | Ledger |
 |---|---|---|
 | `app/tests/test_file_size.py` (Python and client source) | 300 lines | `file_size.json` |
+| `app/tests/test_text_size.py` (hand-written `.md`, `.txt`, `.css`, and `.jsonl` under `content/`; generated files, fixtures and readouts excluded by path) | 100,000 bytes, not lines, since a prose or CSS line has no length bound; a file past it splits by subject into a directory with an `index.md` (`docs/design/opening-screen/`) | `text_size.json` |
 | `app/tests/test_function_size.py` (Python) | 80 lines per function | none (its held list is empty and stays empty) |
 | `app/client/gates/function-size.mjs` (client, run by `npm test`) | 80 lines | `function_size.json` |
 | `app/tests/test_suppressions.py` | counts of `# pyright: ignore`, `# type: ignore`, `# noqa`, `cast(`, `@ts-ignore`, `@ts-expect-error`, `as unknown as`; each names its rule and a ` -- reason` on its line | `suppressions.json` |
@@ -278,7 +284,7 @@ While a deploy rolls, the old and the new pods answer at once, and the gateway b
 requests reach both builds. What holds:
 
 - Every response, errors included, names the build that answered in `X-Ashfall-Build`
-  (`app/ashfall_app/api/CONTRACT.txt`).
+  (`app/ashfall_app/api/contract/overview.txt`).
 - The bundle's path names its build, and a page loads only its own (`docs/systems.md`, Page shell). There is no
   unversioned /build/ path. The web pods' probes read `/webz` (the image's bundle, never the assets volume).
 - A save is written by one request at a time (its row is locked for the transaction), and only forward. Builds are

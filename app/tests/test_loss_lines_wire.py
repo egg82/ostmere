@@ -1,4 +1,4 @@
-"""The loss lines on the wire (api/CONTRACT.txt, "LOSS LINES"): a pooled card's three fields on CardInfo.fight, null on
+"""The loss lines on the wire (api/contract/loss-lines.txt, "LOSS LINES"): a pooled card's three fields on CardInfo.fight, null on
 every other fight; a fold note's count and the pencil hand on a served day; the fields named in openapi.json."""
 import json
 from pathlib import Path

@@ -1,4 +1,4 @@
-// The split a mix runs now (CONTRACT.txt, "SPENT", THE CLIENT MUST): under the hands strip's bar while a card of the
+// The split a mix runs now (contract/spent.txt, "SPENT", THE CLIENT MUST): under the hands strip's bar while a card of the
 // running mix is paused or spent, each card at share_bp plus its gains with the source named, the stopped card greyed
 // and at 0; nothing of it while the splits match, its room kept once it has come. The bar the player set never moves.
 import { install } from "./fake-dom";

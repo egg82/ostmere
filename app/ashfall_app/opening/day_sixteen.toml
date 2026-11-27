@@ -163,6 +163,12 @@ inputs = [
 line_keys = ["l_road_1", "l_road_2", "l_road_3", "l_road_4", "l_road_5", "l_road_6", "l_road_7", "l_road_8",
              "l_road_9", "l_road_10"]
 
+# The ten stretches laid: ends the aim of finding where the road goes (aim_road's `until`), whatever else waits on it.
+[[triggers]]
+id = "t_road_laid"
+when = { test = "at_least", subject_kind = "card_count", id = "cut_road", value = 10 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "road_laid" }] }
+
 # "When the road's bed reaches 12, lay a stretch": passed over at the cap.
 [[order_cards]]
 store = "cleared"
@@ -807,6 +813,9 @@ id = "rime_ring"
 id = "spellcraft"
 
 [[features]]
+id = "road_laid"
+
+[[features]]
 id = "t_pack_clear"
 label_key = "feature_t_pack_clear"
 
@@ -817,6 +826,7 @@ label_key = "feature_t_pack_clear"
 id = "aim_road"
 text_key = "aim_road"
 after = { unlock_kind = "feature", id = "road_marked" }
+until = { unlock_kind = "feature", id = "road_laid" }
 
 # ---------- text ----------
 

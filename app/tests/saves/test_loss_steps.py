@@ -1,4 +1,4 @@
-"""A step writes the loss runners' notes at each day's end it passes (api/CONTRACT.txt, "LOSS LINES"): the tallies are
+"""A step writes the loss runners' notes at each day's end it passes (api/contract/loss-lines.txt, "LOSS LINES"): the tallies are
 read at the day's end whatever the steps were, so many small steps store what one long advance stores, and a fold's
 count is stored and read back. The tally is fixtures/loss_tick.toml's store, which grows by one an hour from the first
 minute."""

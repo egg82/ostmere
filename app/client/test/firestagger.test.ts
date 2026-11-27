@@ -1,4 +1,4 @@
-// The fire's stretch asks one thing at a time (docs/design/opening-screen.md, "One thing at a time" and "Lessons"):
+// The fire's stretch asks one thing at a time (docs/design/opening-screen/, "One thing at a time" and "Lessons"):
 // two red lines with guided rule offers show one Show me, never twins; the other waits until the first is answered
 // (its lesson ended, or the offer gone), and a ledger line that arrives holds the cards behind it until it is read.
 import { install } from "./fake-dom";

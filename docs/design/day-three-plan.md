@@ -52,7 +52,7 @@ Nothing in day three depends on combat items 1–7.
 3. **The town's mix** (**L** in all, engine, api, client). At the second arrival, the townsfolk's lanes become one mix
    whose shares are people's time, over each person's cards; the first person's rules keep acting, and a save past
    the join is rebased with them. The interface is written: engine `DESIGN.txt`, "THE TOWN'S MIX" (invariants 90–97),
-   and `api/CONTRACT.txt`, "The town's mix". In short: a town mix is an ordinary saved mix whose cards sit on joined
+   and `api/contract/the-towns-mix.txt`, "The town's mix". In short: a town mix is an ordinary saved mix whose cards sit on joined
    ruled lanes, a share being part of one person's time; the running one is set by the town's always rule (a
    SwitchMix order, no Save field); a rule's tap on a joined lane yields that person's shares, as a tap yields the
    hands' mix; joining is an outcome part (`joins`) that adds a `joined` unlock and turns the lane's always task into

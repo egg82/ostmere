@@ -1,4 +1,4 @@
-// The daily journal's written days as the page reads them (docs/design/journal.md, "What the page draws"; CONTRACT.txt,
+// The daily journal's written days as the page reads them (docs/design/journal.md, "What the page draws"; contract/journal.txt,
 // "JOURNAL", "The written days"): every day Opened and the Steps carried, and the days pages they fill. Pure: the pages
 // come from the days and their words alone, never the window, so the same days are the same pages on every device and
 // width.

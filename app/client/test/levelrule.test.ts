@@ -1,6 +1,6 @@
 // A rule on a store a lost fight adds to (Catalog.isLevel; hurt) is in the whole items its chip shows, rounded up
 // (#218): "reaches 2" is on whenever the chip reads 2 or more, which is raw above one item, where a ledger store's
-// amount is shown rounded down. The crossings sit on the amount the page shows (CONTRACT.txt, "a store rule").
+// amount is shown rounded down. The crossings sit on the amount the page shows (contract/the-client-may.txt, "a store rule").
 import { fixtureContent, Q } from "../fixtures/content";
 import { buildRule, readRule, ruleWhen, valid, type StoreRule } from "../src/game/storerule";
 import { conditionWords } from "../src/game/orders";

@@ -1,4 +1,4 @@
-"""The content's places on the world map (CONTRACT.txt, "MAP")."""
+"""The content's places on the world map (contract/map.txt, "MAP")."""
 from ..opening import convert as authored
 from ..opening.schema import Opening
 from . import convert

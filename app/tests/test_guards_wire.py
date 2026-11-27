@@ -1,4 +1,4 @@
-"""Rule guards and fallbacks over the wire (CONTRACT.txt, "Rule guards"; docs/design/rule-guards.md, "The saved shape"):
+"""Rule guards and fallbacks over the wire (contract/endpoints.txt, "Rule guards"; docs/design/rule-guards.md, "The saved shape"):
 an Order carries `unless` and `or_else`, the View serves `order_guards`, `order_doing` and the state `paused`, and a rule
 with neither encodes and reads as it did before. Run through the wire models and the engine on the shipped rules."""
 import json
@@ -121,7 +121,7 @@ def test_order_doing_names_the_action_the_rule_runs(play: Play):
 
 
 def test_rule_runs_and_the_view_word_a_rule_alike(shipped_ruleset: ShippedRuleset):
-    """A rule_run's `order` equals its rule in View.orders (CONTRACT.txt): both are convert.order."""
+    """A rule_run's `order` equals its rule in View.orders (contract/): both are convert.order."""
     rules = shipped_ruleset.rs.rules
     order = e.Order(e.AfterTime(0), e.SwitchMix(e.MixId("m1")),
                     (e.AtMost(e.StoreValue(rules.stores[0].id), 100, 200),), (e.SwitchMix(e.MixId("m2")),))

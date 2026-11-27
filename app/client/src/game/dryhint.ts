@@ -1,7 +1,7 @@
-// The first dry store (docs/design/opening-screen.md, the hands strip, "Hint: the first dry store"): read off the view and
+// The first dry store (docs/design/opening-screen/hands-strip.md, the hands strip, "Hint: the first dry store"): read off the view and
 // the content only. A card of the running mix has stopped on a store that ran dry, nothing covers that store, and a hands
 // card in play that makes it could join the mix: added, it takes the stopped card's share while the store refills
-// (CONTRACT.txt, "SPENT"). The ledger marks that line with the quiet dot and the dry store's lesson starts from it
+// (contract/spent.txt, "SPENT"). The ledger marks that line with the quiet dot and the dry store's lesson starts from it
 // (game/lessons.ts, DRY_STORE); nothing is built and the mix is never edited for the player.
 import type { Mix, View } from "../api/types";
 import type { Catalog } from "./catalog";

@@ -1,4 +1,4 @@
-// The story at the seam between the art and the controls (docs/design/opening-screen.md, "One column of attention").
+// The story at the seam between the art and the controls (docs/design/opening-screen/attention.md, "One column of attention").
 // The head, at the art's top: the Camp bar, the chips (an icon from the tone, the word, and under it what the chip
 // costs; each once its cure is on screen, game/shown.ts), the permanent bonuses the player carries (a feature with a
 // label) behind one count (ui/keptbonuses.ts), and the book, dotted when it arrives, until the journal's first entry moves it into the Book. The Book (ui/book.ts) holds the chronicle and
@@ -152,7 +152,7 @@ export class Story implements Part {
   }
 
   /** A skill that reached its phase's top since the last view: one line, saying how long ago when that was a return
-   * (CONTRACT.txt, "PRESTIGE PHASES"), never what the wait missed. It takes its turn like the step's other lines. */
+   * (contract/prestige-phases.txt, "PRESTIGE PHASES"), never what the wait missed. It takes its turn like the step's other lines. */
   private topLines(view: View, prev: View | null): void {
     const { text, format } = this.ctx.catalog;
     for (const { skill, at } of toppedSince(prev, view)) {
@@ -249,7 +249,7 @@ export class Story implements Part {
   }
 
   /** A mention line, counted into its day's mention: one chronicle entry at the day's first second and one strip line,
-   * reworded as the day counts more (CONTRACT.txt, "PEOPLE"). Its strip line, or null when this call already drew the
+   * reworded as the day counts more (contract/people.txt, "PEOPLE"). Its strip line, or null when this call already drew the
    * day's (reworded in place) or it is for the chronicle only. */
   private mentioned(key: string, told: Mention, at: number, animate: boolean, stripless: boolean, batch: Map<string, HTMLElement>): HTMLElement | null {
     this.keys.push({ key, at });

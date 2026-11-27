@@ -34,7 +34,7 @@ The juice is per visit; the progress is per hour.
 
 How these stand today, moved from their rows in `systems.md`.
 
-Feedback: null is silent. The ladder (`docs/design/opening-screen.md`, "The feedback ladder") is data in
+Feedback: null is silent. The ladder (`docs/design/opening-screen/feedback.md`, "The feedback ladder") is data in
 `app/client/src/ui/ladder.ts`: event kind to rung to effect. A failed tap (`api.models.Step`, its failed_tap) pulses its
 card red and the need that stopped it (`app/client/src/ui/cards.ts`); the effect's numbers are tokens in
 `app/client/src/game.css`. **A refused tap never has text**: the engine emits no line for it and the content has no

@@ -1,4 +1,4 @@
-// The Journal (docs/design/opening-screen.md, "The journal"; docs/design/journal.md, "What the page draws"; CONTRACT.txt,
+// The Journal (docs/design/opening-screen/journal.md, "The journal"; docs/design/journal.md, "What the page draws"; contract/journal.txt,
 // "JOURNAL"): a page of the Book (ui/book.ts) from its first page on, its button and the Book's tab dotted while
 // something is unread. The days pages hold the written days the save served, each day's notes under its day, as many
 // days as fit (game/days.ts); every other page is one entry written. A page is its sketch, its notes in their hand and,

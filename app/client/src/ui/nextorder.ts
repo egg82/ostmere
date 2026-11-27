@@ -1,4 +1,4 @@
-// Next's order (docs/design/opening-screen.md, "The Rules tab"): each row a lane is not already running has a ≡ in
+// Next's order (docs/design/opening-screen/rules-tab.md, "The Rules tab"): each row a lane is not already running has a ≡ in
 // the row's handle gap, dragged as a rule's is (ruledrag.ts) or moved by ArrowUp / ArrowDown; either moves one entry
 // (a row of several runs gives up its last) past the next row and sends the queue whole in its new order
 // (game/queue.ts, "moveQueued", "rowStep").

@@ -1,0 +1,224 @@
+THE CLIENT MAY
+  - on load, ask GET /api/me: with a save, open the first (no front page); without, show the front page, whose
+    Begin is POST /api/saves. Draw `was` and `history` at once, then `step` as a return (what arrived while away is
+    revealed in turn). A Step whose rules_digest differs from the content the page holds means a deploy: fetch the
+    content again and redraw.
+  - keep the save a tab plays in its address as #game=ID: on load, open the save it names when it is in /me's saves,
+    else the first. Switching opens another and writes its id there; New game is POST /api/saves, drawn as Begin
+    draws a new game, and writes its id. A deleted save is never opened; a 404 on the open save starts again from
+    GET /api/me.
+  - on load, read a join link's fragment (#join=CODE) and remove it from the address bar before anything else runs
+    (analytics included), then put the code in the join box: a link never joins by itself, the player's tap does.
+    With a save on this browser, open it as usual with the join box shown over it. On confirm_merge, ask the player
+    whether to move this browser's games or join without moving them, and send the same join again with merge true or
+    keep true only on their tap. After a keep that answers `kept`, show its words (or, with none, say that the words
+    D already had are what bring those games back) before reloading. After a
+    join answers 200, reload and start again from GET /api/me.
+  - reload itself when a Step's build, or /page-config.json's version asked every few minutes while idle, is not the
+    build it booted with: at a quiet moment (no input for twenty seconds, no sheet open), behind a fade to its
+    background, backing off a build that is still served after a reload. The game resumes from the server.
+  - send one request at a time per save, and on 409 stale draw the Step it carries and carry on from it.
+  - ask a request again, with backoff and the quiet "reconnecting" state, when it got no answer or a 5xx that the app
+    did not answer (no X-Ashfall-Server: app: a gateway's, while a deploy or a pod restart leaves no ready app), without
+    bound. A 5xx that carries X-Ashfall-Server: app and no ApiError body is the app's own failure and may repeat on every
+    try: ask it again at most 3 times, then refuse it like any refused request, so the save's queue goes on.
+  - on a Step with catching_up_to, ask advance again at once, keeping each slice's lines, and draw them as one Step
+    once catching_up_to is null; hold the player's decisions and the forecast ask until then. On 409 catching_up,
+    carry on catching up from its `step`, then send the decision again. While catching up, say so plainly where the
+    reconnecting state shows, with how far through the time away it is if shown at all (view.at against
+    catching_up_to).
+  - sample any Segment at its clock: value = start_value + rate*(t-start), clamped at limit; divide by
+    Scales.quantity_per_item to show items. A store's Segment is exact at its start; a card's per-completion amounts
+    move a store by the card's work, a slope the integer rate rounds down, so between events the sample may trail the
+    engine by under one unit per second, and it is exact again at next_event_at. Bars: Card.bar against bar_total;
+    skills: SkillBar.xp.
+  - show what the view says is there: only unlocked stores, skills, cards, chips, and the lanes in view.lanes (free
+    ones too, labelled by LaneInfo). A chip whose ChipInfo has an offered_after is drawn only once view.unlocked
+    holds it (its cure is on screen). A chip with a cost_key draws that text with its word, wherever it is drawn.
+    A chip whose ChipInfo.chore is true and that no OrderCard names carries the hint dot while it is drawn and no
+    rule is set on its store and test: no card is offered for it, and its rule is the player's to write.
+    Just above the art, one line: the aim, the text of the last of Content.aim_infos whose `after` view.unlocked
+    holds (the first has none, so there is always one); no line once that aim's `ends_after` (when set) holds too: its
+    step is done, and the next step is the wait line's or a goal's. Content.line_infos lists every key a log line can carry
+    (any LogLine.key, and end_line_keys), each once, so the page can keep the strip's room for the tallest line of a
+    kind the strip shows (story, tap, body) before any arrives.
+  - draw one card panel from view.cards and a Completed tab from view.completed; a card moves between them only
+    when the view says so. Each card is drawn the same whether tapped, mixed or idle: its completions against its
+    cap ("3 of 5"; no cap, the count alone), its upside_key (also under its name in the town editor), its share and run
+    in the running mix, and its one bar: Card.bar sampled
+    and taken modulo bar_total, whoever runs it (Card.by: tap, mix, or null and still). Card.completes_at is a tap's
+    landing, drawn as its countdown; a share's is null: a rule that takes the hands yields the mix, so no landing is
+    claimed for it.
+    A card is ready iff blocker is null, else show blocker.ready_at as a countdown (null: no countdown), except while
+    an at_most order on the blocker's store is on (view.orders_on) and its release + 1 is below the blocker's value:
+    that order lets go first, so the time cannot be kept and no countdown shows. It can be tapped iff it is ready and
+    its lane's LaneBar has no running_card; its time is Card.tap_s. A need on a store the view has not unlocked is
+    drawn by what the store is: a tally (StoreInfo.tally), as ui.card.needs like any store; a clock with a part of
+    the day (StoreInfo.clock) as when it opens, ui.card.opens with {when} from ui.when.* (below), until its sample
+    reaches the quantity; any other (a countdown the player never sees) not at all, so the card's countdown is all of
+    it. A blocker on a store the view has not unlocked never takes When ready.
+    On a Step whose failed_tap names a card, pulse that card red and mark what its blocker names, and show no text for it: the need of its
+    store (its have/need or when it opens; for a countdown the player never sees, the countdown), skill level or step;
+    a blocker with nothing of its own on the card (a time) marks the countdown, and with no countdown either, the card
+    alone. Every require that can refuse a tap is one the card draws (tests/opening/test_requires_shown.py).
+  - draw a time for a skill's next level, a store's "full in" or its "empty in" only from the forecast it holds
+    (FORECAST below), never from SkillBar.next_level_at, LedgerLine.fills_at or empties_at, which hold only until the
+    next event.
+  - draw a card in view.completed as retired, not done, when view.unlocked holds it as a `retired` unlock (a newer
+    card replaced it); in the mix editor it is struck through until removed.
+  - list a card's Card.needs on it, ready or not, each as ui.card.needs (what one completion takes, the same while
+    its bar runs; for a card paused dry, also the store it ran out of at the level it resumes at, which a tap waits
+    for), and draw one short (the ledger's red) while the card is unready (blocker not null) and its
+    segment's sample is below its quantity. A need whose Need.gate is set draws the gate in its place, never naming
+    its store, whether or not the view has unlocked the store: a skill_level gate as ui.card.needs_skill and a
+    card_count one as ui.card.needs_step, read as below. The server sets it while the need is short, nothing makes the
+    store, and a trigger that grants it has not fired, to the first such trigger's condition a need row can show. A
+    need whose Need.spent is set (short, no card or standing in play can make the store again, every trigger granting
+    it fired) draws as ui.card.needs_spent instead of ui.card.needs. A tap
+    of a short need's row lights its Need.makers (the cards in view.cards and standing actions in view.standing that
+    make it: their cards and the ledger lines they feed) until the next press, adds no words and does not tap the card.
+    List each of CardInfo.skill_needs too, as ui.card.needs_skill, short while that
+    skill's SkillBar.level is below its level (a skill not in view.skills reads as level one), and each of
+    CardInfo.step_needs as ui.card.needs_step, short while that card's completions (view.cards or view.completed;
+    absent, none) are below its count.
+    A card with CardInfo.reach also draws, even while it works, its store's amount (the ledger line in view.ledger, sampled)
+    against the first reach stop above it as ui.card.reach, and none once every stop is passed: a rising line joins the
+    ledger only once full, so the card is where the player reads how far the next reach is.
+  - show on each skill row its next level and what it pays, from SkillInfo.levels (the first entry above
+    SkillBar.level); a pays_key is words, "?" for a story unlock. Its {pct} slot (and {pct_b}) is LevelPays.change_bp.
+  - when a skill's shown level (SkillPrestige.level_counted, else SkillBar.level) rises from one view to the next,
+    show ui.card.levelled for 2 s on each card in view.cards that a level passed names in LevelPays.speeds and whose
+    Card.speed rose: {skill} the skill's label, {n} the new level, {before} and {after} one whole completion's time
+    (bar_total / speed) in the two views. A card whose speed did not rise shows nothing.
+  - draw the Camp bar from the ledger line of Content.camp.store, which is never drawn as a ledger line: its
+    level is how many of camp.camp_levels' `at` the line's sample has reached, its next marker the next level's
+    pays_key (its {from} and {to} slots filled from pays_from and pays_to, {pct} from change_bp) in ui.camp.pays, shown only once
+    every one of its `names` is in view.unlocked. A `held` level is not counted as reached while none of its
+    lifted_by cards (a list of card ids, any one of which lifts it; empty, nothing does) is in view.completed: the
+    bar fills to it and holds, its marker still showing.
+    It shows once view.unlocked holds that store and its first level is reached, and is not tappable.
+  - fill a text entry's slots, and only that, and format numbers by the one rule below (Text and numbers).
+  - offer to add to a mix any card in view.cards whose CardInfo.lane is "hands"; show a mix by its id (its name).
+    A mix in view.greyed_mix_ids (it holds a completed or retired card) is drawn grey and offers only edit
+    (save_mix without those cards) and delete_mix.
+    A retired card's CardInfo.replaced_by, when set, is the card that takes its place: a lesson can say to add it.
+  - draw the hands from view.running_mix_id, the mix that runs now. view.active_mix_id is the player's own mix; while
+    view.mix_order is not null, orders[mix_order]'s mix runs over it, and the player's own comes back once that
+    order's condition stops holding (view.orders_on[i]: orders[i]'s condition holds now). A switch_mix while a
+    rule's mix runs sets only the player's own. Order sequence is priority among the orders that switch a mix; an
+    order that taps a card never competes with them.
+  - say why a rule is off from view.order_states[i], never from its own reading of the stores:
+    waiting (its condition does not hold), outranked (its condition holds and an earlier rule has the hands or the
+    lane: orders[mix_order] for a mix rule, orders[LaneBar.order] of its card's lane for a rule that taps a card),
+    passed_over (its mix is greyed, its task completed, or its offer answered, whatever its condition), paused (its
+    condition holds and a guard of its `unless` holds; it resumes when the last lets go), behind_next (its condition
+    holds and the queue has the hands: Next's row). on is not off.
+  - offer the first mix: once view.unlocked holds the feature Content.first_mix.feature and view.mixes is
+    empty, offer first_mix.card_ids (those in view.cards) as one control. The player's tap on it sends save_mix with the
+    id from text `ui.mix.default`, those cards in that order at an even split of Scales.bp (the remainder to the
+    first), then switch_mix to it. The offer stays until used; the page never makes a mix by itself.
+  - show the order_card whose store matches a ledger line that is red and not covered (falling, or starved), once
+    view.unlocked holds its offered_after (if any), inline under that line, unprompted (a tap on the line offers it
+    too). Accepting it sends set_orders (the current orders plus one new order on the card's `when`, at the end, or
+    for a card on a ruled lane where A LANE RUN BY RULES places it): for a card on
+    another lane, the card's tap_card; for a hands card, a switch_mix to a saved mix of that card alone at Scales.bp,
+    reused when one exists (same components), else first saved (save_mix) under the card's label. On the hands a
+    rule always runs a mix, so the player's mixes and rules are one list. The card goes away when the line turns
+    white. Also offer it, as an offer the player may
+    ignore, once the player has started by hand, twice in a row, the card that order taps (a player who keeps laying wood
+    to dry never lets the store fall); it then stays until set. A rule already set on the card's store and test (at
+    whatever levels) answers the card: nothing is offered under the line.
+  - mark a ledger line whose store a rule watches (an order whose `when` is on that StoreValue) with a quiet mark, and
+    open that rule in the Rules tab on a tap anywhere on the line: the rule drawing the store down (below), else the
+    first watching it. Nothing stands under the line for it. When that rule covers the line and the store still heads
+    where the rule does not want it, the line says why beside its time (ui.ledger.behind with the rule's task or mix;
+    while the rule is outranked or passed over, the Rules tab's own reason): empty by the forecast while an at_most
+    rule wants it held, or full while something still feeds it while an at_least rule wants it taken.
+  - an order_card with a `chip` is never shown under a ledger line: it is offered in the hands strip once that chip
+    is in view.chips and no rule is set on the card's store and test, and then stays until such a rule is set (not
+    when the chip clears). One with after_end waits for view.ended_at and for the end lines to have been read in that
+    page (below, "The end"). Accepting it is the same as above. A chip with several order_cards offers each, side by
+    side, in content order; a rule set on the chip's store and test answers them all.
+  - offer, in the condition editor's When list for a rule doing some cards (a task, or a mix's cards), first the
+    stores those cards make (CardInfo.makes), then the stores they take (CardInfo.takes), then the stores of each
+    card in view.cards that makes one they take or takes one they make; never by words in a label. The simple view
+    offers only those; the full editor offers every store, those first. A store some fight wounds (read a level,
+    above) has no ledger line and is never unlocked as a store, so it is offered once a chip watching it is drawn (in
+    view.chips_seen, offered_after held), in the same tiers, and its chip is not offered in the When row at all (a
+    chip's rule carries no level; the store's rule has one). A rule on it is an ordinary store rule (the engine reads a store_value
+    condition on any store); the editor reads its level from View.levels in whole items rounded up, words its levels in
+    those items only (never a share), and puts each crossing on that reading: under n is at_most (n-1)*Q, n or more is
+    at_least (n-1)*Q + 1, a release the same, so "reaches 2" is on while the chip shows 2 or more (above one item). An Unless guard on it is the same: whole items
+    only, starting at the cap, crossing and worded on that reading, with its release one item past its value; the When list shows
+    its level beside the name, as the chip does.
+  - word a rule whose `when` equals a ChipInfo's `when` as that chip: ui.rule.chip in a rule's condition,
+    ui.hands.while_chip on the hands strip while it runs; never by its numbers. Offer a chip's rule in the full
+    condition editor from the chip's first showing on: every chip in view.chips_seen that would be drawn (its
+    offered_after, if any, in view.unlocked), whether or not it shows now and whatever task the rule then does.
+  - build, read back and word a store rule (an order whose `when` watches a StoreValue), with Q =
+    Scales.quantity_per_item. Each level is whole items n, m or a share of the cap (Share levels above), b in basis
+    points, sent with its flag true and worded by name (ui.level.empty, quarter, half, three_quarters, full at 0,
+    2500, 5000, 7500, 10000) or as ui.level.pct {pct}:
+      "Under {n} {store}, until {m}"                   at_most, value n*Q - 1, release m*Q - 1 (or b)
+      "{store} down to {b}, until {m}"                 at_most, value b, release m*Q - 1 (or b)
+      "{n} or more {store}, until under {m}"           at_least, value n*Q, release m*Q
+      "{n} or more {store}, until down to {b}"         at_least, value n*Q, release b
+      "{store} up to {b}, until under {m}"             at_least, value b, release m*Q
+      "{store} up to {b}, until down to {b}"           at_least, value b, release b
+    so each crossing in items falls on the amount the page shows, and a share is reached at the share itself from
+    either side (engine DESIGN.txt, "SHARE LEVELS"). Read back: a flagged level is its share; at_most n =
+    floor((value+1)/Q), m = floor((release+1)/Q); at_least n = floor(value/Q), m = floor(release/Q). A rule of items
+    read back with no band (m == n: an order card with no release) is worded without "until" (ui.rule.below,
+    ui.rule.reaches). A new rule starts with both levels shares (down to a quarter, until three quarters; up to full,
+    until half), in items only on a store too small for those to keep a band; either level of any rule can be turned
+    into the other form where it reads now. The page builds only rules whose levels, read against the store's cap now
+    (LedgerLine.cap) as the engine reads them, have a band of at least one item inside the cap, so never one that is
+    always true or flips at one level on a flow; on a store with StoreInfo.rises_in_steps (nothing that runs raises
+    it, so it cannot flip that way) the band may be none, the rule letting go where it came on ("{n} or more {store}"
+    lets go under n: reaches 1 on a level is on above none and off at none), and only on a store in view.unlocked with a ledger line, the Camp store excepted, or on
+    the store of the rule being edited even without a ledger line (its cap from StoreInfo). It may
+    write rules once it has seen one of the player's rules come on and then let go (view.orders_on), and draws no
+    rule whose `when` is not on a StoreValue or one of the subject rules below, except a lane's always rule (A LANE
+    RUN BY RULES), which it draws, builds and edits from the first time the lane is in view.
+  - build, read back and word a subject rule, one threshold with no band (counts and levels only go up):
+      "Once {card} is done {n} times"                  at_least(CardCount), value = release = n; ui.rule.done_once at 1
+      "Once {name} reaches level {n}"                  at_least(SkillLevel), value = release = n; or at_least on the
+                                                       Content.camp store, value = release = camp_levels[n-1].at, n
+                                                       below the first held level not yet lifted
+    on a card in view.cards, a skill in view.skills, and the Camp store once its line is in and unlocked. It writes
+    none on an Unlocked (unlocks only grow, so one the save holds is always true), and a Running only as below.
+  - on a lane's rule whose actions tap that lane's cards, offer "while {card} is running" (ui.rule.while_running) for
+    each card in view.cards on another lane, the hands' included, that a tap or a mix can run: at_least(Running),
+    value = release = 1. Nowhere else (422 invalid_decision, Decisions).
+  - never draw a ledger line for a store whose StoreInfo.hidden is true (the engine's bookkeeping: a clock, a countdown),
+    whatever it would ask; AnswerInfo.gains holds no hidden store.
+  - draw a store's ledger line from when it first asks something (red, or carrying an order card's offer) or is
+    falling by something other than the hands' tap, full while something feeds it, or covered; once drawn it stays,
+    kept in AccountPresentation.ledger_lines.
+  - build nothing for the player after the first mix's and first rule's lessons (the page walks those on the real
+    editor): a card the player's own mix could take (mixable, in play, doable again, not in the mix, Step.repeats.taps),
+    a chip whose mix switch the player keeps making or whose order card has no rule, and a red ledger line whose order
+    card has no rule each carry the quiet dot until touched. The dot opens and highlights nothing, has no sentence, and
+    a card's is kept once in SavePresentation.mix_offered, a ledger line's in lines_touched, a switch's in switch_offered.
+  - draw a ledger line white when it is not starved and is either not falling or covered; otherwise red (a starved
+    line is dry while something waits on it, covered or not). A falling line is covered when LedgerLine.covered, or
+    when a rule of the player's draws the store down as it means to: its order_states entry is on, its `when` is an
+    at_least on that store, and a card it runs (its tap_card, or a card_share of its mix) is a runner taking from the
+    store in LedgerLine.contributions. Its amount is against LedgerLine.cap. A red line with
+    no order card to offer names its largest drain (unless that is the hands' tap, which ends by itself) and offers
+    Edit mix, as a full line that something still feeds does. There is no banner text: "everything keeps itself
+    going" shows only as every line white. A store whose StoreInfo.bonus_bp is set only feeds a bonus (the standing
+    actions that take from it hold a lane speed while they run: engine DESIGN.txt, "HELD SPEED"), so its line is
+    always white, names no drain, and once starved reads ui.ledger.unfed, {pct} from bonus_bp, in ui.ledger.starved's
+    place: running low on it misses the bonus and asks nothing.
+  - fold the drawn lines of stores that share a StoreInfo.group_key into one row, once two or more are drawn: the
+    label of group_key and their total against their caps' sum, at the first one's place, which a tap opens to show
+    each line as it is drawn alone. A line drawn with the asks (red, or full while fed) is not folded.
+  - draw the cards in view.cards that share a CardInfo.variant_of as one card on the Tasks page, once two or more are
+    there: the kind the player picked (kept per device), else one a lane runs or a mix holds, else the first, with a
+    picker naming each kind by the label of the first store in its CardInfo.makes. Each kind is still its own card to
+    tap, mix, queue and rule.
+  - mark what is new with a quiet dot (no number, no pulse), cleared once seen or tapped, and put the one glow on at
+    most one control at a time: on a card whose CardInfo.glows is true, the first time it is ready with its lane
+    free or Card.cuts_in true, and on the first-mix offer. Show a feature with a label_key, once unlocked, with the chips;
+    a carried one with an effect_key says what it does: that text filled from FeatureInfo.change_bp as an answer's cost is.

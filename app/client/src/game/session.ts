@@ -189,7 +189,7 @@ export class Session {
     return this.asking.answered(() => this.api.content());
   }
 
-  /** The forecast, asked for by its own call (CONTRACT.txt, "Forecast"), drawn at once on the view the page holds. */
+  /** The forecast, asked for by its own call (contract/forecast.txt, "Forecast"), drawn at once on the view the page holds. */
   private async askForecast(): Promise<void> {
     const id = this.saveId;
     if (id === null || !this.forecastDue()) return;

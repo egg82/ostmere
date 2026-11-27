@@ -1,0 +1,61 @@
+/* sheets */
+.sheet { max-height: calc(100dvh - 2rem); overflow-y: auto; max-width: min(30rem, calc(100vw - 2rem)); width: 100%; box-sizing: border-box; padding: 0 1.1rem; font: 400 var(--t-body)/1.4 "Alegreya Sans", system-ui, sans-serif; background: var(--raise); color: var(--ink); border: 0; border-radius: 2px; box-shadow: 0 1.1rem 4rem rgba(0, 0, 0, .7); }
+.sheet button { font: inherit; }
+.sheet[open] { animation: arrive .35s ease-out; }
+.sheet::backdrop { background: rgba(8, 7, 8, .62); }
+.sheet-actions { display: flex; justify-content: flex-end; gap: .6rem; margin-top: 1rem; }
+.sheet > .panel-heading { position: sticky; top: 0; z-index: 1; background: var(--raise); padding: 1.1rem 0 .3rem; }   /* a sheet taller than the viewport scrolls between its heading and its actions */
+.sheet > .sheet-actions { position: sticky; bottom: 0; z-index: 1; background: var(--raise); padding: .5rem 0 1.1rem; }
+.book-sheet .sheet-actions { position: sticky; bottom: 0; z-index: 1; background: var(--raise); padding: .5rem 0 1.1rem; }   /* the Book's, a level down in it */
+.sheet:not(:has(> .panel-heading, > .book)) { padding-top: 1.1rem; }
+.book-sheet { max-width: min(40rem, calc(100vw - 2rem)); }
+.book-sheet .book-head { position: sticky; top: 0; z-index: 1; background: var(--raise); padding-top: .6rem; }
+/* the Journal, a page of the Book (ui/journal.ts; docs/design/opening-screen/journal.md, "The journal"). The page is parchment
+   written in the hand's ink, whatever the browser prefers: the game is one dark theme. Phone: one portrait page, the
+   sketch, the notes and the numbers top to bottom, the Book's sheet full height while it is open. Desktop: an open spread
+   of two 600:780 pages, the sketch alone on the left, the notes then the numbers on the right. */
+.journal { --page-h: min(calc(94dvh - 8.5rem), calc((96vw - 2.2rem) * .65)); }
+.journal-spread { background: var(--parchment); color: var(--hand-ink); display: flex; flex-direction: column; gap: .8rem; padding: 1rem; }
+.journal-page, .journal-notes { display: contents; }
+.journal-sketch-box { display: contents; }
+.journal-sketch { display: block; width: var(--sk-w); margin-left: calc((100% - var(--sk-w)) * var(--sk-x)); aspect-ratio: 1; object-fit: contain; }
+.journal-sketch.missing, .journal-note-sketch.missing { visibility: hidden; }   /* a sketch that failed to load leaves its room empty */
+.journal-spread[data-above="true"] .journal-note:first-child { order: -1; }   /* on a phone, a first note the seed puts above the sketch */
+.journal-note { display: flex; flex-wrap: wrap; align-items: flex-start; gap: .3rem .8rem; margin: 0 0 .4rem var(--indent, 0); transform: rotate(var(--tilt, 0deg)); transform-origin: left center; font: 400 1.35rem/1.2 "Reenie Beanie", "Segoe Print", cursive; }
+.journal-note.hand-ink { color: var(--hand-ink); background: var(--parchment); }
+.journal-note.hand-pencil { color: var(--hand-pencil); background: var(--parchment); }
+.journal-words { flex: 1 1 55%; min-width: 0; margin: 0; }
+.journal-note:has(.journal-count) .journal-words { flex: 0 1 auto; }
+.journal-count { flex: none; align-self: baseline; margin-left: .6rem; font: 400 1rem/1.3 "Alegreya Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; color: var(--hand-ink); background: var(--parchment); }
+.journal-day { margin: 0 0 -.5rem; font: 400 1.35rem/1.2 "Reenie Beanie", "Segoe Print", cursive; color: var(--hand-pencil); background: var(--parchment); }   /* a day's heading on a days page, in the pencil; on a phone it sits in the column's .8rem gap, pulled to its first note */
+.journal-day:not(:first-child) { margin-top: .1rem; }
+.journal-note-sketch { flex: none; display: block; max-width: 40%; max-height: 8rem; object-fit: contain; }
+.journal-numbers { display: flex; flex-direction: column; gap: .6rem; margin-top: .4rem; padding-top: .6rem; border-top: 1px solid var(--hand-pencil); font: 400 1rem/1.3 "Alegreya Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; color: var(--hand-ink); background: var(--parchment); }
+.journal-notes:focus-visible { outline: 2px solid var(--hand-pencil); outline-offset: -2px; }   /* a scroller a keyboard reaches: its ring is the pencil's, not the browser's white */
+.journal-numbers[hidden] { display: none; }
+/* the page's marks (ui/pagemarks.ts; docs/design/journal.md, "Marks on the page"): over the page's words but placed
+   clear of them, multiplied into the parchment like a stain; the phone's page is the spread, the desktop's the right page */
+.journal-spread { position: relative; overflow: hidden; }
+.journal-marks { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.journal-mark { position: absolute; max-width: none; mix-blend-mode: multiply; user-select: none; }
+.journal-row { display: flex; flex-direction: column; }
+.journal-runner { font-weight: 500; }
+.journal-sheet .sheet-actions > :first-child { margin-right: auto; }
+.journal-bookmarks { margin: .4rem 0 .8rem; overflow-x: auto; scrollbar-width: none; }   /* one row however many sections: it scrolls, the open one kept in view */
+.journal-bookmarks .tab { flex: none; white-space: nowrap; }
+.journal-place { align-self: center; min-width: 3.2ch; text-align: center; font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
+.journal-sheet .sheet-actions .quiet { white-space: nowrap; padding-inline: .7rem; }
+/* a section's contents (ui/journal.ts): its pages as rows in the parchment, a tap turns to one */
+.journal-contents { box-sizing: border-box; width: min(36rem, calc(100vw - 3rem)); max-height: calc(100dvh - 14rem); overflow-y: auto; overscroll-behavior: contain; margin: 0 auto; padding: .4rem .6rem; background: var(--parchment); color: var(--hand-ink); }
+.journal-contents[hidden] { display: none; }
+.journal-entry { display: flex; align-items: center; gap: .8rem; position: relative; width: 100%; min-height: 2.75rem; padding: .3rem .4rem; text-align: left; background: var(--parchment); border: 0; box-shadow: inset 0 -1px 0 rgba(43, 36, 28, .25); color: var(--hand-ink); cursor: pointer; }
+.journal-entry.on { background: #d3c8b0; }
+.journal-entry-n { flex: none; min-width: 2ch; font: 400 .9rem/1 "Alegreya Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; color: var(--hand-pencil); background: var(--parchment); text-align: right; }
+.journal-entry.on .journal-entry-n { color: var(--hand-ink); background: #d3c8b0; }
+.journal-entry-title { flex: 1 1 auto; min-width: 0; font: 400 1.35rem/1.15 "Reenie Beanie", "Segoe Print", cursive; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.journal-entry .new-dot { position: static; flex: none; }
+.journal-entry:focus-visible { outline: 2px solid var(--hand-pencil); outline-offset: -2px; }
+.journal-left[hidden] { display: none; }   /* a page with no sketch is text alone */
+.journal-spread.turn-next { animation: journal-turn .15s ease-out; --turn-from: .5rem; }
+.journal-spread.turn-prev { animation: journal-turn .15s ease-out; --turn-from: -.5rem; }
+@keyframes journal-turn { from { opacity: 0; transform: translateX(var(--turn-from)); } }

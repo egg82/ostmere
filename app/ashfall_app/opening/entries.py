@@ -68,12 +68,12 @@ class FightEntry(Entry):
     loses: list[ItemAmount] = []
     wounds: list[ItemAmount] = []
     won_line_keys: list[str] = []
-    """The arrival queue's lines for one fight won, a pool the page draws from (api/CONTRACT.txt, "FIGHTS"); empty:
+    """The arrival queue's lines for one fight won, a pool the page draws from (api/contract/fights.txt, "FIGHTS"); empty:
     ui.fight.won. Words only: the engine never reads it."""
     lost_line_keys: list[str] = []
     """The same for one fight lost; empty: ui.fight.lost."""
     loss_pool: list[str] | None = None
-    """With loss_notes, on_loss_key and loss_after, all or none: api/CONTRACT.txt, "LOSS LINES" (loss_checks.py)."""
+    """With loss_notes, on_loss_key and loss_after, all or none: api/contract/loss-lines.txt, "LOSS LINES" (loss_checks.py)."""
     loss_notes: list[str] | None = None
     on_loss_key: str | None = None
     loss_after: str | None = None
@@ -246,10 +246,10 @@ class CardEntry(Entry):
     upside_key: str | None = None
     upside_of: str | None = None
     """A runner, a standing action or a card, whose while_running entries the upside describes, served after the card's
-    own changes: a recipe whose make that runner eats (api/CONTRACT.txt, {pct})."""
+    own changes: a recipe whose make that runner eats (api/contract/, {pct})."""
     variant_of: str | None = None
     """The card this one is a kind of (itself on the first): cards of one variant_of are one card on the Tasks page,
-    with a kind picker (api/CONTRACT.txt, CardInfo.variant_of)."""
+    with a kind picker (api/contract/, CardInfo.variant_of)."""
     work_s: int = Field(ge=1)
     skill: str | None = None
     xp_per_hour: int = Field(default=0, ge=0)
@@ -272,7 +272,7 @@ class CardEntry(Entry):
     (stake_checks.py)."""
     glows: bool = False
     """The one glow lands here the first time the card is ready while its lane is free: the opening's obvious next
-    steps (docs/design/opening-screen.md, "Dots and the one glow"), said where the card is authored."""
+    steps (docs/design/opening-screen/feedback.md, "Dots and the one glow"), said where the card is authored."""
     twin_of: str | None = None
     """On a townsperson's lane: the player's card this one is the town's version of (player_checks.py)."""
     only_player: Literal["alone", "story", "self", "fight", "magic", "station", "project"] | None = None

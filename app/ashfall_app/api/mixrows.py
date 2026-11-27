@@ -1,4 +1,4 @@
-"""The Mixes list's numbers (CONTRACT.txt, "Mix rows"): each of the player's saved mixes as if it ran from now, on
+"""The Mixes list's numbers (contract/mix-rows.txt, "Mix rows"): each of the player's saved mixes as if it ran from now, on
 separate numbers (when each open goal lands, each store's net per hour, when the mix runs out), never one score, and the
 player's own earlier best per goal from saves/mixbest.py."""
 from collections.abc import Mapping

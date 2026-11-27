@@ -1,4 +1,4 @@
-// Which running cards an order started. The view does not say what started a tap (CONTRACT.txt names no origin), so
+// Which running cards an order started. The view does not say what started a tap (contract/ names no origin), so
 // this infers it: a card that begins on a lane with no tap from the player, that a standing order whose condition holds
 // taps and no queue entry does. `fresh` is the cards an order started in the latest view; `running` holds them while they run.
 import type { View } from "../api/types";
