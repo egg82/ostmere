@@ -53,9 +53,15 @@ def test_a_cast_with_no_patterns_is_refused_at_the_entry(tmp_path: Path):
     refused(tmp_path, "patterns", casts='{ role = "lead", patterns = [] }')
 
 
-@pytest.mark.parametrize("role", ["1lead", "le-ad", "_lead", ""])
-def test_a_role_that_is_not_a_word_starting_with_a_letter_is_refused(tmp_path: Path, role: str):
-    refused(tmp_path, "role", casts=f'{{ role = "{role}", patterns = ["{{lane}}_chop"] }}')
+@kills(15)
+@pytest.mark.parametrize("role", ["1lead", "le-ad", "_lead"])
+def test_a_role_that_is_not_a_word_starting_with_a_letter_is_refused_naming_it(tmp_path: Path, role: str):
+    refused(tmp_path, rf"casts {role}, which is not a word of letters, digits and underscores",
+            casts=f'{{ role = "{role}", patterns = ["{{lane}}_chop"] }}')
+
+
+def test_an_empty_role_is_refused(tmp_path: Path):
+    refused(tmp_path, "role", casts='{ role = "", patterns = ["{lane}_chop"] }')
 
 
 @kills(19)
@@ -107,7 +113,7 @@ def test_a_text_elsewhere_that_holds_the_slot_is_refused_naming_key_and_slot(tmp
     plain = dict(extra='[[triggers]]\nid = "t_after"\nwhen = { test = "after_time", value = 400 }\n'
                        'outcome = { line_keys = ["t_l_x"] }\n\n', extra_kinds='t_l_x = "story"\n')
     opening_of(tmp_path, extra_text='t_l_x = "Nobody is here."\n', **plain)
-    with pytest.raises(ValueError, match=r"text t_l_x: holds the slot \{lead\}, which can show before lead is cast"):
+    with pytest.raises(ValueError, match=r"text t_l_x: holds the slot \{lead\}, which can show before lead is cast \(in trigger t_after\)"):
         opening_of(tmp_path, extra_text=SLOT_TEXT, **plain)
 
 
