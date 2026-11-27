@@ -64,7 +64,7 @@ jobs:
   # `release` pass for this run. The only job here that writes to the repository, and the pull request it opens runs no CI
   # of its own (a GITHUB_TOKEN push starts no workflow): the orchestrator starts it before merging.
   # The same pull request carries the chapter-save cost table (app/tools/ci_costs.json, refreshed from the last runs' logs by
-  # tools/ci_costs.py) whenever it changed, so tests/test_saves_plan.py reads the new costs on that pull request: a jump
+  # tools/ci_costs.py) whenever it changed, so tests/tools/test_saves_plan.py reads the new costs on that pull request: a jump
   # that puts a planned job over its cap is a red pull request. A table refresh that fails measures nothing and holds nothing.
   refresh-readouts:
     needs: [full, tests-deep, ci-health]

@@ -6,7 +6,7 @@ from ashfall_app.api.service import Game
 from ashfall_app.engine import QUANTITY_SCALE as Q
 from ashfall_app.engine import new_save
 from tests.shipped_ruleset import ShippedRuleset
-from tests.test_scene_stores import named_in_the_scene
+from tests.scene.test_scene_stores import named_in_the_scene
 
 
 def test_a_hidden_clock_is_on_the_view_with_what_the_opening_starts_it_at(shipped_ruleset: ShippedRuleset):

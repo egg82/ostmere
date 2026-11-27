@@ -15,7 +15,7 @@ from ..head import HeadAsGet
 from ..old_host import OldHostRedirect
 from . import page
 
-# What the edge sends to the app instead of here: every route the app has falls under one (tests/test_web.py). A new
+# What the edge sends to the app instead of here: every route the app has falls under one (tests/web/test_web.py). A new
 # one is added to the cluster's HTTPRoute and tunnel in the same change.
 SERVER_PREFIXES = ("/api/",)
 SERVER_EXACT = ("/healthz", "/page-config.json", "/changes", "/openapi.json")

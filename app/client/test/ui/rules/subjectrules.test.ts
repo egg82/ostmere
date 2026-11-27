@@ -1,6 +1,6 @@
 // A rule on a count or a level, written in the full condition editor and read back (docs/design/opening-screen/rules-tab.md,
 // "The condition editor"): each case of fixtures/subject_cases.json is picked under When, stepped and added; the set_orders it sends holds exactly the case's condition (the shape the engine accepts:
-// tests/test_subject_rules_wire.py runs the same cases through the engine); the Rules tab then draws the rule in the
+// tests/api/test_subject_rules_wire.py runs the same cases through the engine); the Rules tab then draws the rule in the
 // case's words, and Change opens it on the same subject and number.
 import { readFileSync } from "node:fs";
 import { install } from "../../fake-dom";

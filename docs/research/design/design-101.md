@@ -189,7 +189,7 @@ evidence, then by cost.
    - load the pinned stage with the address bar shown and hidden, and with the condition editor's keyboard open.
 
    List the failures before designing anything. Fits into: Feedback (the calm form of each effect) and Page shell. The
-   size and greyscale checks sit beside `app/tests/test_client_contrast.py`.
+   size and greyscale checks sit beside `app/tests/client/test_client_contrast.py`.
 8. **An absence ladder in the simulator, then start each new marker partly filled.** Change: none at first. Run returns
    after 1 h, 8 h, 24 h, 3 days and 7 days and count the milestone-class arrivals each unwrap holds. Check that longer
    absences hold a recognisably bigger moment, and that the 4 s cap does not flatten the non-story arrivals. Only if the

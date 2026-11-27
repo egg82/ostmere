@@ -1,5 +1,5 @@
 {
-  "about": "Store rules with share levels, as the page's rule editor builds them (client/test/game/condition/sharelevels.test.ts proves the editor writes and reads back each `when` from its `rule`; tests/test_share_levels_wire.py proves the engine accepts each through the wire). A store of cap 12 items; Q = 3600000.",
+  "about": "Store rules with share levels, as the page's rule editor builds them (client/test/game/condition/sharelevels.test.ts proves the editor writes and reads back each `when` from its `rule`; tests/api/test_share_levels_wire.py proves the engine accepts each through the wire). A store of cap 12 items; Q = 3600000.",
   "cap_items": 12,
   "cases": [
     {"name": "down to a quarter, until full",

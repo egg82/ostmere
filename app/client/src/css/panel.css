@@ -79,7 +79,7 @@
 .hands-rows > * { margin-top: .5rem; }
 
 /* a mix as one split bar, its legend beneath: no text inside the bar. Neighbouring hues sit apart on a 2px gap of the page,
-   each hue 3:1 against it (tests/test_client_contrast.py). The legend's look is shared with the town's (.town-key). */
+   each hue 3:1 against it (tests/client/test_client_contrast.py). The legend's look is shared with the town's (.town-key). */
 .share-bar { position: relative; }
 .share-track { position: relative; height: .5rem; background: var(--track); touch-action: none; }
 .share-bar.large .share-track { height: 1.25rem; }

@@ -149,7 +149,7 @@ class InstallEntry(Entry):
 
 
 class WhereaboutsEntry(Entry):
-    """Where an outcome puts a person, and what the scene shows of it (app/tests/test_scene_people.py): `layer` is the id of
+    """Where an outcome puts a person, and what the scene shows of it (app/tests/scene/test_scene_people.py): `layer` is the id of
     the scene layer that shows it, `no_scene` the reason nothing does. Exactly one; words only to the engine."""
 
     person: str
@@ -249,7 +249,7 @@ class CardEntry(Entry):
     only_player: Literal["alone", "story", "self", "fight", "magic", "station", "project"] | None = None
     """On a player's lane: why no townsperson has this card, as a tag (player_checks.py)."""
     site: SiteEntry | None = None
-    """Where the scene shows this card's work done: a layer, or why there is none (site_checks.py, app/tests/test_scene_sites.py).
+    """Where the scene shows this card's work done: a layer, or why there is none (site_checks.py, app/tests/scene/test_scene_sites.py).
     A card and its `twin_of` name the same site."""
 
 

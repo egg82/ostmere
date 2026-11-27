@@ -60,7 +60,7 @@ MANY.n = Number(hash.get("stores") ?? 0);
 if (isSince(phase)) Object.assign(fixtureContent, withSince(fixtureContent));
 const fixture = fixtureApi(phase, hash.has("stale"), hash.has("seen"), hash.has("limited"), hash.has("due"));
 const kept = (hash.get("kept") ?? "").split(",").filter((l) => l.length > 0);
-// #stuck stands in for the server's View.order_dry (contract/dry-rules.txt, "Dry rules"; tested in tests/test_rule_dry.py): the rule
+// #stuck stands in for the server's View.order_dry (contract/dry-rules.txt, "Dry rules"; tested in tests/goals/test_rule_dry.py): the rule
 // holding the hands cannot let go, and a dry run says the rule being written may stop short.
 const dryOf = (v: View, holding: boolean): View => ({ ...v, order_dry: v.orders.map((o, i) => (!holding || v.order_states[i] === "on" ? (o.then.kind === "switch_mix" ? { store: "stone", holding } : null) : null)) });
 const stuck = hash.has("stuck");

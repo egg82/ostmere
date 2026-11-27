@@ -7,7 +7,7 @@ from .entries import Entry, UnlockEntry
 
 
 class LodgingEntry(Entry):
-    """Where a person sleeps, as the content has it (app/tests/test_scene_lodging.py): `build` the card whose build houses
+    """Where a person sleeps, as the content has it (app/tests/scene/test_scene_lodging.py): `build` the card whose build houses
     them, `elsewhere` the reason no build does. Exactly one; words only to the engine."""
 
     build: str | None = None
@@ -21,7 +21,7 @@ class LodgingEntry(Entry):
 
 
 class ByDayEntry(Entry):
-    """Where a person is by day when no card of theirs is running (app/tests/test_scene_day.py): `card` the card of their
+    """Where a person is by day when no card of theirs is running (app/tests/scene/test_scene_day.py): `card` the card of their
     lane (or their crew's) whose work they stand at (its `site` names the scene layer), `at_fire` why the content seats them
     at the camp fire instead, `off_scene` why their work or place is outside what the scene draws (the scene keeps drawing
     them as before). Exactly one; words only to the engine."""

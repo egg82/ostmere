@@ -1,4 +1,4 @@
-// Every shipped chip and card (fixtures/real_chip_cards.json, which tests/test_rule_chip_cases_wire.py keeps equal to the
+// Every shipped chip and card (fixtures/real_chip_cards.json, which tests/api/test_rule_chip_cases_wire.py keeps equal to the
 // shipped content): the simple rule view offers a chip for a card when the chip falls on a store the card makes (tired
 // for rest) or rises on a store it takes (ash-laden for clearing the roofs, #277).
 import { fixtureContent } from "../../../fixtures/content";

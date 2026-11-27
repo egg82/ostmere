@@ -1,6 +1,6 @@
 """Where a card's work is shown (`site` on a card, entries.SiteEntry): a card and the card it is a twin of name the same site,
 so the player's job and the town's version of it stand in one place. Structural fields only, never ids or words. Raises
-ValueError naming the card (refs.fail). The layer a site names is checked against the scene in app/tests/test_scene_sites.py."""
+ValueError naming the card (refs.fail). The layer a site names is checked against the scene in app/tests/scene/test_scene_sites.py."""
 from typing import TYPE_CHECKING
 
 from ...refs import fail
