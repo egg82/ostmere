@@ -20,6 +20,7 @@ PYTEST_GATES=(
   app/tests/opening/test_pool_checks.py
   app/tests/test_boundaries.py
   app/tests/test_doc_citations.py
+  app/tests/engine/test_design_index.py
   app/tests/test_decision_citations.py
   app/tests/test_canon_ids.py
   app/tests/test_scene_depth.py
