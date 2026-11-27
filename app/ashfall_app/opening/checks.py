@@ -13,6 +13,7 @@ from .chip_checks import check_chips
 from .choice_checks import check_choices
 from .close_call_checks import check_close_calls
 from .player_checks import check_player_only
+from .site_checks import check_sites
 from .pool_checks import check_pools
 from .face_checks import check_clocks
 from .convert import build_rules
@@ -88,6 +89,7 @@ def check_structure(o: "Opening") -> None:
     check_replacements(o)
     check_choices(o)
     check_player_only(o)
+    check_sites(o)
     check_loss_lines(o)
     check_leaves(o)
     check_groups(o)

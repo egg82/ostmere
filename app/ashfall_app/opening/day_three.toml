@@ -469,6 +469,7 @@ unlocks = [{ unlock_kind = "feature", id = "warm_ground" }]
 # Either lane's stage counts toward the other's: both add to watch_done, and the second stage retires both cards.
 [[cards]]
 id = "watch_fire"
+site = { layer = "watch_ring" }
 presentation = "craft"
 label_key = "c_watch_fire"
 work_s = 3600
@@ -480,6 +481,7 @@ outcome = { stores = [{ store = "watch_done", items = 1 }] }
 [[cards]]
 id = "n1_build_watch"
 twin_of = "watch_fire"
+site = { layer = "watch_ring" }
 lane = "n1"
 presentation = "craft"
 label_key = "c_n1_build_watch"
@@ -508,6 +510,7 @@ unlocks = [
 # day_eight.toml's gap), each holding an entry while it runs.
 [[cards]]
 id = "n1_watch"
+site = { layer = "watch_lit" }
 lane = "n1"
 presentation = "action"
 label_key = "c_n1_watch"

@@ -483,6 +483,7 @@ cap_items = 1
 # runs (b7.toml's while_running, where the side is declared).
 [[cards]]
 id = "n4_watch"
+site = { layer = "watch_lit" }
 lane = "n4"
 presentation = "action"
 label_key = "c_n4_watch"

@@ -4,6 +4,8 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from .site_entries import SiteEntry
+
 
 class Entry(BaseModel):
     """Content is our own file one directory away: an unknown field is a typo, so it fails the load."""
@@ -277,6 +279,9 @@ class CardEntry(Entry):
     """On a townsperson's lane: the player's card this one is the town's version of (player_checks.py)."""
     only_player: Literal["alone", "story", "self", "fight", "magic", "station", "project"] | None = None
     """On a player's lane: why no townsperson has this card, as a tag (player_checks.py)."""
+    site: SiteEntry | None = None
+    """Where the scene shows this card's work done: a layer, or why there is none (site_checks.py, app/tests/test_scene_sites.py).
+    A card and its `twin_of` name the same site."""
 
 
 class TriggerEntry(Entry):
