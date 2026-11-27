@@ -1928,6 +1928,7 @@ export interface components {
             when: components["schemas"]["Condition"];
             then: components["schemas"]["OrderVerb"];
             offered_after: components["schemas"]["Unlock"] | null;
+            offered_until: components["schemas"]["Unlock"] | null;
             /** Chip */
             chip: string | null;
             /** After End */

@@ -122,7 +122,8 @@ CHOICES (townsfolk, installed rules, offers)
   unlock set, nor orders whose verb is a SwitchMix or an answer. A tap a removed order started runs on to its landing
   (no cancel, as a task change) and is not tapped again by it. Orders and the queue evaluate after the outcome, as
   always. It lands once (a trigger fires once), so a rule the player sets again afterwards stays. The chore's order
-  card needs nothing: the page offers it again while its line shows uncovered (LedgerLine.covered), as before. The
+  card is offered again while its line shows uncovered (LedgerLine.covered), unless the content gave it an
+  offered_until (OrderCardEntry), an unlock the retiring turn gives: then the page offers it no more. The
   chore's leftover stores are content's to empty (a standing drain on its own pool, the visitor's idiom).
 - Logged: rulelog.RuleChange gains `ended: Ended | None = None`, Ended an Enum of SEASON ("season") and LEFT ("left",
   LEAVES). rule_changes(before, after, rules) reports, beside the latch changes, one RuleChange(after.time, o, False,

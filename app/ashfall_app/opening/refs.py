@@ -122,6 +122,7 @@ def _unlocks(o: "Opening") -> Iterator[tuple[str, "UnlockEntry"]]:
     for where, out in outcomes(o):
         yield from ((where, u) for u in out.unlocks)
     yield from ((f"order card for {c.store}", c.offered_after) for c in o.order_cards if c.offered_after is not None)
+    yield from ((f"order card for {c.store}", c.offered_until) for c in o.order_cards if c.offered_until is not None)
     yield from ((f"chip {c.id}", c.offered_after) for c in o.chips if c.offered_after is not None)
     yield from ((f"aim {a.id}", a.after) for a in o.aims if a.after is not None)
     yield from ((f"lane {x.id}", lb.after) for x in o.lanes for lb in x.later_labels)
