@@ -1,4 +1,4 @@
-// What holds the hands, read off the view (docs/design/opening-screen.md, "The hands strip"), so the mix bar can show
+// What holds the hands, read off the view (docs/design/opening-screen/hands-strip.md, "The hands strip"), so the mix bar can show
 // what the hands are actually doing: a tap on the hands (by hand, a When ready step or an answer's queued one-off, a
 // rule's tap, a cut-in), else a rule's mix, else a goal stint's mix, else the player's own mix. Each holder but the
 // player's mix names the mix the hands go back to when it lets go.

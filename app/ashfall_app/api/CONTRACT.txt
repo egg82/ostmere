@@ -236,7 +236,7 @@ REPEATS
   Each decision's context (the mix the hands ran, whether a tap's card was in it, the chips shown) is kept in the log
   as it is made, so the counts need no replay and a save rebuilt from its log counts the same. Decisions logged by a
   build before this field count for nothing. The page offers each repeat once (AccountPresentation.mix_offered,
-  switch_offered); what it offers is the page's (docs/design/opening-screen.md, the hands strip).
+  switch_offered); what it offers is the page's (docs/design/opening-screen/hands-strip.md, the hands strip).
 
 RULE RUNS
   Step.rule_runs [RuleRun {order, starts, on_at, on_level, off_at, off_level, ended}]: what the rules did lately, one
@@ -570,7 +570,8 @@ THE CLIENT MAY
     A chip whose ChipInfo.chore is true and that no OrderCard names carries the hint dot while it is drawn and no
     rule is set on its store and test: no card is offered for it, and its rule is the player's to write.
     Just above the art, one line: the aim, the text of the last of Content.aim_infos whose `after` view.unlocked
-    holds (the first has none, so there is always one). Content.line_infos lists every key a log line can carry
+    holds (the first has none, so there is always one); no line once that aim's `ends_after` (when set) holds too: its
+    step is done, and the next step is the wait line's or a goal's. Content.line_infos lists every key a log line can carry
     (any LogLine.key, and end_line_keys), each once, so the page can keep the strip's room for the tallest line of a
     kind the strip shows (story, tap, body) before any arrives.
   - draw one card panel from view.cards and a Completed tab from view.completed; a card moves between them only
@@ -1008,8 +1009,10 @@ GOALS (docs/decisions.md, "Progress is stated, never hinted")
   and the wait line states the count ("{card}: {n} lost", ui.goal.lost, n the fights lost against the count, as ui.store.amount words it) beside the clock's words, "Something new"
   once; a store with no line yet is a
   row in the Camp bar's box (its label, value against target, a bar, "something new"), the cards that make it marked;
-  the clock is the wait line, plain text at the top of the deck and no card or control: "Something new", the time left,
-  and the store it runs while there is some, or that store alone while it is dry. Nothing names a beat. `at` holds until next_event_at.
+  the clock is the wait line, plain text at the top of the deck and no card or control: "Something new", the count of
+  a store the content states (a clock Goal with `store`, `target` and `value`: "{store}: {n}", ui.goal.count, n as
+  ui.store.amount words it), the time left, and the store it runs while there is some, or that store alone while it is
+  dry. Nothing names a beat. `at` holds until next_event_at.
 
 GOAL ROWS (docs/design/worth-a-change.md, "The payoff, shown before and after"; docs/research/fun-from-choice.md, proposal 1)
   view.goal_rows is each goal a mix can move: every store and level goal of view.goals, in that order, then each skill
@@ -1394,7 +1397,7 @@ JOURNAL
   perfect once known"). It is a reading of what the wire already carries: an entry and each of its notes are unlocks,
   and the numbers are View.fights. View gains nothing. The page draws the journal from Content.journal,
   view.unlocked and view.fights, and keeps what the player has read in AccountPresentation. Page design:
-  docs/design/opening-screen.md, "The journal". Fits into Unlocks, Knowledge (as a page reading), Lessons and the
+  docs/design/opening-screen/journal.md, "The journal". Fits into Unlocks, Knowledge (as a page reading), Lessons and the
   page shell; not a system (one caller, nothing to swap). The daily journal's written days are the one part the wire
   carries anew, on Step and Opened (below, "The written days").
 
@@ -1560,7 +1563,7 @@ JOURNAL
                                     ui.journal.contents   the button that lists the open section's pages
                                     ui.journal.day {n}   a day's heading on a days page
                                     ui.lesson.journal_open | ui.lesson.journal_notes | ui.lesson.journal_numbers
-                                    the journal's lesson (opening-screen.md, "Lessons")
+                                    the journal's lesson (opening-screen/lessons.md, "Lessons")
                                     ui.journal.days | ui.journal.creatures | ui.journal.places   the sections'
                                     bookmarks
 

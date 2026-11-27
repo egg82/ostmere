@@ -1,4 +1,4 @@
-// Where the tabs, the ledger, the skills and the panel's foot sit, by frame (docs/design/opening-screen.md, "Desktop" and
+// Where the tabs, the ledger, the skills and the panel's foot sit, by frame (docs/design/opening-screen/layout.md, "Desktop" and
 // "Phone"). On a desktop the tabs, the skills and the foot are the left rail's, and the ledger fills the room under the
 // art when the window is tall enough, else the panel's foot. On a phone the tabs are the bottom bar (the panel's, fixed
 // by game.css) and the ledger and skills are the Town tab's. A landscape phone keeps them all in the panel. The Book

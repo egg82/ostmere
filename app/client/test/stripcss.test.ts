@@ -1,4 +1,4 @@
-// The story strip's layout (src/game.css; docs/design/opening-screen.md, "One column of attention"): the shown line and
+// The story strip's layout (src/game.css; docs/design/opening-screen/attention.md, "One column of attention"): the shown line and
 // the room of every line share one grid cell and one type size, so the strip is the tallest line's height and no line
 // is cut; none faded or clipped. The Camp bar's next-marker wraps by word rather
 // than truncating, and the first card keeps its hidden parts' room. The layout is CSS, so this reads the rules.

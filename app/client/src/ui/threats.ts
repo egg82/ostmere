@@ -1,4 +1,4 @@
-// The ledger's threats group (docs/design/opening-screen.md, "Fights"): a threat that runs on its own at the stores is
+// The ledger's threats group (docs/design/opening-screen/ledger-and-fights.md, "Fights"): a threat that runs on its own at the stores is
 // a standing fight, drawn under the stores' lines once the `combat` feature is on: its name, its odds and strengths as
 // a card shows them, and how many it has fought and lost. It asks nothing of the player, so it is calm: no alarm hue.
 import type { Fight, StandingInfo, View } from "../api/types";

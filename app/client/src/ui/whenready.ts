@@ -1,4 +1,4 @@
-// "When ready" on a card (docs/design/opening-screen.md, "Cards" and "The Rules tab"): a small button on a step that
+// "When ready" on a card (docs/design/opening-screen/, "Cards" and "The Rules tab"): a small button on a step that
 // will turn ready by itself, or is ready on a lane running another tap (game/queue.canQueue), beside the card's own tap
 // target, never inside it. It adds one tap of the card to the queue, and the card flies to the Rules tab, where Next lists it. Once queued it stays as a quiet
 // "in Next" mark, so the card does not change size under the finger. The first time it is on show it takes the one

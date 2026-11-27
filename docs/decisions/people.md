@@ -134,7 +134,7 @@ person is in one group). The story sets and clears it, on the join and in a late
 headcount, and the page never sets it. It is not the notable tier: notables never die, a promise to the player, while the
 mark is given and taken by the story, so fusing them would make losing a mark expose a person to death. Content will often
 mark notables; the two fields stay separate. The Town view draws a row per marked person and per group
-(`docs/design/opening-screen.md`, "The Town view"); a group's page may name a person tied to it from an authored field when
+(`docs/design/opening-screen/town-and-book.md`, "The Town view"); a group's page may name a person tied to it from an authored field when
 content has one.
 
 How many things the Town view asks the player to tune (a person keeping their own split, or a group with a joined member

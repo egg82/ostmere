@@ -1,4 +1,4 @@
-// A retired card's share in the hands strip (hands.ts; docs/design/opening-screen.md, "The hands strip"): the engine
+// A retired card's share in the hands strip (hands.ts; docs/design/opening-screen/hands-strip.md, "The hands strip"): the engine
 // keeps it in the greyed mix (docs/decisions.md, "The mix"), but the strip draws the rest of the bar with the
 // share divided among them in proportion, never a struck segment holding a share.
 import { install } from "./fake-dom";

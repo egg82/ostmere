@@ -38,8 +38,15 @@ def goals(save: e.Save, rules: e.Rules, v: e.View, defs: Mapping[str, GoalDef]) 
         return out
     at = min(x[0] for x in clocks)
     fed = dict.fromkeys(s for t, d in clocks if t == at for s in d.fed_by if s in shown)
-    return out + [g.Goal(kind=g.GoalKind.CLOCK, store=None, card=None, skill=None, target=0, value=None,
+    counted = next((d for t, d in clocks if t == at and d.count is not None), None)
+    return out + [g.Goal(kind=g.GoalKind.CLOCK, store=None if counted is None else counted.count, card=None, skill=None,
+                         target=0 if counted is None else counted.target,
+                         value=None if counted is None else _segment(save, rules, str(counted.count)),
                          at=None if at == _PAUSED else at, feeds=list(fed))]
+
+
+def _segment(save: e.Save, rules: e.Rules, store: str) -> g.Segment:
+    return convert.segment(e.segment(save, rules, e.StoreId(store)))
 
 
 def stopped(save: e.Save, rules: e.Rules, d: GoalDef) -> bool:

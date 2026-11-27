@@ -1,4 +1,4 @@
-// A countdown is a promise (docs/design/opening-screen.md, "When ready"): a card waiting on a store shows the engine's
+// A countdown is a promise (docs/design/opening-screen/rules-tab.md, "When ready"): a card waiting on a store shows the engine's
 // ready time, and offers When ready, only while the page can see that time being kept. A rule on that store that is
 // on and lets go below the need stops the store short (day one's lean-to: the dry-wood rule stops at 6 against a need
 // of 10), so the card shows its need and maker with no countdown and no When ready.

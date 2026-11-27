@@ -1,4 +1,4 @@
-// The hands strip arrives with the first mix (hands.ts, game/shown.ts; docs/design/opening-screen.md, "The hands
+// The hands strip arrives with the first mix (hands.ts, game/shown.ts; docs/design/opening-screen/hands-strip.md, "The hands
 // strip"): before the first mix's offer it takes no room; from the offer on it is, and once drawn it
 // stays for the page session.
 import { install } from "./fake-dom";

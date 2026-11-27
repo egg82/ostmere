@@ -1,4 +1,4 @@
-// The quick add's sentence (docs/design/opening-screen.md, "The condition editor"): the whole store rule as one line
+// The quick add's sentence (docs/design/opening-screen/rules-tab.md, "The condition editor"): the whole store rule as one line
 // in the editor's foot ("When smoked falls to a quarter, Smoke the catch until three quarters"), each part a native
 // select laid over the words it reads as, so a tap opens the platform's own picker in place. The levels offer the five
 // named shares; a rule with an exact number is More options' (condlevels.ts), and any other share shows as it reads.

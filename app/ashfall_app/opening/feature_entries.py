@@ -29,3 +29,7 @@ class AimEntry(Entry):
     id: str
     text_key: str
     after: UnlockEntry | None = None
+    until: UnlockEntry | None = None
+    """When this unlock holds the aim's step is done and the aim gives way: the line shows nothing until a later aim's
+    `after` holds, and the next step is the wait line's or a goal's (api/CONTRACT.txt, "The client may"). Only for a step
+    whose end is a state of its own, never a guess at one."""

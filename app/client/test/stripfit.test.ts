@@ -1,4 +1,4 @@
-// The story strip shows as many of the newest lines as fit whole in its room (docs/design/opening-screen.md, "One column
+// The story strip shows as many of the newest lines as fit whole in its room (docs/design/opening-screen/attention.md, "One column
 // of attention"): the last N in order, a new line pushing out the oldest; the Chronicle is dotted only when a line that
 // showed with no touch after it leaves the strip entirely. A room not laid out holds just the newest.
 import { FakeEl, FakeEvent, fakeDocument, install } from "./fake-dom";

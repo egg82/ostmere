@@ -58,7 +58,7 @@ Each part is tagged on the page with the competing design it came from.
   the skill, the level and one completion's time, old → new, read from the rules (the cards a level speeds and each
   card's speed are served), never guessed. A chain sets off its links one by one, about 90ms apart (not the page's
   150ms), so the eye can follow the cascade, each lit with the page's ember tick and wash. Reduced motion keeps every
-  state and drops the movement: no sink, and the links light together. The details are in `opening-screen.md`, "The
+  state and drops the movement: no sink, and the links light together. The details are in `opening-screen/`, "The
   feedback ladder" and "One thing at a time".
 
 ## Routing: one home per message

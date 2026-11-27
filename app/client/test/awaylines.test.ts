@@ -1,4 +1,4 @@
-// What a long absence brings back (docs/design/opening-screen.md, "Coming back"; decisions.md, "Day and night run on
+// What a long absence brings back (docs/design/opening-screen/one-thing-at-a-time.md, "Coming back"; decisions.md, "Day and night run on
 // the story's clock"): every story line that landed while the player was away plays, in order, each alone on the band
 // for its reading time; a tap moves on to the next, and Escape or a tap on the band shows the rest at once. A chip's
 // on-line, which comes once per save, goes to the chronicle only; its off-lines, which can come every cycle while away,

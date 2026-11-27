@@ -1,4 +1,4 @@
-// The story strip holds the newest line whole (docs/design/opening-screen.md, "One column of attention"): a line waiting
+// The story strip holds the newest line whole (docs/design/opening-screen/attention.md, "One column of attention"): a line waiting
 // its turn in the arrival queue (held) leaves the shown one in place; once it shows, it replaces it, in order. The strip
 // keeps room for every story line the content can write (Content.line_infos, game/chronicle.ts inStrip), each once,
 // unseen and out of the screen reader's way, so the tallest sets its height; a line's arrival touches nothing outside

@@ -1,4 +1,4 @@
-// One thing at a time (docs/design/opening-screen.md): a line's reading time; a live step's lines lead their batch,
+// One thing at a time (docs/design/opening-screen/index.md): a line's reading time; a live step's lines lead their batch,
 // each holding the next turn for its reading time; a batch sent while another waits follows it; and the reveal's line
 // and straggler paths against a stand-in DOM.
 import { ArrivalQueue, MAX_GAP_MS, MIN_GAP_MS } from "../src/game/arrivals";

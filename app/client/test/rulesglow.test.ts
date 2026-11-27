@@ -1,4 +1,4 @@
-// The Rules tab's label comes without its glow (ui/screen.ts; docs/design/opening-screen.md, "Dots and the one glow"):
+// The Rules tab's label comes without its glow (ui/screen.ts; docs/design/opening-screen/feedback.md, "Dots and the one glow"):
 // it is there once the first rule exists, and takes the glow only once a rule of the save has come on and let go
 // (writing rules opens then too), until the tab is first opened.
 import { install } from "./fake-dom";

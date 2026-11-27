@@ -1,4 +1,4 @@
-// The opening's slower reveal, as a contract (docs/design/opening-screen.md): a thing is drawn when it first means
+// The opening's slower reveal, as a contract (docs/design/opening-screen/index.md): a thing is drawn when it first means
 // something, and stays once drawn. Written blind, from the contract alone, through the parts' public surface: a chip
 // waits for its offered_after; the Camp bar waits for its first level (arriving, then its level burst, only when that
 // level is crossed live); the strip's mix row opens with a name and a bar, and Edit, Mixes and runs each come when

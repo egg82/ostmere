@@ -1,4 +1,4 @@
-// What the rules did lately (docs/design/opening-screen.md, "Lately"): the Rules tab's last block, from Step.rule_runs
+// What the rules did lately (docs/design/opening-screen/rules-tab.md, "Lately"): the Rules tab's last block, from Step.rule_runs
 // (CONTRACT.txt, "Rule runs"), in the server's order, the most recent change first. One entry per rule the view still
 // has: its words, then how many times it came on, its last start and, once it has let go since, its last let-go, each
 // with the store's level then (never a chip's: its store is never a number) and how long ago by the frame's clock.

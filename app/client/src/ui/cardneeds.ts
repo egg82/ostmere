@@ -1,4 +1,4 @@
-// A card's needs (docs/design/opening-screen.md, "Cards"): one line per store need as have/need, then each skill-level
+// A card's needs (docs/design/opening-screen/asks-and-cards.md, "Cards"): one line per store need as have/need, then each skill-level
 // need, then each step it waits on. Needs read in the card's quiet tone; a short one marks only the number it is short
 // of while it holds the card back (red is the ledger's alarm, not a need). A store need with a gate (Need.gate: what
 // the trigger that grants the store waits on) draws the gate in its place, as a skill-level or step row, and never names

@@ -553,6 +553,7 @@ id = "meals"
 label_key = "store_meals"
 cap_items = 8760
 hidden = true
+stated = true
 
 [[standing]]
 id = "table"

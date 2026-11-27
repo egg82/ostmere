@@ -1,5 +1,5 @@
 // When a card waiting on a store will turn ready by itself, as far as the page can see the promise kept
-// (docs/design/opening-screen.md, "When ready"). The engine's ready_at holds under the current rates; a rule on that
+// (docs/design/opening-screen/rules-tab.md, "When ready"). The engine's ready_at holds under the current rates; a rule on that
 // store that is on and lets go below the need stops it short (the rule's own release, from view.orders), so no
 // countdown or When ready is drawn for it. A card waiting on its store's whole cap turns ready when the store fills,
 // so its time is the forecast's fill, which plays out the rules that take the hands from the mix; ready_at, under
@@ -27,7 +27,7 @@ function fullStore(view: View, card: Card): string | null {
 }
 
 /** The card waits on a store the player has never been shown (the night): its countdown is all the page draws of it,
- * with no have/need and no When ready (CONTRACT.txt, "The client may"; docs/design/opening-screen.md, "When ready"). */
+ * with no have/need and no When ready (CONTRACT.txt, "The client may"; docs/design/opening-screen/rules-tab.md, "When ready"). */
 export function waitsOnUnseen(view: View, card: Card): boolean {
   const when = card.blocker?.condition;
   if (when?.kind !== "at_least" || when.watched.kind !== "store_value") return false;

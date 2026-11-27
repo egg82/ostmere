@@ -1,4 +1,4 @@
-"""The scripted player kept going past the end, the way the page teaches the second mix (docs/design/opening-screen.md,
+"""The scripted player kept going past the end, the way the page teaches the second mix (docs/design/opening-screen/feedback.md,
 the hands strip and "Dots and the one glow"): the end lines read END_READ_S after the end; then
 the strip's rest offer (Nudge 1) shows the first time the tired chip is on with no rule on its store and test, and stays
 until used; accepting it is the page's addRule (a saved mix of rest alone, reused if one exists, and a rule running it);

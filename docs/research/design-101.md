@@ -62,7 +62,7 @@ tested enough (research). Depth: `playtesting-writeup.txt` 1, 2, 6.
 ## 2. Checked against `decisions.md`
 
 Only decisions the research bears on are listed. Unless another file is named, headings are in `decisions.md`; screen
-sections are in `design/opening-screen.md`.
+sections are in `design/opening-screen/index.md`.
 
 ### Conflicts
 

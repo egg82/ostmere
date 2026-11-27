@@ -1,4 +1,4 @@
-// The idle nudge (docs/design/opening-screen.md, "Dots and the one glow"): a player who has not touched anything for a
+// The idle nudge (docs/design/opening-screen/feedback.md, "Dots and the one glow"): a player who has not touched anything for a
 // while is pointed at the card to tap, with the one glow, unless something else has it. Which card is the screen's
 // pick (game/cues.ts, nudgeTarget); any touch starts the wait again.
 import type { View } from "../api/types";

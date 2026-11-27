@@ -1,4 +1,4 @@
-// A completion's "+1" (docs/design/opening-screen.md, "The feedback ladder") never covers a card's title or its need
+// A completion's "+1" (docs/design/opening-screen/feedback.md, "The feedback ladder") never covers a card's title or its need
 // rows, on any frame of its rise: it sits in the room the card's head keeps clear at its right, and rises 12px from
 // there, staying in the head's row. The geometry is CSS, so this computes the boxes from the rules, at a phone's card
 // width (390 wide: two columns of about 170px) and a desktop's.

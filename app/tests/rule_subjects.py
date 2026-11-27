@@ -1,5 +1,5 @@
 """Every subject a rule may watch that the page has shown is one the full condition editor offers (docs/design/
-opening-screen.md, "The condition editor"), at every save of a play, read off the wire View and Content the page gets.
+opening-screen/rules-tab.md, "The condition editor"), at every save of a play, read off the wire View and Content the page gets.
 A player who meets a need and goes to write a rule for it finds it there, not later.
 
 Shown, per subject (`shown`): a chip once the band has drawn it (on, its offered_after held), and from then on, since

@@ -1,4 +1,4 @@
-// Lessons are kept per save (docs/design/opening-screen.md, "Lessons"): a new save teaches everything again from each
+// Lessons are kept per save (docs/design/opening-screen/lessons.md, "Lessons"): a new save teaches everything again from each
 // lesson's own moment, whatever another save of the account kept; a save made before lessons were per save starts with
 // none kept, and each lesson's own condition keeps a save that is past it from being taught it again. The account's
 // lessons setting turns them all off; on again, a save's lessons go on from what it keeps.

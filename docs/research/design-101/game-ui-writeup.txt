@@ -117,13 +117,13 @@ developer source found for the reasoning)), Melvor Idle, Cookie Clicker.
 
 # Part B: What it means for Ostmere
 
-Read: decisions.md, systems.md headings, design/opening-screen.md (all section structure; Cards and Mix editor skimmed).
+Read: decisions.md, systems.md headings, design/opening-screen/index.md (all section structure; Cards and Mix editor skimmed).
 
 **Where the design already agrees with Part A**
 - Non-diegetic plain controls over a living scene (finding 1): "What can be tapped looks tappable" keeps controls as
   obvious controls; the fiction goes into lines and art. This is the fallback the taxonomy endorses.
 - Growth in one place with its reason (finding 4): "The screen arrives when it means something", "Taught by need, and
-  needed again", and opening-screen.md "One thing at a time" are a stricter version of the idle-game and A Dark Room
+  needed again", and opening-screen/one-thing-at-a-time.md "One thing at a time" are a stricter version of the idle-game and A Dark Room
   pattern, including reserved room so an arrival moves nothing ("Tapping never moves the layout"). Nothing to add here.
 - Consequence beside the thing (finding 3): chips carry their cost line, the Camp bar states what the next level pays,
   rules say what they do. Agrees.
@@ -134,7 +134,7 @@ Read: decisions.md, systems.md headings, design/opening-screen.md (all section s
 
 **Gaps and conflicts**
 - **Hover is undocumented.** game.css styles `:hover` alongside `:focus-visible` (the pairing is fine), but neither
-  decisions.md nor opening-screen.md states a no-hover rule, and no tooltip mechanism is described. Anything meaningful
+  decisions.md nor opening-screen/index.md states a no-hover rule, and no tooltip mechanism is described. Anything meaningful
   living only in a title attribute or hover would be invisible on a phone. Gap, not a conflict: the "looks tappable"
   rule implies it but does not say it.
 - **Target size is stated once** (the editor's 44 px) and not as a rule for chips, tabs, the Log button, the strip's

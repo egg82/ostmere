@@ -1,4 +1,4 @@
-"""What the rules did lately, as the save keeps it (saves/ruleruns.py; docs/design/opening-screen.md, "Lately"): one
+"""What the rules did lately, as the save keeps it (saves/ruleruns.py; docs/design/opening-screen/rules-tab.md, "Lately"): one
 entry per rule, counting its starts and keeping its last start and let-go with levels; an entry whose rule the save no
 longer has goes; past KEPT, the entries changed longest ago go; and the stored form reads back as written."""
 from ashfall_app import engine as e

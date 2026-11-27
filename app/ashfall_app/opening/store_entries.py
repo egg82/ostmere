@@ -20,6 +20,9 @@ class StoreEntry(Entry):
     hidden: bool = False
     """The engine's bookkeeping (a clock, a countdown) the player never sees: no ledger line, in no served figure
     (api/CONTRACT.txt, StoreInfo.hidden)."""
+    stated: bool = False
+    """A hidden store a story beat waits on whose amount the wait line states against the beat's value, beside the
+    countdown (opening/goals.py, GoalDef.count). Set by hand: nothing infers it from a name."""
     clock: Literal["dawn", "day", "evening", "night"] | None = None
     """The part of the story's day this store counts through: a clock the player is never shown, made only by standing
     actions, whose conditions read as that time of day (api/CONTRACT.txt, StoreInfo.clock; opening/face_checks.py)."""

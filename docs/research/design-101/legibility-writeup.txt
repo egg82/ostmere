@@ -41,9 +41,9 @@ Evidence is thin on primary sources. A second pass found and read the real Facto
 
 Agreement:
 - "The mix: several actions at once": "The game states facts, never a verdict on the mix"; ledger lines show rate and how long the stock lasts ("Candles -4/h · 7 h left"). This is the intent-icon approach: quantities, no advice.
-- opening-screen.md, "The hands strip": a rule's mix running shows where the rule lets go ("until 8 dry wood"), as a button into the Rules tab. A greyed mix says why it stopped ("stopped · {card} done") and offers the fix in place. This answers "why did that happen" at the moment it matters.
-- opening-screen.md, "The Rules tab": a dot marks the rule on now, in priority order, with `Otherwise` as the default. That is the FFXII list plus the "which one is acting" mark I found missing in the genre.
-- opening-screen.md, "Ledger and rules": while a share is dragged, the lines the card feeds or draws on light up (a causal overlay on demand, not always on).
+- opening-screen/hands-strip.md, "The hands strip": a rule's mix running shows where the rule lets go ("until 8 dry wood"), as a button into the Rules tab. A greyed mix says why it stopped ("stopped · {card} done") and offers the fix in place. This answers "why did that happen" at the moment it matters.
+- opening-screen/rules-tab.md, "The Rules tab": a dot marks the rule on now, in priority order, with `Otherwise` as the default. That is the FFXII list plus the "which one is acting" mark I found missing in the genre.
+- opening-screen/ledger-and-fights.md, "Ledger and rules": while a share is dragged, the lines the card feeds or draws on light up (a causal overlay on demand, not always on).
 - "Dots and the one glow": one highlight at a time, nothing pulses for urgency. Fits the Factorio finding that always-on overlays get left on and become wallpaper.
 
 Gaps (all my reading of the docs; I have not played the build):

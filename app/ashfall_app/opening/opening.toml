@@ -681,7 +681,7 @@ tap_card = "forage"
 when = { test = "at_most", subject_kind = "store", id = "roots", value = 3, release = 6 }
 offered_after = { unlock_kind = "action", id = "eating" }
 
-# The second mix, taught after the end (docs/design/opening-screen.md, the hands strip): offered in the strip while
+# The second mix, taught after the end (docs/design/opening-screen/hands-strip.md, the hands strip): offered in the strip while
 # tired, once the end lines have been read; its `when` is the chip's, so the rule reads as the chip.
 [[order_cards]]
 store = "energy"
@@ -1216,6 +1216,7 @@ feature_book = "book"
 "ui.goal.while" = "pauses if out of {store}"
 "ui.goal.paused" = "paused, out of {store}"
 "ui.goal.lost" = "{card}: {n} lost"
+"ui.goal.count" = "{store}: {n}"
 "ui.ledger.starved" = "ran dry"
 "ui.ledger.unfed" = "ran dry · {pct} work speed off"
 "ui.devices.open" = "Another device"

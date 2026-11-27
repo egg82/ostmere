@@ -241,7 +241,7 @@ The page draws written days the way a notebook fills (owner, 2026-11-14): each d
 heading, days running on down a `days` page, with the hands and sketches the slots name, in today's page look. A day
 begins on the page in hand if its heading and first note fit there; a note that does not fit begins a new page, headed
 again by its day, so a day still being written runs on over the page instead of leaving it. Whether a note fits is a
-fixed measure of its words, rows of the hand at the desktop page's width (`opening-screen.md`, "The days pages"), never
+fixed measure of its words, rows of the hand at the desktop page's width (`opening-screen/journal.md`, "The days pages"), never
 the window, so the same days are the same pages on every device and width, and a page, once a later one is begun,
 never changes. Opened carries every written day, the day in progress with the notes it has so far; Step carries each
 day it added to, whole, and the page takes the copy with more notes. A day added to while its page is open grows on

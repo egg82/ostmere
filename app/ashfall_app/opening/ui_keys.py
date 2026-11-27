@@ -64,7 +64,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.card.retired",
     "ui.ledger.full",
     "ui.camp.pays",
-    "ui.goal.in", "ui.goal.while", "ui.goal.paused", "ui.goal.lost",
+    "ui.goal.in", "ui.goal.while", "ui.goal.paused", "ui.goal.lost", "ui.goal.count",
     "ui.ledger.starved",
     "ui.heading.mixes",
     "ui.order.add",

@@ -1,4 +1,4 @@
-// The first full store (docs/design/opening-screen.md, the hands strip, "Hint: the first full store"): read off the view
+// The first full store (docs/design/opening-screen/hands-strip.md, the hands strip, "Hint: the first full store"): read off the view
 // and the content only. A new save has no cap rule, so a store the hands fill tops out and what they make past the top
 // is lost. The ledger marks that line with the quiet dot and the cap rule's lesson starts from it (game/lessons.ts,
 // CAP_RULE); nothing is built.

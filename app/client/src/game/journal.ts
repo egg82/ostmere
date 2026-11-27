@@ -1,4 +1,4 @@
-// The journal as the page reads it (docs/design/opening-screen.md, "The journal"; CONTRACT.txt, "JOURNAL"): which pages
+// The journal as the page reads it (docs/design/opening-screen/journal.md, "The journal"; CONTRACT.txt, "JOURNAL"): which pages
 // and notes are written, what is unread, which page the sheet opens on, the numbers rows and the seeded layout. Pure:
 // the days pages are the written days the save served (game/days.ts), every other page is Content.journal and
 // view.unlocked, the numbers are view.fights, and what has been read is the account's notes and the save's newest day
@@ -178,7 +178,7 @@ export function numbersOf(catalog: Catalog, view: View, page: Page): NumbersRow[
   return page.runners.flatMap((r) => { const f = fightOf(view, r); return f ? [rowOf(catalog, f)] : []; });
 }
 
-/** One page's seeded draws (opening-screen.md, "Seeded per entry"). */
+/** One page's seeded draws (opening-screen/journal.md, "Seeded per entry"). */
 export interface Layout {
   /** The sketch's width as a share of its box, 86 to 100 per cent. */
   sketchWidth: number;
