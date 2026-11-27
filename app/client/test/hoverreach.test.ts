@@ -1,13 +1,13 @@
 // A control whose only sign of life is a hover look is reachable by tap and by keyboard (docs/research/a11y-audit.md, §4):
 // the panel foot's words read as buttons at rest, and every control whose focus look was a colour alone or nothing gets
 // the ring the other controls use. The look is CSS, so this reads the rules.
-import { readFileSync } from "node:fs";
+import { readGameCss } from "./gamecss";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
 }
 
-const css = readFileSync("src/game.css", "utf8");
+const css = readGameCss();
 const rules = [...css.matchAll(/(?:^|\n)\s*([^{}\n/@][^{}]*?)\s*\{([^}]*)\}/g)].map((m) => ({ selectors: (m[1] ?? "").split(/,(?![^(]*\))/).map((s) => s.trim()), body: m[2] ?? "" }));
 /** Every declaration block applying to exactly `selector` (also through an `:is(...)` list), in file order. */
 const bodies = (selector: string): string[] => rules.filter((r) => r.selectors.some((s) => s === selector

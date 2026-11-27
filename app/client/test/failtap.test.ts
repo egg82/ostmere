@@ -3,7 +3,7 @@
 // the have/need of a short or pausing store, the skill level, the step, or, for a store the player has never been shown
 // or a wait on time, the countdown. Nothing on a card that did not fail; nothing but the card when the card shows no
 // such thing. The pulse is a transform and colours only, so it moves no layout.
-import { readFileSync } from "node:fs";
+import { readGameCss } from "./gamecss";
 import { install } from "./fake-dom";
 import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
@@ -119,7 +119,7 @@ const one = shown("lean_to");
 expect("only the failed card pulses", one.root.querySelectorAll(".tap-failed").length, 1);
 
 // The pulse moves nothing: transform, colour and shadow only.
-const css = readFileSync("src/game.css", "utf8");
+const css = readGameCss();
 const frames = (name: string): string => {
   const start = css.indexOf(`@keyframes ${name} {`);
   if (start < 0) throw new Error(`no keyframes ${name}`);

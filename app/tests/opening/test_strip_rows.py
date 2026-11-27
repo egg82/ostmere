@@ -15,6 +15,7 @@ from PIL import ImageFont
 
 from ashfall_app.opening.line_kinds import LineKind
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, OPENING, UNWRITTEN
+from tests.contrast import game_css
 
 APP = Path(__file__).resolve().parents[2]
 CLIENT = APP / "client" / "src"
@@ -28,7 +29,7 @@ GUTTER_PX = 16
 
 @cache
 def css_var(name: str) -> str:
-    found = re.search(rf"--{name}:\s*([^;]+);", (CLIENT / "game.css").read_text())
+    found = re.search(rf"--{name}:\s*([^;]+);", game_css())
     assert found, f"game.css defines no --{name}"
     return found.group(1).strip()
 

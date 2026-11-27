@@ -1,0 +1,30 @@
+/* "Another device" (ui/devices.ts): a quiet text button at the panel's foot, and its sheet */
+.devices-open { position: relative; }   /* its dot (.new-dot) sits at the label's end */
+.devices-open .new-dot { top: .5rem; left: auto; right: .2rem; }
+.devices-sheet { max-width: min(28rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); overflow-y: auto; }
+.devices-sheet .panel-heading { margin: 0 0 .2rem; }
+.devices-part { display: flex; flex-direction: column; gap: .55rem; padding: .9rem 0; border-top: 1px solid var(--rule); }
+.devices-part:first-of-type { border-top: 0; padding-top: .3rem; }
+.devices-part[hidden], .devices-sheet > .sheet-actions[hidden] { display: none; }   /* the step after a join that left games behind hides the rest of the sheet */
+.devices-heading { margin: 0; font-size: var(--t-body); font-weight: 500; line-height: 1.2; color: var(--ink-hi); }
+.devices-lead, .devices-note { margin: 0; color: var(--ink); font-size: var(--t-meta); }
+.devices-note:empty, .devices-code-text:empty { display: none; }
+.devices-code-text { margin: .2rem 0 0; text-align: center; font: 600 var(--t-display)/1.1 ui-monospace, "SF Mono", Menlo, Consolas, monospace; letter-spacing: .14em; color: var(--ink-hi); }
+.devices-code .devices-note { text-align: center; }
+.qr-tile { align-self: center; width: min(12rem, 58vw); border-radius: .35rem; overflow: hidden; }
+.qr-tile[hidden] { display: none; }
+.qr { display: block; width: 100%; height: auto; }
+.qr-light { fill: #f6f1e7; }
+.qr-dark { fill: #121012; }
+.devices-code .quiet, .devices-words > .quiet { align-self: flex-start; }
+.devices-words-list { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0; }
+.devices-words-list span { padding: .35rem .6rem; border-radius: 2px; background: var(--bg); box-shadow: inset 0 0 0 1px var(--rule); font: 600 var(--t-story)/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--ink-hi); }
+.devices-wordsform { display: flex; flex-direction: column; gap: .55rem; }
+.devices-wordsform .sheet-actions { margin-top: 0; }
+.devices-joinform { display: flex; gap: .5rem; align-items: flex-end; }
+.devices-field { flex: 1; min-width: 0; display: flex; align-items: center; gap: .5rem; }
+.devices-input { flex: 1; min-width: 0; min-height: 2.75rem; }
+/* Games (ui/games.ts): the account's games, the one played marked, the deleted ones held under them */
+.games-sheet, .settings-sheet { max-width: min(28rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); overflow-y: auto; }
+.games-sheet .panel-heading, .settings-sheet .panel-heading { margin: 0 0 .2rem; }
+.settings-choice { display: flex; align-items: center; gap: .55rem; min-height: 2.4rem; cursor: pointer; color: var(--ink); }   /* each kept choice on its own row (as .front-keep) */
