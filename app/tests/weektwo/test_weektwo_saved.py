@@ -121,5 +121,6 @@ def test_a_changed_play_is_named_and_a_chapter_list_is_not(two_loads: tuple[DayT
 def test_the_rebased_inputs_see_one_decision_more_or_less(two_loads: tuple[DayTwoPlayer, DayTwoPlayer]):
     p, _ = two_loads
     last = p.decisions[-1][0]
-    assert rebased.inputs(p, last) != rebased.inputs(p, last - 1)
-    assert rebased.inputs(p, last) == rebased.inputs(p, last)
+    assert rebased.inputs(p, last, None) != rebased.inputs(p, last - 1, None)
+    assert rebased.inputs(p, last, None) == rebased.inputs(p, last, None)
+    assert len({rebased.inputs(p, last, start) for start in ("a", "b", None)}) == 3, "a different checkpoint is stale"

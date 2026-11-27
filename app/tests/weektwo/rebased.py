@@ -1,10 +1,15 @@
 """A save at a chapter's end written under the rules the next chapter ships after, rebased onto today's and played on
 (docs/design/week-two-plan.md, item 13: "a save rebased from each earlier chapter's end loads and plays on"). The save is
-the route's own: its decisions from the start replayed under the rules without the next chapter to the end of the visit
-the chapter's last beat is seen in, each verb applied as it was (a verb that no longer fits fails the replay): each
-chapter's end under the shipped chapters without the ones after it (day nineteen's without days twenty-two and twenty-three,
-day twenty-two's without day twenty-three). The replay is written once, by tools/chapter_saves.py,
-and the tests read it back (from_saved, ends.py). Ids only (CLAUDE.md, "Never spoil the owner")."""
+the route's own: its save at the end of the saved chapter before (CHECKPOINT) with what the rules without the next
+chapter lack dropped, then its decisions after that replayed under those rules to the end of the visit the chapter's
+last beat is seen in, each verb applied as it was (a verb that no longer fits fails the replay); the first chapter's
+decisions are replayed from the start. Each chapter's end is under the shipped chapters without the ones after it (day
+nineteen's without days twenty-two and twenty-three, day twenty-two's without day twenty-three). A replay so costs one
+chapter's decisions, however deep the chapter. Where content after the chapter acts before the checkpoint (a rule that
+applies from early on), its effects on what the chapter's rules share stay in the save while its own ids go, so the save
+is the old build's shape but not, there, a fresh old-build player's numbers. The replay is written once, by
+tools/chapter_saves.py, and the tests read it back (from_saved, ends.py). Ids only (CLAUDE.md, "Never spoil the
+owner")."""
 from collections.abc import Callable
 from dataclasses import dataclass
 from functools import cache
@@ -26,7 +31,7 @@ from ashfall_app.rules.schema import (
 from tests.daythree.content import rules3
 from tests.daytwo.player import DayTwoPlayer
 from tests.weekone import verdicts as v1
-from tests.weektwo import ends
+from tests.weektwo import ends, keys
 from tests.weektwo.routes import played
 from tests.weektwo.verdicts import (
     EIGHT, EIGHTEEN, ELEVEN, FIFTEEN, NINE, NINETEEN, SIXTEEN, TWELVE, TWENTYFIVE, TWENTYSEVEN, TWENTYTHREE, TWENTYTWO,
@@ -75,12 +80,15 @@ def as_then(verb: Verb, rules: Rules) -> Verb | None:
     return SetOrders(tuple(o for o in verb.orders if known(o, rules))) if isinstance(verb, SetOrders) else verb
 
 
-def replayed(p: DayTwoPlayer, until: int, rules: Rules) -> Save:
-    """`p`'s decisions from the start applied at their times under `rules` (as_then), then advanced to `until`."""
-    s = new_save(rules)
+def replayed(p: DayTwoPlayer, until: int, rules: Rules, start: Save | None = None) -> Save:
+    """`p`'s decisions after `start` (from the start when None) applied at their times under `rules` (as_then), then
+    advanced to `until`."""
+    s = new_save(rules) if start is None else start
     for at, _, verb in p.decisions:
         if at > until:
             break
+        if start is not None and at <= start.time:
+            continue
         if (then := as_then(verb, rules)) is not None:
             s = decide(advance(s, rules, at), rules, at, then)
     return advance(s, rules, until)
@@ -234,22 +242,48 @@ OLD: dict[str, Callable[[], Rules]] = {"eight": rules8, "nine": rules9, "eleven"
                                        "nineteen": rules19, "twentytwo": rules22, "twentythree": rules23,
                                        "twentyfive": rules25, "twentyseven": rules27}
 """Each saved chapter's end and the rules its save is written under: the shipped chapters without the ones after it."""
+_order = [c for c in keys.ORDER if c in OLD]
+CHECKPOINT: dict[str, str | None] = dict(zip(_order, [None, *_order]))
+"""The saved chapter at whose end each chapter's replay starts: the one before it, None for the first."""
 
 
-def inputs(p: DayTwoPlayer, end: int) -> str:
-    """What replayed(p, end, old) reads besides `old`, whose digest the written save's envelope carries: `p`'s decisions
-    to `end`, and the source of the engine (which imports nothing but itself) and of the replay's own functions."""
+def checkpoint(chapter: str, p: DayTwoPlayer) -> Save | None:
+    """`p`'s own save, under its rules, at the end of the chapter's CHECKPOINT (the exit of that visit); None for the
+    first chapter."""
+    prev = CHECKPOINT[chapter]
+    if prev is None:
+        return None
+    at = ENDS[prev](p)
+    found = [v.exit for v in p.visits if v.exit is not None and v.exit.time == at]
+    assert len(found) == 1, (chapter, prev, at, len(found))
+    return found[0]
+
+
+def inputs(p: DayTwoPlayer, end: int, start: str | None) -> str:
+    """What written() reads besides the old rules, whose digest the written save's envelope carries: the checkpoint's
+    save as encoded under `p`'s rules (`start`, None from the start), `p`'s decisions to `end`, and the source of the
+    engine (which imports nothing but itself) and of the replay's own functions."""
     code = sha256(ends.engine_digest().encode())
-    for fn in (replayed, as_then, known):
+    for fn in (replayed, as_then, known, checkpoint, written):
         code.update(getsource(fn).encode())
     log: list[Json] = [[at, verb_to_json(verb)] for at, _, verb in p.decisions if at <= end]
-    return sha256(canonical({"until": end, "decisions": log, "code": code.hexdigest()}).encode()).hexdigest()
+    begun = None if start is None else sha256(start.encode()).hexdigest()
+    return sha256(canonical({"until": end, "decisions": log, "code": code.hexdigest(), "from": begun}).encode()).hexdigest()
+
+
+def todays_inputs(chapter: str, p: DayTwoPlayer) -> str:
+    """inputs() of the chapter's save written from `p` today."""
+    at = checkpoint(chapter, p)
+    return inputs(p, ENDS[chapter](p), None if at is None else encode(at, p.rules))
 
 
 def written(chapter: str, p: DayTwoPlayer) -> ends.SavedRebased:
-    """`p`'s save at the chapter's end under its old rules, as tools/chapter_saves.py saves it."""
-    end, old = ENDS[chapter](p), OLD[chapter]()
-    return ends.SavedRebased(inputs(p, end), encode(replayed(p, end, old), old))
+    """`p`'s save at the chapter's end under its old rules, as tools/chapter_saves.py saves it: `p`'s save at the
+    checkpoint rebased onto the old rules (what they lack dropped), then `p`'s decisions after it replayed under them."""
+    end, old, at = ENDS[chapter](p), OLD[chapter](), checkpoint(chapter, p)
+    text = None if at is None else encode(at, p.rules)
+    start = None if text is None else rebase(text, old)
+    return ends.SavedRebased(inputs(p, end, text), encode(replayed(p, end, old, start), old))
 
 
 def from_saved(chapter: str) -> Rebased:
