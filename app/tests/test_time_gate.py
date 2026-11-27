@@ -204,3 +204,27 @@ def test_a_playthroughs_shared_fixture_keeps_the_tests_own_guard(pytester: pytes
     pytester.makepyfile(test_played=PLAYED)
     result = pytester.runpytest_inprocess("-p", "no:cacheprovider", "-p", "no:xdist", "-p", "no:randomly", "-rA")
     result.stdout.fnmatch_lines(["PASSED test_played.py::test_reads_the_play", "ERROR test_played.py::test_reads_a_slow_fixture*"])
+
+
+HANGS = """
+import time
+
+def test_hangs():
+    time.sleep(5)
+"""
+
+
+@pytest.mark.xfail(strict=True, reason="the hang guard's dump names no test")
+def test_a_test_killed_by_the_hang_guard_is_named(pytester: pytest.Pytester, monkeypatch: pytest.MonkeyPatch):
+    """pytest-timeout's thread method kills the process with only a stack dump, and a `-q` log has no test ids: the
+    kill must name the test it interrupted."""
+    monkeypatch.setenv("PYTHONPATH", str(Path(__file__).resolve().parent.parent))
+    pytester.makeini("[pytest]\ntimeout = 1\ntimeout_method = thread\n")
+    pytester.makeconftest("from tests import time_gate\n\n"
+                          "def pytest_configure(config):\n    config.pluginmanager.register(time_gate, 'time_gate')\n")
+    pytester.makepyfile(test_hang=HANGS)
+    result = pytester.runpytest_subprocess("-q", "-p", "no:cacheprovider", "-p", "no:randomly")
+    assert result.ret != 0
+    out = result.stdout.str()
+    assert "Timeout" in out   # control: the guard fired
+    assert "test_hang.py::test_hangs" in out
