@@ -15,7 +15,7 @@ from tests.weektwo.routes import BEFORE, DAYS, SAVED
 
 ORDER = keys.ORDER
 COPIED = ("ashfall_app/engine", "ashfall_app/rules", "tests/dayone", "tests/daytwo", "tests/daythree", "tests/weekone",
-          "tests/weektwo", "tools/chapter_saves.py")
+          "tests/weektwo", "tests/weekfive", "tools/chapter_saves.py")
 
 
 @pytest.fixture

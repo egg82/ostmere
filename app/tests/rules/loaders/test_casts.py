@@ -40,7 +40,7 @@ def refused(o: Opening, message: str) -> None:
 def test_a_cast_passes_the_checks_and_the_loader_gives_it_every_person_and_their_cards(shipped_opening: Opening):
     o = casting(shipped_opening)
     check_opening(o)
-    (cast,) = [c for t in o.triggers for c in t.outcome.casts]
+    (cast,) = [c for t in o.triggers if t.id == "t_cast_test" for c in t.outcome.casts]
     people = [x.id for x in o.lanes if x.ruled and not x.pooled and not x.station and x.name_key is not None]
     assert candidates(o) == people and people[:3] == ["n1", "n2", "n3"] and "g_field" not in people and "pot" not in people
     assert [p.lane for p in cast.picks] == people and cast.picks[1].feature == "scout_n2"
@@ -63,9 +63,9 @@ def test_a_group_or_a_station_is_never_a_candidate_whatever_it_is_named(shipped_
 def test_the_content_serves_each_role_with_its_lanes_in_join_order(shipped_opening: Opening):
     o = casting(shipped_opening)
     infos = Game(o, ruleset(o, "test", 1)).content().cast_infos
-    assert [i.role for i in infos] == ["scout"]
-    assert [(x.lane, x.feature) for x in infos[0].lanes][:2] == [("n1", "scout_n1"), ("n2", "scout_n2")]
-    assert Game(shipped_opening, ruleset(shipped_opening, "test", 1)).content().cast_infos == []
+    assert [i.role for i in infos] == ["tracker", "scout"]
+    assert [(x.lane, x.feature) for x in infos[1].lanes][:2] == [("n1", "scout_n1"), ("n2", "scout_n2")]
+    assert [i.role for i in Game(shipped_opening, ruleset(shipped_opening, "test", 1)).content().cast_infos] == ["tracker"]
 
 
 def test_the_part_declares_the_features_a_condition_or_a_label_may_name(shipped_opening: Opening):

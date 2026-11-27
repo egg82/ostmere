@@ -16,6 +16,9 @@ SHIPPED = load_opening()
 def chip_dicts() -> tuple[dict[str, Any], list[dict[str, Any]]]:
     """The shipped opening as plain data, and its chips within it."""
     data: dict[str, Any] = SHIPPED.model_dump(mode="json")
+    for t in data["triggers"]:   # a cast's picks are filled by the loader, never authored, so the round trip drops them
+        for c in t["outcome"]["casts"]:
+            c.pop("picks")
     chips: list[dict[str, Any]] = data["chips"]
     return data, chips
 

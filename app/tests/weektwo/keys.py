@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any
 
 ORDER = ("week1", "eight", "nine", "eleven", "twelve", "fifteen", "sixteen", "eighteen", "nineteen", "twentytwo",
-         "twentythree", "twentyfive", "twentyseven")
+         "twentythree", "twentyfive", "twentyseven", "twentynine")
 """Every chapter with a saved end, in the order their plays build on each other ("week1" is week one's)."""
 APP = Path(__file__).resolve().parents[2]
 OPENING = "ashfall_app/rules"
@@ -28,14 +28,18 @@ DAYS = "days"
 BEATS = "content/beats.yaml"
 """The one story file the plays read (the pace and the level gates); the rest of content/ is read by tests that play nothing."""
 WEEK_ONE_CODE = ("tests/dayone", "tests/daytwo", "tests/daythree", "tests/weekone")
+WEEK_FIVE_CODE = "tests/weekfive"
+"""The week-five policies every week-five chapter's moves read (tests/weektwo/weekfive.py)."""
 MOVES = {c: "tests/weektwo/content.py" for c in ORDER[1:ORDER.index("twentytwo")]} | \
-        {c: "tests/weektwo/weekfour.py" for c in ORDER[ORDER.index("twentytwo"):]}
+        {c: "tests/weektwo/weekfour.py" for c in ORDER[ORDER.index("twentytwo"):ORDER.index("twentynine")]} | \
+        {c: "tests/weektwo/weekfive.py" for c in ORDER[ORDER.index("twentynine"):]}
 """The file each chapter's moves live in (tests/weektwo/routes.py DAYS)."""
 DAY_FILES = {"week1": ("day_one", "day_two", "day_three", "day_four", "day_five", "b7", "day_six"),
              "eight": ("day_eight",), "nine": ("day_nine",), "eleven": ("day_eleven",), "twelve": ("day_twelve",),
              "fifteen": ("day_fifteen",), "sixteen": ("day_sixteen",), "eighteen": ("day_eighteen",),
              "nineteen": ("day_nineteen",), "twentytwo": ("day_twenty_two",), "twentythree": ("day_twenty_three",),
-             "twentyfive": ("day_twenty_five",), "twentyseven": ("day_twenty_seven",)}
+             "twentyfive": ("day_twenty_five",), "twentyseven": ("day_twenty_seven",),
+             "twentynine": ("day_twenty_nine",)}
 """Each chapter's toml files in the opening (schema.CHAPTERS)."""
 
 
@@ -83,7 +87,8 @@ def shared_files() -> list[Path]:
     opening = sorted(f for f in (APP / OPENING).rglob("*") if f.suffix in (".py", ".toml") and str(f) not in own)
     moves = {APP / m for m in set(MOVES.values())}
     weektwo = [f for f in code_files("tests/weektwo") if f not in moves]
-    return [*sorted((APP / "ashfall_app/engine").rglob("*.py")), *opening, *weektwo, *code_files("tools/chapter_saves.py"),
+    return [*sorted((APP / "ashfall_app/engine").rglob("*.py")), *opening, *weektwo, *code_files(WEEK_FIVE_CODE),
+            *code_files("tools/chapter_saves.py"),
             APP.parent / BEATS]
 
 

@@ -435,13 +435,16 @@ unlocks = [
   { unlock_kind = "card", id = "n3_clear_roofs" },
 ]
 
-# "When ash-laden, he clears the roofs": day one's hunger card on his lane (D-91's shape), its `when` the chip's.
+# "When ash-laden, he clears the roofs": day one's hunger card on his lane (D-91's shape), its `when` the chip's. Offered
+# once: the Clear's turn retires its rule, and the Drift's chore comes back with its hint dot alone (D-203). The feature
+# that ends the offering is unlocked once the Clear has turned (day_twenty_nine.toml).
 [[order_cards]]
 store = "roof_ash"
 tap_card = "n2_clear_roofs"
 chip = "ash_laden"
 when = { test = "at_least", subject_kind = "store", id = "roof_ash", value = 16 }
 offered_after = { unlock_kind = "card", id = "n2_clear_roofs" }
+offered_until = { unlock_kind = "feature", id = "roofs_offered" }
 
 # The first clear, by either hand.
 [[triggers]]
@@ -757,6 +760,9 @@ id = "pack_near"
 
 [[features]]
 id = "b9"
+
+[[features]]
+id = "roofs_offered"
 
 # ---------- aims ----------
 
