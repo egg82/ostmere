@@ -10,7 +10,7 @@ import pytest
 from ashfall_app import engine as e
 from ashfall_app import main
 from ashfall_app.db.stored import savewrite
-from ashfall_app.opening.schema import CHAPTERS, Opening, load_opening
+from ashfall_app.rules.schema import CHAPTERS, Opening, load_opening
 from ashfall_app.saves import write
 from ashfall_app.saves.interface import Ruleset
 from ashfall_app.saves.ruleset import ruleset

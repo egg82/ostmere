@@ -7,7 +7,7 @@ from .modifiers import RateRef, StoreCap, WorkRef
 
 ORDINARY_ABSENCE_S = 48 * 3600
 """The ordinary absence, in seconds: a carry window is never longer, and no skill's phase is spanned faster at a full
-share of its quickest runner (the loader's check, opening/prestige.py), so the carry window binds before the XP
+share of its quickest runner (the loader's check, rules/prestige.py), so the carry window binds before the XP
 ceiling does and no whole phase falls inside one absence."""
 
 NODE_PREFIX = "node:"

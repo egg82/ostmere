@@ -46,7 +46,7 @@ CHOICES (offer kinds)
 - Rebase: an offer may gain, lose or change its kind and its answers' roles; step 4 drops an AnswerKind (an order's
   action, the order going when none is left) whose kind and role no offer of the new rules has, so every AnswerKind a
   save keeps is one SetOrders would accept under them.
-- Content (the loader, app/ashfall_app/opening): OfferEntry gains `kind` (optional) and AnswerEntry `role` (optional).
+- Content (the loader, app/ashfall_app/rules): OfferEntry gains `kind` (optional) and AnswerEntry `role` (optional).
   The loader fails, naming the offer, for a role on an offer without a kind, a kinded offer's answer without a role,
   two answers of one offer with one role, and two offers of one kind whose role sets differ. Day three's arrival
   offer and day five's carry the arrival kind; the engine and the loader are tested on a fixture chapter.

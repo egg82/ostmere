@@ -35,7 +35,7 @@ use that teaches it, and every number can show where it comes from (some of Orb'
     counting: a store's amount or a level can open the next thing, since a mix fills the one and trains the other while
     the player is away. How much a stretch leans on hand repetition is a "more or less" matter, so the pacing
     simulator's active-effort readout flags a heavy stretch and never fails. One hard check stays: no story gate needs
-    many taps of one card before mixes or rules can take them over (`app/tests/opening/tap_gates.py` defines "before"
+    many taps of one card before mixes or rules can take them over (`app/tests/rules/play/tap_gates.py` defines "before"
     and "many").
     Nor do stores need to grow until one training fits a single go: a mix trains a skill over several, and tuning
     store sizes toward that would bind them for no gain (owner, 2026-11-15).
@@ -91,7 +91,7 @@ use that teaches it, and every number can show where it comes from (some of Orb'
   is banked, so the two never need to overlap. Every runner of the work fills the one store at its own share, a
   person's beside the hands', and its readers count the store, never a card's runs. The loader refuses a card that
   takes stores, gives nothing, and declares no stake, a side stake held on no fought side, and a reach stake no
-  trigger reads (`app/ashfall_app/opening/stake_checks.py`).
+  trigger reads (`app/ashfall_app/rules/checks/cards/stake_checks.py`).
 - **A mix keeps going without a dry store** (consistency is the priority: no card may look the same
   as every other card and yet be treated differently, say because it is seasonal). A card that behaves differently must look different; no rule may single out a card for a property
   the page doesn't show. A card whose store runs
@@ -125,7 +125,7 @@ use that teaches it, and every number can show where it comes from (some of Orb'
   as a lesson step on that very element, and it starts when that element first shows; a card or line that arrives
   before its proof is moved to the proof's moment, not shortened. A note whose proof never shows is cut.
 - Every skill is paced to one shared target, which the simulator reports per skill (`tests/dayone/pacing/growth.py`,
-  `climb_hours`): woodcutting's 900 XP an hour at a full share, under the prestige floor (`opening/prestige.py`,
+  `climb_hours`): woodcutting's 900 XP an hour at a full share, under the prestige floor (`rules/prestige.py`,
   `check_phase_spans`), so how fast a skill climbs on a route is the share of the hands the player gives it, not which
   skill it is. The slow skills' methods sit below it where raising them turns an invariant red or shows in a readout; each skill's reason,
   measured on the push routes:
@@ -201,7 +201,7 @@ Stores and caps: finite everywhere. Past a cap, production is lost on purpose; w
 work that takes stores (trips, comforts, arrivals: Cards and Offers), sized so a day's absence loses at most half
 (`docs/design/banked-time-plan.md`; `engine/design/`, "BANKED TIME").
 
-Finite supply (`app/ashfall_app/opening/finite_checks.py`, #438): a store is finite when every maker of it stops on a
+Finite supply (`app/ashfall_app/rules/checks/world/finite_checks.py`, #438): a store is finite when every maker of it stops on a
 finite pool; one made through an uncapped maker (a filler card stopping on a town store an uncapped gatherer makes) is
 not. Only tally stores count as progress needs, so a gate on a plain store's value is never checked: a store a gate
 reads must be declared a tally (fixture: `app/tests/supply/`).

@@ -11,7 +11,7 @@ import pytest
 from ashfall_app.api.player import journal_models as jm
 from ashfall_app.api.service import Game
 from ashfall_app.main import create_app
-from ashfall_app.opening.schema import Opening
+from ashfall_app.rules.schema import Opening
 from ashfall_app.saves.journal import DAY_S, ComposedDay, Note
 from ashfall_app.saves.journal_rules import Look, journal_rules
 from tests.game_client import GameClient

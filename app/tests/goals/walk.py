@@ -3,7 +3,7 @@
 each trigger that fires between two moments, reads the earlier one. Beats are named by trigger id only (CLAUDE.md,
 "Never spoil the owner").
 
-A beat is a trigger whose outcome is story (opening/goals.py, `story`), unless the trigger is marked `line_only`: it
+A beat is a trigger whose outcome is story (rules/goals.py, `story`), unless the trigger is marked `line_only`: it
 only says its line once and gates nothing, so it is no beat. Shown means View.goals (api/goals/goals.py) marked
 the store, card or skill it waits on, or, for a wait on the clock, served the wait line with a time no later than the
 beat (or stopped, naming the dry store) and naming every store whose running dry pauses that clock. Not beats here: a
@@ -30,8 +30,8 @@ from ashfall_app.engine import (
 )
 from ashfall_app.engine.conditions import is_true
 from ashfall_app.engine.work import completions
-from ashfall_app.opening.goals import GoalDef, goal_defs, moved_by, story
-from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, Opening, load_opening
+from ashfall_app.rules.goals import GoalDef, goal_defs, moved_by, story
+from ashfall_app.rules.schema import CHAPTERS, IN_WRITING, Opening, load_opening
 
 Served = Callable[[Save, Rules, View, Mapping[str, GoalDef]], list[g.Goal]]
 

@@ -8,6 +8,8 @@ gate counts them); --json prints the samples as one JSON line instead, for tools
 player's decisions to /api/saves/{id}/decisions on a new save, the server's clock set to each decision's time, as the
 page does (each one reads, advances, decides and writes the save). `steps` needs DATABASE_URL (a migrated database).
 """
+import importlib
+import importlib.util
 import json
 import logging
 import os
@@ -24,7 +26,10 @@ from fastapi.testclient import TestClient
 from ashfall_app.api.convert import condition, mix, order_verb
 from ashfall_app.engine import SaveMix, SetOrders, SetQueue, SwitchMix, TapCard, Verb
 from ashfall_app.main import create_app
-from tests.opening.playthrough import Player, opening_rules
+if importlib.util.find_spec("tests.rules") is None:
+    # bench_ab copies this file into the base tree, which may predate the opening/ -> rules/ move.
+    sys.modules["tests.rules.play.playthrough"] = importlib.import_module("tests.opening.playthrough")
+from tests.rules.play.playthrough import Player, opening_rules
 CARDS = Path(__file__).parent.parent / "tests" / "cards_contract"
 sys.path.insert(0, str(CARDS))  # the contract tests' own imports
 sys.path.insert(0, str(CARDS / "views"))

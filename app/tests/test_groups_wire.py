@@ -1,4 +1,4 @@
-"""Groups on the wire (api/contract/groups.txt, "GROUPS"), on the test chapter tests/opening/fixtures/groups_wire.toml merged
+"""Groups on the wire (api/contract/groups.txt, "GROUPS"), on the test chapter tests/rules/fixtures/groups_wire.toml merged
 after the shipped content: a pooled lane t_crew, two people handed to it (t_m1, t_m3) and one marked (t_m2). The
 content's pooled and group, the view's own_split and crew, each a plain copy of the engine's."""
 from functools import cache
@@ -10,10 +10,10 @@ from ashfall_app import engine as e
 from ashfall_app import main
 from ashfall_app.api import models as w
 from ashfall_app.api.service import Game
-from ashfall_app.opening.schema import Opening, merge_chapters, to_rules
+from ashfall_app.rules.schema import Opening, merge_chapters, to_rules
 from ashfall_app.saves.ruleset import ruleset
 
-FIXTURE = Path(__file__).resolve().parent / "opening" / "fixtures" / "groups_wire.toml"
+FIXTURE = Path(__file__).resolve().parent / "rules" / "fixtures" / "groups_wire.toml"
 CREW_CARD = "t_crew_work"
 WORKED = 400   # after the third join (300): two members of the group, one marked person
 

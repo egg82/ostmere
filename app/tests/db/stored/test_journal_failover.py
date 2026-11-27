@@ -4,7 +4,7 @@ COMMIT, and composed by the page's next ask."""
 import psycopg
 import pytest
 
-from ashfall_app.opening.schema import Opening
+from ashfall_app.rules.schema import Opening
 from ashfall_app.saves.journal import DAY_S
 from tests.db.test_failover import at_commit, at_statement, engine_of, terminate
 from tests.saves.journal.journal_fixture import a_beat_line

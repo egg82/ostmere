@@ -4,11 +4,11 @@ each slot's hand and sketch for serving its notes."""
 from collections.abc import Iterator
 from dataclasses import dataclass
 
-from ..opening.people import mention_keys, moves, told
-from ..opening.refs import outcomes
-from ..opening.schema import Opening
-from ..opening.setting_entries import FadeEntry, JournalHabitsEntry
-from ..opening.subject_entries import SlotEntry, SourceEntry, SubjectEntry
+from ..rules.people import mention_keys, moves, told
+from ..rules.refs import outcomes
+from ..rules.schema import Opening
+from ..rules.entries.setting_entries import FadeEntry, JournalHabitsEntry
+from ..rules.entries.subject_entries import SlotEntry, SourceEntry, SubjectEntry
 from .journal import Band, Fade, Habits, MarkRates, Press, Source, Subject
 
 DIARY_HAND = "ink"

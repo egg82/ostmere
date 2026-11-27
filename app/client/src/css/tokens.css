@@ -30,7 +30,7 @@
   --hand-pencil: #645d52;
   --panel-w: clamp(28rem, 30vw, 38rem);
   --scene-vh: 38vh;   /* the pinned stage on a phone: ui/story/headseat.ts measures it */
-  --strip-rows: 3;   /* a phone's strip, in rows of the story's size (tests/opening/test_strip_rows.py reads it) */
+  --strip-rows: 3;   /* a phone's strip, in rows of the story's size (tests/rules/checks/test_strip_rows.py reads it) */
   /* the failed tap's pulse (the Feedback system's effect, ui/cards/cards.ts failed()): the card's red glow and the flash of
      what stopped the tap, transform and colour only, so nothing moves */
   --fail-ms: 400ms;

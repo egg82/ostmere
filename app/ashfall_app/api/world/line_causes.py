@@ -3,14 +3,14 @@ read from where the content authors the key. A key is written in one place, or b
 phase's pool of lines); any other sharing fails the content's load, since its cause would be unknown."""
 from collections.abc import Iterable
 
-from ...opening import convert as authored
-from ...opening.entries import ConditionEntry
-from ...opening.line_kinds import line_keys
-from ...opening.face_checks import shown_stores, timed_stores
-from ...opening.offer_entries import OfferEntry
-from ...opening.people import mention_keys, person_keys
-from ...opening.refs import fail
-from ...opening.schema import Opening
+from ...rules.expand import convert as authored
+from ...rules.entries.entries import ConditionEntry
+from ...rules.line_kinds import line_keys
+from ...rules.checks.cards.face_checks import shown_stores, timed_stores
+from ...rules.entries.offer_entries import OfferEntry
+from ...rules.people import mention_keys, person_keys
+from ...rules.refs import fail
+from ...rules.schema import Opening
 from .. import convert
 from ..goals.decision_models import AtLeast, SkillLevel
 from .line_models import AnswerCause, CampCause, LineCause, LineInfo, Mention, RunnerCause, SkillCause, WhenCause

@@ -31,7 +31,7 @@ CHOICES (full output)
   every outcome store stands at its cap (gates.store_cap) with an unclamped exact net above 0. Nothing fits, so
   everything its inputs would pay for is lost. One outcome store full while another has room: the card runs, and the
   full store's overflow is lost as CHOICES "Cap" says. Why: pausing when any output is full would stall a job forever
-  on a by-product nothing uses (a hunt's second yield); the loader's finite-supply check (opening/finite_checks.py)
+  on a by-product nothing uses (a hunt's second yield); the loader's finite-supply check (rules/checks/world/finite_checks.py)
   refuses content where such a loss could cost progress.
 - The full rule: at an instant where a card is full, pause it, last in running order first (rates.Running, as the dry
   rule reads it), re-reading after each pause, since pausing one card lowers its stores' nets and can leave an earlier
@@ -111,4 +111,4 @@ KNOWN GAPS (full output)
   Interim: the loader's finite-supply check asks a converter's target to hold all progress needs of it, so the loss
   is only ever of what progress does not need.
 - Modifiers that raise an outcome amount are read through the exact net, as everything is; the loader's check reads
-  base amounts (opening/finite_checks.py).
+  base amounts (rules/checks/world/finite_checks.py).

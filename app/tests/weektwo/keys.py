@@ -23,7 +23,8 @@ ORDER = ("week1", "eight", "nine", "eleven", "twelve", "fifteen", "sixteen", "ei
          "twentythree", "twentyfive", "twentyseven")
 """Every chapter with a saved end, in the order their plays build on each other ("week1" is week one's)."""
 APP = Path(__file__).resolve().parents[2]
-OPENING = "ashfall_app/opening"
+OPENING = "ashfall_app/rules"
+DAYS = "days"
 BEATS = "content/beats.yaml"
 """The one story file the plays read (the pace and the level gates); the rest of content/ is read by tests that play nothing."""
 WEEK_ONE_CODE = ("tests/dayone", "tests/daytwo", "tests/daythree", "tests/weekone")
@@ -78,8 +79,8 @@ def shape_digest() -> str:
 
 
 def shared_files() -> list[Path]:
-    own = {f"{APP / OPENING / name}.toml" for names in DAY_FILES.values() for name in names}
-    opening = sorted(f for f in (APP / OPENING).iterdir() if f.suffix in (".py", ".toml") and str(f) not in own)
+    own = {f"{APP / OPENING / DAYS / name}.toml" for names in DAY_FILES.values() for name in names}
+    opening = sorted(f for f in (APP / OPENING).rglob("*") if f.suffix in (".py", ".toml") and str(f) not in own)
     moves = {APP / m for m in set(MOVES.values())}
     weektwo = [f for f in code_files("tests/weektwo") if f not in moves]
     return [*sorted((APP / "ashfall_app/engine").rglob("*.py")), *opening, *weektwo, *code_files("tools/chapter_saves.py"),
@@ -92,7 +93,7 @@ def shared() -> str:
 
 
 def own_files(chapter: str) -> list[Path]:
-    toml = [APP / OPENING / f"{name}.toml" for name in DAY_FILES[chapter]]
+    toml = [APP / OPENING / DAYS / f"{name}.toml" for name in DAY_FILES[chapter]]
     if chapter == "week1":
         return [*toml, *(f for entry in WEEK_ONE_CODE for f in code_files(entry))]
     return [*toml, APP / MOVES[chapter]]

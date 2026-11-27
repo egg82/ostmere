@@ -14,13 +14,13 @@ from ashfall_app.engine import (
     CardDef, CardId, ChipId, Rules, Save, StoreId, StoreValue, TapCard, Unlock, UnlockKind, View, advance, decide, next_event,
     value, view,
 )
-from ashfall_app.opening.convert import unlock
+from ashfall_app.rules.expand.convert import unlock
 from ashfall_app.engine.checks import check_hand_tap
 from ashfall_app.engine.errors import InvalidVerbError
 from ashfall_app.engine.work import completions
 from ashfall_app.engine.cure_reading import count_stores, cures_chip
 from tests.dayone.player.player import DayOnePlayer
-from tests.opening.playthrough import opening
+from tests.rules.play.playthrough import opening
 
 CURE_S = 600
 """How long a present player may take to clear a chip from when it is checked."""

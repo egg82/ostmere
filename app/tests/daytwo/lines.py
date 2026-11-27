@@ -8,7 +8,7 @@ from collections import defaultdict
 from functools import cache
 
 from ashfall_app.engine import AfterTime, Save, TapCard, Unlock, UnlockKind, View
-from ashfall_app.opening.schema import DAY_TWO
+from ashfall_app.rules.schema import DAY_TWO
 from tests.daytwo import content as c
 from tests.daytwo.player import DayTwoPlayer
 

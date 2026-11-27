@@ -1,0 +1,56 @@
+# A test chapter, merged onto the opening alone (tests/rules/expand/test_arrivals_cap.py): an arrivals count on a base cap of
+# three, five arrivals at fixed times, and a turn between the third and the fourth whose outcome raises that cap with a
+# sourced entry (x2). A gate on the count asks for more than the base cap. Not story: the ids and words are the tests'
+# own.
+version = 1
+end_feature = "t_five"
+
+[[stores]]
+id = "t_arrivals"
+label_key = "t_s_arrivals"
+cap_items = 3
+tally = true
+
+[[features]]
+id = "t_five"
+
+[[features]]
+id = "t_turned"
+
+[[triggers]]
+id = "t_arrive_1"
+when = { test = "after_time", value = 100 }
+outcome = { stores = [{ store = "t_arrivals", items = 1 }] }
+
+[[triggers]]
+id = "t_arrive_2"
+when = { test = "after_time", value = 200 }
+outcome = { stores = [{ store = "t_arrivals", items = 1 }] }
+
+[[triggers]]
+id = "t_arrive_3"
+when = { test = "after_time", value = 300 }
+outcome = { stores = [{ store = "t_arrivals", items = 1 }] }
+
+[[triggers]]
+id = "t_turn"
+when = { test = "after_time", value = 400 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "t_turned" }], modifiers = [{ target = "cap", id = "t_arrivals", kind = "mul_bp", amount_bp = 20000, source = "t_turn" }] }
+
+[[triggers]]
+id = "t_arrive_4"
+when = { test = "after_time", value = 500 }
+outcome = { stores = [{ store = "t_arrivals", items = 1 }] }
+
+[[triggers]]
+id = "t_arrive_5"
+when = { test = "after_time", value = 600 }
+outcome = { stores = [{ store = "t_arrivals", items = 1 }] }
+
+[[triggers]]
+id = "t_gate_on_five"
+when = { test = "at_least", subject_kind = "store", id = "t_arrivals", value = 5 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "t_five" }] }
+
+[text]
+t_s_arrivals = "Arrivals"

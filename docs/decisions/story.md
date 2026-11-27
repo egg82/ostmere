@@ -138,9 +138,9 @@ Catalogue: null is an empty catalogue for tests, and its checks name ids and fie
 output. The opening's file loads alone; each later chapter is its own file merged on (new ids only, filling the
 markers past the content so far), so a file boundary is a spoiler boundary. A chapter's `[[town_cards]]` entry (a
 card's fields, `lanes` and an id pattern with `{lane}`) is expanded by the loader to one ordinary card per lane
-(`app/ashfall_app/opening/town.py`), a lane expanding where it is declared; the engine sees only cards. A chapter's
+(`app/ashfall_app/rules/expand/town.py`), a lane expanding where it is declared; the engine sees only cards. A chapter's
 `while_running` table gives a card an earlier file shipped the entries it holds while running, on a side the chapter
-declares (`app/ashfall_app/opening/chapters.py`).
+declares (`app/ashfall_app/rules/chapters.py`).
 
 Gates: one vocabulary from the start, where habits grew six or seven separate ones. An offer's gate is a trigger the
 loader makes; "answered, either answer" is one Unlocked condition. LaneRules counts the player-set orders on a ruled
@@ -149,7 +149,7 @@ lane, and only a trigger's `when` or an offer's gate may read it.
 Triggers: deterministic, so what a level or a count earns shows the moment it is earned. Gates is the vocabulary;
 triggers are the engine firing it. The end is one too, with its time kept (`Save.ended_at`; `engine/design/`, "The
 end"). What the next beat waits on is a query over them: the pending triggers with when each lands
-(`app/ashfall_app/engine/pending.py`), read against the content's goals (`app/ashfall_app/opening/goals.py`) into the
+(`app/ashfall_app/engine/pending.py`), read against the content's goals (`app/ashfall_app/rules/goals.py`) into the
 view's goals (`app/ashfall_app/api/goals/goals.py`), which the page marks (`app/client/src/game/story/story.ts`, the wait line
 `app/client/src/ui/story/waitline.ts`). Each store and level goal, and each skill's next level, also gets when it lands at
 the rates as set, a tap of the hands set aside, and the dry store that binds it (`app/ashfall_app/api/goals/goalrows.py`,
@@ -157,7 +157,7 @@ the rates as set, a tap of the hands set aside, and the dry store that binds it 
 (`app/client/src/ui/mixes/goaltimes.ts`). "The player set a rule on a ruled lane" is one: the LaneRules subject, fired at
 the decision that sets it (`engine/design/`, "Lane rules"). A later prestige phase's level pays are one table per
 skill, keyed by the level within the phase, which the merge expands into ordinary triggers
-(`app/ashfall_app/opening/phase_pays.py`).
+(`app/ashfall_app/rules/expand/phase_pays.py`).
 
 Unlocks: the client never decides what exists. A person joining the town is one (`app/ashfall_app/engine/joins.py`: an
 outcome part that adds the joined unlock and turns the lane's always task into its share), and a person leaving
@@ -167,7 +167,7 @@ view, the content and what the account keeps (`app/client/src/game/page/shown.ts
 when it means something"). Features (the ledger, the craft list) are page parts the engine only switches on. Facts
 that only grow live here too: a card retired, an offer shown, answered, and by which answer, a person joined or left.
 The stated aim is read off this set the same way: each aim in the content names the unlock it starts at, and the page
-shows the last one that holds (`app/ashfall_app/opening/aims.py`).
+shows the last one that holds (`app/ashfall_app/rules/checks/cards/aims.py`).
 
 Offers and quests: authored or Claude-proposed, timing decided in code; state is three only-growing unlocks (shown,
 answered, which answer). Answering is a Command, an order verb like a tap, so a rule or the queue can answer, and an
@@ -180,4 +180,4 @@ gate, none where the page cannot word it; an earlier answer it requires only seq
 draws open offers as one list (`docs/design/opening-screen/asks-and-cards.md`, "Asks").
 Interface: `engine/design/`, "Offers", and `app/ashfall_app/api/contract/offers.txt`, "OFFERS". Built:
 `app/ashfall_app/engine/offerstate.py` (where an offer stands), `app/ashfall_app/engine/answering.py` (an answer
-landing); the loader makes each offer's trigger (`app/ashfall_app/opening/convert.py`).
+landing); the loader makes each offer's trigger (`app/ashfall_app/rules/expand/convert.py`).

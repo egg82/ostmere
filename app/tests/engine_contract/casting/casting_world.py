@@ -19,7 +19,7 @@ from ashfall_app.engine import (
     AfterTime, CardId, CardShare, Mix, MixId, Order, Rules, Save, SaveMix, SetOrders, SwitchMix, Unlock, UnlockKind,
     advance, decide, new_save, view,
 )
-from ashfall_app.opening.schema import OPENING, Opening, load_opening, to_rules
+from ashfall_app.rules.schema import OPENING, Opening, load_opening, to_rules
 from ashfall_app.saves.ruleset import ruleset
 
 PEOPLE = ("t_a", "t_b", "t_c", "t_m")

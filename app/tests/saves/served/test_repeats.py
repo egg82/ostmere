@@ -8,7 +8,7 @@ from hypothesis import given, settings, strategies as st
 
 from ashfall_app import engine as e
 from ashfall_app.engine.codec import Json
-from ashfall_app.opening.schema import DAY_ONE, load_opening, to_rules
+from ashfall_app.rules.schema import DAY_ONE, load_opening, to_rules
 from ashfall_app.saves.repeats import Logged, RepeatRules, Repeats, count, hands_cards
 
 RULES = replace(to_rules(load_opening(chapters=(DAY_ONE,))), opening=None)

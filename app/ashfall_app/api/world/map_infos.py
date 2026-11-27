@@ -1,6 +1,6 @@
 """The content's places on the world map (contract/map.txt, "MAP")."""
-from ...opening import convert as authored
-from ...opening.schema import Opening
+from ...rules.expand import convert as authored
+from ...rules.schema import Opening
 from .. import convert
 from .map_models import PlaceInfo, Stamp
 

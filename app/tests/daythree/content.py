@@ -1,5 +1,5 @@
 """Day three's content as the simulator reads it: the rules with the chapters in writing (IN_WRITING, day_three.toml)
-merged after the shipped ones, as tests/opening/test_day_two.py loads them; which content step is which of day three's
+merged after the shipped ones, as tests/rules/content/test_day_two.py loads them; which content step is which of day three's
 story ids, read off a save; and the chapter as the routes play it (chapter.Later). Ids only (CLAUDE.md, "Never spoil
 the owner")."""
 from functools import cache
@@ -7,8 +7,8 @@ from functools import cache
 from ashfall_app.engine import (
     AnswerId, AtLeast, CardId, OfferId, Order, QUANTITY_SCALE, Rules, StoreId, StoreValue, TapCard, Unlock, UnlockKind, ceil_div,
 )
-from ashfall_app.opening.convert import condition
-from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, OPENING, Opening, load_opening, to_rules
+from ashfall_app.rules.expand.convert import condition
+from ashfall_app.rules.schema import CHAPTERS, IN_WRITING, OPENING, Opening, load_opening, to_rules
 from tests.daythree.chapter import Keep, Landings, Later, Offer
 from tests.dayone.player.sinks import Chapter, Trip
 
@@ -70,7 +70,7 @@ def keeps() -> tuple[Keep, ...]:
 
 
 def order_cards(op: Opening, stores: tuple[str, ...] = ORDER_STORES) -> tuple[Offer, ...]:
-    """The chapter's order cards on `stores` that tap a card once offered, as the page fills them in (opening/convert.py)."""
+    """The chapter's order cards on `stores` that tap a card once offered, as the page fills them in (rules/expand/convert.py)."""
     cards = {c.id for c in op.cards}
     out: list[Offer] = []
     for oc in op.order_cards:

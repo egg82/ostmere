@@ -1,9 +1,9 @@
 """The chips' wire form (Content.chip_infos): when each shows, what it costs, its lines, and whether it is a season's
 chore."""
 from ... import engine as e
-from ...opening import convert as authored
-from ...opening.chores import chores
-from ...opening.schema import Opening
+from ...rules.expand import convert as authored
+from ...rules.chores import chores
+from ...rules.schema import Opening
 from . import content_models as cm
 from .. import convert
 from .changes import changes

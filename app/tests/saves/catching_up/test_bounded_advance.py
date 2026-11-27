@@ -4,7 +4,7 @@ does, with the same lines and rule changes in turn."""
 from pathlib import Path
 
 from ashfall_app.engine import Line, RuleChange, advance_logged, decode, encode, rebase
-from ashfall_app.opening.schema import Opening, to_rules
+from ashfall_app.rules.schema import Opening, to_rules
 
 GOLDEN = Path(__file__).resolve().parent.parent / "golden"
 SPAN_S = 10_800

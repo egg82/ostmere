@@ -14,10 +14,10 @@ PYTEST_GATES=(
   app/tests/test_function_size.py
   app/tests/test_suppressions.py
   app/tests/test_save_fields.py
-  app/tests/opening/test_requires_shown.py
-  app/tests/opening/test_player_only.py
-  app/tests/opening/test_answer_gate.py
-  app/tests/opening/test_pool_checks.py
+  app/tests/rules/cards/test_requires_shown.py
+  app/tests/rules/checks/test_player_only.py
+  app/tests/rules/checks/test_answer_gate.py
+  app/tests/rules/checks/test_pool_checks.py
   app/tests/test_boundaries.py
   app/tests/test_doc_citations.py
   app/tests/test_saves_plan.py

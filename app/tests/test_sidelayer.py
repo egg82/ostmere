@@ -9,7 +9,7 @@ import pytest
 from tests import sidelayer
 from tests.dayone.player.beats import BEATS_YAML
 from tests.dayone.player.story import FLATCHECK
-from tests.opening.playthrough import News
+from tests.rules.play.playthrough import News
 
 SHIPPED = BEATS_YAML.read_text()
 SL1 = "{id: SL1, kind: arc,     chapter: day_three, thread: th-survive, offers: both,     gate: {hours_after: {beat: K1, hours: 1.25}}}"

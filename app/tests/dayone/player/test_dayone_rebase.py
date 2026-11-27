@@ -10,7 +10,7 @@ from tests.dayone.conftest import PLAY_TIMEOUT_S
 from tests import readout_snapshot as rs
 from tests.dayone.pacing.report import rebase_text
 from tests.dayone.player.story import AWAY, Rebased, ended_saves, rebase_problems, rebased_case
-from tests.opening.playthrough import opening, opening_rules
+from tests.rules.play.playthrough import opening, opening_rules
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 CASES = [(p, away) for p in ended_saves() for away in AWAY]

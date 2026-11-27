@@ -1,4 +1,4 @@
-THE CAMP: HELD LEVELS AND LIFTS (the loader's use of Store caps, app/ashfall_app/opening/convert.py). Where this part
+THE CAMP: HELD LEVELS AND LIFTS (the loader's use of Store caps, app/ashfall_app/rules/expand/convert.py). Where this part
 and an entry above disagree, this part holds. Examples name ids only.
 
 FIT PASS

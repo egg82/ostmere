@@ -9,10 +9,10 @@ from pathlib import Path
 
 import pytest
 
-from ashfall_app.opening.entries import CardEntry
-from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, OPENING, Opening, load_opening
-from ashfall_app.opening.site_entries import SiteEntry
-from ashfall_app.opening.site_checks import check_sites, unsited
+from ashfall_app.rules.entries.entries import CardEntry
+from ashfall_app.rules.schema import CHAPTERS, IN_WRITING, OPENING, Opening, load_opening
+from ashfall_app.rules.entries.site_entries import SiteEntry
+from ashfall_app.rules.checks.world.site_checks import check_sites, unsited
 from tests.held_ledger import Ledger, dump, load, problems, tally, total
 
 APP = Path(__file__).resolve().parents[1]

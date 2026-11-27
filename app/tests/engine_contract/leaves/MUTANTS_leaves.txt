@@ -62,7 +62,7 @@ RUNS
   alone. Run: python -m tools.mutate_suite leaves|retire --run (specs tools/leaves_mutants/, tools/retire_mutants/:
   mNN.py is a row's mutant, mNNa.py ... its further variants, each planted alone). Each run also runs the other suite
   and the implementation's own tests (engine/test_leaves_impl.py, engine/test_retired_chores_impl.py,
-  opening/test_leaves_loader.py, opening/test_retired_chores_loader.py); only the suite's own tests make claims.
+  rules/loaders/test_leaves_loader.py, rules/loaders/test_retired_chores_loader.py); only the suite's own tests make claims.
 - Against the implementation: all 33 rows KILLED in every planted variant, each by a test that claims the row; no
   survivors and no equivalent mutants. Not planted: row 3's rate-form wind-back and row 6's level 0 (the variants that read the
   stores' history, which no edit of one line reaches).

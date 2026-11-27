@@ -13,7 +13,7 @@ from sqlalchemy import select
 from ashfall_app import main
 from ashfall_app.api.service import Game
 from ashfall_app.db.tables import saves
-from ashfall_app.opening.schema import Opening
+from ashfall_app.rules.schema import Opening
 from ashfall_app.saves.interface import Ruleset
 from ashfall_app.saves.ruleset import ruleset
 from tests.game_client import RATE_KEY, SITE

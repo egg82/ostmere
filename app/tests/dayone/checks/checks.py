@@ -16,7 +16,7 @@ from itertools import groupby
 from ashfall_app.engine import BP, Condition, Rules, Save, TriggerDef, Unlock, UnlockKind, View, advance
 from tests.dayone.player.beats import STORY
 from tests.dayone.player.player import DayOnePlayer
-from tests.opening.playthrough import News
+from tests.rules.play.playthrough import News
 
 PER_VISIT_GAP = 3600
 """A visit after this long away is a return; shorter ones are a look in the same sitting."""

@@ -16,8 +16,8 @@ from ashfall_app.engine import (
     advance, decide, decode, encode, new_save, rebase, verb_to_json,
 )
 from ashfall_app.engine.codec import Json, canonical
-from ashfall_app.opening.convert import build_rules
-from ashfall_app.opening.schema import (
+from ashfall_app.rules.expand.convert import build_rules
+from ashfall_app.rules.schema import (
     CHAPTERS, DAY_EIGHTEEN, DAY_ELEVEN, DAY_FIFTEEN, DAY_NINE, DAY_NINETEEN, DAY_SIXTEEN, DAY_TWELVE, DAY_TWENTY_FIVE, DAY_TWENTY_SEVEN,
     DAY_TWENTY_THREE, DAY_TWENTY_TWO, OPENING,
     load_opening,

@@ -1,6 +1,6 @@
 # Day-four keys manifest: every key in day_four.toml still at the UNWRITTEN marker, in file order.
 # kind: line (a proposer writes it) | fail (failed-card line, a proposer writes it) | label (the voice pass writes it).
-# limit: lines share a set limit: median <= 45 chars, p90 <= 75 across the chapter's l_ keys, and no line over 75 (app/tests/opening/test_line_length.py). Labels: none set.
+# limit: lines share a set limit: median <= 45 chars, p90 <= 75 across the chapter's l_ keys, and no line over 75 (app/tests/rules/content/test_line_length.py). Labels: none set.
 # alt: H = a proposer also writes key_alt. brief: the design brief's name where it differs (-: same).
 # keys: 53
 key	kind	limit	alt	brief

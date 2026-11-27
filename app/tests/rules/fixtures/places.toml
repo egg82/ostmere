@@ -1,0 +1,81 @@
+# A test chapter, merged onto the opening alone (tests/rules/loaders/test_places.py): places on the world map. A named one revealed
+# by a trigger's feature, an unnamed one revealed by a card, one named only after a later feature, and two revealed together
+# by one feature, one of them sitting on the first place's cell. Not story: the ids and words are the tests'
+# own. The planted variants are edits of this file.
+version = 1
+end_feature = "m_road"
+
+[[features]]
+id = "m_road"
+
+[[features]]
+id = "m_bridge"
+
+[[features]]
+id = "m_far"
+
+[[cards]]
+id = "m_scout"
+presentation = "action"
+label_key = "m_c_scout"
+upside_key = "t_up"
+work_s = 60
+
+[[triggers]]
+id = "m_road_on"
+when = { test = "after_time", value = 100 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "m_road" }, { unlock_kind = "card", id = "m_scout" }] }
+
+[[places]]
+id = "m_hamlet"
+stamp = "village"
+at = [2, -1]
+reveal = { unlock_kind = "feature", id = "m_road" }
+label_key = "m_p_hamlet"
+
+[[triggers]]
+id = "m_bridge_on"
+when = { test = "after_time", value = 200 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "m_bridge" }] }
+
+[[triggers]]
+id = "m_far_on"
+when = { test = "after_time", value = 300 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "m_far" }] }
+
+[[places]]
+id = "m_woods"
+stamp = "forest"
+at = [-3, 4]
+reveal = { unlock_kind = "card", id = "m_scout" }
+
+[[places]]
+id = "m_tower"
+stamp = "fort"
+at = [4, 3]
+reveal = { unlock_kind = "feature", id = "m_road" }
+label_key = "m_p_tower"
+labelled_after = { unlock_kind = "feature", id = "m_bridge" }
+
+[[places]]
+id = "m_ridge"
+stamp = "mountain"
+at = [-5, -3]
+reveal = { unlock_kind = "feature", id = "m_far" }
+label_key = "m_p_ridge"
+
+[[places]]
+id = "m_banner"
+stamp = "fort"
+at = [2, -1]
+reveal = { unlock_kind = "feature", id = "m_far" }
+over = "m_hamlet"
+
+[line_kinds]
+
+[text]
+t_up = "what it is for"
+m_c_scout = "Scout"
+m_p_hamlet = "A hamlet"
+m_p_tower = "A tower"
+m_p_ridge = "A ridge"

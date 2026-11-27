@@ -4,7 +4,7 @@ return a finding."""
 from dataclasses import replace
 
 from ashfall_app.engine import AfterTime, CardId, LaneBar, LaneId, Order, TapCard, Unlock, UnlockKind, new_save
-from ashfall_app.opening.schema import DAY_ONE, load_opening
+from ashfall_app.rules.schema import DAY_ONE, load_opening
 from tests.daytwo import checks, content as c, lines
 from tests.daytwo.later import LevelAt
 from tests.daytwo.player import visit_seen

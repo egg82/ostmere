@@ -3,8 +3,8 @@ the ones that fired or showed have states. A fight's pool keys are drawn by the 
 roll, so they never have a state and are not counted."""
 import pytest
 
-from ashfall_app.opening.fight_refs import fights
-from ashfall_app.opening.schema import DAY_EIGHT
+from ashfall_app.rules.checks.world.fight_refs import fights
+from ashfall_app.rules.schema import DAY_EIGHT
 from tests.daythree import content as c3
 from tests.daythree import lines
 from tests.daytwo.conftest import PLAY_TIMEOUT_S

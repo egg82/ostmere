@@ -7,7 +7,7 @@ import psycopg
 import pytest
 
 from ashfall_app.db.migrate import SCRIPTS, head, migrate
-from ashfall_app.opening.schema import Opening
+from ashfall_app.rules.schema import Opening
 from ashfall_app.saves.journal import DAY_S
 from tests.db.stored.test_save_lessons_migrate import ACCOUNT_COLUMNS, SAVE_COLUMNS, SESSION_COLUMNS, copy_rows
 from tests.game_client import game_client

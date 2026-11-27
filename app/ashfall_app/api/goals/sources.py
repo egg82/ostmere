@@ -1,11 +1,11 @@
 """Where each input a card in play needs comes from (View Card.needs' gate and makers; contract/, "Cards"), read off
-the content's makers (opening/makers.py), the save's fired triggers and the engine's view."""
+the content's makers (rules/makers.py), the save's fired triggers and the engine's view."""
 from collections.abc import Mapping
 from dataclasses import dataclass
 
 from ... import engine as e
-from ...opening.makers import card_makers, granted_by, makers_by_store, standing_makers
-from ...opening.schema import Opening
+from ...rules.makers import card_makers, granted_by, makers_by_store, standing_makers
+from ...rules.schema import Opening
 
 
 @dataclass(frozen=True)

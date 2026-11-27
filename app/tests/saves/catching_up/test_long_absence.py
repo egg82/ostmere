@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 
 from ashfall_app.engine import Rules, Save, rebase
-from ashfall_app.opening.schema import load_opening, to_rules
+from ashfall_app.rules.schema import load_opening, to_rules
 from tests.saves.catching_up.absence import advanced_counted
 
 GOLDEN = Path(__file__).resolve().parent.parent / "golden"

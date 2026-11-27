@@ -50,7 +50,7 @@ empty only once its `until` holds (its step is done), when the wait line or a go
 keyed to the unlock that starts it, and the next aim's start, or its own `until` unlock, ends it;
 nothing reads it from the prose. A plain objective line is genre-standard, so it is not one of the first five minutes'
 Ashfall-specific mechanics ("The screen arrives when it means something"). Held by
-`tests/dayone/human/test_dayone_aims.py` and the content check in `app/ashfall_app/opening/aims.py`.
+`tests/dayone/human/test_dayone_aims.py` and the content check in `app/ashfall_app/rules/checks/cards/aims.py`.
 
 **Unlocks mostly come from play.** A story moment on a clock may open a task, and that keeps the pace known, but
 only interspersed with unlocks the player's own loops earn toward a goal they can see; lean on clocks too much and

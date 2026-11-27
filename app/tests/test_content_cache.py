@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from ashfall_app.opening import schema
-from ashfall_app.opening.schema import CHAPTERS, OPENING, Opening
+from ashfall_app.rules import schema
+from ashfall_app.rules.schema import CHAPTERS, OPENING, Opening
 from tests import content_cache
 
 

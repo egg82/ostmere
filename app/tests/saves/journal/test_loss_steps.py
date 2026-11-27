@@ -12,7 +12,7 @@ from ashfall_app.db import accounts
 from ashfall_app.db.engine import open_database
 from ashfall_app.db.migrate import migrate
 from ashfall_app.db.tables import save_journal
-from ashfall_app.opening.schema import OPENING, load_opening
+from ashfall_app.rules.schema import OPENING, load_opening
 from ashfall_app.saves.interface import Ruleset
 from ashfall_app.saves.journal_rules import LossRunner
 from ashfall_app.saves.ruleset import ruleset

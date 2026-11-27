@@ -4,13 +4,13 @@ day one's in content order), so the aim stated is read through them all; day two
 not this one. How many views state no aim is the readout's (report.py). Aims are named by id, never by their text."""
 import pytest
 
-from ashfall_app.opening.entries import UnlockEntry
-from ashfall_app.opening.feature_entries import AimEntry
+from ashfall_app.rules.entries.entries import UnlockEntry
+from ashfall_app.rules.entries.feature_entries import AimEntry
 from tests.dayone.conftest import PLAY_TIMEOUT_S
 from tests.dayone.human.human import HumanPlayer
 from tests.dayone.human.human_flags import Session
 from tests.dayone.human.screen import aimless, stated, unstated, views
-from tests.opening.playthrough import day_one, opening
+from tests.rules.play.playthrough import day_one, opening
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 Run = tuple[HumanPlayer, list[Session]]

@@ -9,7 +9,7 @@ from tests.dayone.pacing.parity import Measured, Present, babysat, replay
 from tests.dayone.player.player import DayOnePlayer, route_player
 from tests.dayone.player.policy import Knobs
 from tests.dayone.player.schedules import schedule
-from tests.opening.routes import DEEP
+from tests.rules.play.routes import DEEP
 
 
 @dataclass(frozen=True)

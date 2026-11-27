@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from ashfall_app.opening.lane_entries import LaneEntry, LodgingEntry
-from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, Opening, load_opening
+from ashfall_app.rules.entries.lane_entries import LaneEntry, LodgingEntry
+from ashfall_app.rules.schema import CHAPTERS, IN_WRITING, Opening, load_opening
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))

@@ -1,5 +1,5 @@
 """Day two's engine parts on the wire (api/contract/, "A lane run by rules", "Offers"), on the test chapter
-(tests/opening/fixtures/townsfolk.toml): the content's lane and offer infos, the view's lane order and offers, and
+(tests/rules/fixtures/townsfolk.toml): the content's lane and offer infos, the view's lane order and offers, and
 answer_offer as a decision and as an order verb, each a plain copy of the engine's."""
 from functools import cache
 
@@ -11,9 +11,9 @@ from ashfall_app.api import convert
 from ashfall_app.api import models as w
 from ashfall_app.api.world.line_models import WhenCause
 from ashfall_app.api.service import Game
-from ashfall_app.opening.schema import to_rules
+from ashfall_app.rules.schema import to_rules
 from ashfall_app.saves.ruleset import ruleset
-from tests.opening.test_townsfolk_loader import loaded
+from tests.rules.loaders.test_townsfolk_loader import loaded
 
 pytestmark = pytest.mark.usefixtures("townsfolk_opening")
 

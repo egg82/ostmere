@@ -7,8 +7,8 @@ import pytest
 from pydantic import ValidationError
 
 from ashfall_app import engine as e
-from ashfall_app.opening.fight_entries import SideEntry, ThreatEntry
-from ashfall_app.opening.schema import CardEntry, Opening, to_rules
+from ashfall_app.rules.entries.fight_entries import SideEntry, ThreatEntry
+from ashfall_app.rules.schema import CardEntry, Opening, to_rules
 from held_world import kills
 
 SIDE, THREAT = "hand", "wolf"

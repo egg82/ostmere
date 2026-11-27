@@ -164,7 +164,7 @@ to level 20, each step half again the last (60, 100, 160 … 24 400 items of XP)
 route and time per level never shrinks (`tests/dayone/pacing/growth.py`). Every level past the finds pays its own skill's
 work a tenth faster (`target = "work"`: more made an hour, the same XP), so after the end every row has a next level
 the mix drives, and the player's weighting decides which comes first (the taper; `tests/dayone/pacing/goals.py`). A "?" that
-paid nothing is gone: every marker pays when its level lands (`tests/opening/test_level_pays.py`). Among the levels
+paid nothing is gone: every marker pays when its level lands (`tests/rules/pacing/test_level_pays.py`). Among the levels
 day one reaches (measured on every route at B3 seen: Scavenging to 17, Woodcutting to 19, Foraging to 7, Cooking to 2),
 at least every third pays a find beside its speed-up (`tests/dayone/pacing/test_dayone_level_pays.py`).
 

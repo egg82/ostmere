@@ -1,6 +1,6 @@
 """The features' wire form: a carried bonus's label and what it does, and a feature's one-time card."""
-from ...opening.feature_entries import FeatureCardEntry, FeatureEntry
-from ...opening.schema import Opening
+from ...rules.entries.feature_entries import FeatureCardEntry, FeatureEntry
+from ...rules.schema import Opening
 from . import feature_models as fm
 from .changes import changes
 

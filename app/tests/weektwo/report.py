@@ -29,7 +29,7 @@ from collections import Counter
 
 from ashfall_app.engine import StoreId, units
 from ashfall_app.engine.rates import store_value
-from ashfall_app.opening.schema import DAY_EIGHT
+from ashfall_app.rules.schema import DAY_EIGHT
 from tests.daythree import content as c3
 from tests.daythree import counters, lines
 from tests.daythree.report import absence_line

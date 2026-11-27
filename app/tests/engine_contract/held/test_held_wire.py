@@ -10,8 +10,8 @@ import pytest
 from ashfall_app import engine as e
 from ashfall_app.api import models as w
 from ashfall_app.api.service import Game
-from ashfall_app.opening.fight_entries import SideEntry, ThreatEntry
-from ashfall_app.opening.schema import Opening, load_opening
+from ashfall_app.rules.entries.fight_entries import SideEntry, ThreatEntry
+from ashfall_app.rules.schema import Opening, load_opening
 from ashfall_app.saves.ruleset import Ruleset, ruleset
 from held_world import kills, wr
 
