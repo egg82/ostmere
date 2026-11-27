@@ -1,6 +1,6 @@
 # Adding content: the checklist
 
-Read this before changing anything in a chapter's data (a day toml in `app/ashfall_app/rules/`, `content/beats.yaml`,
+Read this before changing anything in a chapter's data (a day toml in `app/ashfall_app/rules/days/`, `content/beats.yaml`,
 a store, card, trigger, offer, person, aim, line or scene state). Each item below is something a past change missed and
 a later PR had to fix, most-missed first. Where a gate catches it, the gate is named. The rest are on you to check, so
 check them.
