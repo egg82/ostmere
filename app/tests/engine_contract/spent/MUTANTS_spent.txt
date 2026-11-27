@@ -55,7 +55,7 @@ MUTANTS_drains.txt does (planted, red, survived, equivalent with the reason). `@
                    the spent card is read as YIELDED or its pause is dropped after the landing.            [19]
 
 RUNS
-- Suite tests/engine_contract/test_spent_*.py (blind, written from the engine design's SPENT part and api/contract/ alone).
+- Suite tests/engine_contract/spent/test_spent_*.py (blind, written from the engine design's SPENT part and api/contract/ alone).
   Run: python -m tools.mutate_suite spent --run (specs tools/spent_mutants/mNN.py, one per row, each a list of (path,
   old, new) edits against the implementation). `--check` fails unless every row is claimed by a test marked @kills(row).
 - Against the implementation: rows 1-24 all KILLED, each with a test that claims it red or, where the planted wrong

@@ -6,7 +6,7 @@ from ashfall_app.engine import Modifier, ModifierKind, SourceId, new_save
 from ashfall_app.engine import lumps
 from ashfall_app.engine.modifiers import Explanation, FlowKind, RateRef, Run, WorkRef
 from ashfall_app.engine.units import BP, QUANTITY_SCALE as Q
-from tests.engine_contract.test_lumps_by_work_contract import A, Y, lump, world
+from tests.engine_contract.cards.test_lumps_by_work_contract import A, Y, lump, world
 
 LINE = RateRef(A, FlowKind.MAKE, Y)
 

@@ -33,7 +33,7 @@ plant one at a time in a scratch copy; a test written from the note alone must g
                    on a rule answering an offer is accepted.                                            [3]
 
 RUNS
-- Suite tests/engine_contract/test_guards_*.py (blind, written from the design note alone; test_guards_directed.py
+- Suite tests/engine_contract/guards/test_guards_*.py (blind, written from the design note alone; test_guards_directed.py
   holds the directed tests below). Rerun, from app/, in batches under the per-test timeout of pytest.ini:
       python -m tools.mutate_suite guards --run --only 1,2,3,4,5,6,7,8,9,10,11,12,13
       python -m tools.mutate_suite guards --run --only 14,15,16,17,18,19,20,21,22,23,24,25,26

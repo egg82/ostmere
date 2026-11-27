@@ -1,5 +1,5 @@
 """Invariant 18, behaviourally, for the cards part: the engine is a deterministic function of its inputs. The static half
-(imports only the stdlib and itself) is engine_contract/test_purity.py, which scans every module of the package.
+(imports only the stdlib and itself) is engine_contract/invariants/test_purity.py, which scans every module of the package.
 
 The same run gives the same saves, text and view in this process and in fresh interpreters with other string-hash
 seeds, which catches a result that depends on set or dict iteration order, a clock or a random draw."""
