@@ -56,7 +56,7 @@ connection: inside the write's, a failed renewal would abort the applied write, 
 the save's, could deadlock against the empty-account prune, which locks accounts and then deletes their saves. A
 forecast or dry run gives its connection back before its replay. A decision holds its save's row lock over four round
 trips: the lock, the tries count (`db/tries.py` `take`, trim, count and insert as one statement), the step's write
-(`db/step.py`: the row, lines, decision log, day snapshot and the repeats' read as one statement) and the COMMIT. The
+(`db/stored/step.py`: the row, lines, decision log, day snapshot and the repeats' read as one statement) and the COMMIT. The
 lock serialises the save's read-modify-write, its tries count and its lines' numbering, so nothing moves out from under it
 and the count stays before the decision is run (a refusal wins over an invalid verb). Rejected: psycopg's pipeline mode
 (SQLAlchemy reads each statement's result as it is sent, so a statement inside a pipeline raises `ResourceClosedError`). Rejected: one transaction for every block of a
@@ -75,7 +75,7 @@ forward-only with no per-change flags. Content may rename or remove any id; a sa
 went, and never fails to load for it. A change that should carry a save across (a rename worth keeping progress for,
 a retroactive change) is a step on the upgrade chain (`app/ashfall_app/engine/upgrade.py`). Stored in Postgres (`app/ashfall_app/db/tables.py`): the save's state
 with its decision log, lines and day snapshots, and each rules digest's manifest once, put back into a row stored
-without it when it is read (`app/ashfall_app/db/manifests.py`). A build writes rows without its manifest once its
+without it when it is read (`app/ashfall_app/db/stored/manifests.py`). A build writes rows without its manifest once its
 start finds it held (`app/ashfall_app/saves/manifest.py`); `python -m ashfall_app.saves strip` does the same for older
 rows and deletes the manifests no row names (`app/ashfall_app/saves/strip.py`). Built:
 `app/ashfall_app/saves/interface.py` (null: no database), one transaction per write holding the row, rebased forward at

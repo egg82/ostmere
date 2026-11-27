@@ -1,6 +1,6 @@
 """The journal's composed days (tables.save_journal) and the lines they are composed from, read in the caller's
 transaction. A step reads them in its save's locking statement (`locked`), so a decision still holds the row over the
-round trips db/test_decision_lock_span.py counts; its days are written by its one statement (db/step.py). What is
+round trips tests/db/stored/test_decision_lock_span.py counts; its days are written by its one statement (db/stored/step.py). What is
 composed when is saves/ (journal_write.py); this module only reads."""
 
 from collections.abc import Sequence
@@ -10,8 +10,8 @@ from typing import Any
 from sqlalchemy import ARRAY, CTE, Connection, Integer, Label, Text, bindparam, func, literal_column, select
 from sqlalchemy.dialects.postgresql import aggregate_order_by
 
-from .saves import LineRecord, SaveRecord, save_and
-from .tables import save_journal, save_lines, saves
+from ..saves import LineRecord, SaveRecord, save_and
+from ..tables import save_journal, save_lines, saves
 
 DAY_S = 86400
 

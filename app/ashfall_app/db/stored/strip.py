@@ -8,7 +8,7 @@ from typing import Literal
 from sqlalchemy import ColumnElement, Connection, Table, and_, delete, exists, func, literal, not_, select, tuple_, update
 
 from .manifests import carries_own
-from .tables import save_manifests, save_snapshots, saves
+from ..tables import save_manifests, save_snapshots, saves
 
 type Kind = Literal["saves", "snapshots"]
 KINDS: tuple[Kind, ...] = ("saves", "snapshots")

@@ -133,7 +133,7 @@ save_snapshots = Table(
 )
 
 # The manifest (engine design/saves-across-releases.txt, "Manifest") of each rules digest a build has played under, as canonical JSON text: a
-# save or snapshot whose state leaves its manifest out is read with its digest's (db/manifests.py).
+# save or snapshot whose state leaves its manifest out is read with its digest's (db/stored/manifests.py).
 save_manifests = Table(
     "save_manifests", metadata,
     Column("rules_digest", Text, primary_key=True),
@@ -161,7 +161,7 @@ save_ahead = Table(
 # carried the save through it. `notes` is the day's notes in page order, each {subject, slot, key}; `gap` is why the day
 # broke off, null for a day written through or blank; `marks` the kinds of mark its page carries, in the order drawn;
 # `through` the save time it was composed through, before the day's end while it is still being written. Earned history, never pruned; a step only appends to
-# the notes and marks of a day still being written and sets its gap once (db/step.py).
+# the notes and marks of a day still being written and sets its gap once (db/stored/step.py).
 save_journal = Table(
     "save_journal", metadata,
     Column("save_id", BigInteger, ForeignKey("saves.id", ondelete="CASCADE"), primary_key=True),

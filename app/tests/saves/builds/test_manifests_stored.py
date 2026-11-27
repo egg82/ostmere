@@ -1,4 +1,4 @@
-"""Manifests stored once per rules digest (db/manifests.py, saves/builds/manifest.py). This build writes every save whole, so
+"""Manifests stored once per rules digest (db/stored/manifests.py, saves/builds/manifest.py). This build writes every save whole, so
 the build before it reads them; it reads a row stripped of its manifest with its digest's, under its own rules and
 across a rebase, golden texts of the oldest format a rebase reads included; a stripped row whose digest has none held
 is unavailable and fails the start check, never decoded wrong."""
@@ -12,7 +12,7 @@ from sqlalchemy import Engine, insert, select, update
 from ashfall_app import engine as e
 from ashfall_app import logs
 from ashfall_app.db import saves as rows
-from ashfall_app.db.manifests import stripped
+from ashfall_app.db.stored.manifests import stripped
 from ashfall_app.db.tables import save_manifests, save_snapshots, saves
 from ashfall_app.saves.builds.check import check
 from ashfall_app.saves.interface import Ruleset, Unavailable

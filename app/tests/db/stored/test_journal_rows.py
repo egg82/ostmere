@@ -1,4 +1,4 @@
-"""The journal's rows (db/journal.py, db/step.py): a step's statement stores its days beside its lines, a day still being
+"""The journal's rows (db/stored/journal.py, db/stored/step.py): a step's statement stores its days beside its lines, a day still being
 written is appended to and never rewritten, a closed day is left as stored, the save's locking
 statement reads every stored day and the lines asked; it says when its snapshot is older than the row it locked; and
 deleting a save for good takes its days with it."""
@@ -10,9 +10,9 @@ import pytest
 from sqlalchemy import Connection, Engine, insert
 
 from ashfall_app.db import accounts as a
-from ashfall_app.db import journal
+from ashfall_app.db.stored import journal
 from ashfall_app.db import saves as s
-from ashfall_app.db import step
+from ashfall_app.db.stored import step
 from ashfall_app.db.engine import open_database
 from ashfall_app.db.tables import save_journal
 from tests.db.test_records import DAY, T0, written

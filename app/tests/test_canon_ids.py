@@ -1,6 +1,6 @@
 """Every canon id (`C-<area>-<n>`) and decision id (`D-<n>`) cited anywhere in the repo's text is a row of
 `content/canon/` (one file per area) or `content/decisions.jsonl`, and both keep their row shape, so a new lead can take the
-seat from them alone (docs/research/studio-team.md, "What it means here").
+seat from them alone (docs/research/writing/studio-team.md, "What it means here").
 
 A canon row's source is `file#heading`: the file is under `content/`, or under the repo root when it starts with
 `docs/`; the heading is the start of a Markdown heading in it, or a top-level key of a YAML file. Only ids, fields and

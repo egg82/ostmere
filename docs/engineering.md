@@ -384,5 +384,5 @@ the parts that apply to it.
 | Design canvas (six phone screens) | https://claude.ai/artifact/H6Foqa7diKmwDS1KGKJuxC, source in `docs/design/canvas/` |
 | Redesign comparison (six designs and the merge) | https://claude.ai/artifact/3zBFvQDBec1J6UWPqCuc6s, the chosen design in `docs/design/redesign/` |
 | Look test canvas | https://claude.ai/artifact/1EDLESML2xgre6iuvonRt1, source in `docs/design/look-test-canvas/` |
-| Writing and model tests | https://claude.ai/artifact/WbXhGSQedRy2SnN2gM3rNd, source in `docs/research/writing-test/` |
+| Writing and model tests | https://claude.ai/artifact/WbXhGSQedRy2SnN2gM3rNd, source in `docs/research/writing/writing-test/` |
 | Strawman doc (superseded by `decisions.md` where they differ) | https://claude.ai/code/artifact/571817bb-99df-498c-be29-3202fe5ef76e |

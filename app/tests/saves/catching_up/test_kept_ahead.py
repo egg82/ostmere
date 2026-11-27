@@ -12,7 +12,7 @@ import pytest
 from sqlalchemy import Engine, delete, select, update
 
 from ashfall_app import engine as e
-from ashfall_app.db import ahead as kept_rows
+from ashfall_app.db.stored import ahead as kept_rows
 from ashfall_app.db import saves as rows
 from ashfall_app.db.tables import save_ahead, save_decisions, save_journal, save_lines, save_snapshots, saves
 from ashfall_app.saves import ahead

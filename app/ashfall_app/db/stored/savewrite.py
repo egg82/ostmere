@@ -7,8 +7,8 @@ from typing import Any
 from sqlalchemy import Connection, Update, bindparam, case, func, update
 from sqlalchemy.dialects.postgresql import JSONB
 
-from .saves import LISTED, Listed, Written, as_listed, next_number
-from .tables import saves
+from ..saves import LISTED, Listed, Written, as_listed, next_number
+from ..tables import saves
 
 WRITING: Update = update(saves).where(saves.c.id == bindparam("w_save_id", type_=saves.c.id.type)).values(
     {c.name: bindparam(f"w_{c.name}", type_=c.type) for c in (
@@ -34,5 +34,5 @@ def writing(save_id: int, now: datetime, w: Written) -> dict[str, Any]:
 
 
 def write(conn: Connection, save_id: int, now: datetime, w: Written) -> Listed:
-    """Writes the save, alone (a step's write is db/step.py). The row as written."""
+    """Writes the save, alone (a step's write is db/stored/step.py). The row as written."""
     return as_listed(conn.execute(_WRITE, writing(save_id, now, w)).one())

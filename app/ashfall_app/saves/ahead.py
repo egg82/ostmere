@@ -3,7 +3,7 @@
 A busy save can cost minutes of engine time per night (a rule flipping every few game seconds is an instant each), far
 more than a request's budget. So the job (`keep`, run each minute) advances each recently played save that has fallen
 behind its clock, from its row as stored, loaded exactly as a step loads it (load.py, a rebase included), and keeps the
-save it reached with that advance's lines and the rule runs it leaves (db/ahead.py). A step that loads the very same
+save it reached with that advance's lines and the rule runs it leaves (db/stored/ahead.py). A step that loads the very same
 row under the same rules continues from there (`continuing`, `step`). An advance split at any instant is the advance
 whole (engine `advance_logged`), and merged(gathered(r, c1), c2) == merged(r, c1 + c2) (ruleruns.py), so the step
 writes what one advance from the row would have. Nothing is written to the save ahead of a step: its row, lines and
@@ -22,7 +22,7 @@ from sqlalchemy import Connection, Engine
 from .. import engine as e
 from .. import logs
 from ..clock import Clock
-from ..db import ahead as kept_rows
+from ..db.stored import ahead as kept_rows
 from ..db import saves as rows
 from ..db import unit
 from ..engine.codec import Json
