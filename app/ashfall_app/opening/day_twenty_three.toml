@@ -581,7 +581,27 @@ whereabouts = [{ person = "n13", layer = "figure_n13_arrived" }]
 doings = ["n13"]
 whereabouts = [{ person = "n13", layer = "figure_n13_arrived" }]
 
+# Each answer to a work offer lands a number a few hours after the answer, named for the answer (the ledger shows its
+# source): to the food, the camp's rest +3%; to the building, the player's hands +3%. Starting values, not tuned.
+[[triggers]]
+id = "t_kept_o_fiddle_food"
+when = { test = "at_least", subject_kind = "store", id = "sorrel_clock", value = 20 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_fiddle_food", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_fiddle_food"]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10300, source = "o_fiddle_food" }]
+
+[[triggers]]
+id = "t_kept_o_fiddle_build"
+when = { test = "at_least", subject_kind = "store", id = "sorrel_clock", value = 20 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_fiddle_build", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_fiddle_build"]
+modifiers = [{ target = "lane", id = "hands", kind = "mul_bp", amount_bp = 10300, source = "o_fiddle_build" }]
+
 [line_kinds]
+l_kept_o_fiddle_food = "story"
+l_kept_o_fiddle_build = "story"
 l_echo_j_show_fish_no = "story"
 l_echo_j_drag_marks_no = "story"
 l_named = "story"
@@ -633,6 +653,8 @@ pot_stew = [{ lane = "n14", amount_bp = 1500 }, { lane = "n15", amount_bp = 1500
 pot_fungus_stew = [{ lane = "n14", amount_bp = 1000 }, { lane = "n15", amount_bp = 1000 }]
 
 [text]
+l_kept_o_fiddle_food = "the pair at the pot keep it going without being asked. the camp rests easier for it."
+l_kept_o_fiddle_build = "the pair keep the road and the stakes in hand, and your hands go quicker for it."
 l_echo_j_show_fish_no = "lucy took the newcomers down to the stream herself. they came back wet and knowing where to stand."
 l_echo_j_drag_marks_no = "someone followed the drag-marks and came back late and cold."
 store_sorrel_clock = "clock"

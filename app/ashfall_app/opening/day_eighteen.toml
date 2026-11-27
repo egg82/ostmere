@@ -127,7 +127,26 @@ outcome = { line_keys = ["l_first_working_1", "l_first_working_2"] }
 # changed there at any time.
 [[offer_kinds]]
 kind = "work"
-roles = [{ role = "food", label_key = "k_work_food" }, { role = "build", label_key = "k_work_build" }]
+roles = [
+  { role = "food", label_key = "k_work_food", tally = "work_food" },
+  { role = "build", label_key = "k_work_build", tally = "work_build" },
+]
+
+# How many answers went to the food and how many to the building, over every offer of the kind: hidden counts the loader
+# adds to from each answer of that role (offer_kinds' tally), read by the pattern's triggers below.
+[[stores]]
+id = "work_food"
+label_key = "store_work_food"
+cap_items = 20
+tally = true
+hidden = true
+
+[[stores]]
+id = "work_build"
+label_key = "store_work_build"
+cap_items = 20
+tally = true
+hidden = true
 
 # ---------- T7 and O-choir: three at the door ----------
 
@@ -213,6 +232,63 @@ modifiers = [
   { target = "work", id = "n11_clear_road", kind = "mul_bp", amount_bp = 12500, source = "o_choir_road" },
   { target = "work", id = "n12_clear_road", kind = "mul_bp", amount_bp = 12500, source = "o_choir_road" },
   { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_choir_road" },
+]
+
+# Each answer to a work offer lands a number a few hours after the answer, named for the answer (the ledger shows its
+# source): to the food, the camp's rest +3%; to the building, the player's hands +3%. Starting values, not tuned.
+[[triggers]]
+id = "t_kept_o_choir_beds"
+when = { test = "at_least", subject_kind = "store", id = "choir_clock", value = 4 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_choir_beds", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_choir_beds"]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10300, source = "o_choir_beds" }]
+
+[[triggers]]
+id = "t_kept_o_choir_road"
+when = { test = "at_least", subject_kind = "store", id = "choir_clock", value = 4 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_choir_road", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_choir_road"]
+modifiers = [{ target = "lane", id = "hands", kind = "mul_bp", amount_bp = 10300, source = "o_choir_road" }]
+
+[[triggers]]
+id = "t_kept_o_cutter_beds"
+when = { test = "at_least", subject_kind = "store", id = "choir_clock", value = 18 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_cutter_beds", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_cutter_beds"]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10300, source = "o_cutter_beds" }]
+
+[[triggers]]
+id = "t_kept_o_cutter_road"
+when = { test = "at_least", subject_kind = "store", id = "choir_clock", value = 18 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_cutter_road", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_cutter_road"]
+modifiers = [{ target = "lane", id = "hands", kind = "mul_bp", amount_bp = 10300, source = "o_cutter_road" }]
+
+# The pattern: three answers to one role, however many offers of the kind there are, land its mark when the third is
+# given; with six offers both can land, and they offset. To the food three times or more: the camp's rest +5%, the
+# player's hands -3%. To the building three times or more: the hands +5%, the rest -3%. Starting values.
+[[triggers]]
+id = "t_pattern_work_food"
+when = { test = "at_least", subject_kind = "store", id = "work_food", value = 3 }
+[triggers.outcome]
+line_keys = ["l_pattern_work_food"]
+modifiers = [
+  { target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "work_food" },
+  { target = "lane", id = "hands", kind = "mul_bp", amount_bp = 9700, source = "work_food" },
+]
+
+[[triggers]]
+id = "t_pattern_work_build"
+when = { test = "at_least", subject_kind = "store", id = "work_build", value = 3 }
+[triggers.outcome]
+line_keys = ["l_pattern_work_build"]
+modifiers = [
+  { target = "lane", id = "hands", kind = "mul_bp", amount_bp = 10500, source = "work_build" },
+  { target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 9700, source = "work_build" },
 ]
 
 # Townsfolk the player's rules set, as the family.
@@ -792,6 +868,12 @@ doings = ["n11", "n12"]
 whereabouts = [{ person = "n11", layer = "figure_n11_at_the_gate" }, { person = "n12", layer = "figure_n12_at_the_gate" }]
 
 [line_kinds]
+l_kept_o_choir_beds = "story"
+l_kept_o_choir_road = "story"
+l_kept_o_cutter_beds = "story"
+l_kept_o_cutter_road = "story"
+l_pattern_work_food = "story"
+l_pattern_work_build = "story"
 l_first_working_1 = "story"
 l_first_working_2 = "story"
 l_choir_1 = "story"
@@ -843,6 +925,14 @@ pot_stew = [{ lane = "n8", amount_bp = 1500 }, { lane = "n9", amount_bp = 1500 }
 pot_fungus_stew = [{ lane = "n8", amount_bp = 1000 }, { lane = "n9", amount_bp = 1000 }, { lane = "n10", amount_bp = 1000 }, { lane = "n11", amount_bp = 1000 }, { lane = "n12", amount_bp = 1000 }]
 
 [text]
+l_kept_o_choir_beds = "the three you put to the beds are at it before light now. the camp wakes to it and rests a little easier."
+l_kept_o_choir_road = "the three on the road have worn a path to it. your hands go the quicker for the road being shorter."
+l_kept_o_cutter_beds = "the two at the beds have the rhythm of it. the camp rests easier for the food they keep coming."
+l_kept_o_cutter_road = "the two on the road have worked it smooth, and your hands go quicker over it."
+l_pattern_work_food = "you have sent them to the food more than twice. the camp eats and rests well, and your own hands are slower for it."
+l_pattern_work_build = "you have sent them to the building more than twice. your hands go quick over the work, and the camp rests a little thinner."
+store_work_food = "put to the food"
+store_work_build = "put to the building"
 store_b15_clock = "clock"
 action_b15_clock = "Clock"
 store_choir_clock = "clock"

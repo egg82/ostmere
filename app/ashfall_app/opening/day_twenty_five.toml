@@ -707,7 +707,45 @@ I9 = ["l_walkers_1"]
 I10 = ["l_thanks"]
 B21 = ["l_b21_1"]
 
+# Each answer to a work offer lands a number a few hours after the answer, named for the answer (the ledger shows its
+# source): to the food, the camp's rest +3%; to the building, the player's hands +3%. Starting values, not tuned.
+[[triggers]]
+id = "t_kept_o_walkers_food"
+when = { test = "at_least", subject_kind = "store", id = "walkers_clock", value = 4 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_walkers_food", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_walkers_food"]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10300, source = "o_walkers_food" }]
+
+[[triggers]]
+id = "t_kept_o_walkers_build"
+when = { test = "at_least", subject_kind = "store", id = "walkers_clock", value = 4 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_walkers_build", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_walkers_build"]
+modifiers = [{ target = "lane", id = "hands", kind = "mul_bp", amount_bp = 10300, source = "o_walkers_build" }]
+
+[[triggers]]
+id = "t_kept_o_widowers_food"
+when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 36 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_widowers_food", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_widowers_food"]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10300, source = "o_widowers_food" }]
+
+[[triggers]]
+id = "t_kept_o_widowers_build"
+when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 36 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_widowers_build", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_widowers_build"]
+modifiers = [{ target = "lane", id = "hands", kind = "mul_bp", amount_bp = 10300, source = "o_widowers_build" }]
+
 [line_kinds]
+l_kept_o_walkers_food = "story"
+l_kept_o_walkers_build = "story"
+l_kept_o_widowers_food = "story"
+l_kept_o_widowers_build = "story"
 l_echo_j_steam_hole_no = "story"
 l_echo_j_leaning_wall_no = "story"
 l_echo_j_midden_no = "story"
@@ -765,6 +803,10 @@ pot_stew = [{ lane = "n23", amount_bp = 1500 }]
 pot_fungus_stew = [{ lane = "n23", amount_bp = 1000 }]
 
 [text]
+l_kept_o_walkers_food = "the four keep the pot between them. the camp rests a little easier."
+l_kept_o_walkers_build = "the four have the road in hand, and your hands go a little quicker."
+l_kept_o_widowers_food = "the three keep the pot as if it were theirs. the camp rests easier."
+l_kept_o_widowers_build = "the three have the stakes in hand now, and your hands go quicker."
 l_echo_j_steam_hole_no = "someone went down the hole by the stream and came up warm to the elbows."
 l_echo_j_leaning_wall_no = "two of them pulled the wall down. the wood is stacked off the stones."
 l_echo_j_midden_no = "the midden pit is dug, and the ground beside it has gone soft and sour."
