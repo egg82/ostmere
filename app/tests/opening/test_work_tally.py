@@ -2,11 +2,13 @@
 to its role's store, a save that answered before counts at rebase, the pattern of three answers to a role lands, and an
 offer of the kind added later is counted by its own data alone."""
 from dataclasses import replace
+from pathlib import Path
 
 import pytest
 
 from ashfall_app.engine import QUANTITY_SCALE as Q, Rules, Save, StoreId, Unlock, UnlockKind, encode, new_save, rebase
-from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, Opening, load_opening, to_rules
+from ashfall_app.opening.convert import build_rules
+from ashfall_app.opening.schema import CHAPTERS, DAY_EIGHTEEN, DAY_TWENTY_THREE, IN_WRITING, OPENING, Opening, load_opening, to_rules
 from ashfall_app.opening.tally_convert import tally_triggers
 
 TALLY = {"food": "work_food", "build": "work_build"}
@@ -73,3 +75,10 @@ def test_a_new_offer_of_the_kind_is_counted_with_no_other_edit(content: Opening)
     grown = content.model_copy(update={"offers": [*content.offers, src.model_copy(update={"id": "o_next", "answers": answers})]})
     added = {str(t.id) for t in tally_triggers(grown)} - {str(t.id) for t in tally_triggers(content)}
     assert added == {"tally_o_next_food", "tally_o_next_build"}
+
+
+@pytest.mark.parametrize("last", [DAY_EIGHTEEN, DAY_TWENTY_THREE])
+def test_the_rules_load_with_only_the_chapters_through_each_boundary(last: Path):
+    """The pattern needs three answers to a role, so it lives in the first chapter whose offers can give them (the
+    loader's finite check refuses a threshold the loaded offers cannot reach)."""
+    build_rules(load_opening(OPENING, CHAPTERS[: CHAPTERS.index(last) + 1]))
