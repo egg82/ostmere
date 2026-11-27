@@ -10,7 +10,7 @@ from ashfall_app import engine as e
 from ashfall_app.db.stored.manifests import stripped, whole, without
 from tests.shipped_ruleset import ShippedRuleset
 
-GOLDEN = Path(__file__).resolve().parents[1] / "saves" / "golden"
+GOLDEN = Path(__file__).resolve().parents[2] / "saves" / "golden"
 TEXTS = sorted(p for f in range(e.OLDEST_FORMAT, e.FORMAT + 1) for p in (GOLDEN / f"f{f}").glob("*.json"))
 
 

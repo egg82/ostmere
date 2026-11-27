@@ -8,7 +8,7 @@ import pytest
 
 from ashfall_app.db.stored.manifests import stripped, whole
 from ashfall_app.db.migrate import SCRIPTS, head, migrate
-from tests.db.test_save_lessons_migrate import ACCOUNT_COLUMNS, SAVE_COLUMNS, SESSION_COLUMNS, copy_rows
+from tests.db.stored.test_save_lessons_migrate import ACCOUNT_COLUMNS, SAVE_COLUMNS, SESSION_COLUMNS, copy_rows
 from tests.game_client import game_client
 
 
