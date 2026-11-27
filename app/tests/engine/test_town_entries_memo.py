@@ -1,11 +1,12 @@
 """mixruns.town_entries is kept across saves while every input of its build is as it was (mixruns._town_key): a save
 that differs in one of them gets a fresh result, and the same one the kept value."""
+from collections.abc import Callable
 from dataclasses import replace
 
 import pytest
 
 from ashfall_app.engine import (
-    QUANTITY_SCALE as Q, AfterTime, AtLeast, CardDef, CardId, CardShare, Flow, Join, LaneDef, LaneId, LaneState, Mix,
+    QUANTITY_SCALE as Q, AfterTime, AtLeast, CardDef, CardId, CardShare, Flow, Join, LaneDef, LaneId, Mix,
     MixId, Outcome, PacingCurve, Pause, Rules, Save, Segment, StoreDef, StoreId, StoreState, StoreValue, TriggerDef,
     TriggerId, Unlock, UnlockKind, advance, new_save, validate_rules,
 )
@@ -43,6 +44,10 @@ def lane(s: Save, which: LaneId, **fields: object) -> Save:
     return replace(s, lanes=tuple(replace(ls, **fields) if ls.lane == which else ls for ls in s.lanes))
 
 
+def identity(s: Save) -> Save:
+    return s
+
+
 def first_paused(s: Save) -> Save:
     return replace(s, pauses=(Pause(A3, Y, Q),))
 
@@ -56,22 +61,47 @@ def unjoined(s: Save) -> Save:
     return replace(s, unlocked=tuple(u for u in s.unlocked if u != Unlock(UnlockKind.JOINED, P3)))
 
 
-CHANGES = {
-    "the shares of the running mix": (lambda s: s, halved),
-    "a lane's tap held": (lambda s: stored(s, w=Q), lambda s: lane(s, P3, card=A3)),
-    "a person's own split": (lambda s: s, lambda s: lane(s, P1, own_split=True)),
-    "the unlock set": (lambda s: s, unjoined),
-    "a pause": (lambda s: s, first_paused),
-    "the store a pause is on": (first_paused, lambda s: replace(s, pauses=(Pause(A3, Z, Q),))),
-    "a require turning true": (lambda s: s, lambda s: stored(s, w=Q)),
-    "the spent stores, under a pause": (first_paused, lambda s: stored(first_paused(s), z=Q)),
+def ready(s: Save) -> Save:
+    """a3's require holds."""
+    return stored(s, w=Q)
+
+
+def busy(s: Save) -> Save:
+    return lane(ready(s), P3, card=A3)
+
+
+def own_split(s: Save) -> Save:
+    return lane(s, P1, own_split=True)
+
+
+def moved_pause(s: Save) -> Save:
+    return replace(s, pauses=(Pause(A3, Z, Q),))
+
+
+def fed(s: Save) -> Save:
+    """z holds something, so makey can run and y is no longer spent."""
+    return stored(s, z=Q)
+
+
+type Step = Callable[[Save], Save]
+CHANGES: dict[str, tuple[Step, Step]] = {
+    "the shares of the running mix": (identity, halved),
+    "a lane's tap held": (ready, busy),
+    "a person's own split": (identity, own_split),
+    "the unlock set": (identity, unjoined),
+    "a pause": (identity, first_paused),
+    "the store a pause is on": (first_paused, moved_pause),
+    "a require turning true": (identity, ready),
+    "the spent stores, under a pause": (first_paused, fed),
 }
+"""Each: how the save is primed, and the one change made to it."""
 
 
-def fresh(s: Save, r: Rules, monkeypatch: pytest.MonkeyPatch) -> object:
+def fresh(s: Save, r: Rules, monkeypatch: pytest.MonkeyPatch) -> tuple[object, object]:
     """town_entries of `s` built with nothing kept: a memo of its own, and a copy of the save no per-save memo knows."""
+    own: KeyedMemo[object] = KeyedMemo()
     with monkeypatch.context() as m:
-        m.setattr(mixruns, "_TOWN_BUILT", KeyedMemo())
+        m.setattr(mixruns, "_TOWN_BUILT", own)
         return mixruns.town_entries(replace(s), r), mixruns.mix_gains(replace(s), r)
 
 
