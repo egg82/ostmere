@@ -54,12 +54,12 @@ NAMING_AT: Spot = (STRANGER_IN[0] - 26, STRANGER_IN[1] + 6)
 BOWL_AT: Spot = (SEAT[0] + 22, SEAT[1] + 2)
 STRANGER_APART: Spot = (190, 300)
 HALL_DOOR: Spot = (700, 240)
-AT_BOARD: Spot = (396, 300)
-"""Beside the tally stump (dayeleven_made.BOARD_AT), on its right, facing it."""
+AT_BOARD: Spot = (352, 320)
+"""Before the tally stump (dayeleven_made.BOARD_AT), facing it."""
 NAMES_AT: Spot = (262, 292)
 AT_STONE: Spot = (STONE[0] + 22, STONE[1] - 4)
 """Kneeling at the camp stone from its far side, clear of whoever sits apart below it."""
-"""Standing on the fire's near side, facing the town round it."""
+"""Standing on the fire's near side, facing the town round it: night 28, after A40."""
 SINGING_AT: tuple[Spot, ...] = ((668, 240), (692, 246), (716, 240))
 HALL_GLOW: tuple[tuple[Spot, int], ...] = (((708, 205), 34), ((676, 176), 18), ((742, 176), 18))
 """Where the hall's door and windows are, and how far each one's light reaches."""
@@ -114,9 +114,9 @@ def people_layers(walls: Image.Image) -> list[Layer]:
               until="feature:bedesman_home"),
         Layer(id="figure_n13_outside_ring", img=person(N13, "right", STRANGER_APART), when="feature:bedesman_home"),
         Layer(id="figure_n23_at_hall_door", img=person(N23, "down", HALL_DOOR), when="feature:bedesman_home"),
-        Layer(id="figure_n23_at_board", img=person(N23, "left", AT_BOARD), when=w["board"]),
+        Layer(id="figure_n23_at_board", img=person(N23, "up", AT_BOARD), when=w["board"]),
         Layer(id="figure_n23_at_stone", img=person(N23, "left", AT_STONE, drop=9), when=w["hands"]),
-        Layer(id="figure_n23_says_the_names", img=person(N23, "up", NAMES_AT), when="project:sit_names", front=True),
+        Layer(id="figure_n23_says_the_names", img=person(N23, "up", NAMES_AT), when="project:sit_names&dark", front=True),
         Layer(id="figure_n5_at_wood_edge", img=person(WOMAN, "left", WOOD_EDGE), when=field),
         Layer(id="figure_n6_at_the_watch_fire", img=person(HUSBAND, "up", HEARTH_WATCH), when=watching),
         Layer(id="figure_n7_at_pot", img=person(BROTHER, "left", POT_RIGHT), when=picking),
@@ -139,7 +139,7 @@ STEP_ASIDE: dict[str, tuple[str, ...]] = {
     "figure_n7_by_fire": ("running:g_field_pick|mix:g_field_pick",),
     "figure_n5_at_hall_door_dark": ("running:g_field_forage|mix:g_field_forage",),
     "figure_n6_at_hall_door_dark": ("running:g_hearth_watch|mix:g_hearth_watch",),
-    "figure_n23_at_hall_door": (people_moments.WINDOWS["board"], people_moments.WINDOWS["hands"], "project:sit_names"),
+    "figure_n23_at_hall_door": (people_moments.WINDOWS["board"], people_moments.WINDOWS["hands"], "project:sit_names&dark"),
 }
 """Each by-the-fire pose, and each lodger seen at the hall's door, with the runs that take the person from it: it gives
 way to them (a person is drawn in one place)."""
