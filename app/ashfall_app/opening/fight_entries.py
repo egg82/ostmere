@@ -14,8 +14,10 @@ class SideEntry(Entry):
 
 
 class ThreatEntry(Entry):
-    """One entry of a roster: `base` before any trigger of the region's schedule raises it (engine ThreatDef)."""
+    """One entry of a roster: `base` before any trigger of the region's schedule raises it (engine ThreatDef). members:
+    2 or more marks a group, fought one after another, that a chain can reach (engine design/spells.txt, "SPELLS")."""
 
     id: str
     label_key: str
     base: int = Field(ge=1)
+    members: int = Field(default=1, ge=1)
