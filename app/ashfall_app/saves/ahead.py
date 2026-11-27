@@ -22,7 +22,7 @@ from sqlalchemy import Connection, Engine
 from .. import engine as e
 from .. import logs
 from ..clock import Clock
-from ..db import ahead as kept_rows
+from ..db.stored import ahead as kept_rows
 from ..db import saves as rows
 from ..db import unit
 from ..engine.codec import Json

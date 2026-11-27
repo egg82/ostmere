@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from ashfall_app import engine as e
-from ashfall_app.db.manifests import stripped, whole, without
+from ashfall_app.db.stored.manifests import stripped, whole, without
 from tests.shipped_ruleset import ShippedRuleset
 
 GOLDEN = Path(__file__).resolve().parents[1] / "saves" / "golden"

@@ -10,9 +10,9 @@ from sqlalchemy import Connection
 
 from .. import engine as e
 from .. import logs
-from ..db import journal as rows
+from ..db.stored import journal as rows
 from ..db.saves import SaveRecord
-from ..db.step import JournalDay
+from ..db.stored.step import JournalDay
 from .interface import Ruleset
 from .journal import DAY_S, MARK_KINDS, ComposedDay, Line, Note, compose_day
 from .journal_rules import JournalRules

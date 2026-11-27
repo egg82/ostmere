@@ -10,9 +10,9 @@ import pytest
 from sqlalchemy import Connection, Engine, insert
 
 from ashfall_app.db import accounts as a
-from ashfall_app.db import journal
+from ashfall_app.db.stored import journal
 from ashfall_app.db import saves as s
-from ashfall_app.db import step
+from ashfall_app.db.stored import step
 from ashfall_app.db.engine import open_database
 from ashfall_app.db.tables import save_journal
 from tests.db.test_records import DAY, T0, written

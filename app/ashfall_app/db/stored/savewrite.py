@@ -7,8 +7,8 @@ from typing import Any
 from sqlalchemy import Connection, Update, bindparam, case, func, update
 from sqlalchemy.dialects.postgresql import JSONB
 
-from .saves import LISTED, Listed, Written, as_listed, next_number
-from .tables import saves
+from ..saves import LISTED, Listed, Written, as_listed, next_number
+from ..tables import saves
 
 WRITING: Update = update(saves).where(saves.c.id == bindparam("w_save_id", type_=saves.c.id.type)).values(
     {c.name: bindparam(f"w_{c.name}", type_=c.type) for c in (

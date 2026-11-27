@@ -12,7 +12,7 @@ from sqlalchemy import (
     CTE, ColumnElement, Connection, Label, Row, ScalarSelect, and_, delete, func, insert, or_, select, update,
 )
 
-from .manifests import held_for, whole
+from .stored.manifests import held_for, whole
 from .tables import save_ahead, save_decisions, save_lines, save_snapshots, saves
 
 

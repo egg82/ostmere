@@ -24,11 +24,11 @@ from .. import engine as e
 from .. import logs
 from ..accounts import limits
 from ..clock import Clock
-from ..db import journal as journal_rows
+from ..db.stored import journal as journal_rows
 from ..db import reminders as reminder_rows
 from ..db import saves as rows
 from ..db import unit
-from ..db.journal import Seen
+from ..db.stored.journal import Seen
 from . import ahead, journal_write, mixbest, write
 from . import games as held
 from .games import info

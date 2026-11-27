@@ -11,7 +11,7 @@ from sqlalchemy import Engine, insert, select, text, update
 from ashfall_app import engine as e
 from ashfall_app import logs
 from ashfall_app.db import saves as rows
-from ashfall_app.db.manifests import stripped
+from ashfall_app.db.stored.manifests import stripped
 from ashfall_app.db.tables import save_manifests, save_snapshots, saves
 from ashfall_app.saves import __main__ as cli
 from ashfall_app.saves.__main__ import main

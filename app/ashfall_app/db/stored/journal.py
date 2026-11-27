@@ -10,8 +10,8 @@ from typing import Any
 from sqlalchemy import ARRAY, CTE, Connection, Integer, Label, Text, bindparam, func, literal_column, select
 from sqlalchemy.dialects.postgresql import aggregate_order_by
 
-from .saves import LineRecord, SaveRecord, save_and
-from .tables import save_journal, save_lines, saves
+from ..saves import LineRecord, SaveRecord, save_and
+from ..tables import save_journal, save_lines, saves
 
 DAY_S = 86400
 

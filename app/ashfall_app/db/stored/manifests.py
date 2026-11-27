@@ -12,7 +12,7 @@ from typing import Any
 from sqlalchemy import ColumnElement, Connection, ScalarSelect, not_, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
-from .tables import save_manifests
+from ..tables import save_manifests
 
 _HEAD = re.compile(r'\{"format":[0-9]+,')
 _KEY = '"manifest":'
