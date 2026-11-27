@@ -3,7 +3,7 @@
 Spoilers: under `content/`, never shown to the owner. Inputs: `day-one-lines-brief.md`, `rubric.md`, the three blind drafts
 beside this file (`w1`, `w2`, `w3`, 39 keys each, matching the 39 `l_*` keys in `day_one.toml`; `l_hungry` is shipped
 and not a writer key). None of the drafts carries the alternates the brief asks for on H lines, so each key had three
-candidates. Picks are written into `app/ashfall_app/opening/day_one.toml`; the voice pass reads them next.
+candidates. Picks are written into `app/ashfall_app/rules/days/day_one.toml`; the voice pass reads them next.
 
 **Result:** 39 keys filled, none rewrite-needed. Picks: w1 19, w2 12, w3 8. Two edits (l_smoke_1, l_b3_4), below.
 

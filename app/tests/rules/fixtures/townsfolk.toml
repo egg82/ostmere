@@ -1,7 +1,7 @@
 # A test chapter, merged after the shipped ones: a ruled lane and its cards, with a later label, and the trigger
 # that brings them and installs the lane's always rule; an offer whose answers set a one-off on that lane or queue
 # one on the hands, and a trigger gated on its being answered. Not story: the
-# ids and words are the tests' own (tests/opening/test_townsfolk_loader.py).
+# ids and words are the tests' own (tests/rules/loaders/test_townsfolk_loader.py).
 version = 1
 end_feature = "t_after"
 

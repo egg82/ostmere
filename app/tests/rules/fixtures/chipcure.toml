@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_chip_card_ruled_lane.py): a ruled lane whose one
+# A test chapter, merged onto the opening alone (tests/rules/expand/test_chip_card_ruled_lane.py): a ruled lane whose one
 # card cures a chip, and the chip's order card tapping it. Not story: the ids and words are the tests' own.
 version = 1
 

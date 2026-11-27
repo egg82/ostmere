@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_chip_card_high.py): a chip shown while a store is
+# A test chapter, merged onto the opening alone (tests/rules/expand/test_chip_card_high.py): a chip shown while a store is
 # high, cured by a ruled lane's card that takes the store, and the chip's at_least order card tapping it. Not story: the
 # ids and words are the tests' own.
 version = 1

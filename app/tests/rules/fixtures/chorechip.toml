@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_chore_chip_loader.py): a season's turn opens a
+# A test chapter, merged onto the opening alone (tests/rules/expand/test_chore_chip_loader.py): a season's turn opens a
 # standing action that piles up a film only it makes; a chip that costs a standing action's making shows while the film is
 # high, and the trigger at its first showing opens its cures, a hands card and a helper's twin, with no order card for
 # the chip (a chore whose rule is the player's to write). Not story: the ids and words are the tests' own. The planted

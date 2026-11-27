@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_offer_unqueued.py): an offer whose first answer
+# A test chapter, merged onto the opening alone (tests/rules/offers/test_offer_unqueued.py): an offer whose first answer
 # queues a one-off and unlocks it, and whose second unlocks the same one-off without queuing it; the one-off's finish
 # unlocks a feature, which a later trigger reads in place of the answers. Not story: the ids and words are the tests' own.
 version = 1

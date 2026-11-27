@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_journal_subjects.py): one journal subject of each
+# A test chapter, merged onto the opening alone (tests/rules/checks/test_journal_subjects.py): one journal subject of each
 # kind, fed by a trigger, a card, a person's joining and leaving, and the mentions of people coming. Not story: the ids
 # and words are the tests' own. The planted variants are edits of this file.
 version = 1

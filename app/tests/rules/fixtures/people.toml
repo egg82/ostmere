@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_people_loader.py): one person told by a line joins
+# A test chapter, merged onto the opening alone (tests/rules/loaders/test_people_loader.py): one person told by a line joins
 # with a story line of their own; two told by a mention join together with none, and later one of them leaves. Not
 # story: the ids and words are the tests' own. The planted variants are edits of this file.
 version = 1

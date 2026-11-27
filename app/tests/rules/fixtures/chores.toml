@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_retired_chores_loader.py): a season's turn opens a
+# A test chapter, merged onto the opening alone (tests/rules/loaders/test_retired_chores_loader.py): a season's turn opens a
 # standing action that piles up a heap only it makes, a chip shows while the heap is high and a hands card clears it;
 # the next turn retires the clearing card's orders. Not story: the ids and words are the tests' own. The planted
 # variants are edits of this file.

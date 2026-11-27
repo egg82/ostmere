@@ -1,7 +1,7 @@
 # A test chapter, merged after the shipped ones: a tally store for arrivals, three people, and the gates on it. The
 # first arrival brings no join (a trigger seeds the tally from its feature, so a save already past it gets the same
 # trigger at rebase); the second and third each join and add one. Not story: the ids and words are the tests' own
-# (tests/opening/test_arrivals_tally.py).
+# (tests/rules/expand/test_arrivals_tally.py).
 version = 1
 end_feature = "t_two_here"
 

@@ -580,7 +580,7 @@ l_fight_crows_lost_6 = "fight"
 [text]
 # ---------- lines: [day two: line to write] ----------
 # Every key below is a placeholder until the simulator's B7 routes give each line its states and the writers' pick
-# lands (content/team/days-four-to-seven-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any
+# lands (content/team/days-four-to-seven-lines-brief.md). tests/rules/content/test_day_two.py keeps this text out of any
 # shipping release: replace each value, never the marker's spelling.
 c_bank_fire_6 = "Tend the fire"
 l_b7_1 = "low stars, out on the ash. some of them blink."

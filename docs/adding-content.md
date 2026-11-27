@@ -1,6 +1,6 @@
 # Adding content: the checklist
 
-Read this before changing anything in a chapter's data (a day toml in `app/ashfall_app/opening/`, `content/beats.yaml`,
+Read this before changing anything in a chapter's data (a day toml in `app/ashfall_app/rules/`, `content/beats.yaml`,
 a store, card, trigger, offer, person, aim, line or scene state). Each item below is something a past change missed and
 a later PR had to fix, most-missed first. Where a gate catches it, the gate is named. The rest are on you to check, so
 check them.
@@ -34,12 +34,12 @@ check them.
 5. **A promise is broken only by a choice, never by a clock** (`docs/decisions/principles.md`). Not gated beyond
    "something reads it".
 6. **The next step is on screen with how far along it is.** Whatever holds the next beat, including a hidden store a
-   trigger feeding the beat waits on, shows as the goal with its value (`app/tests/opening/test_goal_defs.py`). An aim
+   trigger feeding the beat waits on, shows as the goal with its value (`app/tests/rules/content/test_goal_defs.py`). An aim
    whose step is done gives way.
 7. **Groups and twins.** A town card on a group is on every member with their own list; a trip's town twin adds the
    same to a shared tally (`check_group_abilities`, `check_player_only`). Town view rows and crew sizes are a readout
    (`app/tests/readouts/town.txt`): read it. Moving people: rebase a copy of the owner's save under the branch and
-   check the hand-over fires once and nothing goes negative (`app/tests/opening/test_hand_over_rebase.py`).
+   check the hand-over fires once and nothing goes negative (`app/tests/rules/content/test_hand_over_rebase.py`).
 8. **Every tapped card has its own upside text.** A missing `upside_key` is gated; two cards sharing one is not.
 9. **Nothing is named before it exists.** A line, chip or offer must not mention a thing the player can't have yet on
    some route (stores and actions are gated by `unlock_order_checks`; text is not). A `{<role>}` slot is gated:
@@ -50,14 +50,14 @@ check them.
 
 ## Mechanical steps
 
-- A loader pass that expands an authored field goes in `app/ashfall_app/opening/expansions.py::with_expansions`, so
-  `app/tests/opening/edited.py` sees the same content (`app/tests/opening/test_edited_merge.py`).
+- A loader pass that expands an authored field goes in `app/ashfall_app/rules/expand/expansions.py::with_expansions`, so
+  `app/tests/rules/play/edited.py` sees the same content (`app/tests/rules/content/test_edited_merge.py`).
 - Regenerate `app/client/fixtures/real_chip_cards.json` when a card, chip or store changes; its test
   (`app/tests/test_rule_chip_cases_wire.py`) runs in CI, not in `gates.sh`, so run it.
-- A new chapter goes in `CHAPTERS` (or `IN_WRITING`) in `opening/schema.py`, with its `content/beats.yaml` ids and
+- A new chapter goes in `CHAPTERS` (or `IN_WRITING`) in `rules/schema.py`, with its `content/beats.yaml` ids and
   `content/decisions.jsonl` rows.
 - A new working is a `[[workings]]` row in its chapter (its axes; a declared cost must equal the computed one); a new
-  kind pair or link is a row in `app/ashfall_app/opening/working_rules.toml`, never a hand-priced card.
+  kind pair or link is a row in `app/ashfall_app/rules/working_rules.toml`, never a hand-priced card.
 - A new gate goes in `app/tools/gates.sh` **and** the "Structural gates" table in `docs/engineering.md` (via
   `doc-delta.txt`).
 - A held-list entry that gains its field leaves the list in the same change; a count is never raised.

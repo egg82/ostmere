@@ -441,7 +441,7 @@ inputs = [{ store = "rime", items = 12 }, { store = "pelt", items = 2 }]
 outcome = { stores = [{ store = "beds_covered", items = 1 }] }
 
 # Every cover by anyone counts toward the fifth (day_sixteen.toml's tear): a tally the cover cards add to, read by no
-# card, so the town's covers spend the rime toward it rather than past it (opening/finite_checks.py).
+# card, so the town's covers spend the rime toward it rather than past it (rules/checks/world/finite_checks.py).
 [[stores]]
 id = "beds_covered"
 label_key = "store_beds_covered"

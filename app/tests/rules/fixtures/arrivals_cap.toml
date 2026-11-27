@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_arrivals_cap.py): an arrivals count on a base cap of
+# A test chapter, merged onto the opening alone (tests/rules/expand/test_arrivals_cap.py): an arrivals count on a base cap of
 # three, five arrivals at fixed times, and a turn between the third and the fourth whose outcome raises that cap with a
 # sourced entry (x2). A gate on the count asks for more than the base cap. Not story: the ids and words are the tests'
 # own.

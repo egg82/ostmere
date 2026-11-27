@@ -3,7 +3,7 @@
 version = 1
 
 # A phase tops out at level 22: the lowest level whose span (54,980 items of XP) a full share of the fastest card
-# (900 an hour) cannot cross inside the ordinary absence (opening/prestige.check_phase_spans).
+# (900 an hour) cannot cross inside the ordinary absence (rules/prestige.check_phase_spans).
 [prestige]
 top_level = 22
 carry_window_s = 172800

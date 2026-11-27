@@ -39,7 +39,7 @@ Notes:
 # Day four's lines: the writers' brief
 
 Spoilers: under `content/`, never shown to the owner. The spec is `days-four-to-seven.md`; the data is
-`app/ashfall_app/opening/day_four.toml`, where every key below reads "[day two: line to write]" (the marker's spelling is
+`app/ashfall_app/rules/days/day_four.toml`, where every key below reads "[day two: line to write]" (the marker's spelling is
 the data file's; ignore it). The brief's design states are an expectation; the generated states below replace them.
 
 ## How the lines get written
@@ -109,7 +109,7 @@ From day one's and day three's voice passes and the lead's picks. Each cost a li
   woman" or "the old man". Write the slot exactly (`{n2}`, no spaces, no other braces); never invent a name; Lucy stays
   the one name written out. The line-length limit counts a slot as the name it shows (about six letters), and a line
   holds no digit.
-- **Hard limit: no line is over 75 characters** (`app/tests/opening/test_line_length.py`, applied to every `l_` line;
+- **Hard limit: no line is over 75 characters** (`app/tests/rules/content/test_line_length.py`, applied to every `l_` line;
   a line over fails CI and goes back). The set's median should stay at 45 or under. Count characters before sending;
   most lines should be well under.
 - **Voice notes (day one's pass):** a line that echoes its own level label or another line shown in the same instant is

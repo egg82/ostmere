@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_leaves_loader.py): two people join the town, and
+# A test chapter, merged onto the opening alone (tests/rules/loaders/test_leaves_loader.py): two people join the town, and
 # later the first leaves, stopping a standing action that came with them. Not story: the ids and words are the tests'
 # own. The planted variants are edits of this file.
 version = 1

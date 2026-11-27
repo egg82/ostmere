@@ -116,7 +116,7 @@ CHOICES (entries held while a card runs)
   field, no manifest change (the manifest's cards carry id, work_s, lane and cap), FORMAT unchanged.
 - Rebase: nothing new; no save holds a held entry, so step 4 has nothing to drop, and a side's id is read from the
   rules.
-- Content (the loader, app/ashfall_app/opening): CardEntry gains `while_running: list[WhileRunningEntry] = []`,
+- Content (the loader, app/ashfall_app/rules): CardEntry gains `while_running: list[WhileRunningEntry] = []`,
   WhileRunningEntry {side: str, amount_bp: int, at least 1 by the schema} in entries.py beside CardEntry (not in
   fight_entries.py beside SideEntry: fight_entries imports Entry from entries and CardEntry names this type, so that
   placement is an import cycle);

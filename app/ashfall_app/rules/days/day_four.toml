@@ -398,7 +398,7 @@ l_find_cook_6 = "find"
 [text]
 # ---------- lines: [day two: line to write] ----------
 # Every key below is a placeholder until the simulator's day-four routes give each line its states and the writers'
-# pick lands (content/team/days-four-to-seven-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any
+# pick lands (content/team/days-four-to-seven-lines-brief.md). tests/rules/content/test_day_two.py keeps this text out of any
 # shipping release: replace each value, never the marker's spelling.
 store_dawn_5 = "dawn"
 action_dawn_5 = "Dawn"

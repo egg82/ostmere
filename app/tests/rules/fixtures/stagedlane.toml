@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_staged_lane_order.py): a ruled lane whose staged
+# A test chapter, merged onto the opening alone (tests/rules/expand/test_staged_lane_order.py): a ruled lane whose staged
 # three-stage card takes a store, the ruled lane's next card, and a second ruled lane whose card does not take the
 # store. Not story: the ids and words are the tests' own.
 version = 1

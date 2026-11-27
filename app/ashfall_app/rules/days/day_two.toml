@@ -1,6 +1,6 @@
 # Day two: from B3 through the evening, the second night and story day 3 to B4, as data merged after day_one.toml
 # (schema.Chapter, chapters.merge). Story spoilers: never shown to the owner. Spec: content/team/day-two.md.
-# In schema.CHAPTERS: it ships. Its lines are checked written by tests/opening/test_day_two.py.
+# In schema.CHAPTERS: it ships. Its lines are checked written by tests/rules/content/test_day_two.py.
 # Its numbers are set by the pacing simulator's day-two routes (tests/daytwo); its lines were written to the states
 # those routes give (content/team/day-two-lines-brief.md).
 version = 1

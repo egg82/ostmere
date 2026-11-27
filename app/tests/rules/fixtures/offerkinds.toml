@@ -1,6 +1,6 @@
 # A test chapter, merged after the shipped ones: two kinds of offer. k_ask's answers start a one-off; k_bank's answers
 # start nothing and each installs a modifier on one card's rate, the answer its source. Not story: the ids and words
-# are the tests' own (tests/opening/test_offer_kinds.py).
+# are the tests' own (tests/rules/offers/test_offer_kinds.py).
 version = 1
 
 [[cards]]

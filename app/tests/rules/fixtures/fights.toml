@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_fight_loader.py): a side, a threat, a fight card
+# A test chapter, merged onto the opening alone (tests/rules/loaders/test_fight_loader.py): a side, a threat, a fight card
 # with a cure, a standing fight with its tallies, and the ramp as a trigger on a clock store. Not story: the ids and
 # words are the tests' own. The planted variants for the content checks are edits of this file (fight_plants.py).
 version = 1

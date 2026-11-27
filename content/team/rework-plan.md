@@ -184,7 +184,7 @@ the first page after the torn ones "isn't quite blank".
 
 ## 3. Per-beat changes
 
-"Shipped" means lines in `app/ashfall_app/opening/*.toml`. Only B1–B3, A1–A14, H1–H7 and P0 have shipped. **No
+"Shipped" means lines in `app/ashfall_app/rules/*.toml`. Only B1–B3, A1–A14, H1–H7 and P0 have shipped. **No
 shipped line needs rewriting.** Field changes are listed only where `beats.yaml` changes. C-promise-17 is new (§4).
 
 | Beat | Old role | New role | Plants / pays | Shipped |
@@ -401,7 +401,7 @@ O-price, S-seam and SB-face; the Essart rename; the seal rule, the written names
 
 **`content/open-questions.md`**: the owner's answer on the ending's price is recorded; no further change.
 
-**`content/team/opening-v2.md`, `day-one.md`, `app/ashfall_app/opening/*.toml`**: no change. **`borrowed-beats.jsonl`**
+**`content/team/opening-v2.md`, `day-one.md`, `app/ashfall_app/rules/*.toml`**: no change. **`borrowed-beats.jsonl`**
 and **`ending-check.jsonl`**: leave as records.
 
 ---

@@ -1,4 +1,4 @@
-# A test chapter, merged after the shipped chapters (tests/opening/test_second_skill.py): a second skill that arrives with a
+# A test chapter, merged after the shipped chapters (tests/rules/pacing/test_second_skill.py): a second skill that arrives with a
 # trigger's outcome together with its first card, a cure for a chip the first cure's card also answers, and an order
 # card for each beside the other. The skill's row (its levels) and the triggers paying them are added by the test, one per level to the curve's top.
 # Not story: the ids and words are the tests' own.

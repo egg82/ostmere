@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_group_arrivals.py): an offer of a kind with two roles
+# A test chapter, merged onto the opening alone (tests/rules/expand/test_group_arrivals.py): an offer of a kind with two roles
 # whose either answer joins four people, told by a mention, as members of one pooled lane, each answer handing the group
 # its own card (its share). A second pooled lane with a card is there for the planted variants. Not story: the ids and
 # words are the tests' own.

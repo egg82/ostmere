@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_season_turns.py): two clock turns ten hours and
+# A test chapter, merged onto the opening alone (tests/rules/expand/test_season_turns.py): two clock turns ten hours and
 # four hours apart; the first fills a pool and opens a standing action drawing it and a card taking another, the
 # second is the next turn. Not story: the ids and words are the tests' own. The planted variants are edits of this file.
 version = 1

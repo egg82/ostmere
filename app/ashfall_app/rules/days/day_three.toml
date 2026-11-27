@@ -1,7 +1,7 @@
 # Day three: from B4 through story day 3's evening, the third night and story day 4 to B5, as data merged after
 # day_two.toml (schema.Chapter, chapters.merge). Story spoilers: never shown to the owner. Spec: content/team/day-three.md;
 # numbers: content/team/day-three-numbers.md. In schema.CHAPTERS: it ships. Its lines are checked written by
-# tests/opening/test_day_two.py.
+# tests/rules/content/test_day_two.py.
 version = 1
 end_feature = "warm_ground"
 
@@ -1245,7 +1245,7 @@ l_kept_o_stay_his = "the bay he built himself stands square, and the camp sleeps
 e_warm_ground_title = "warm ground"
 # ---------- lines: [day two: line to write] ----------
 # Every key below is a placeholder until the simulator's day-three routes give each line its states and the writers'
-# pick lands (content/team/day-three-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any shipping
+# pick lands (content/team/day-three-lines-brief.md). tests/rules/content/test_day_two.py keeps this text out of any shipping
 # release: replace each value, never the marker's spelling.
 store_arrivals = "arrivals"
 store_own_hands = "built by hand"

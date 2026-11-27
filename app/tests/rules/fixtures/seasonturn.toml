@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_season_second_turn.py): a season's first turn opens a
+# A test chapter, merged onto the opening alone (tests/rules/expand/test_season_second_turn.py): a season's first turn opens a
 # standing action that piles up a heap only it makes (a chip shows while it is high) and fills a gift pool; the next
 # turn retires the clearing card's orders and the chip's order card is offered until then; the third turn, the season's
 # second, refills a new pool, opens its standing action and a one-item pool a standing action drains, which empties the

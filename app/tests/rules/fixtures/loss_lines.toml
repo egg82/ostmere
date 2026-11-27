@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_loss_lines_loader.py): a fight card that tells its
+# A test chapter, merged onto the opening alone (tests/rules/loaders/test_loss_lines_loader.py): a fight card that tells its
 # losses from pools of its own (api/contract/loss-lines.txt, "LOSS LINES"), opened only once a feature is, beside a plain fight
 # card and a standing fight. Not story: the ids and words are the tests' own.
 version = 1

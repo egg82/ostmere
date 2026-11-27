@@ -675,7 +675,7 @@ l_echo_o_fed_pot = "the pot stays on the fire, and the stew is thick for it."
 l_echo_o_deep_pace = "{n2} has gone back to reset two posts on the low side."
 # ---------- lines: [day two: line to write] ----------
 # Every key below is a placeholder until the simulator's day-nine routes give each line its states and the writers'
-# pick lands (content/team/week-two-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any shipping
+# pick lands (content/team/week-two-lines-brief.md). tests/rules/content/test_day_two.py keeps this text out of any shipping
 # release: replace each value, never the marker's spelling.
 store_b9_clock = "clock"
 feature_t_pack_step = "Pack's season"

@@ -77,7 +77,7 @@ unless that tab is open, leaves a quiet dot on its label until the tab is next t
 
 A player who put rest in their own mix is never tired, so never meets the strip's rest entry, and that costs no lesson:
 looked at, and fine. On every scripted route the ledger's dry-wood offer shows about two minutes after the first mix,
-before any rule and minutes before the end, so the rule's lesson starts there (`tests/opening/test_first_rule_offer.py`
+before any rule and minutes before the end, so the rule's lesson starts there (`tests/rules/offers/test_first_rule_offer.py`
 holds it); the rest entry is the rule lesson's second door, for a player who rests by hand. Further mixes and rules are the player's to write; a quiet dot marks the card, chip or line one could answer.
 
 Fits into: the offers it replaces for one first time (the first-mix offer, `ui/story/chipoffer.ts`, the ledger's inline

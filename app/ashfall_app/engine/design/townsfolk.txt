@@ -154,7 +154,7 @@ CHOICES (townsfolk, installed rules, offers)
   named card that is not the cure (cure_reading.cures_chip) of a chip whose store only a season's standing makes, a
   season's standing being a standing action some season's turn unlocks, and "only" meaning every card and standing
   action whose makes hold that store is one: "trigger {id}: retires the orders on {card}, which cures no chip whose
-  store only a season's standing makes" (opening/retire_checks.py). The cure check reads the built rules, so it is a content
+  store only a season's standing makes" (rules/checks/people/retire_checks.py). The cure check reads the built rules, so it is a content
   check: it runs once, on the last state, with the others' errors naming the chapter.
 - Validation (InvalidRulesError): a RuleInstall's card is a declared card on a ruled lane; Outcome.orders is empty
   outside a trigger's and an answer's outcome; Outcome.queues is empty outside an answer's outcome, each card a
@@ -247,7 +247,7 @@ CHOICES (townsfolk, installed rules, offers)
   rebase instant, forward only. rebase_logged's Step carries that instant's rule changes beside its lines (rulelog
   over the step-5 save and the result, each at the save's time), so the server's rule runs list an installed rule
   from the rebase; rebase returns only the save.
-- Content (the loader, app/ashfall_app/opening): LaneEntry gains `ruled` (default false) and `later_labels`, a list
+- Content (the loader, app/ashfall_app/rules): LaneEntry gains `ruled` (default false) and `later_labels`, a list
   of {after: UnlockEntry, label_key} (the row's label once `after` is unlocked; the last held one wins, as aims). A
   card on a ruled lane has no skill and no XP (a loader check: townsfolk do not level, docs/decisions.md, "You and the
   town") and gets the camp's make flow as hands cards do (CampEntry). OutcomeEntry gains `orders`, a list of
@@ -392,7 +392,7 @@ REJECTED, AND WHY (townsfolk, installed rules, offers)
 KNOWN GAPS (townsfolk, installed rules, offers)
 - Offer expiry ("on offer for a stretch and then go", docs/decisions.md, "The town"): would be a fourth only-growing
   fact (an unlock of the offer having gone) and an event at its time; the content's expiry_key, which says so to the
-  player, is refused until then (opening/ask_checks.py). Decided by: the first offer that expires.
+  player, is refused until then (rules/checks/cards/ask_checks.py). Decided by: the first offer that expires.
 - Claude-proposed offers (docs/systems.md, Offers and quests) are authored OfferDefs today; a proposed one needs its
   own id space in the manifest. Decided by: the first emergent quest.
 - A queue entry tapping a retired chore's cure is left in the queue (retire_orders touches orders only); if the cure

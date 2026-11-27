@@ -1,6 +1,6 @@
 # A test chapter, merged after the shipped ones: two offers of one kind, shown at different times, each with the kind's
 # two roles (the second lists its answers the other way round). Not story: the ids and words are the tests' own
-# (tests/opening/test_offer_kinds_loader.py).
+# (tests/rules/offers/test_offer_kinds_loader.py).
 version = 1
 
 [[offers]]

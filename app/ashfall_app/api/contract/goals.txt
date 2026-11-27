@@ -1,5 +1,5 @@
 GOALS (docs/decisions.md, "Progress is stated, never hinted")
-  view.goals is what the open story beats wait on (app/ashfall_app/opening/goals.py: a beat unlocks something, brings
+  view.goals is what the open story beats wait on (app/ashfall_app/rules/goals.py: a beat unlocks something, brings
   or takes someone, or tells lines with no find on them): each store (store, target, value), card (card, target; 0 for
   the card running), skill level (skill, target) and card fight (kind fight: card, its lost tally as store and value,
   target lost fights) an open beat waits on that is in play, a require on an unlock

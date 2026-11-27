@@ -828,7 +828,7 @@ e_cellar_title = "the cellar"
 e_bear_title = "bear"
 # ---------- lines: [day two: line to write] ----------
 # Every key below is a placeholder until the simulator's day-twelve routes give each line its states and the writers'
-# pick lands (content/team/week-two-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any shipping
+# pick lands (content/team/week-two-lines-brief.md). tests/rules/content/test_day_two.py keeps this text out of any shipping
 # release: replace each value, never the marker's spelling.
 l_dig_open = "the larder is full. the rest of the food needs a storage pit."
 store_dig_clock = "clock"

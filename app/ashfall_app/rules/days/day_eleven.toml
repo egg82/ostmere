@@ -888,7 +888,7 @@ l_pattern_by_hand = "you have built it with your own hands more than once. every
 l_pattern_left_to_them = "you have left it to them more than once. your hands are freer, and the beds are tended a little less well."
 # ---------- lines: [day two: line to write] ----------
 # Every key below is a placeholder until the simulator's day-eleven routes give each line its states and the writers'
-# pick lands (content/team/week-two-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any shipping
+# pick lands (content/team/week-two-lines-brief.md). tests/rules/content/test_day_two.py keeps this text out of any shipping
 # release: replace each value, never the marker's spelling.
 store_stranger_clock = "clock"
 action_stranger_clock = "Clock"

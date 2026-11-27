@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_journal_loader.py): the fights fixture's side, threat,
+# A test chapter, merged onto the opening alone (tests/rules/loaders/test_journal_loader.py): the fights fixture's side, threat,
 # fight card and standing fight, with the journal on top: the book, two entries and three notes. Not story: the ids and
 # words are the tests' own. j_page_a runs both fights; its second note's gate holds before its first note's, and it
 # is pencil in an ink page. j_page_b is a pencil page with no runner. The planted variants are edits of this file.

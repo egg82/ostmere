@@ -1,4 +1,4 @@
-# A test chapter, merged after the shipped chapters (tests/opening/test_trips.py): a trip (an uncapped hands card taking a
+# A test chapter, merged after the shipped chapters (tests/rules/pacing/test_trips.py): a trip (an uncapped hands card taking a
 # pool and a material it makes at its cap), its town twin on a ruled lane, a count both add to (a tally store), finds on
 # that count, and a skill whose first card is the trip. The skill's row and the triggers paying its levels are added by
 # the test. Not story: the ids and words are the tests' own.

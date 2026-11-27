@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/opening/test_places.py): places on the world map. A named one revealed
+# A test chapter, merged onto the opening alone (tests/rules/loaders/test_places.py): places on the world map. A named one revealed
 # by a trigger's feature, an unnamed one revealed by a card, one named only after a later feature, and two revealed together
 # by one feature, one of them sitting on the first place's cell. Not story: the ids and words are the tests'
 # own. The planted variants are edits of this file.

@@ -135,7 +135,7 @@ CHOICES (the town's mix)
   an ordinary at_least on a store; the engine needs nothing new. A trigger on the first arrival's feature adds 1
   (so a save past that arrival gets 1 at rebase, as any new trigger already true fires), and each joining outcome
   adds one per join to a tally store, except a join marked `counted` (the loader's JoinEntry only), whose person a
-  tally counted on arrival (the first arrival's). The loader (opening/tally_checks.py) refuses a card or standing
+  tally counted on arrival (the first arrival's). The loader (rules/checks/world/tally_checks.py) refuses a card or standing
   action that takes a tally store as a cost or an input, and a joining outcome whose tally additions differ from its
   joins not marked counted.
 

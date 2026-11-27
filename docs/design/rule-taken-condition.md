@@ -93,8 +93,8 @@ rule. A rule the player sets and later removes has still landed the line, since 
 | `app/ashfall_app/engine/rules_check.py`, `checks.py` | known ruled lane, placement, verb refusal | ~15 |
 | `app/ashfall_app/engine/renaming.py`, `app/ashfall_app/api/convert.py` | unreachable arms the exhaustive matches need | ~4 |
 | `app/ashfall_app/engine/design/` | a "Lane rules" entry, invariants, rejected | ~20 |
-| `app/ashfall_app/opening/entries.py`, `refs.py`, `convert.py` | `lane_rules` kind and checks | ~20 |
-| `app/ashfall_app/opening/day_two.toml` | `t_her_rule` | 4 |
+| `app/ashfall_app/rules/entries/entries.py`, `refs.py`, `convert.py` | `lane_rules` kind and checks | ~20 |
+| `app/ashfall_app/rules/days/day_two.toml` | `t_her_rule` | 4 |
 | tests (engine contract, loader) | the statements above | ~150 |
 
 That is about 85 lines of code and docs plus tests, size **S**.

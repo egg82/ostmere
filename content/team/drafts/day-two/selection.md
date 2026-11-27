@@ -2,7 +2,7 @@
 
 Spoilers: under `content/`, never shown to the owner. Inputs: `day-two-lines-brief.md`, `rubric.md`, the three blind drafts
 beside this file after one revision each (`w1`, `w2`, `w3`: 44 keys each, plus an alternate for each H key), and the
-critic's scores of the first drafts (kept outside the repo). Picks are written into `app/ashfall_app/opening/day_two.toml`;
+critic's scores of the first drafts (kept outside the repo). Picks are written into `app/ashfall_app/rules/days/day_two.toml`;
 the voice pass reads them next.
 
 Code checks on the picks: median 43.5 characters, p90 58 (limits 45 / 75); no must-not hit; the three-word runs left

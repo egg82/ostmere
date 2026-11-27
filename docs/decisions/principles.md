@@ -104,7 +104,7 @@ as what is next, not as a store like any other. A wait on a card fight's lost ta
 fight's card and the count so far, and the card carries the story mark; the tally is never drawn as a store. A wait on the clock alone shows its countdown. A wait on a store the content marks `stated` shows its count beside the countdown on the wait line. A card shows every
 requirement that can refuse its tap before the tap: a store as have/need, a level or a step as its row, a night or
 other part of the day as when it opens ("Opens after dark"), any other clock as its countdown; a card the content
-can show with a requirement its face cannot draw fails the build (`app/tests/opening/test_requires_shown.py`, whose
+can show with a requirement its face cannot draw fails the build (`app/tests/rules/cards/test_requires_shown.py`, whose
 held list only shrinks). The same holds for rules: a subject the player can see is one a rule can watch, in a form
 that works for it (a task that repeats by its running, not by a count it soon passes for good).
 **Progress uses mechanics native to the genre and fits the game's type and story**: a milestone is a build,

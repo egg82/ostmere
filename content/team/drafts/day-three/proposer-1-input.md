@@ -15,7 +15,7 @@ A lens is a way into the line, not a topic; a line that cannot take it plainly i
 # Day three's lines: the writers' brief
 
 Spoilers: under `content/`, never shown to the owner. The spec is `day-three.md` (the beats, the side layer, the canon ids);
-the data will be `app/ashfall_app/opening/day_three.toml`, where every key below reads "[day three: line to write]". The
+the data will be `app/ashfall_app/rules/days/day_three.toml`, where every key below reads "[day three: line to write]". The
 states below are the design's expectation. **Before the writers start**, regenerate them with the day-three report's
 `--lines` (`docs/design/day-three-plan.md`, item 6) and replace this file's "States" notes with the generated lists;
 a line written against the expectation alone is a draft.
