@@ -51,7 +51,7 @@ AT_WORK: dict[str, Work] = {
 }
 """Each person `by_day` sends to a card's site, by lane."""
 
-HELD_UNDECIDED: frozenset[str] = frozenset({"n11", "n13", "n23"})
+HELD_UNDECIDED: frozenset[str] = frozenset()
 """Person lanes with no `by_day` yet: only shrinks (the check fails on a lane that gained one, and on one that has none and is
 not here)."""
 

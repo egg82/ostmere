@@ -622,6 +622,7 @@ joins = [{ lane = "n23", mix = "town:camp", card = "n23_stakes", own_split = tru
 [[lanes]]
 id = "n23"
 lodging = { elsewhere = "no bed is named for the bedesman, who goes from door to door; stands at the hall door" }
+by_day = { off_scene = "goes from door to door, which no card's site shows; the scene draws one fixed place for them already" }
 label_key = "lane_n23"
 ruled = true
 told = "line"

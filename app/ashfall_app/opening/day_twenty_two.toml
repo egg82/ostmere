@@ -562,6 +562,7 @@ joins = [{ lane = "n13", mix = "town:camp", card = "n13_forage", own_split = tru
 [[lanes]]
 id = "n13"
 lodging = { elsewhere = "sleeps by the fire outside the hall, having declined a place in it (C-cast-33)" }
+by_day = { off_scene = "keeps apart from the camp's work, and none of their cards has a place of its own in the scene; the scene draws them apart already" }
 label_key = "lane_n13"
 ruled = true
 told = "line"

@@ -533,6 +533,7 @@ outcome = { stores = [{ store = "cleared", items = 1 }, { store = "damp_wood", i
 [[lanes]]
 id = "n11"
 lodging = { build = "hall" }
+by_day = { off_scene = "his work is the road, which lies outside what the scene draws" }
 label_key = "lane_n11"
 ruled = true
 told = "line"

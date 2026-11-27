@@ -1,6 +1,6 @@
 """Where each person stands by day (`by_day` on a lane, lane_entries.ByDayEntry) and the scene that draws it (tools/scene/people_day.py):
 a `card` names a card of the person's own lane (or of their crew's) whose `site` is a scene layer, `at_fire` the reason the content seats them at the
-camp fire. The scene moves only the people the content sends to a site, to that card's layer; the lanes with no `by_day` are held
+camp fire, `off_scene` why their work or place is outside what the scene draws. The scene moves only the people the content sends to a site, to that card's layer; the lanes with no `by_day` are held
 (`people_day.HELD_UNDECIDED`, only shrinks)."""
 import json
 import sys
@@ -61,6 +61,8 @@ def content() -> Opening:
 def test_a_lane_without_by_day_is_held_and_only_it(content: Opening):
     assert len(person_lanes(content)) > 10, "almost no people seen: the check is blind"
     assert undecided(content) == set(people_day.HELD_UNDECIDED), "a lane gained a `by_day`, or lost its one: lower or fix the held set"
+    stripped = content.model_copy(update={"lanes": [x.model_copy(update={"by_day": None}) if x.id == "n11" else x for x in content.lanes]})
+    assert undecided(stripped) == {"n11"} != set(people_day.HELD_UNDECIDED), "the check cannot see a lane with no answer"
 
 
 def test_a_by_day_card_is_the_lanes_or_its_crews_and_sited(content: Opening):
@@ -87,7 +89,8 @@ def test_the_scene_layers_it_names_exist():
 
 
 def test_a_by_day_needs_exactly_one_answer():
-    ByDayEntry.model_validate({"card": "x"})
-    for fields in ({}, {"card": "x", "at_fire": "y"}):
-        with pytest.raises(ValueError, match="exactly one of card and at_fire"):
+    for ok in ({"card": "x"}, {"at_fire": "x"}, {"off_scene": "x"}):
+        ByDayEntry.model_validate(ok)
+    for fields in ({}, {"card": "x", "at_fire": "y"}, {"at_fire": "x", "off_scene": "y"}):
+        with pytest.raises(ValueError, match="exactly one of card, at_fire and off_scene"):
             ByDayEntry.model_validate(fields)
