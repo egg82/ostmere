@@ -1,4 +1,4 @@
-"""One client cannot fill feedback's site-wide cap (api/CONTRACT.txt, "POST /api/feedback"): an IPv4 address with many
+"""One client cannot fill feedback's site-wide cap (api/contract/endpoints.txt, "POST /api/feedback"): an IPv4 address with many
 accounts, or an IPv6 /48 with many /64s, meets a limit of its own first, and another client still gets through."""
 from fastapi.testclient import TestClient
 

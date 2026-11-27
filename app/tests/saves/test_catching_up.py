@@ -1,4 +1,4 @@
-"""A long absence through the saves service in bounded slices (saves/service.py; CONTRACT.txt, "Catching up"), with a
+"""A long absence through the saves service in bounded slices (saves/service.py; contract/catching-up.txt, "Catching up"), with a
 stop that ends every request after its first instant: each slice is written with catching_up_to, a decision whose
 advance stops short is written as that slice and refused (Behind), a dry run that would stop short writes nothing,
 and the slices end where one unbounded advance does."""

@@ -1,4 +1,4 @@
-"""Groups on the wire (api/CONTRACT.txt, "GROUPS"), on the test chapter tests/opening/fixtures/groups_wire.toml merged
+"""Groups on the wire (api/contract/groups.txt, "GROUPS"), on the test chapter tests/opening/fixtures/groups_wire.toml merged
 after the shipped content: a pooled lane t_crew, two people handed to it (t_m1, t_m3) and one marked (t_m2). The
 content's pooled and group, the view's own_split and crew, each a plain copy of the engine's."""
 from functools import cache

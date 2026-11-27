@@ -1,4 +1,4 @@
-// The second offer kind (docs/design/day-three-plan.md, item 5; CONTRACT.txt, "Offers"): once an offer whose answers
+// The second offer kind (docs/design/day-three-plan.md, item 5; contract/offers.txt, "Offers"): once an offer whose answers
 // start nothing and install a modifier sits beside one that starts a card, the Rules tab lists the answer order (the
 // always rules that answer offers, in list order, under the Answers heading), and the Asks list words each answer's
 // effect where a time would be.

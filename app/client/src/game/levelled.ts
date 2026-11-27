@@ -1,4 +1,4 @@
-// A level shown on the card it speeds up (docs/design/redesign.md, "Feel"; CONTRACT.txt, "Skills"), read from two
+// A level shown on the card it speeds up (docs/design/redesign.md, "Feel"; contract/, "Skills"), read from two
 // views and the content alone: the cards a level passed names in LevelPays.speeds whose Card.speed rose, with one whole
 // completion's time at each speed. Pure.
 import type { View } from "../api/types";

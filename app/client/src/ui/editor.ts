@@ -134,7 +134,7 @@ export class MixEditor {
     if (!this.open || !this.local) return;
     if (this.from !== null && !view.mixes.some((m) => m.id === this.from)) { this.close(); return; }   // deleted
     this.draw();
-    this.preview.schedule();   // the after must be of this view's instant (CONTRACT.txt, dry-run), not the last one's
+    this.preview.schedule();   // the after must be of this view's instant (contract/endpoints.txt, dry-run), not the last one's
   }
 
   private setShares(shares: number[]): void {
@@ -201,7 +201,7 @@ export class MixEditor {
     this.close();
   }
 
-  /** Saves the edit when it differs from the saved mix, then queues it until `until` (CONTRACT.txt, "Goal stints"). */
+  /** Saves the edit when it differs from the saved mix, then queues it until `until` (contract/goal-stints.txt, "Goal stints"). */
   private runUntil(until: Condition): void {
     const view = this.view;
     const mix = this.edited();

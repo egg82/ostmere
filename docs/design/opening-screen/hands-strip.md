@@ -34,7 +34,7 @@ stay in the strip.
 The dividers on the strip are draggable for a quick change; the strip never shows a 0% divider (a card joins with a
 real share, see the editor).
 
-**A lane run by rules** (a townsperson who works: api `CONTRACT.txt`, "A lane run by rules") gets a row in the Town
+**A lane run by rules** (a townsperson who works: api `contract/a-lane-run-by-rules.txt`, "A lane run by rules") gets a row in the Town
 view, under the town's people, in their row form: a face, the lane's label (a later label once its unlock is held), what it
 does (the task's name, or `idle`), the task's bar, and `Change`. A row arrives through the arrival queue the first time
 its lane is in view, then stays. `Change` opens the person's

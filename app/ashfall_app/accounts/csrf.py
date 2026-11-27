@@ -8,7 +8,7 @@ alone keeps their writes out.
   sends one of them, and a write that proves nothing about where it came from changes nothing.
 - A body must be JSON. A plain cross-site form can only send form or text bodies, never application/json.
 
-Refusals are the API's error body (api/CONTRACT.txt): 403 cross_site, 415 not_json, never cached."""
+Refusals are the API's error body (api/contract/): 403 cross_site, 415 not_json, never cached."""
 
 import json
 from typing import Any

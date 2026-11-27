@@ -3,7 +3,7 @@ page shows it. A trip joins the mix at the visit its supply store's line shows, 
 with a reserve rule where a second consumer needs the store kept; a comfort is queued with
 When ready the visit it shows, built or not; an arrival offer is answered by hand while the player is there, and once
 an offer of a kind is answered the kind's rule is set, so the kind's later offers are taken the instant they show,
-present or away (an offer of no kind has no rule: the page builds none, CONTRACT.txt, "Offers"). The sinks are named by id in a Chapter, so the policies hold for any chapter; a
+present or away (an offer of no kind has no rule: the page builds none, contract/offers.txt, "Offers"). The sinks are named by id in a Chapter, so the policies hold for any chapter; a
 route's knobs say which of the three it does. Ids only (CLAUDE.md, "Never spoil the owner")."""
 from dataclasses import dataclass
 

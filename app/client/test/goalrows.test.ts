@@ -1,4 +1,4 @@
-// The editors' goal rows (ui/goaltimes.ts; CONTRACT.txt, "Goal rows"): a row for each goal whose time or limit the
+// The editors' goal rows (ui/goaltimes.ts; contract/goal-rows.txt, "Goal rows"): a row for each goal whose time or limit the
 // dry run changes, matched by goal, and under it the after row's binding line as the server states it.
 import { install } from "./fake-dom";
 import { fixtureStep } from "../fixtures/steps";

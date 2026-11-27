@@ -1,5 +1,5 @@
 // The Mixes list shows each saved mix's own numbers, separately, and the player's earlier best for a goal with the mix
-// that set it, worded "earlier" and never as a verdict (CONTRACT.txt, "Mix rows"; ui/selector.ts).
+// that set it, worded "earlier" and never as a verdict (contract/mix-rows.txt, "Mix rows"; ui/selector.ts).
 import { fakeDocument, install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";

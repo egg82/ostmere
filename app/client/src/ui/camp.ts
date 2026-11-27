@@ -1,4 +1,4 @@
-// The Camp bar, the thing to work toward (CONTRACT.txt): drawn from the ledger line of Content.camp.store, which
+// The Camp bar, the thing to work toward (contract/): drawn from the ledger line of Content.camp.store, which
 // is never drawn as a ledger line. Its level is how many of camp_levels' `at` the sample has reached; the bar runs from
 // the level's own `at` to the next one's, and the next marker states what that level pays. A held level is a marker
 // past the opening: the bar fills to it and holds, its marker still showing, and it is not counted as reached until the

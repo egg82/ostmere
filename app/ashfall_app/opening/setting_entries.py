@@ -8,7 +8,7 @@ from .entries import Entry
 
 
 class RepeatOffersEntry(Entry):
-    """When doing a thing by hand again and again makes it offered as a mix or a rule (api/CONTRACT.txt, "Repeats"):
+    """When doing a thing by hand again and again makes it offered as a mix or a rule (api/contract/repeats.txt, "Repeats"):
     a count reached within a span of game time."""
 
     hand_taps: int = Field(ge=2)
@@ -73,7 +73,7 @@ class JournalHabitsEntry(Entry):
 
 class FirstMixEntry(Entry):
     """The first mix the page offers once `feature` is unlocked: these hands cards at an even split, made by the
-    player's tap (api/CONTRACT.txt)."""
+    player's tap (api/contract/)."""
 
     feature: str
     cards: list[str]

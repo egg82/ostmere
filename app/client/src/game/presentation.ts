@@ -1,4 +1,4 @@
-// What the page keeps only grows (CONTRACT.txt, AccountPresentation and SavePresentation), so two copies of it join by union: flags OR
+// What the page keeps only grows (contract/endpoints.txt, AccountPresentation and SavePresentation), so two copies of it join by union: flags OR
 // together, a list is the first's entries then the second's that are new, of two chapters the later return's, and of two
 // newest days read the later. The
 // server does the same on every write; the page does it to take the server's answer without losing a keep made while

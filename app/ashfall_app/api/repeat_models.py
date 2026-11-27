@@ -1,10 +1,10 @@
-"""Wire models of what the player keeps doing by hand (Step.repeats; CONTRACT.txt, "Repeats"); the conventions in
+"""Wire models of what the player keeps doing by hand (Step.repeats; contract/repeats.txt, "Repeats"); the conventions in
 models.py hold here."""
 from pydantic import BaseModel
 
 
 class RepeatedTap(BaseModel):
-    """A hands card tapped `count` times in the window while the hands ran a mix without it (CONTRACT.txt,
+    """A hands card tapped `count` times in the window while the hands ran a mix without it (contract/repeats.txt,
     "Repeats")."""
 
     card: str
@@ -12,7 +12,7 @@ class RepeatedTap(BaseModel):
 
 
 class RepeatedSwitch(BaseModel):
-    """The player's own mix switched to `mix_id` `count` times in the window while `chip` showed (CONTRACT.txt,
+    """The player's own mix switched to `mix_id` `count` times in the window while `chip` showed (contract/repeats.txt,
     "Repeats")."""
 
     chip: str

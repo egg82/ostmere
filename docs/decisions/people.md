@@ -107,7 +107,7 @@ differently. It is taken as modules once habits' cleanup lands, never as a copy 
 
 How people stand today, moved from their row in `systems.md`. Arrival policy is the A/B target. Notables never die. A
 person's name is content beside their lane (`name_key`), which the page fills into any text's `{<lane>}` slot
-(`app/ashfall_app/opening/name_checks.py`; CONTRACT.txt, "Text and numbers"); one name per person in every save for
+(`app/ashfall_app/opening/name_checks.py`; contract/text-and-numbers.txt, "Text and numbers"); one name per person in every save for
 now, the per-save draw from a pool still planned.
 
 **A person who matters is written into the story when they join or leave; the rest are a daily mention.** A journal
@@ -120,7 +120,7 @@ aside, since that person came earlier and was told then (`app/ashfall_app/openin
 person writes no line of their own: the loader gives each outcome that moves one a mention line with no text, so it
 lands in the save's log at the second it happened, and the page words each game day's mentions of a way as one line,
 from the `[people]` bands for how many came or went, drawn by a shuffle bag keyed by the save, the way and the band
-(`app/ashfall_app/opening/people.py`, `app/client/src/game/people.ts`; CONTRACT.txt, "PEOPLE"). The bands are words,
+(`app/ashfall_app/opening/people.py`, `app/client/src/game/people.ts`; contract/people.txt, "PEOPLE"). The bands are words,
 never a count, after A Dark Room, whose arrivals read as a stranger, a family, a group or a convoy by their size. The
 mention is decided in code and written by authored lines: no frequency word anywhere. Every person in the shipped
 chapters is `line`, since each joining so far is a beat with lines of its own. Rejected: a per-person line for everyone, which

@@ -1,4 +1,4 @@
-// A fight card that tells its losses from its own pools (CONTRACT.txt, "LOSS LINES"): its on-loss line is its own key's
+// A fight card that tells its losses from its own pools (contract/loss-lines.txt, "LOSS LINES"): its on-loss line is its own key's
 // words, its lost entries in the chronicle come only from loss_pool, and a runner without one never draws from it; a
 // fold note's count is drawn beside its words on its own day.
 import { install } from "./fake-dom";

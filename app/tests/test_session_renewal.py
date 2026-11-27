@@ -1,5 +1,5 @@
 """A session is renewed (its last use and its cookie) only by a POST or PUT that succeeds: never by a GET, never by a
-refused write (CONTRACT.txt, "Accounts and sessions": a 4xx or 5xx writes nothing)."""
+refused write (contract/accounts-and-sessions.txt, "Accounts and sessions": a 4xx or 5xx writes nothing)."""
 import threading
 from collections.abc import Callable
 from typing import Any

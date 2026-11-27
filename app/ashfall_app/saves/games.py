@@ -1,4 +1,4 @@
-"""Games on one account (api/CONTRACT.txt, "Games on one account"), in the caller's transaction: the account's row held
+"""Games on one account (api/contract/games-on-one-account.txt, "Games on one account"), in the caller's transaction: the account's row held
 while its saves are counted, so making, deleting and restoring run one after another on any pod and MAX_SAVES and the
 last live save hold under any race; the new-game limit counted in the same step (accounts/limits.py); and the writer's
 own retention: a deleted save is held KEPT_DAYS, then a later delete or new game deletes it for good, PURGE_BATCH at a

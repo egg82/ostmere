@@ -1,4 +1,4 @@
-// The daily journal's days pages (docs/design/journal.md, "What the page draws"; CONTRACT.txt, "JOURNAL", "The written
+// The daily journal's days pages (docs/design/journal.md, "What the page draws"; contract/journal.txt, "JOURNAL", "The written
 // days"): each day's notes in order under its day, days running on down a page, a note that does not fit beginning the
 // next page under its day's heading again, the measure fixed so the same days are the same pages on every device and
 // width; a day still being written growing on its page; the dot while a day after the save's newest day read is

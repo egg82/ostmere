@@ -4,7 +4,7 @@ pinned stage never grows for the longest line ever written; this is the content 
 
 What the strip shows is read from the page (client/src/game/chronicle.ts, ROUTES: the kinds routed to the Story
 filter), and the rows and the size from client/src/game.css. Lines wrap at spaces only, which can only add rows, never
-hide one. A person's name slot is measured as the name it shows (api/CONTRACT.txt, "Text and numbers", {<lane>})."""
+hide one. A person's name slot is measured as the name it shows (api/contract/text-and-numbers.txt, "Text and numbers", {<lane>})."""
 import re
 import tomllib
 from functools import cache

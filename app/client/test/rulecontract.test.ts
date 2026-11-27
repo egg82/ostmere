@@ -95,7 +95,7 @@ const sentOrders = (ds: Decision[]): Order[] | null => {
   return d && d.kind === "set_orders" ? d.orders : null;
 };
 /** "Down to a quarter of the cap" and "until" no lower than half the cap and no higher than full, both as shares of
- *  the cap, so the levels keep up as the cap grows (CONTRACT.txt, "Share levels"); the cap's size changes nothing. */
+ *  the cap, so the levels keep up as the cap grows (contract/endpoints.txt, "Share levels"); the cap's size changes nothing. */
 function quarterThenUp(id: string, capItems: number, when: Order["when"] | undefined): void {
   if (!when || when.kind === "after_time") throw new Error(`not a store condition: ${JSON.stringify(when)}`);
   const where = `${when.value} until ${when.release} of the cap (${capItems} items)`;

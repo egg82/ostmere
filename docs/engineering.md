@@ -284,7 +284,7 @@ While a deploy rolls, the old and the new pods answer at once, and the gateway b
 requests reach both builds. What holds:
 
 - Every response, errors included, names the build that answered in `X-Ashfall-Build`
-  (`app/ashfall_app/api/CONTRACT.txt`).
+  (`app/ashfall_app/api/contract/overview.txt`).
 - The bundle's path names its build, and a page loads only its own (`docs/systems.md`, Page shell). There is no
   unversioned /build/ path. The web pods' probes read `/webz` (the image's bundle, never the assets volume).
 - A save is written by one request at a time (its row is locked for the transaction), and only forward. Builds are

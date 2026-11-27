@@ -1,4 +1,4 @@
-// A Next entry whose card a lane is already running (CONTRACT.txt, "Ruled lanes", an answer's one-off): it stays in
+// A Next entry whose card a lane is already running (contract/, "Ruled lanes", an answer's one-off): it stays in
 // view.queue until the card completes, so Next draws it as under way, with no Remove, since removing it would not stop
 // the work. An entry whose card is not running keeps its Remove.
 import { install } from "./fake-dom";

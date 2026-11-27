@@ -42,7 +42,7 @@ alongside each chapter; 8 before `day_twenty_seven.toml`; 10 needs 1 and 3-9; 11
 first chapter.
 
 1. **A fight whose losses are told from its own pools** (**M**, opening, api, client, journal; interface first: a
-   section "LOSS LINES" in `api/CONTRACT.txt`). (a) Content: a fight card's `fight` table may carry `loss_pool` (a line
+   section "LOSS LINES" in `api/contract/`). (a) Content: a fight card's `fight` table may carry `loss_pool` (a line
    pool's key, used for its lost labels instead of the shipped lost pool) and `loss_notes` (a journal note pool), and an
    `on_loss_key` for the card's on-loss wording. The loader refuses them on a town card, on a card with a town twin, on a
    standing fight, on a card whose `only_player` is not `"self"`, and on a card that can be unlocked before a feature the
@@ -60,10 +60,10 @@ first chapter.
    card's never do; each planted loader refusal fails naming the id; the composer writes exactly one note per unit
    crossed and the same notes on every read of the same day; a long absence folds to one note and a count line; nothing
    on the page totals these losses beyond the served tally.
-2. **Blind contract tests for item 1** (**S**, tests), by an agent that never reads item 1's code: from `CONTRACT.txt`
+2. **Blind contract tests for item 1** (**S**, tests), by an agent that never reads item 1's code: from `contract/loss-lines.txt`
    "LOSS LINES" alone, with a `MUTANTS.txt` (labels a plain fight's loss from the card pool; notes per fight instead of per whole
    unit; draws notes from the engine's state; repeats a note in a row; folds nothing). Accept: each mutant goes red;
-   ambiguities answered in `CONTRACT.txt` before item 1 merges.
+   ambiguities answered in `contract/` before item 1 merges.
 3. **An offer whose second answer leaves the one-off** (**S**, opening). One answer queues a capped hands card (and
    unlocks it); the other unlocks the same card without queuing it; the card's finish unlocks a feature, which later
    content reads instead of the answer. Check the loader and the ask checks accept it, and that the page shows the

@@ -1,4 +1,4 @@
-"""The journal on the wire (CONTRACT.txt, "JOURNAL"): what the content says of the book, its pages and their notes, and
+"""The journal on the wire (contract/journal.txt, "JOURNAL"): what the content says of the book, its pages and their notes, and
 the daily journal's written days. Whether a page or note is written is view.unlocked's, and a page's numbers are
 View.fights'. Re-exported from content_models.py and, the days, models.py."""
 from enum import StrEnum

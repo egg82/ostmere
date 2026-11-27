@@ -628,7 +628,7 @@ label_key = "feature_t_pack_step"
 # ---------- text ----------
 
 # The first line of each story beat, by its id in content/beats.yaml: the page hears a beat open from these, by no
-# key's name (api/CONTRACT.txt, "Beat lines"). One id lists a key per way the beat can be told.
+# key's name (api/contract/endpoints.txt, "Beat lines"). One id lists a key per way the beat can be told.
 [beat_lines]
 B10 = ["l_b10_1"]
 

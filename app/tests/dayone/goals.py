@@ -13,7 +13,7 @@ Promises. Sampled through day one and on past its end card (AFTER_CARD_S of the 
 visit's exit with nobody deciding), since nothing past the card may be drawn as a wait that will pay. What the page
 draws as a time must come true by itself: advanced from the sample with nobody deciding to that time, the card is ready or done, the store holds its cap or is empty, the level has landed. A card's countdown is
 drawn under game/ready.ts's rule; a "full in", an "empty in" and a skill row's time come from the forecast (api
-CONTRACT.txt, "Forecast"), the first it lists after now, as the page draws them. Problems name minutes and ids only (CLAUDE.md, "Never spoil the owner")."""
+contract/forecast.txt, "Forecast"), the first it lists after now, as the page draws them. Problems name minutes and ids only (CLAUDE.md, "Never spoil the owner")."""
 from collections.abc import Iterator
 from dataclasses import dataclass
 from functools import cache

@@ -1,4 +1,4 @@
-// A long absence comes back in slices (src/game/session.ts; CONTRACT.txt, Step.catching_up_to): a Step still catching up
+// A long absence comes back in slices (src/game/session.ts; contract/catching-up.txt, Step.catching_up_to): a Step still catching up
 // is announced with catchingUp(at, to) and asked past at once, never drawn; once one arrives that is not, exactly one
 // stepped() follows with every slice's lines. A decision made meanwhile is held and sent after, a catching_up 409 on a
 // decision goes on catching up, and no forecast is asked on the way. Written from the contract; the api is scripted.
@@ -205,7 +205,7 @@ const ONE_SLICE_LATE = [slice(2000, 3600, ["b1"]), slice(3600, null, ["c1", "c2"
   check(h.log.calls.includes("forecast"), "the forecast was due all along: it is asked once the save has caught up");
 }
 
-{  // the written days (CONTRACT.txt, "JOURNAL", "The written days"): the save as last seen carries the days stored before
+{  // the written days (contract/journal.txt, "JOURNAL", "The written days"): the save as last seen carries the days stored before
   // the open, never the open step's; the one stepped of a catch-up carries every slice's days, in order
   const h = harness({ stored: [0, 1], open: slice(1000, 3600, ["a1"], 0, [2]), advances: [slice(2000, 3600, [], 0, [3]), slice(3600, null, [], 0, [4, 5])] });
   await h.session.resume(7);

@@ -1,4 +1,4 @@
-// The Asks list (CONTRACT.txt, "OFFERS"; docs/design/redesign.md, "Asks"): the first open offer drawn in its slot with
+// The Asks list (contract/offers.txt, "OFFERS"; docs/design/redesign.md, "Asks"): the first open offer drawn in its slot with
 // its text and one button per answer, each with its cost (a time from takes_s, left out while takes_s is null); the
 // rest counted, and the count opening the whole list; who asks, what led to it and the texts an offer has only where
 // it differs, each drawn only when the content gives it; each answer's figures from a dry run of it. Revealed through

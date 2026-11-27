@@ -1,6 +1,6 @@
-// A rule's condition on a store, as the page builds, reads and words it (CONTRACT.txt, "a store rule"). Two tests, each
+// A rule's condition on a store, as the page builds, reads and words it (contract/the-client-may.txt, "a store rule"). Two tests, each
 // a latch with a band so a rule never flips at one level: "under n, until m" (at_most) and "n or more, until under m"
-// (at_least). Each level is whole items or a share of the store's cap (CONTRACT.txt, "Share levels"); a share keeps up
+// (at_least). Each level is whole items or a share of the store's cap (contract/endpoints.txt, "Share levels"); a share keeps up
 // as the cap grows and is worded as one (empty, a quarter, half, three quarters, full, or a percentage). Whole-item
 // levels keep the ±1 conventions that put each crossing on the amount the page shows; a share is reached at the share
 // itself, from either side ("down to a quarter", "until empty"). A rule the page builds always has a band of at least
@@ -88,7 +88,7 @@ export function levelAt(l: Level, cap: number): number {
 const inRange = (l: Level, cap: number): boolean => (isShare(l) ? l.share >= 0 && l.share <= BP : l.items >= 1 && l.items <= cap);
 
 /** The page builds the rule: every level in range, a band of at least one item inside 0..cap, and never always true
- * (CONTRACT.txt, "a store rule"). `steps`: the store rises only in steps, so the band may be none. */
+ * (contract/the-client-may.txt, "a store rule"). `steps`: the store rises only in steps, so the band may be none. */
 export function valid(rule: StoreRule, cap: number, steps = false): boolean {
   const m = rule.m;
   if (cap < 2 || m === null || !inRange(rule.n, cap) || !inRange(m, cap)) return false;

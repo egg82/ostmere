@@ -110,7 +110,7 @@ INSTANTS_MAX = 240
 """The most instants one forecast at the served horizon may resolve over day one's saves: twice the 118 measured (the
 typical route; babysitter's reach 56). A count, not a time, so the runner's speed and load do not move it: the CPU
 ratio this replaced failed at 2.65 against its 2.4 on unchanged code on a loaded host. What one instant costs is the
-engine bench's question (tools/bench_ab.py). The forecast is computed only when the page asks (CONTRACT.txt,
+engine bench's question (tools/bench_ab.py). The forecast is computed only when the page asks (contract/forecast.txt,
 "Forecast"), never on a plain advance or a decision."""
 
 

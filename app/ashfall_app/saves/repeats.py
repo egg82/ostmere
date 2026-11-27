@@ -1,4 +1,4 @@
-"""What the player keeps doing, counted from the save's decision log (api/CONTRACT.txt, "Repeats"): the same hands
+"""What the player keeps doing, counted from the save's decision log (api/contract/repeats.txt, "Repeats"): the same hands
 card tapped while the hands ran a mix that does not hold it, and the same switch of the player's own mix made while a
 chip showed. Each logged decision keeps its context (engine DecisionContext), so the count reads the log alone, needs
 no replay, and comes out the same for a save rebuilt by replaying that log. How many make a habit, and over how much

@@ -1,4 +1,4 @@
-// What the page works out about fights (CONTRACT.txt, "FIGHTS"); every number it shows is the engine's, served: the
+// What the page works out about fights (contract/fights.txt, "FIGHTS"); every number it shows is the engine's, served: the
 // odds' words, the strengths' entries, and which fights of a window the log calls lost. It rolls nothing that changes
 // a number: a window's labels are placed by a seeded shuffle of the engine's exact lost count.
 import type { Fight, FightInfo, Strength, View } from "../api/types";
@@ -101,7 +101,7 @@ export function poolLine(save: number, runner: string, kind: "won" | "lost", poo
   return bagged(`${save}|${runner}|${kind}`, pool, k);
 }
 
-/** The pool a runner's lost fights are worded from: its own loss_pool when its card tells losses that way (CONTRACT.txt,
+/** The pool a runner's lost fights are worded from: its own loss_pool when its card tells losses that way (contract/loss-lines.txt,
  * "LOSS LINES"), else its lost_line_keys; none for a runner with no fight. */
 export function lostPool(fight: FightInfo | null | undefined): readonly string[] {
   return fight ? fight.loss_pool ?? fight.lost_line_keys : [];

@@ -1,4 +1,4 @@
-// A feature's card (CONTRACT.txt, "A feature's card"): the content's end card is one. Shown once, when the page first sees
+// A feature's card (contract/a-features-card.txt, "A feature's card"): the content's end card is one. Shown once, when the page first sees
 // its feature unlocked, after what arrived with it; docked at the panel's foot (the bottom edge on a phone) and not
 // modal, so the scene stays in view and play goes on under it. Its one button puts it away. A page whose first view
 // already holds the feature never shows it, so nothing is kept for it.

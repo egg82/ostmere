@@ -1,4 +1,4 @@
-// The answer rule on the page (CONTRACT.txt, "Offers"): the Rules tab's answers section builds one rule per offer kind,
+// The answer rule on the page (contract/offers.txt, "Offers"): the Rules tab's answers section builds one rule per offer kind,
 // only once an offer of that kind has been answered, and only while one of the kind is still to be answered; its buttons are the kind's roles worded by the kind's own
 // labels; a tap sets (or, with a rule set, changes in place) an answer_kind order; the page builds no answer_offer.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";

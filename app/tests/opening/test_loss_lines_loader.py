@@ -1,4 +1,4 @@
-"""The loader's loss lines (api/CONTRACT.txt, "LOSS LINES"): a fight card's loss_pool, loss_notes, on_loss_key and
+"""The loader's loss lines (api/contract/loss-lines.txt, "LOSS LINES"): a fight card's loss_pool, loss_notes, on_loss_key and
 loss_after, on fixtures/loss_lines.toml merged onto the opening alone. Each refusal is the fixture edited to break it,
 beside the control that loads."""
 from pathlib import Path

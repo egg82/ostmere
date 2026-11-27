@@ -1,4 +1,4 @@
-"""Wire models of accounts and saves (CONTRACT.txt, ENDPOINTS): who this browser is, its saves, and the requests that
+"""Wire models of accounts and saves (contract/endpoints.txt, ENDPOINTS): who this browser is, its saves, and the requests that
 move them. The game's own shapes (Step, View, Decision) are models.py; the conventions there hold here."""
 from datetime import datetime
 from typing import Annotated, TypeGuard
@@ -109,7 +109,7 @@ class AccountPresentation(BaseModel):
     switch_offered: list[OfferedSwitch] = Field(default=[], max_length=MAX_LIST)
     """The repeated switches whose rule offer the player has answered: each is offered once."""
     journal_read: list[Id] = Field(default=[], max_length=MAX_LIST)
-    """The notes on pages the player has turned to (CONTRACT.txt, "JOURNAL"): kept for the account, so a note read in one
+    """The notes on pages the player has turned to (contract/journal.txt, "JOURNAL"): kept for the account, so a note read in one
     game is read in the next."""
 
 
@@ -180,7 +180,7 @@ class DeletedSave(BaseModel):
 
 
 class Games(BaseModel):
-    """The account's saves (CONTRACT.txt, "Games on one account")."""
+    """The account's saves (contract/games-on-one-account.txt, "Games on one account")."""
 
     saves: list[SaveInfo]
     """The live saves, the most recently played first."""

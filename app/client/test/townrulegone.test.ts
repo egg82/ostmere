@@ -1,4 +1,4 @@
-// The Rules tab has no town section, with one town mix or two (CONTRACT.txt, "The town's mix"): the town's always rule,
+// The Rules tab has no town section, with one town mix or two (contract/the-towns-mix.txt, "The town's mix"): the town's always rule,
 // which stays in the engine, is drawn nowhere, and the hands' rules are as they were. The view is the engine's own town
 // over the day-two page (one town mix, town:main); the second adds another under a new name.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";

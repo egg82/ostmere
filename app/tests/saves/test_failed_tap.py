@@ -1,6 +1,6 @@
 """A tap of an unready card through the saves service and the API's Step: answered at once with the card's failed line
 at the tap's instant, the card named as the failed tap (Played.failed, Step.failed_tap), no lane holding it, and
-written as a decision like any other (CONTRACT.txt, ENDPOINTS, the decisions route)."""
+written as a decision like any other (contract/endpoints.txt, ENDPOINTS, the decisions route)."""
 import pytest
 
 from ashfall_app import engine as e

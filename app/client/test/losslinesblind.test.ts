@@ -1,4 +1,4 @@
-// LOSS LINES, from api/CONTRACT.txt alone (docs/design/week-four-plan.md, item 2; mutants in MUTANTS.txt beside the
+// LOSS LINES, from api/contract/ alone (docs/design/week-four-plan.md, item 2; mutants in MUTANTS.txt beside the
 // composer tests): the pool a runner's lost entries read from, the chronicle's wording of them, and the card's own
 // on-loss line.
 import { install } from "./fake-dom";

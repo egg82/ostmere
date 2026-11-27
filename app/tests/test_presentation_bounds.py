@@ -1,4 +1,4 @@
-"""What the page keeps about the player and about a save is bounded (api/CONTRACT.txt, "Request limits"): lists of at
+"""What the page keeps about the player and about a save is bounded (api/contract/request-limits.txt, "Request limits"): lists of at
 most 512 items, free strings of at most 64 characters."""
 from typing import Any
 

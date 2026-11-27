@@ -1,6 +1,6 @@
 """StoreInfo.rises_in_steps on the shipped content: a store nothing that runs makes (no card lands or flows it, no
 standing action flows it) rises only by events, a step at a time, so a rule on it cannot flip at one level on a flow
-(CONTRACT.txt, "a store rule"). Hurt, which only a lost fight adds to, is one; a store a card or a standing action makes
+(contract/the-client-may.txt, "a store rule"). Hurt, which only a lost fight adds to, is one; a store a card or a standing action makes
 is not."""
 from ashfall_app.api.content_models import Content
 from ashfall_app.opening.makers import card_makers, standing_makers

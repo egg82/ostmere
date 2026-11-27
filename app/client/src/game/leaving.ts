@@ -1,4 +1,4 @@
-// A person who leaves (CONTRACT.txt, "LEAVES"): the Step that holds the left unlock has already dropped their lane, their
+// A person who leaves (contract/leaves.txt, "LEAVES"): the Step that holds the left unlock has already dropped their lane, their
 // cards and their shares. The page's lists keep drawing them from the view they were last in until the moment's lines
 // have been read, so a person does not vanish before the lines that say why.
 import type { View } from "../api/types";

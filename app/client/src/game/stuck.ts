@@ -1,5 +1,5 @@
 // A person with nothing to do (issue 467): every card holding a share of their time is stopped, paused or spent
-// (CONTRACT.txt, "SPENT"), and no tap holds their lane, so the split they set runs nothing and moving it between those
+// (contract/spent.txt, "SPENT"), and no tap holds their lane, so the split they set runs nothing and moving it between those
 // cards cannot help. The page says so and offers the tasks they could run now; it never picks one (the game does not
 // choose for the player). All of it is read off the view: Card.run, spent_store, full_store and the needs it serves.
 import type { Card, View } from "../api/types";

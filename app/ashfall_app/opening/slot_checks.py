@@ -1,4 +1,4 @@
-"""The slots a text may hold: each is one the page fills for that text's key (api/CONTRACT.txt, "Text and numbers"), else
+"""The slots a text may hold: each is one the page fills for that text's key (api/contract/text-and-numbers.txt, "Text and numbers"), else
 its braces would show. A `{<lane id>}` is a person's name in any text (name_checks.py checks it has one) and `{found}` is a
 find line's (find_checks.py checks where). Raises ValueError naming the key and the slot (refs.fail)."""
 from collections.abc import Iterable

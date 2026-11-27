@@ -75,7 +75,7 @@ and you tune it, then hit go.
   gone never reaches 15 and holds the hands. The game does not release it, change the defaults or block Save
   (choice-not-protection.md): the rule's row states the fact ("can't reach 15: out of damp wood"), and the editor
   states beside Save, before it is written, that nothing in the mix makes a store the mix consumes. Server decision
-  (CONTRACT.txt, "Dry rules"); the client words it.
+  (contract/dry-rules.txt, "Dry rules"); the client words it.
 - **No hold on a line**. The Hold, which kept a store at a level by slowing one card of the mix, is
   gone, from the engine to the page. It was left over from protecting players who don't want to play the game
   ("Choice, not protection", `design/choice-not-protection.md`): mixes and rules cover everything met so far,
@@ -246,7 +246,7 @@ runs another tap. While a staged card a tap started is running, its face offers 
 (owner, #464: the moment to decide is right after the first tap). It sends the plan the card would have had were it
 planned before the tap, its work kept: on a lane the queue takes, the entry tapping it to its cap (at Next's front, or
 a running When ready entry held on to the cap); on a person's lane, an always rule tapping it where a new lane rule
-goes, passed over at the cap (`app/ashfall_app/api/CONTRACT.txt`, "UNTIL DONE"). When ready's own default still
+goes, passed over at the cap (`app/ashfall_app/api/contract/until-done.txt`, "UNTIL DONE"). When ready's own default still
 never holds a staged card to its cap (engine DESIGN's REJECTED list).
 
 Modifiers: buildings, tools, spells, prestige, seasons, injuries and supply are all modifiers, and a cap only rises.

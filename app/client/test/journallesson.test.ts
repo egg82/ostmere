@@ -1,4 +1,4 @@
-// The journal's lesson on pages with and without numbers (CONTRACT.txt, "JOURNAL", THE CLIENT MAY): the numbers step runs
+// The journal's lesson on pages with and without numbers (contract/journal.txt, "JOURNAL", THE CLIENT MAY): the numbers step runs
 // only on a page that shows numbers; on a page with none the lesson ends, kept, at the Journal's button, and the numbers
 // step is a lesson of its own the first time a page with numbers is open. A step that waits on numbers never holds the
 // lessons after it. And the rule offer that follows the book at its first showing is not held back by the journal lesson.

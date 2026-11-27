@@ -21,4 +21,4 @@ class FeatureInfo(BaseModel):
     change_bp: list[int]
     """That answer's modifiers as signed changes in basis points, as AnswerInfo.change_bp. Empty with no effect_key."""
     feature_card: FeatureCard | None
-    """A card shown once when the feature unlocks, after what came with it (CONTRACT.txt, "A feature's card")."""
+    """A card shown once when the feature unlocks, after what came with it (contract/a-features-card.txt, "A feature's card")."""

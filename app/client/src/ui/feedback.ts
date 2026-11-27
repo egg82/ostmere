@@ -6,7 +6,7 @@ import { el, tapFeedback } from "./dom";
 import { openSheet } from "./back";
 import type { PartContext } from "./part";
 
-/** The server's limit on a text (CONTRACT.txt, POST /api/feedback). */
+/** The server's limit on a text (contract/, POST /api/feedback). */
 const MAX = 2000;
 const THANKS_MS = 1500;
 

@@ -1,4 +1,4 @@
-"""The journal on week one's played routes (api/CONTRACT.txt, "JOURNAL"): each section's entry pages are written in
+"""The journal on week one's played routes (api/contract/journal.txt, "JOURNAL"): each section's entry pages are written in
 content order, so content order is writing order. Ids only."""
 import pytest
 

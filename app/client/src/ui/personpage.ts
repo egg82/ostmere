@@ -2,7 +2,7 @@
 // Tasks page is: once they have joined the town their split as a share bar (personmix.ts), then every task of theirs
 // in full, as the Tasks panel draws a card (cardpick.ts), its bar and countdown moving with the clock, then the rules
 // that run them (rulelanes.ts), each a button into the Rules tab. A tap on a task joins it to their time or takes it
-// out; a capped task, which the town's mix never holds (CONTRACT.txt, "The town's mix"), is tapped for its next
+// out; a capped task, which the town's mix never holds (contract/the-towns-mix.txt, "The town's mix"), is tapped for its next
 // completion, as a hands one-off is, and their split comes back once it lands. It takes the card area's place while open; its
 // one root is what a tab would seat later. Opening it is what clears the quiet dot on the person's row.
 // A group's page is this page for a pooled lane's id: the group's split as the one bar with the crew under it, its tasks as

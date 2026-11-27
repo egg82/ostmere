@@ -1,4 +1,4 @@
-// A ruled lane's cards stay out of the card panel and the Completed tab (CONTRACT.txt, "A lane run by rules"): such
+// A ruled lane's cards stay out of the card panel and the Completed tab (contract/a-lane-run-by-rules.txt, "A lane run by rules"): such
 // cards are offered only as that lane's tasks (its row's Change, the rule editor).
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";

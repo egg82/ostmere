@@ -1,4 +1,4 @@
-"""What a page keeps about the player (api/CONTRACT.txt, AccountPresentation) only grows: a flag once set stays set and
+"""What a page keeps about the player (api/contract/endpoints.txt, AccountPresentation) only grows: a flag once set stays set and
 a list only gains entries. A page's copy can be older than the stored one (a second tab, a second device), so a write
 is merged into what is stored: flags OR together, lists are the stored entries then the new ones, a growing number keeps
 the higher. What is stored

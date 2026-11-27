@@ -1,6 +1,6 @@
 Wrong implementations of entries held while a card runs (engine DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS",
 invariants 110-118), to plant one at a time in a scratch copy of the engine; a test written blind from DESIGN.txt and
-api/CONTRACT.txt must go red for each. "Guard" is a card with while_running on side g; "fight" is a fight runner on g
+api/contract/ must go red for each. "Guard" is a card with while_running on side g; "fight" is a fight runner on g
 (a standing fight unless a row says otherwise, so its odds are live). Rows 1-5 are plan item 3's; the rest follow from
 the rules. Record each run below the list as MUTANTS.txt does (planted, red, survived, equivalent with the reason).
 
@@ -52,7 +52,7 @@ the rules. Record each run below the list as MUTANTS.txt does (planted, red, sur
                    (StateFormatError), or returns a save whose modifiers differ from s's.  [117, 114]
 
 RUNS
-- Suite tests/engine_contract/test_held_*.py (blind, written from DESIGN.txt and CONTRACT.txt alone). Run: python -m tools.mutate_suite held --run
+- Suite tests/engine_contract/test_held_*.py (blind, written from DESIGN.txt and contract/ alone). Run: python -m tools.mutate_suite held --run
   (specs tools/held_mutants/mNN.py, each a list of (path, old, new) edits against the implementation, one per row).
   `--check` fails unless every row is claimed by a test marked @kills(row).
 - Against a reference model written from DESIGN.txt in a scratch copy (not the implementation): rows 1-22 all red, and 16 single-clause

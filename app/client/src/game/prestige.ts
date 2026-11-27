@@ -1,4 +1,4 @@
-// What a skill's prestige shows, read from the view and the content alone (CONTRACT.txt, "PRESTIGE PHASES"): a menu
+// What a skill's prestige shows, read from the view and the content alone (contract/prestige-phases.txt, "PRESTIGE PHASES"): a menu
 // node's change as plain numbers before and after one more rank (never a verdict on it), the levels waiting at the top,
 // and which skills reached their top between two views (the line a return brings, at its time).
 import type { MenuNode, SkillBar, SkillPrestige, View } from "../api/types";

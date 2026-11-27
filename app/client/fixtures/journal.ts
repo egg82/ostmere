@@ -1,4 +1,4 @@
-// FIXTURE, never shipped: the journal's shapes (CONTRACT.txt, "JOURNAL") with placeholder ids and words, on the fights
+// FIXTURE, never shipped: the journal's shapes (contract/journal.txt, "JOURNAL") with placeholder ids and words, on the fights
 // fixture (the shipped game has no entries yet). The sketches are placeholders too: assets/journal/*.png, ink on
 // transparent, which a screenshot run serves at /assets/journal/ (the real ones come from docs/research/sketch-test).
 //   journal:       the book on, combat on, two entries written. The first (creatures) has three notes (one pencil with

@@ -1,4 +1,4 @@
-// FIXTURE, never shipped: the Asks list (CONTRACT.txt, "OFFERS"), on day two's bank phase (daytwo.ts). asksone: the
+// FIXTURE, never shipped: the Asks list (contract/offers.txt, "OFFERS"), on day two's bank phase (daytwo.ts). asksone: the
 // bank offer open alone, with every optional field; asksmany: all three fixture offers open, the bare one shown first and
 // "2 more" behind it. An answer the page sends is kept (the ask leaves the list), and a dry run of one shows what it
 // moves: hers the wood's rate and Rest's time, his the wood's cap, keep Rest's time.

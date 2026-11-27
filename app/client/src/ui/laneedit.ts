@@ -1,4 +1,4 @@
-// The rule editor's simple view scoped to a lane run by rules (CONTRACT.txt, "A lane run by rules"), in the Rules tab:
+// The rule editor's simple view scoped to a lane run by rules (contract/a-lane-run-by-rules.txt, "A lane run by rules"), in the Rules tab:
 // opened by the lane row's Change or an always rule's words. It picks the task only, from the lane's own cards in
 // view.cards; the rule's condition stays as it is. Save sends set_orders with that rule's tap_card changed in place,
 // or a new always rule appended. Its parts are the condition editor's (condition.ts): the head, the Do row (condrows.ts)

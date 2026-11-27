@@ -34,7 +34,7 @@ export interface Past {
 }
 
 /** One entry: its words, the game second it landed at, its kind, and what caused it in words (null: nothing to say).
- * `person`: it tells someone joining or leaving, by their own line or a day's mention (CONTRACT.txt, "PEOPLE"). */
+ * `person`: it tells someone joining or leaving, by their own line or a day's mention (contract/people.txt, "PEOPLE"). */
 export interface Entry {
   text: string;
   at: number;

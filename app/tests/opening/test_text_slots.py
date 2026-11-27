@@ -1,4 +1,4 @@
-"""A text holds only slots its key's kind is filled with (api/CONTRACT.txt, "Text and numbers"): a lane's person, `{found}`
+"""A text holds only slots its key's kind is filled with (api/contract/text-and-numbers.txt, "Text and numbers"): a lane's person, `{found}`
 on a find line, `{pct}` on what pays a change, and so on. A slot nothing fills shows its braces on the page, so the loader
 refuses it, naming the key and the slot."""
 import pytest

@@ -1,4 +1,4 @@
-"""Offers on the wire (CONTRACT.txt, "Offers"): what the view serves of each shown offer, and what the content says
+"""Offers on the wire (contract/offers.txt, "Offers"): what the view serves of each shown offer, and what the content says
 of every offer. Re-exported from models.py and content_models.py."""
 from pydantic import BaseModel
 
@@ -77,7 +77,7 @@ class OfferInfo(BaseModel):
     askers: list[str]
     """The ruled lanes whose people ask, named by their lane's label; empty when no one person asks."""
     cause: LineCause | None
-    """What led to the offer, as a line's cause (CONTRACT.txt, "Line causes"): its gate, or, for a gate the page cannot
+    """What led to the offer, as a line's cause (contract/endpoints.txt, "Line causes"): its gate, or, for a gate the page cannot
     word (a hidden store, a lane's rules), the earlier offer whose answer it requires; null with neither."""
     waiting_key: str | None
     """What waiting costs; null when waiting is free, as usual."""

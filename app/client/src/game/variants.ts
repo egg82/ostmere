@@ -1,5 +1,5 @@
 // Kinds of one card (CardInfo.variant_of: the pot's stews) are one card on the Tasks page, with a picker of the kinds in
-// view (CONTRACT.txt, "Cards"). The card shows the kind the player picked, else one at work, else the first.
+// view (contract/, "Cards"). The card shows the kind the player picked, else one at work, else the first.
 import type { Card, View } from "../api/types";
 import type { Catalog } from "./catalog";
 

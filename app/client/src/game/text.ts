@@ -1,4 +1,4 @@
-// Every visible word comes from Content's text table (CONTRACT.txt). The page names keys, never text: a key
+// Every visible word comes from Content's text table (contract/). The page names keys, never text: a key
 // the content lacks renders as nothing and is reported once on the console, so the gap is found, not papered over.
 import type { Content } from "../api/types";
 import { ASK_KEYS } from "./askkeys";
@@ -43,7 +43,7 @@ export const UI = {
   reach: "ui.card.reach", // "{store} {have}, next reach at {n}": the store a reach stake fills, against its next stop
   opensIn: "ui.card.opens_in", // "{d}": the foot of a card waiting to open, apart from a running card's bare timer
   takesNothing: "ui.card.takes_nothing", // a card that takes from no store: its only price is its share of time
-  noRoom: "ui.card.no_room", // "{store}": a full-paused card's face: every store it fills is full (CONTRACT.txt, "FULL OUTPUT")
+  noRoom: "ui.card.no_room", // "{store}": a full-paused card's face: every store it fills is full (contract/full-output.txt, "FULL OUTPUT")
   needsStep: "ui.card.needs_step", // "{card} {have}/{n}": a card held back by another card's completions
   ledgerHeading: "ui.heading.ledger",
   ledgerYours: "ui.ledger.yours", // the ledger's group of the player's own stores
@@ -251,7 +251,7 @@ export const UI = {
 
 export type Slots = Record<string, string>;
 
-/** The text table with every person's name slot and each find's `{found}` slot filled (CONTRACT.txt, "Text and
+/** The text table with every person's name slot and each find's `{found}` slot filled (contract/text-and-numbers.txt, "Text and
  * numbers", {<lane>}, {found}): the lane's name_key text, lowercased in a line as the lines' voice writes it; the
  * amount a find found, in whole items. Any other slot is left for fill(). */
 function named(content: Content): Map<string, string> {

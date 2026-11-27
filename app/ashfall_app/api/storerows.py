@@ -1,4 +1,4 @@
-"""View.store_rows: each ledger store's net as set and where it heads (CONTRACT.txt, "Store rows"). The rates are
+"""View.store_rows: each ledger store's net as set and where it heads (contract/store-rows.txt, "Store rows"). The rates are
 setrates.py's, the same running set as goal_rows, so a dry run's goals and stores are one simulation."""
 from .. import engine as e
 from ..engine.mixruns import mix_entries

@@ -1,4 +1,4 @@
-// The Book's Map page (CONTRACT.txt, "MAP"; docs/decisions.md, "A world map"): the town and the places found so far on
+// The Book's Map page (contract/map.txt, "MAP"; docs/decisions.md, "A world map"): the town and the places found so far on
 // one sheet, north up, each an engraved stamp (the town's warm, the rest cool) with its name in clear space beside it, and
 // the named places listed beside the sheet (under it on a phone), so no name needs a hover. Offered only once a place is
 // revealed. The stamps' manifest is fetched when the page is first offered; the layout is game/maplayout.ts's, redrawn

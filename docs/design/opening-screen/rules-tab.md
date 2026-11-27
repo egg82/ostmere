@@ -84,7 +84,7 @@ While tired → Rest
 - **Facts only, in the ledger's grammar:** how many times the rule came on, then its last start and, once it has let
   go since, its last let-go, each with the store's level at that moment (never for a chip's rule) and how long ago.
 - **The record is the server's,** since a rule can come on and let go while the page is closed (Step.rule_runs,
-  CONTRACT.txt). It is a chronicle record, not a new system: the engine reports each order's latch turning true or
+  contract/). It is a chronicle record, not a new system: the engine reports each order's latch turning true or
   false (`engine/rulelog.py`), and the save keeps one entry per rule, the most recent few, pruned as it is written.
 - **A rule is known by what it says,** its condition and what it runs, since rules have no id. A reorder keeps its
   entry. An edit makes it a new rule, so the old entry goes and the edited one starts its own the next time it comes
@@ -185,7 +185,7 @@ Remove                       [Copy rule] [Add rule] Remove and Copy rule only wh
   number stepped an item at a time, and switching keeps the level where it reads now. A share is reached at the share
   itself from either side, so `down to empty` and `until empty` both mean nothing shown. The band is at least one
   item and inside the store's cap, so a rule never flips at one level and is never always true (the conventions:
-  `api/CONTRACT.txt`), except on a store nothing that runs raises (only a lost fight, a find or an answer adds to
+  `api/contract/`), except on a store nothing that runs raises (only a lost fight, a find or an answer adds to
   it, as to hurt), which cannot flip on a flow: there the band may be none (`hurt reaches 1, until down to empty`). A store under two items is off.
 - The words put a number before the store and use no verb (`Under 3 stones, until 8`, `12 or more dry wood, until
   under 6`), so they read right whatever the store's name; a share follows the store (`Dry wood down to a quarter,

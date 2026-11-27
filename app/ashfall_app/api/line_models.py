@@ -1,4 +1,4 @@
-"""Wire models of the content's log lines (Content.line_infos): each key's kind and what writes it (CONTRACT.txt, "Line
+"""Wire models of the content's log lines (Content.line_infos): each key's kind and what writes it (contract/endpoints.txt, "Line
 causes"). The conventions in models.py hold here."""
 from typing import Annotated, Literal
 
@@ -44,7 +44,7 @@ class AnswerCause(BaseModel):
 
 
 class Mention(BaseModel):
-    """A mention line: `lane`'s person joined or left, counted into the day's one line the page words (CONTRACT.txt,
+    """A mention line: `lane`'s person joined or left, counted into the day's one line the page words (contract/people.txt,
     "People")."""
 
     lane: str
@@ -75,6 +75,6 @@ class LineInfo(BaseModel):
     """What writes the line, read from where its key is authored: one place, or several levels of one skill; null for
     the opening's first lines, the end's, and a beat waiting on a lane's rules."""
     person: bool
-    """A story line of an outcome where a `line` person joins or leaves (CONTRACT.txt, "People")."""
+    """A story line of an outcome where a `line` person joins or leaves (contract/people.txt, "People")."""
     mention: Mention | None
     """Set on a mention line, which has no text of its own: the page counts it into the day's mention."""

@@ -1,4 +1,4 @@
-"""Saves across releases and pods, and the answers that say so (CONTRACT.txt: SAVES ACROSS RELEASES AND PODS, 503
+"""Saves across releases and pods, and the answers that say so (contract/saves-across-releases-and-pods.txt: SAVES ACROSS RELEASES AND PODS, 503
 save_unavailable, X-Ashfall-Build). A newer build's save and an older rules' save are planted in the row (rows.py):
 the contract names no way to stand up two builds with different rules through HTTP."""
 import re

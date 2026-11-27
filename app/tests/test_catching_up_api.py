@@ -1,4 +1,4 @@
-"""A long absence over the API (api/CONTRACT.txt, Step and ERRORS): every Step says whether it is still catching up
+"""A long absence over the API (api/contract/, Step and ERRORS): every Step says whether it is still catching up
 and to what game time, and a decision, a forecast or a dry run on a save that is behind is refused with a 409
 `catching_up` rather than applied. The app is the real one on a test database; its saves service is given a stop that
 cuts every request after five instants, since which stop production uses is not part of the contract."""
@@ -93,7 +93,7 @@ def test_a_decision_goes_through_once_the_save_has_caught_up(game: GameClient, b
 ], ids=["forecast", "dry-run"])
 def test_a_forecast_or_a_dry_run_on_a_save_that_is_behind_is_refused_and_writes_nothing(
         game: GameClient, behind: int, path: str, body: Json | None):
-    """Both are reads (CONTRACT.txt, "Forecast"): the 409's step is the save as stored, with no lines."""
+    """Both are reads (contract/forecast.txt, "Forecast"): the 409's step is the save as stored, with no lines."""
     before = stored(game, behind)
     r = game.client.post(f"/api/saves/{behind}/{path}", json=body)
     assert r.status_code == 409 and r.json()["code"] == "catching_up", r.text

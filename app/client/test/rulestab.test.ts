@@ -347,7 +347,7 @@ expect("a task rule doesn't move", reorderRule(tab, 3, 0), null);
   expect("its heading names the task", one(e.root, ".cond-heading").textContent, "Run Smoke roots when…");
 }
 
-// Share levels (CONTRACT.txt, "Share levels"): a new rule's levels are shares, each picked by name or stepped by five
+// Share levels (contract/endpoints.txt, "Share levels"): a new rule's levels are shares, each picked by name or stepped by five
 // points, and either level switches to an exact number and back, standing where it reads now. An existing rule of
 // numbers switches the same way. Dead wood's cap is 40.
 {

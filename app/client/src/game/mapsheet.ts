@@ -1,4 +1,4 @@
-// The world map's places and their art (CONTRACT.txt, "MAP"; docs/decisions.md, "A world map"): which places are
+// The world map's places and their art (contract/map.txt, "MAP"; docs/decisions.md, "A world map"): which places are
 // revealed, and which variant of its stamp kind each is drawn with. Pure: a variant is a shuffle bag keyed by the save and
 // the kind, walked over every place of the kind in content order, so a place keeps its art as others are revealed.
 import type { Content, View } from "../api/types";

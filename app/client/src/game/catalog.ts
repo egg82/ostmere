@@ -24,9 +24,9 @@ export class Catalog {
   readonly threats: Map<string, ThreatInfo>;
   private readonly lines: Map<string, LineInfo>;
   readonly features: Map<string, string | null>;
-  /** The store the Camp bar is drawn from; never a ledger line (CONTRACT.txt). */
+  /** The store the Camp bar is drawn from; never a ledger line (contract/). */
   readonly campStore: string | null;
-  /** The order cards that answer a chip: offered in the hands strip, never under a ledger line (CONTRACT.txt). */
+  /** The order cards that answer a chip: offered in the hands strip, never under a ledger line (contract/). */
   readonly chipCards: OrderCard[];
   /** Each store's ledger-line order cards, in content order: a later one supersedes an earlier once it is offered. */
   private readonly orderCards = new Map<string, OrderCard[]>();
@@ -78,17 +78,17 @@ export class Catalog {
     return kind;
   }
 
-  /** What writes a line, read from where its key is authored (CONTRACT.txt, "Line causes"); null: nothing does. */
+  /** What writes a line, read from where its key is authored (contract/endpoints.txt, "Line causes"); null: nothing does. */
   lineCause(key: string): LineCause | null {
     return this.lines.get(key)?.cause ?? null;
   }
 
-  /** A mention line's lane and way (CONTRACT.txt, "PEOPLE"); null for any other line. */
+  /** A mention line's lane and way (contract/people.txt, "PEOPLE"); null for any other line. */
   mention(key: string): Mention | null {
     return this.lines.get(key)?.mention ?? null;
   }
 
-  /** The line tells a person told by a line joining or leaving (CONTRACT.txt, "PEOPLE"). */
+  /** The line tells a person told by a line joining or leaving (contract/people.txt, "PEOPLE"). */
   tellsPerson(key: string): boolean {
     return this.lines.get(key)?.person === true;
   }
@@ -124,12 +124,12 @@ export class Catalog {
     return this.label(this.skills.get(skill)?.label_key);
   }
 
-  /** A card's or a standing action's label: they share one namespace (CONTRACT.txt). */
+  /** A card's or a standing action's label: they share one namespace (contract/). */
   runnerLabel(runner: string): string {
     return this.cards.has(runner) ? this.cardLabel(runner) : this.label(this.content.standing_infos.find((a) => a.action === runner)?.label_key);
   }
 
-  /** A lane's label: the last of its later labels whose unlock `view` holds, else its own (CONTRACT.txt, "A lane run
+  /** A lane's label: the last of its later labels whose unlock `view` holds, else its own (contract/a-lane-run-by-rules.txt, "A lane run
    * by rules"). */
   laneLabel(lane: string, view?: View): string {
     const info = this.lanes.get(lane);
@@ -157,12 +157,12 @@ export class Catalog {
     return this.cardOrder.get(card) ?? Number.MAX_SAFE_INTEGER;
   }
 
-  /** Cards the player's mix may hold: those whose lane is the hands (CONTRACT.txt). */
+  /** Cards the player's mix may hold: those whose lane is the hands (contract/). */
   mixable(card: string): boolean {
     return this.laneOf(card) === "hands";
   }
 
-  /** Whether the view's unlock set holds this id (the view's own say on what exists, CONTRACT.txt). */
+  /** Whether the view's unlock set holds this id (the view's own say on what exists, contract/). */
   unlocked(view: View, category: View["unlocked"][number]["category"], id: string): boolean {
     return view.unlocked.some((u) => u.category === category && u.id === id);
   }
