@@ -11,7 +11,7 @@ import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import { Catalog } from "../src/game/catalog";
 import { Keeps } from "../src/game/keeps";
-import { Asks } from "../src/ui/asks";
+import { Asks } from "../src/ui/asks/asks";
 import { PHONE } from "../src/ui/layout";
 import { Screen } from "../src/ui/screen";
 

@@ -5,8 +5,8 @@ import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
-import { Glow } from "../src/ui/fresh";
-import { Lessons } from "../src/ui/lessons";
+import { Glow } from "../src/ui/feedback/fresh";
+import { Lessons } from "../src/ui/lessons/lessons";
 import { keepsOf, NEW_FLAT } from "./kept";
 
 install();

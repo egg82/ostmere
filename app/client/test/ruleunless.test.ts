@@ -9,7 +9,7 @@ import { guardsStep } from "../fixtures/guards";
 import { fixtureStep } from "../fixtures/steps";
 import type { Condition, Decision, Order, View } from "../src/api/types";
 import { buildGuard, guardValid } from "../src/game/guarddraft";
-import { RulesTab } from "../src/ui/rules";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 

@@ -6,9 +6,9 @@ import { testContext } from "./context";
 import { townStep } from "../fixtures/town";
 import type { View } from "../src/api/types";
 import { LESSONS, TOWN_MIX } from "../src/game/lessons";
-import { Glow } from "../src/ui/fresh";
-import { LaneRows } from "../src/ui/lanerows";
-import { Lessons } from "../src/ui/lessons";
+import { Glow } from "../src/ui/feedback/fresh";
+import { LaneRows } from "../src/ui/town/lanerows";
+import { Lessons } from "../src/ui/lessons/lessons";
 import { keepsOf, NEW_FLAT, type Flat } from "./kept";
 
 install();

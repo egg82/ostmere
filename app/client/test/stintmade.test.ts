@@ -3,7 +3,7 @@
 import { Catalog } from "../src/game/catalog";
 import { fixtureContent, Q } from "../fixtures/content";
 import type { RuleRun } from "../src/api/types";
-import { stintFacts } from "../src/ui/stintlately";
+import { stintFacts } from "../src/ui/next/stintlately";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

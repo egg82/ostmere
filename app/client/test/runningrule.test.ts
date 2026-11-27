@@ -10,7 +10,7 @@ import { conditionWords, taskRules } from "../src/game/orders";
 import { subjectChoices } from "../src/game/ruleoffers";
 import { ruleSideOf } from "../src/game/ruleside";
 import { buildSubject } from "../src/game/subjectrule";
-import { subjectRows } from "../src/ui/condsubject";
+import { subjectRows } from "../src/ui/condition/condsubject";
 
 install();
 const catalog = new Catalog(fixtureContent);

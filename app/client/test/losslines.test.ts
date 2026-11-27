@@ -8,8 +8,8 @@ import { fixtureContent } from "../fixtures/content";
 import { Catalog } from "../src/game/catalog";
 import { lostPool } from "../src/game/fights";
 import { NewMarks } from "../src/game/marks";
-import { Cards } from "../src/ui/cards";
-import { Story } from "../src/ui/story";
+import { Cards } from "../src/ui/cards/cards";
+import { Story } from "../src/ui/story/story";
 import type { FightInfo, JournalDay } from "../src/api/types";
 import { rig, text as rigText } from "./journalrig";
 

@@ -11,7 +11,7 @@ import type { Card, Order, QueueEntry, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { tapUntil } from "../src/game/queue";
 import { untilDone } from "../src/game/untildone";
-import { Cards } from "../src/ui/cards";
+import { Cards } from "../src/ui/cards/cards";
 import { NewMarks } from "../src/game/marks";
 import { pageRig } from "./personrig";
 

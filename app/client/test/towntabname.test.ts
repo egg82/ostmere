@@ -7,10 +7,10 @@ import { Catalog } from "../src/game/catalog";
 import { mixLabel } from "../src/game/orders";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
-import { LaneRows } from "../src/ui/lanerows";
-import { sideSwitch } from "../src/ui/ruleswitch";
+import { LaneRows } from "../src/ui/town/lanerows";
+import { sideSwitch } from "../src/ui/rules/ruleswitch";
 import { PanelTabs } from "../src/ui/tabs";
-import { TownView } from "../src/ui/townview";
+import { TownView } from "../src/ui/town/townview";
 
 install();
 

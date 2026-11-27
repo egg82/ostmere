@@ -4,14 +4,14 @@
 import type { Condition, View } from "../api/types";
 import type { Keeps } from "../game/keeps";
 import { Layer } from "./back";
-import type { Book } from "./book";
+import type { Book } from "./book/book";
 import { revealBelow } from "./dom";
-import type { MixEditor } from "./editor";
-import type { GlowWhile } from "./fresh";
-import type { Hands } from "./hands";
+import type { MixEditor } from "./mixes/editor";
+import type { GlowWhile } from "./feedback/fresh";
+import type { Hands } from "./hands/hands";
 import { PHONE } from "./layout";
 import type { RuleTarget } from "./part";
-import type { RulesTab } from "./rules";
+import type { RulesTab } from "./rules/rules";
 import type { PanelTabs, Tab } from "./tabs";
 
 /** What the navigation drives: the screen's parts and the nodes it seats. */

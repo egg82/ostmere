@@ -4,8 +4,8 @@ import { fakeDocument, type FakeEl } from "./fake-dom";
 import { testContext, type Recorded } from "./context";
 import type { Catalog } from "../src/game/catalog";
 import type { Decision, Mix, View } from "../src/api/types";
-import { Glow } from "../src/ui/fresh";
-import { LaneRows } from "../src/ui/lanerows";
+import { Glow } from "../src/ui/feedback/fresh";
+import { LaneRows } from "../src/ui/town/lanerows";
 
 export interface PageRig {
   rows: LaneRows;

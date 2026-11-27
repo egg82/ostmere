@@ -97,7 +97,7 @@ function times<T>(q: ArrivalQueue<T>, from: number, until = from + 30_000): Arra
     },
     performance: { now: () => now },
   });
-  const { Reveal } = await import("../src/ui/reveal");
+  const { Reveal } = await import("../src/ui/feedback/reveal");
   const node = (top = 100) => {
     const cls = new Set<string>();
     return {
@@ -170,7 +170,7 @@ function times<T>(q: ArrivalQueue<T>, from: number, until = from + 30_000): Arra
   expect("then", ran, ["idle", "burst", "glow"]);
 
   // The glow waits its turn too: offered while a line is read, it comes on after.
-  const { Glow } = await import("../src/ui/fresh");
+  const { Glow } = await import("../src/ui/feedback/fresh");
   const glow = new Glow(r);
   const target = { ...node(), addEventListener: () => undefined };
   now += 5000;

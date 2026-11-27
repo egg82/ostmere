@@ -6,9 +6,9 @@ import { fixtureContent } from "../fixtures/content";
 import { Catalog } from "../src/game/catalog";
 import type { Card, View } from "../src/api/types";
 import { kindLabel, kindsByLead, shownKind } from "../src/game/variants";
-import { KindPicks } from "../src/ui/kindpick";
+import { KindPicks } from "../src/ui/cards/kindpick";
 import { testContext } from "./context";
-import { Glow } from "../src/ui/fresh";
+import { Glow } from "../src/ui/feedback/fresh";
 
 install();
 

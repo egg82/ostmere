@@ -10,9 +10,9 @@ import { fixtureStep } from "../fixtures/steps";
 import type { Card, Decision, QueueEntry, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { moveQueued, onFace, planCards, rowStep, tapUntil, unqueue, whenReady } from "../src/game/queue";
-import { nextRows } from "../src/ui/nextlist";
-import { NextOrder } from "../src/ui/nextorder";
-import { StintPlan } from "../src/ui/stintplan";
+import { nextRows } from "../src/ui/next/nextlist";
+import { NextOrder } from "../src/ui/next/nextorder";
+import { StintPlan } from "../src/ui/next/stintplan";
 
 install();
 

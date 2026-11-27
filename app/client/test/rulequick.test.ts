@@ -7,7 +7,7 @@ import { dayOneStep } from "../fixtures/dayone";
 import type { Decision, View } from "../src/api/types";
 import { fixtureContent } from "../fixtures/content";
 import { Catalog } from "../src/game/catalog";
-import { RulesTab } from "../src/ui/rules";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 

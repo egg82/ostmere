@@ -6,9 +6,9 @@ import { registerSound, resetSound } from "../src/audio/locator";
 import { browserSoundSwitch } from "../src/audio/mute";
 import { browserStraight } from "../src/app/straight";
 import { Text, UI } from "../src/game/text";
-import { ReminderRow, type ReminderDeps } from "../src/ui/reminders";
-import { SettingsSheet } from "../src/ui/settings";
-import { soundControl } from "../src/ui/soundcontrol";
+import { ReminderRow, type ReminderDeps } from "../src/ui/settings/reminders";
+import { SettingsSheet } from "../src/ui/settings/settings";
+import { soundControl } from "../src/ui/settings/soundcontrol";
 
 install();
 

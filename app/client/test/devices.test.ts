@@ -8,7 +8,7 @@ import { takeJoinLink } from "../src/app/joinlink";
 import { fixtureContent } from "../fixtures/content";
 import { askLine, joinWith, refusal, refusalLine } from "../src/game/joining";
 import { Text, UI } from "../src/game/text";
-import { qrSvg } from "../src/ui/qr";
+import { qrSvg } from "../src/ui/devices/qr";
 
 function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(what);

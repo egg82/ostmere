@@ -10,19 +10,19 @@ import { Scene, SCENE_MANIFEST } from "./scene/scene";
 import { SelfUpdate } from "./app/selfupdate";
 import { browserStraight, type Straight } from "./app/straight";
 import { noteGame } from "./telemetry";
-import { CatchingUp } from "./ui/catchingup";
-import { Devices } from "./ui/devices";
+import { CatchingUp } from "./ui/story/catchingup";
+import { Devices } from "./ui/devices/devices";
 import { remindersConfig } from "./app/pageconfig";
 import { browserEnv, pushCap } from "./app/push";
-import { ReminderMention } from "./ui/remindermention";
-import { ReminderRow } from "./ui/reminders";
+import { ReminderMention } from "./ui/settings/remindermention";
+import { ReminderRow } from "./ui/settings/reminders";
 import { createBed } from "./audio/bed";
 import { onSing } from "./audio/cues";
 import { createEvening } from "./audio/evening";
 import { browserSoundSwitch } from "./audio/mute";
-import { SettingsSheet } from "./ui/settings";
-import { soundControl } from "./ui/soundcontrol";
-import { GamesSheet } from "./ui/games";
+import { SettingsSheet } from "./ui/settings/settings";
+import { soundControl } from "./ui/settings/soundcontrol";
+import { GamesSheet } from "./ui/front/games";
 import { Screen } from "./ui/screen";
 
 /** Which save to play: one to open (the account's newest), or a new one (Begin). */

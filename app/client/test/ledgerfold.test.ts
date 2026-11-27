@@ -5,9 +5,9 @@ import { fixtureStep } from "../fixtures/steps";
 import { fixtureContent } from "../fixtures/content";
 import { Catalog } from "../src/game/catalog";
 import type { LedgerLine } from "../src/api/types";
-import { LedgerGroups } from "../src/ui/ledgergroups";
+import { LedgerGroups } from "../src/ui/ledger/ledgergroups";
 import { testContext } from "./context";
-import { Glow } from "../src/ui/fresh";
+import { Glow } from "../src/ui/feedback/fresh";
 
 install();
 

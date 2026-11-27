@@ -10,7 +10,7 @@ import { townStep } from "../fixtures/town";
 import type { Card, Content, LedgerLine, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { wastedOn } from "../src/game/wasted";
-import { CardNeeds } from "../src/ui/cardneeds";
+import { CardNeeds } from "../src/ui/cards/cardneeds";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

@@ -9,7 +9,7 @@ import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { speedups } from "../src/game/levelled";
-import { Cards } from "../src/ui/cards";
+import { Cards } from "../src/ui/cards/cards";
 import { NewMarks } from "../src/game/marks";
 
 install();

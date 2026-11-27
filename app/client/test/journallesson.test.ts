@@ -9,9 +9,9 @@ import { NOTES_A, NOTES_D } from "../fixtures/journal";
 import { fixtureStep } from "../fixtures/steps";
 import type { LedgerLine, View } from "../src/api/types";
 import { CLOCK, FIRST_MIX, FIRST_RULE, JOURNAL, JOURNAL_NUMBERS } from "../src/game/lessons";
-import { Glow } from "../src/ui/fresh";
-import { Ledger } from "../src/ui/ledger";
-import { Lessons } from "../src/ui/lessons";
+import { Glow } from "../src/ui/feedback/fresh";
+import { Ledger } from "../src/ui/ledger/ledger";
+import { Lessons } from "../src/ui/lessons/lessons";
 import { keepsOf, NEW_FLAT, type Flat } from "./kept";
 
 install();

@@ -10,8 +10,8 @@ import { dayTwoStep } from "../fixtures/daytwo";
 import type { Order, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { actionWords, ruleDecisions } from "../src/game/orders";
-import { RulesTab } from "../src/ui/rules";
-import { whyOff } from "../src/ui/rulewhy";
+import { RulesTab } from "../src/ui/rules/rules";
+import { whyOff } from "../src/ui/rules/rulewhy";
 
 install();
 

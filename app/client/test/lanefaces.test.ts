@@ -6,9 +6,9 @@ import { dayTwoStep } from "../fixtures/daytwo";
 import type { View } from "../src/api/types";
 import { keepsOf } from "./kept";
 import { el } from "../src/ui/dom";
-import { LaneRows } from "../src/ui/lanerows";
-import { RulesTab } from "../src/ui/rules";
-import { StintPlan } from "../src/ui/stintplan";
+import { LaneRows } from "../src/ui/town/lanerows";
+import { RulesTab } from "../src/ui/rules/rules";
+import { StintPlan } from "../src/ui/next/stintplan";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

@@ -8,7 +8,7 @@ import { fightsStep, withHurtChip } from "../fixtures/fights";
 import type { View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { tryRule } from "../src/game/storerule";
-import { draftWhen, editDraft } from "../src/ui/conditiondraft";
+import { draftWhen, editDraft } from "../src/ui/condition/conditiondraft";
 
 install();
 

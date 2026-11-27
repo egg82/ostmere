@@ -11,10 +11,10 @@ import { fixtureStep } from "../fixtures/steps";
 import type { Card, LedgerLine, Step, Unlock, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { Keeps } from "../src/game/keeps";
-import { Hands } from "../src/ui/hands";
-import { Ledger } from "../src/ui/ledger";
+import { Hands } from "../src/ui/hands/hands";
+import { Ledger } from "../src/ui/ledger/ledger";
 import { Screen } from "../src/ui/screen";
-import { LADDER } from "../src/ui/ladder";
+import { LADDER } from "../src/ui/feedback/ladder";
 import { keepsOf, NEW_FLAT, type Flat } from "./kept";
 
 const LEVEL = LADDER.level.pulse ?? "";

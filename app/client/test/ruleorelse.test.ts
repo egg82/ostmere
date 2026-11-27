@@ -10,7 +10,7 @@ import { guardsStep } from "../fixtures/guards";
 import { fixtureStep } from "../fixtures/steps";
 import type { Decision, Order, OrderVerb, View } from "../src/api/types";
 import { ruleExists } from "../src/game/orders";
-import { RulesTab } from "../src/ui/rules";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 

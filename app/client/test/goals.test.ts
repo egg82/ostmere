@@ -10,8 +10,8 @@ import type { Goal, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { storyMarks } from "../src/game/story";
 import { UI } from "../src/game/text";
-import { CampBar } from "../src/ui/camp";
-import { WaitLine } from "../src/ui/waitline";
+import { CampBar } from "../src/ui/story/camp";
+import { WaitLine } from "../src/ui/story/waitline";
 
 install();
 

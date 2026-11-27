@@ -8,7 +8,7 @@ import { fixtureStep } from "../fixtures/steps";
 import type { LedgerLine, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { workNeeds } from "../src/game/dryneed";
-import { Ledger } from "../src/ui/ledger";
+import { Ledger } from "../src/ui/ledger/ledger";
 import { keepsOf, NEW_FLAT } from "./kept";
 
 install();

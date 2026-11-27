@@ -8,7 +8,7 @@ import type { LedgerLine, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { chipCards } from "../src/game/cues";
 import { hintedSwitch } from "../src/game/ruleoffers";
-import { Ledger } from "../src/ui/ledger";
+import { Ledger } from "../src/ui/ledger/ledger";
 
 install();
 

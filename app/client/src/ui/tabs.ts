@@ -6,7 +6,7 @@
 import type { Catalog } from "../game/catalog";
 import { UI } from "../game/text";
 import { el, tapFeedback } from "./dom";
-import { unmark } from "./fresh";
+import { unmark } from "./feedback/fresh";
 
 export type Tab = "cards" | "town" | "rules" | "book";
 

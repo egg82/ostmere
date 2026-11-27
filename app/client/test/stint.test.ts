@@ -7,7 +7,7 @@ import { Catalog } from "../src/game/catalog";
 import { fixtureContent, Q } from "../fixtures/content";
 import type { Condition, GoalRow, QueueEntry, View } from "../src/api/types";
 import { controllingEntry, queueStint, shareUntil, stintRow } from "../src/game/queue";
-import { stintFacts, stintParts, stintWords } from "../src/ui/stint";
+import { stintFacts, stintParts, stintWords } from "../src/ui/next/stint";
 
 install();
 

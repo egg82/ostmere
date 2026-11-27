@@ -12,9 +12,9 @@ import { Catalog } from "../src/game/catalog";
 import { canQueue } from "../src/game/queue";
 import { waitsOnUnseen } from "../src/game/ready";
 import { UI } from "../src/game/text";
-import { CardNeeds } from "../src/ui/cardneeds";
-import { Ledger } from "../src/ui/ledger";
-import { Skills } from "../src/ui/skills";
+import { CardNeeds } from "../src/ui/cards/cardneeds";
+import { Ledger } from "../src/ui/ledger/ledger";
+import { Skills } from "../src/ui/skills/skills";
 import { keepsOf } from "./kept";
 
 install();

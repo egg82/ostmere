@@ -7,7 +7,7 @@ import { fixtureStep } from "../fixtures/steps";
 import { ApiFailure } from "../src/api/api";
 import type { SaveInfo, View } from "../src/api/types";
 import { Text } from "../src/game/text";
-import { Places, type Paint } from "../src/ui/places";
+import { Places, type Paint } from "../src/ui/front/places";
 import { NEW_SAVE } from "../src/game/keeps";
 
 install();

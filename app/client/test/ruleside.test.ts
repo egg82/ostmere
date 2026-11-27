@@ -10,7 +10,7 @@ import type { View } from "../src/api/types";
 import type { SideKept } from "../src/app/ruleside";
 import { landedSide, ruleSideOf, type RuleSide } from "../src/game/ruleside";
 import { people } from "../src/game/town";
-import { RulesTab } from "../src/ui/rules";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

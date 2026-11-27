@@ -11,7 +11,7 @@ import { Catalog } from "../src/game/catalog";
 import { Keeps, NEW_SAVE } from "../src/game/keeps";
 import { ruleEntries } from "../src/game/rulerows";
 import { UI } from "../src/game/text";
-import { STORES_SHOWN } from "../src/ui/chapter";
+import { STORES_SHOWN } from "../src/ui/book/chapter";
 import { Screen } from "../src/ui/screen";
 
 install();

@@ -9,7 +9,7 @@ import { fixtureStep } from "../fixtures/steps";
 import type { LedgerLine, Order, OrderState, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { UI } from "../src/game/text";
-import { Ledger } from "../src/ui/ledger";
+import { Ledger } from "../src/ui/ledger/ledger";
 
 install();
 

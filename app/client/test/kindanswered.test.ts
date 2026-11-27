@@ -7,7 +7,7 @@ import { fixtureContent } from "../fixtures/content";
 import { dayTwoStep } from "../fixtures/daytwo";
 import type { View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
-import { RulesTab } from "../src/ui/rules";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 Object.assign(window, { innerWidth: 1440, innerHeight: 900 });

@@ -7,8 +7,8 @@ import { pageRig } from "./personrig";
 import { townStep } from "../fixtures/town";
 import type { View } from "../src/api/types";
 import type { RuleSide } from "../src/game/ruleside";
-import { RulesTab } from "../src/ui/rules";
-import { whoChoices } from "../src/ui/rulewho";
+import { RulesTab } from "../src/ui/rules/rules";
+import { whoChoices } from "../src/ui/rules/rulewho";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

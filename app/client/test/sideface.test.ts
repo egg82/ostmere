@@ -8,8 +8,8 @@ import { fightsStep } from "../fixtures/fights";
 import type { Content, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { NewMarks } from "../src/game/marks";
-import { Cards } from "../src/ui/cards";
-import { Glow } from "../src/ui/fresh";
+import { Cards } from "../src/ui/cards/cards";
+import { Glow } from "../src/ui/feedback/fresh";
 import { fixtureContent } from "../fixtures/content";
 
 install();

@@ -7,7 +7,7 @@ import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureContent } from "../fixtures/content";
 import { Catalog } from "../src/game/catalog";
-import { Story } from "../src/ui/story";
+import { Story } from "../src/ui/story/story";
 
 install();
 

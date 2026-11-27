@@ -5,7 +5,7 @@ import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
 import type { GoalRow, MixRows } from "../src/api/types";
 import type { PartContext } from "../src/ui/part";
-import { MixSelector } from "../src/ui/selector";
+import { MixSelector } from "../src/ui/mixes/selector";
 
 install();
 

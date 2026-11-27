@@ -6,8 +6,8 @@ import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
 import { NewMarks } from "../src/game/marks";
-import { MixEditor } from "../src/ui/editor";
-import { Lessons } from "../src/ui/lessons";
+import { MixEditor } from "../src/ui/mixes/editor";
+import { Lessons } from "../src/ui/lessons/lessons";
 import { keepsOf, NEW_FLAT } from "./kept";
 
 install();

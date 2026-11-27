@@ -7,7 +7,7 @@ import { testContext } from "./context";
 import { townStep } from "../fixtures/town";
 import type { View } from "../src/api/types";
 import { NewMarks } from "../src/game/marks";
-import { MixEditor } from "../src/ui/editor";
+import { MixEditor } from "../src/ui/mixes/editor";
 import type { PartContext } from "../src/ui/part";
 
 install();

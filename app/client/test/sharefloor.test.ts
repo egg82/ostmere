@@ -2,7 +2,7 @@
 // arrow-key steps, and a card never goes lower (a card at 0% is the remove control's job).
 import { FakeEl, FakeEvent, fakeDocument, install } from "./fake-dom";
 import { MIN_SHARE_BP } from "../src/game/mix";
-import { ShareBar } from "../src/ui/sharebar";
+import { ShareBar } from "../src/ui/mixes/sharebar";
 
 install();
 

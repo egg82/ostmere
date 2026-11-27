@@ -4,7 +4,7 @@ import { Catalog } from "../src/game/catalog";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Content, View } from "../src/api/types";
-import { FeatureCard } from "../src/ui/featurecard";
+import { FeatureCard } from "../src/ui/story/featurecard";
 
 const vars = new Map<string, string>();
 let timers: (() => void)[] = [];

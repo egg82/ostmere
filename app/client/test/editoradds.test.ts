@@ -5,7 +5,7 @@ import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import { Catalog } from "../src/game/catalog";
 import { NewMarks } from "../src/game/marks";
-import { AddFold } from "../src/ui/editoradds";
+import { AddFold } from "../src/ui/mixes/editoradds";
 
 install();
 

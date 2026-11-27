@@ -10,7 +10,7 @@ import { fixtureStep } from "../fixtures/steps";
 import type { Card, Condition, Content, Need, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { whenWords } from "../src/game/chronwords";
-import { CardNeeds } from "../src/ui/cardneeds";
+import { CardNeeds } from "../src/ui/cards/cardneeds";
 
 install();
 

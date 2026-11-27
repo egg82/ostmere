@@ -5,8 +5,8 @@ import { readGameCss } from "./gamecss";
 import { fakeDocument, install, pointer } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
-import { makeRow } from "../src/ui/cardrow";
-import { WhenReady } from "../src/ui/whenready";
+import { makeRow } from "../src/ui/cards/cardrow";
+import { WhenReady } from "../src/ui/cards/whenready";
 
 install();
 

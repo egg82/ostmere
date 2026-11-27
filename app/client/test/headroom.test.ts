@@ -13,5 +13,5 @@ const css = readGameCss();
 const low = [...css.matchAll(/^ {2}\.low \{([^}]*)\}/gm)].map((m) => m[1] ?? "");
 expect("the panel under the art has rules", low.length > 0, true);
 expect("its floor gives up the head's height", low.some((r) => /min-height: [^;]*- var\(--head-h/.test(r)), true);
-const seat = readFileSync("src/ui/headseat.ts", "utf8");
+const seat = readFileSync("src/ui/story/headseat.ts", "utf8");
 expect("the root learns the head's height", /"--head-h"/.test(seat) && /watch\.observe\(head\)/.test(seat), true);

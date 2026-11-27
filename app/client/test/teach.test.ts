@@ -8,7 +8,7 @@ import { fixtureContent } from "../fixtures/content";
 import type { Card, Mix, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { switchCue } from "../src/game/teach";
-import { CardNeeds } from "../src/ui/cardneeds";
+import { CardNeeds } from "../src/ui/cards/cardneeds";
 
 install();
 

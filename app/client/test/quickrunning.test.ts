@@ -10,8 +10,8 @@ import { Catalog } from "../src/game/catalog";
 import { QUICK_RUNNING, quickRunning, subjectChoices } from "../src/game/ruleoffers";
 import { defaultRule } from "../src/game/storerule";
 import { subjectKey } from "../src/game/subjectrule";
-import { draftWhenRow } from "../src/ui/condwhen";
-import { dropStaleRunning, type Draft } from "../src/ui/conditiondraft";
+import { draftWhenRow } from "../src/ui/condition/condwhen";
+import { dropStaleRunning, type Draft } from "../src/ui/condition/conditiondraft";
 
 install();
 const failures: string[] = [];

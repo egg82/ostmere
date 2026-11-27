@@ -5,7 +5,7 @@ import { fixtureStep } from "../fixtures/steps";
 import { Catalog } from "../src/game/catalog";
 import { fixtureContent, Q } from "../fixtures/content";
 import type { GoalRow, View } from "../src/api/types";
-import { goalRows } from "../src/ui/goaltimes";
+import { goalRows } from "../src/ui/mixes/goaltimes";
 
 install();
 

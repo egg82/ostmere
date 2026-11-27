@@ -6,8 +6,8 @@ import { fixtureStep } from "../fixtures/steps";
 import type { Decision, QueueEntry, RuleRun, View } from "../src/api/types";
 import { NEXT, nextItems, placeItems, reorderedItems, steppedItems, unplacedKey } from "../src/game/nextrow";
 import { moveRule, setRule } from "../src/game/orders";
-import { RulesTab } from "../src/ui/rules";
-import { shownRuns } from "../src/ui/rulelately";
+import { RulesTab } from "../src/ui/rules/rules";
+import { shownRuns } from "../src/ui/rules/rulelately";
 import { testContext } from "./context";
 
 install();

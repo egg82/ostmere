@@ -10,9 +10,9 @@ import { sendable } from "../src/game/presentation";
 import { Text } from "../src/game/text";
 import { fixtureContent } from "../fixtures/content";
 import { el } from "../src/ui/dom";
-import { clock12, clock24, HourSlider, keyed, shaded } from "../src/ui/hourslider";
-import { mentionDue, ReminderMention } from "../src/ui/remindermention";
-import { rowState, windowPhrase } from "../src/ui/reminders";
+import { clock12, clock24, HourSlider, keyed, shaded } from "../src/ui/settings/hourslider";
+import { mentionDue, ReminderMention } from "../src/ui/settings/remindermention";
+import { rowState, windowPhrase } from "../src/ui/settings/reminders";
 
 function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(what);

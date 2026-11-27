@@ -14,7 +14,7 @@ import { play } from "./game";
 import { joinWith, refusalLine, type Refused } from "./game/joining";
 import { Text, UI } from "./game/text";
 import { noteBegin } from "./telemetry";
-import { dress } from "./ui/frontdress";
+import { dress } from "./ui/front/frontdress";
 
 /** What opens a game on the page: the game's own `play`, or a spy in a test. */
 export type PlayGame = (...args: Parameters<typeof play>) => Pick<Session, "begin">;

@@ -9,12 +9,12 @@ import { fixtureStep } from "../fixtures/steps";
 import type { Content, Decision, LedgerLine, Mix, Order, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { NewMarks } from "../src/game/marks";
-import { Hands } from "../src/ui/hands";
-import { MixEditor } from "../src/ui/editor";
+import { Hands } from "../src/ui/hands/hands";
+import { MixEditor } from "../src/ui/mixes/editor";
 import type { PartContext } from "../src/ui/part";
 import type { RuleTarget } from "../src/ui/part";
-import { RulesTab } from "../src/ui/rules";
-import { MixSelector } from "../src/ui/selector";
+import { RulesTab } from "../src/ui/rules/rules";
+import { MixSelector } from "../src/ui/mixes/selector";
 
 install();
 

@@ -5,7 +5,7 @@ import { fakeDocument, type FakeEl, FakeEvent, install, pointer } from "./fake-d
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
 import type { Decision, QueueEntry, View } from "../src/api/types";
-import { RulesTab } from "../src/ui/rules";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 

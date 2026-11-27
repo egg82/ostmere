@@ -13,7 +13,7 @@ import { Catalog } from "../src/game/catalog";
 import { PRESTIGE } from "../src/game/lessons";
 import { changeText, toppedSince } from "../src/game/prestige";
 import { UI } from "../src/game/text";
-import { Skills } from "../src/ui/skills";
+import { Skills } from "../src/ui/skills/skills";
 
 install();
 

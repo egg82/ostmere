@@ -3,8 +3,8 @@
 // "Maximum call stack size exceeded" in the opening, Glow.offer -> Reveal.effect -> (out of sight, run now) -> offer.
 // The fake DOM's nodes have empty rects, so every node here is out of sight.
 import { install } from "./fake-dom";
-import { Glow } from "../src/ui/fresh";
-import { Reveal } from "../src/ui/reveal";
+import { Glow } from "../src/ui/feedback/fresh";
+import { Reveal } from "../src/ui/feedback/reveal";
 
 install();
 

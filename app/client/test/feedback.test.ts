@@ -7,7 +7,7 @@ import { dayOneStep } from "../fixtures/dayone";
 import { fixtureContent } from "../fixtures/content";
 import { Catalog } from "../src/game/catalog";
 import { Keeps } from "../src/game/keeps";
-import { FeedbackSheet } from "../src/ui/feedback";
+import { FeedbackSheet } from "../src/ui/settings/feedback";
 import { Screen } from "../src/ui/screen";
 
 install();

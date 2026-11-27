@@ -7,8 +7,8 @@ import { fixtureStep } from "../fixtures/steps";
 import type { Card, QueueEntry, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { canQueue } from "../src/game/queue";
-import { RulesTab } from "../src/ui/rules";
-import { WhenReady } from "../src/ui/whenready";
+import { RulesTab } from "../src/ui/rules/rules";
+import { WhenReady } from "../src/ui/cards/whenready";
 import { keepsOf } from "./kept";
 
 install();

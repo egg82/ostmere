@@ -9,8 +9,8 @@ import { fightsStep } from "../fixtures/fights";
 import { townStep } from "../fixtures/town";
 import type { Content, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
-import { Cards } from "../src/ui/cards";
-import { Glow } from "../src/ui/fresh";
+import { Cards } from "../src/ui/cards/cards";
+import { Glow } from "../src/ui/feedback/fresh";
 import { NewMarks } from "../src/game/marks";
 import { fixtureContent } from "../fixtures/content";
 

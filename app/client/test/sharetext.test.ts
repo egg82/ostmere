@@ -1,7 +1,7 @@
 // No text sits inside a share bar (docs/design/redesign.md, "Phone frame"; ui/sharebar.ts): the segments are hue alone,
 // and a legend beneath names each one with its share, in the bar's order, following a divider as it moves.
 import { FakeEvent, fakeDocument, install } from "./fake-dom";
-import { ShareBar } from "../src/ui/sharebar";
+import { ShareBar } from "../src/ui/mixes/sharebar";
 
 install();
 

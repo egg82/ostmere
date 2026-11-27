@@ -1,7 +1,7 @@
 // A share bar's dividers are named for the segment before them, from the mix drawn now, on the first draw and after a
 // change of mix (src/ui/sharebar.ts).
 import { install } from "./fake-dom";
-import { ShareBar } from "../src/ui/sharebar";
+import { ShareBar } from "../src/ui/mixes/sharebar";
 
 install();
 

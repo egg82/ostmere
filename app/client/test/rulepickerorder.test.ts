@@ -8,9 +8,9 @@ import { dayOneStep } from "../fixtures/dayone";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
-import { CardGroups } from "../src/ui/cardgroups";
+import { CardGroups } from "../src/ui/cards/cardgroups";
 import { UI } from "../src/game/text";
-import { RulesTab } from "../src/ui/rules";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 

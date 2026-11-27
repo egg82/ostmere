@@ -7,9 +7,9 @@ import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
 import type { LedgerLine, View } from "../src/api/types";
 import { FIRST_MIX, FIRST_RULE } from "../src/game/lessons";
-import { ChipOffer } from "../src/ui/chipoffer";
-import { Ledger } from "../src/ui/ledger";
-import { HELD_MS, Lessons } from "../src/ui/lessons";
+import { ChipOffer } from "../src/ui/story/chipoffer";
+import { Ledger } from "../src/ui/ledger/ledger";
+import { HELD_MS, Lessons } from "../src/ui/lessons/lessons";
 import { keepsOf, NEW_FLAT, type Flat } from "./kept";
 
 install();

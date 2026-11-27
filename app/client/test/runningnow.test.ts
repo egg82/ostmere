@@ -8,7 +8,7 @@ import type { View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { runningNow } from "../src/game/spent";
 import { fixtureContent } from "../fixtures/content";
-import { Hands } from "../src/ui/hands";
+import { Hands } from "../src/ui/hands/hands";
 
 install();
 

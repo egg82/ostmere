@@ -4,8 +4,8 @@ import { fakeDocument, FakeEl, FakeEvent, install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
-import { RulesTab } from "../src/ui/rules";
-import { shiftOf } from "../src/ui/ruleslide";
+import { RulesTab } from "../src/ui/rules/rules";
+import { shiftOf } from "../src/ui/rules/ruleslide";
 
 install();
 

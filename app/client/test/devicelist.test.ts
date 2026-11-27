@@ -7,8 +7,8 @@ import { fixtureDevices } from "../fixtures/devices";
 import { ApiFailure, type GameApi } from "../src/api/api";
 import { dateOf } from "../src/game/format";
 import { Text } from "../src/game/text";
-import { DeviceList } from "../src/ui/devicelist";
-import type { DevicesContext } from "../src/ui/devices";
+import { DeviceList } from "../src/ui/devices/devicelist";
+import type { DevicesContext } from "../src/ui/devices/devices";
 
 install();
 

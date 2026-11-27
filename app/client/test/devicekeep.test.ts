@@ -8,7 +8,7 @@ import { ApiFailure, type GameApi } from "../src/api/api";
 import type { JoinWay, Joined, KeptGames } from "../src/api/types";
 import type { Keeps } from "../src/game/keeps";
 import { Text, UI } from "../src/game/text";
-import { Devices } from "../src/ui/devices";
+import { Devices } from "../src/ui/devices/devices";
 
 install();
 

@@ -8,9 +8,9 @@ import type { Decision, Mix, View } from "../src/api/types";
 import { ruledLaneOf } from "../src/game/lanes";
 import { taskRules } from "../src/game/orders";
 import { NewMarks } from "../src/game/marks";
-import { Cards } from "../src/ui/cards";
-import { pickRow } from "../src/ui/cardpick";
-import { LaneRows } from "../src/ui/lanerows";
+import { Cards } from "../src/ui/cards/cards";
+import { pickRow } from "../src/ui/cards/cardpick";
+import { LaneRows } from "../src/ui/town/lanerows";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

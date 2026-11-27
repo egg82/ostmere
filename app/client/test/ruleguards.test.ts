@@ -8,7 +8,7 @@ import { fixtureStep } from "../fixtures/steps";
 import { BP, Q, TIRED } from "../fixtures/content";
 import type { Condition, LedgerLine, Order, OrderGuard, OrderState, View } from "../src/api/types";
 import { guardWords, ruleActions, ruleCondition } from "../src/game/guardwords";
-import { RulesTab } from "../src/ui/rules";
+import { RulesTab } from "../src/ui/rules/rules";
 import { testContext } from "./context";
 
 install();

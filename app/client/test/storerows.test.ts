@@ -6,7 +6,7 @@ import { fixtureStep } from "../fixtures/steps";
 import { Catalog } from "../src/game/catalog";
 import { fixtureContent } from "../fixtures/content";
 import type { StoreRow, View } from "../src/api/types";
-import { storeRows } from "../src/ui/storetimes";
+import { storeRows } from "../src/ui/mixes/storetimes";
 
 install();
 

@@ -129,7 +129,7 @@ for (const n of [2, 3, 6, 7, 11, 20]) {
       removeEventListener: (t: string, f: () => void) => { if (listeners.get(t) === f) listeners.delete(t); },
     },
   });
-  const { Reveal } = await import("../src/ui/reveal");
+  const { Reveal } = await import("../src/ui/feedback/reveal");
   const node = (top = 100) => {
     const cls = new Set<string>();
     return {

@@ -7,7 +7,7 @@ import type { Order, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { mixRules, ruleExists, ruleFor, ruleLetGo, ruleWords, setRule, taskRules } from "../src/game/orders";
 import { whenChoices } from "../src/game/ruleoffers";
-import { draftWhen } from "../src/ui/conditiondraft";
+import { draftWhen } from "../src/ui/condition/conditiondraft";
 import { buildRule, clampRule, defaultRule, readRule, ruleUntil, ruleWhen, tryRule, valid, type StoreRule } from "../src/game/storerule";
 
 function expect(label: string, got: unknown, want: unknown): void {

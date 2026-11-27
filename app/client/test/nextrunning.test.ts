@@ -5,10 +5,10 @@ import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
 import type { QueueEntry, View } from "../src/api/types";
-import { nextRows } from "../src/ui/nextlist";
-import { NextOrder } from "../src/ui/nextorder";
+import { nextRows } from "../src/ui/next/nextlist";
+import { NextOrder } from "../src/ui/next/nextorder";
 import type { PartContext } from "../src/ui/part";
-import { StintPlan } from "../src/ui/stintplan";
+import { StintPlan } from "../src/ui/next/stintplan";
 
 install();
 const idle = (ctx: PartContext): NextOrder => new NextOrder(ctx, document.createElement("div"), () => null, () => {});

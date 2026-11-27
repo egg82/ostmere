@@ -9,8 +9,8 @@ import type { Content, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import type { ArrivalKind } from "../src/game/arrivals";
 import { el } from "../src/ui/dom";
-import { seatHead } from "../src/ui/headseat";
-import { Story } from "../src/ui/story";
+import { seatHead } from "../src/ui/story/headseat";
+import { Story } from "../src/ui/story/story";
 
 install();
 

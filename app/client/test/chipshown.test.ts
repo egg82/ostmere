@@ -7,7 +7,7 @@ import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Content, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
-import { Story } from "../src/ui/story";
+import { Story } from "../src/ui/story/story";
 
 install();
 

@@ -9,11 +9,11 @@ import { KNOCK_CYCLE_SEMITONES, KNOCK_GAP_MS, resetCues, sing, TICK_RATIOS } fro
 import { hasSound, registerSound, resetSound } from "../src/audio/locator";
 import { LINK_GAP_MS } from "../src/game/arrivals";
 import { NewMarks } from "../src/game/marks";
-import { Cards } from "../src/ui/cards";
-import { Flight } from "../src/ui/flight";
-import { LADDER, play } from "../src/ui/ladder";
-import { Reveal } from "../src/ui/reveal";
-import { StripGlow } from "../src/ui/stripglow";
+import { Cards } from "../src/ui/cards/cards";
+import { Flight } from "../src/ui/asks/flight";
+import { LADDER, play } from "../src/ui/feedback/ladder";
+import { Reveal } from "../src/ui/feedback/reveal";
+import { StripGlow } from "../src/ui/story/stripglow";
 
 let clock = 0;
 Object.defineProperty(performance, "now", { value: () => clock, configurable: true });

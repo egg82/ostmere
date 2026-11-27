@@ -7,8 +7,8 @@ import { fightsStep } from "../fixtures/fights";
 import type { Content, FightInfo, View } from "../src/api/types";
 import { lostPool } from "../src/game/fights";
 import { Catalog } from "../src/game/catalog";
-import { FightPanel } from "../src/ui/fightpanel";
-import { Story } from "../src/ui/story";
+import { FightPanel } from "../src/ui/ledger/fightpanel";
+import { Story } from "../src/ui/story/story";
 import { fixtureContent } from "../fixtures/content";
 
 install();

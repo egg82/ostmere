@@ -8,9 +8,9 @@ import { placesView, withPlaces } from "../fixtures/places";
 import { fixtureStep } from "../fixtures/steps";
 import { Catalog } from "../src/game/catalog";
 import { FIRST_MIX, FIRST_RULE, JOURNAL, JOURNAL_NUMBERS, MAP } from "../src/game/lessons";
-import { Glow } from "../src/ui/fresh";
+import { Glow } from "../src/ui/feedback/fresh";
 import { PHONE } from "../src/ui/layout";
-import { Lessons } from "../src/ui/lessons";
+import { Lessons } from "../src/ui/lessons/lessons";
 import { Screen } from "../src/ui/screen";
 import { keepsOf, NEW_FLAT, type Flat } from "./kept";
 

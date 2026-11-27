@@ -5,8 +5,8 @@ import { install } from "./fake-dom";
 import { fixtureStep } from "../fixtures/steps";
 import { fixtureContent, Q } from "../fixtures/content";
 import type { GoalRow, Mix, RuleRun, View } from "../src/api/types";
-import { RulesTab } from "../src/ui/rules";
-import { StintPlan } from "../src/ui/stintplan";
+import { RulesTab } from "../src/ui/rules/rules";
+import { StintPlan } from "../src/ui/next/stintplan";
 import { keepsOf } from "./kept";
 import { TAUGHT, testContext } from "./context";
 

@@ -4,10 +4,10 @@ import type { Decision } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { FIRST_MIX, FIRST_RULE } from "../src/game/lessons";
 import { HandStreak } from "../src/game/stall";
-import { OrderFires } from "../src/ui/fires";
-import { Glow } from "../src/ui/fresh";
+import { OrderFires } from "../src/ui/cards/fires";
+import { Glow } from "../src/ui/feedback/fresh";
 import type { PartContext, RuleTarget } from "../src/ui/part";
-import type { Arrivals } from "../src/ui/reveal";
+import type { Arrivals } from "../src/ui/feedback/reveal";
 import { fixtureContent } from "../fixtures/content";
 import { keepsOf, NEW_FLAT } from "./kept";
 

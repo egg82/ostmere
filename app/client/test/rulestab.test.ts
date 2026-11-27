@@ -14,14 +14,14 @@ import { Keeps } from "../src/game/keeps";
 import { pointSlot, reorderRule } from "../src/game/orders";
 import { HandStreak } from "../src/game/stall";
 import { buildRule } from "../src/game/storerule";
-import { Flight } from "../src/ui/flight";
-import { Glow, GlowWhile } from "../src/ui/fresh";
-import { Hands } from "../src/ui/hands";
-import { Ledger } from "../src/ui/ledger";
+import { Flight } from "../src/ui/asks/flight";
+import { Glow, GlowWhile } from "../src/ui/feedback/fresh";
+import { Hands } from "../src/ui/hands/hands";
+import { Ledger } from "../src/ui/ledger/ledger";
 import type { PartContext } from "../src/ui/part";
-import type { Arrivals } from "../src/ui/reveal";
-import { RulesTab } from "../src/ui/rules";
-import { MixSelector } from "../src/ui/selector";
+import type { Arrivals } from "../src/ui/feedback/reveal";
+import { RulesTab } from "../src/ui/rules/rules";
+import { MixSelector } from "../src/ui/mixes/selector";
 
 install();
 

@@ -5,7 +5,7 @@ import { FakeEl, FakeEvent, fakeDocument, install, pointer } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { Catalog } from "../src/game/catalog";
 import type { StoreRule } from "../src/game/storerule";
-import { Levels } from "../src/ui/condlevels";
+import { Levels } from "../src/ui/condition/condlevels";
 
 install();
 

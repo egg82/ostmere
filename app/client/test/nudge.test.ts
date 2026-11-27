@@ -1,8 +1,8 @@
 // The idle nudge (ui/nudge.ts): after NUDGE_IDLE_S without a touch, the card the pick gives takes the one glow, unless
 // something else has it; any touch starts the wait again.
 import { install } from "./fake-dom";
-import { Glow } from "../src/ui/fresh";
-import { NUDGE_IDLE_S, IdleNudge } from "../src/ui/nudge";
+import { Glow } from "../src/ui/feedback/fresh";
+import { NUDGE_IDLE_S, IdleNudge } from "../src/ui/story/nudge";
 
 install();
 

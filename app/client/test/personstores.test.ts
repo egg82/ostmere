@@ -8,7 +8,7 @@ import { townStep } from "../fixtures/town";
 import { fixtureContent } from "../fixtures/content";
 import type { Content, Decision, StoreRow, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
-import { LaneRows } from "../src/ui/lanerows";
+import { LaneRows } from "../src/ui/town/lanerows";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

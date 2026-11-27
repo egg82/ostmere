@@ -14,8 +14,8 @@ import { Catalog } from "../src/game/catalog";
 import { NEW_ACCOUNT, NEW_SAVE, NEW_SETTINGS, type Keeps } from "../src/game/keeps";
 import { CAP_RULE, CLOCK, FIRST_MIX, FIRST_RULE, guided, JOURNAL, LESSONS, mayStart, PRESTIGE, TOWN_MIX } from "../src/game/lessons";
 import { Session } from "../src/game/session";
-import { Glow } from "../src/ui/fresh";
-import { Lessons } from "../src/ui/lessons";
+import { Glow } from "../src/ui/feedback/fresh";
+import { Lessons } from "../src/ui/lessons/lessons";
 import { keepsOf, NEW_FLAT } from "./kept";
 
 install();

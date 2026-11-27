@@ -8,7 +8,7 @@ import { fightsStep, withHurtChip } from "../fixtures/fights";
 import type { Decision, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { storeItems } from "../src/game/ruleoffers";
-import { RulesTab } from "../src/ui/rules";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 

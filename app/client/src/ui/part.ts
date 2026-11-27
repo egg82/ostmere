@@ -4,10 +4,10 @@ import type { Catalog } from "../game/catalog";
 import type { Keeps } from "../game/keeps";
 import type { Subject } from "../game/lessons";
 import type { HandStreak } from "../game/stall";
-import type { OrderFires } from "./fires";
-import type { Glow } from "./fresh";
-import type { LaneTarget } from "./laneedit";
-import type { Arrivals } from "./reveal";
+import type { OrderFires } from "./cards/fires";
+import type { Glow } from "./feedback/fresh";
+import type { LaneTarget } from "./condition/laneedit";
+import type { Arrivals } from "./feedback/reveal";
 
 /** What the Rules tab opens on: its list (null), a rule's condition editor, a new rule's (for one person's lane, `newFor`),
  * or a lane's task editor. */

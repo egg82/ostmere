@@ -6,7 +6,7 @@ import { fixtureContent } from "../fixtures/content";
 import { townStep } from "../fixtures/town";
 import type { Card, Content, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
-import { CardNeeds } from "../src/ui/cardneeds";
+import { CardNeeds } from "../src/ui/cards/cardneeds";
 import { pageRig } from "./personrig";
 
 install();

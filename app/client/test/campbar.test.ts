@@ -7,7 +7,7 @@ import { fixtureStep } from "../fixtures/steps";
 import type { Content, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { UI } from "../src/game/text";
-import { CampBar } from "../src/ui/camp";
+import { CampBar } from "../src/ui/story/camp";
 
 install();
 

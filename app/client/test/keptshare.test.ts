@@ -7,9 +7,9 @@ import { pageRig } from "./personrig";
 import { townStep } from "../fixtures/town";
 import type { Content } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
-import { Glow } from "../src/ui/fresh";
-import { makeRow } from "../src/ui/cardrow";
-import { WhenReady } from "../src/ui/whenready";
+import { Glow } from "../src/ui/feedback/fresh";
+import { makeRow } from "../src/ui/cards/cardrow";
+import { WhenReady } from "../src/ui/cards/whenready";
 import { fixtureContent } from "../fixtures/content";
 
 install();

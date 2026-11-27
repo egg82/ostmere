@@ -8,7 +8,7 @@ import { fixtureStep } from "../fixtures/steps";
 import type { Decision, LedgerLine, Order, OrderCard, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { offeredCard, risingCard, risingLine } from "../src/game/cues";
-import { Ledger } from "../src/ui/ledger";
+import { Ledger } from "../src/ui/ledger/ledger";
 
 install();
 

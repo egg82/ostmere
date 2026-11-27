@@ -6,11 +6,11 @@ import type { GameApi } from "../src/api/api";
 import { browserStraight } from "../src/app/straight";
 import { Keeps, NEW_ACCOUNT } from "../src/game/keeps";
 import { Text, UI } from "../src/game/text";
-import { Devices } from "../src/ui/devices";
+import { Devices } from "../src/ui/devices/devices";
 import { el } from "../src/ui/dom";
-import { ReminderMention } from "../src/ui/remindermention";
-import { ReminderRow, type ReminderDeps } from "../src/ui/reminders";
-import { SettingsSheet } from "../src/ui/settings";
+import { ReminderMention } from "../src/ui/settings/remindermention";
+import { ReminderRow, type ReminderDeps } from "../src/ui/settings/reminders";
+import { SettingsSheet } from "../src/ui/settings/settings";
 
 install();
 

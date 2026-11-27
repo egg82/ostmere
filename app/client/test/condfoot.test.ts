@@ -3,7 +3,7 @@
 import { readGameCss } from "./gamecss";
 import { install } from "./fake-dom";
 import { testContext } from "./context";
-import { ConditionEditor } from "../src/ui/condition";
+import { ConditionEditor } from "../src/ui/condition/condition";
 
 install();
 

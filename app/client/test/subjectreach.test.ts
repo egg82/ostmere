@@ -11,7 +11,7 @@ import type { Content } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { subjectChoices } from "../src/game/ruleoffers";
 import { buildSubject, defaultSubject, subjectNow, subjectRange, subjectWords, type SubjectRule } from "../src/game/subjectrule";
-import { RulesTab } from "../src/ui/rules";
+import { RulesTab } from "../src/ui/rules/rules";
 import { testContext } from "./context";
 
 install();

@@ -10,9 +10,9 @@ import type { Card, Mix, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { planCards, whenReady } from "../src/game/queue";
 import { waitWords } from "../src/game/needwords";
-import { CardNeeds } from "../src/ui/cardneeds";
-import { StintPlan } from "../src/ui/stintplan";
-import { WhenReady } from "../src/ui/whenready";
+import { CardNeeds } from "../src/ui/cards/cardneeds";
+import { StintPlan } from "../src/ui/next/stintplan";
+import { WhenReady } from "../src/ui/cards/whenready";
 
 install();
 
