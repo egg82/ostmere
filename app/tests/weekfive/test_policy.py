@@ -4,10 +4,11 @@ from collections.abc import Callable
 from pathlib import Path
 
 from ashfall_app.engine import (
-    AfterTime, AnswerId, CardId, CardShare, ChipId, OfferId, Order, Rules, Save, SaveMix, StoreId, TapCard, Unlock, UnlockKind, decide,
+    AfterTime, AnswerId, CardId, CardShare, ChipId, Mix, OfferId, Order, Rules, Save, SaveMix, StoreId, TapCard, Unlock, UnlockKind, decide,
     view,
 )
-from ashfall_app.engine.mixruns import running_town_mix
+from ashfall_app.engine.mixes.mixes import flatten_shares
+from ashfall_app.engine.mixes.mixruns import running_town_mix
 from tests.daythree.chapter import ChipRule, Keep, Later
 from tests.dayone.player.policy import Move
 from tests.weekfive import fixtures, policy
@@ -99,3 +100,28 @@ def test_the_cast_lanes_card_is_put_in_the_mix_at_the_routes_share_once_cast(tmp
 def test_a_route_at_zero_share_keeps_the_card_off_the_line(tmp_path: Path):
     r, after = cast_scene(tmp_path, casting.CAST_AT + 5)
     assert own("sharp")(view(after, r), after, r) is None
+
+
+def test_a_town_split_that_resets_the_cast_lane_keeps_the_cast_card_and_settles(tmp_path: Path):
+    """The week-two splits save a lane's town shares whole; on the cast lane that would drop the cast card, and the cast
+    move would put it back, one move each, for ever. With keep_casts the pair settles with the card on at its share."""
+    r, s = cast_scene(tmp_path, casting.CAST_AT + 5)
+    town = running_town_mix(s, r)
+    assert town is not None
+    split = SaveMix(Mix(town.id, flatten_shares(s.mixes, town.id)))
+
+    def resets(v: object, save: Save, rules: Rules) -> Move | None:
+        now = running_town_mix(save, rules)
+        return None if now is not None and now == split.mix else ("decision", (split,))
+    own_moves = policy.keep_casts(resets, (HAUL,), "typical")
+    found: Move | None = None
+    for _ in range(6):
+        found = own_moves(view(s, r), s, r)
+        if found is None:
+            break
+        for verb in found[1]:
+            s = decide(s, r, s.time, verb)
+    assert found is None, "the split and the cast card kept undoing each other"
+    now = running_town_mix(s, r)
+    assert now is not None and CardShare(CardId("t_b_haul"), 2500) in now.components
+

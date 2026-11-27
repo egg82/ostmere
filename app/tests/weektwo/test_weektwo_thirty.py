@@ -7,7 +7,7 @@ The bands and the rhythm are the readouts' and the shared band checks'. Ids only
 import pytest
 
 from ashfall_app.engine import CardId
-from ashfall_app.engine.work import completions
+from ashfall_app.engine.loop.work import completions
 from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
@@ -20,7 +20,7 @@ from tests.weektwo.routes import THIRTY_PUSH_ROUTES
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 Route = tuple[str, DayTwoPlayer]
 DAWN_31_S = 2592000
-"""t_dawn_31's instant: A42 opens at dawn 31 on the calendar (D-226)."""
+"""Dawn 31 on the calendar: A42 opens once dawn_31, counting from Y6 at 708 h, is full (D-226)."""
 
 
 def test_a_save_from_day_twenty_nines_end_loads_under_day_thirty_and_plays_on(rebased_twentynine: Rebased):

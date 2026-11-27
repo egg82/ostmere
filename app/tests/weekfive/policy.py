@@ -16,8 +16,8 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass, replace
 
 from ashfall_app.engine import BP, AnswerId, CardId, CardShare, ChipId, Mix, OfferId, Order, Rules, Save, SaveMix, Unlock, View
-from ashfall_app.engine.mixes import flatten_shares
-from ashfall_app.engine.mixruns import running_town_mix
+from ashfall_app.engine.mixes.mixes import flatten_shares
+from ashfall_app.engine.mixes.mixruns import running_town_mix
 from tests.daythree import moves
 from tests.daythree.chapter import ChipRule, Keep, Later, Offer, Share
 from tests.dayone.player.policy import Move
@@ -120,9 +120,42 @@ def town_share(save: Save, rules: Rules, card: CardId, lane: str, bp: int) -> Mo
     flat = flatten_shares(save.mixes, mix.id)
     if any(s.card == card for s in flat):
         return None
+    return "decision", (SaveMix(with_share(Mix(mix.id, flat), rules, card, lane, bp)),)
+
+
+def with_share(mix: Mix, rules: Rules, card: CardId, lane: str, bp: int) -> Mix:
+    """`mix` (flat card shares) with `card` at `bp` of `lane`'s time, the lane's other shares scaled to leave it."""
     on_lane = {x.id for x in rules.cards if str(x.lane) == lane}
-    scaled = tuple(CardShare(s.card, s.share_bp * (BP - bp) // BP) if s.card in on_lane else s for s in flat)
-    return "decision", (SaveMix(Mix(mix.id, (*scaled, CardShare(card, bp)))),)
+    kept = [c for c in mix.components if isinstance(c, CardShare) and c.card != card]
+    scaled = tuple(CardShare(c.card, c.share_bp * (BP - bp) // BP) if c.card in on_lane else c for c in kept)
+    return Mix(mix.id, (*scaled, CardShare(card, bp)))
+
+
+def keep_casts(prev: Callable[[View, Save, Rules], Move | None] | None, casts: tuple[CastCard, ...],
+               route: str) -> Callable[[View, Save, Rules], Move | None]:
+    """The earlier weeks' moves with the cast cards kept on: a town mix those moves save again (the week-two splits set a
+    lane's shares whole) keeps each cast card at its share, and a save that would change nothing else is no move, so the
+    split and the cast card never undo each other. Then the cast move itself."""
+    def move(v: View, save: Save, rules: Rules) -> Move | None:
+        found = prev(v, save, rules) if prev is not None else None
+        if found is not None:
+            kind, verbs = found
+            kept = tuple(SaveMix(_casts_on(x.mix, save, rules, casts, route)) if isinstance(x, SaveMix) else x for x in verbs)
+            if any(not isinstance(x, SaveMix) or x.mix not in save.mixes for x in kept):
+                return kind, kept
+        return cast_move(casts, route)(v, save, rules)
+    return move
+
+
+def _casts_on(mix: Mix, save: Save, rules: Rules, casts: tuple[CastCard, ...], route: str) -> Mix:
+    if not str(mix.id).startswith("town:"):
+        return mix
+    for c in casts:
+        lane, bp = cast_lane(save, rules, c.role), by_route(c.bp, route)
+        if lane is not None and bp > 0 and any(
+                isinstance(x, CardShare) and x.card == c.card_on(lane) for m in save.mixes if m.id == mix.id for x in m.components):
+            mix = with_share(mix, rules, c.card_on(lane), lane, bp)
+    return mix
 
 
 def _no_story(save: Save, rules: Rules) -> set[str]:
@@ -154,7 +187,7 @@ def later(prev: Later, week: Week, route: str) -> Later:
         answers=(*prev.answers, *answers, *week.asks),
         shares=(*prev.shares, *(Share(s.card, bp, s.until) for s in week.shares if (bp := by_route(s.bp, route)) > 0)),
         chip_rules=(*prev.chip_rules, *(() if lazy(route) else week.chips)),
-        own=first_move(prev.own, cast_move(week.casts, route) if week.casts else None))
+        own=keep_casts(prev.own, week.casts, route) if week.casts else prev.own)
 
 
 def chip_cure(chip: str, cure: str) -> ChipRule:

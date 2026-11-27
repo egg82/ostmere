@@ -372,6 +372,7 @@ line_keys = ["l_y6_1", "l_y6_2"]
 unlocks = [
   { unlock_kind = "feature", id = "pack_yard" },
   { unlock_kind = "action", id = "night_30" },
+  { unlock_kind = "action", id = "dawn_31" },
   { unlock_kind = "store", id = "hair" },
   { unlock_kind = "card", id = "comb_pelts" },
   { unlock_kind = "card", id = "n1_comb_pelts" },
@@ -455,27 +456,23 @@ cap = 1
 glows = true
 inputs = [{ store = "hair", items = 3 }]
 requires = [
-  { test = "at_least", subject_kind = "store", id = "dawn_31", value = 20 },
+  { test = "at_least", subject_kind = "store", id = "dawn_31", value = 12 },
   { test = "at_least", subject_kind = "skill_level", id = "arcana", value = 14 },
 ]
 
-# Dawn 31 at 720 h on the calendar, the season's morning (drift_clock 552): A42's face says "opens at dawn" where a
-# countdown beside its hair could not be drawn (day_twenty_two.toml's dawn_22).
+# The hours from night 30 (Y6, 708 h) to dawn 31 at 720 h, the season's morning (drift_clock 552): A42's face says
+# "opens at dawn" where a countdown beside its hair could not be drawn, and the clock runs from Y6, so A42 has a known
+# ready time to be queued When ready by.
 [[stores]]
 id = "dawn_31"
 label_key = "store_dawn_31"
-cap_items = 20
+cap_items = 12
 clock = "dawn"
 
 [[standing]]
 id = "dawn_31"
 label_key = "action_dawn_31"
-makes = [{ store = "dawn_31", items_per_hour = 20 }]
-
-[[triggers]]
-id = "t_dawn_31"
-when = { test = "after_time", value = 2592000 }
-outcome = { unlocks = [{ unlock_kind = "action", id = "dawn_31" }] }
+makes = [{ store = "dawn_31", items_per_hour = 1 }]
 
 # ---------- B23: the ward and the jump ----------
 
