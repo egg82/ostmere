@@ -11,7 +11,8 @@ rewrites them (REWRITE):
   tests/weekone_saved for week one's ends, compared with the plays week one's job exports): the chain is checked link by
   link, each link at the cost of the chapter it plays;
 - a saved rebased save decodes only under the rules it was written under (the envelope's rules digest), and its
-  stamped inputs (rebased.inputs: the replayed decisions, the engine's source and the replay's) are today's."""
+  stamped inputs (rebased.inputs: the replayed decisions, the engine's source and the replay's, and the save its replay
+  started from) are today's."""
 import hashlib
 import io
 import json

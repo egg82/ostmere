@@ -327,10 +327,11 @@ def chapter_end(request: pytest.FixtureRequest) -> tuple[str, DayTwoPlayer, DayT
 
 @pytest.fixture(scope="session")
 def rebased_inputs(request: pytest.FixtureRequest) -> tuple[str, str]:
-    """A chapter's saved rebased save's stamped inputs, and today's: typical's play to the chapter's end (rebased.inputs)."""
+    """A chapter's saved rebased save's stamped inputs, and today's: typical's play to the chapter's end, from its
+    checkpoint (rebased.todays_inputs)."""
     chapter: str = request.param
     p = verdicts.PLAYS[chapter]("typical")
-    now = rebased.inputs(p, rebased.ENDS[chapter](p))
+    now = rebased.todays_inputs(chapter, p)
     return (ends.rebased_text(chapter).inputs if ends.available(chapter) else now), now
 
 
