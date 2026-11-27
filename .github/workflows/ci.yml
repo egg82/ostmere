@@ -234,10 +234,7 @@ jobs:
           total: ${{ strategy.job-total }}
       - name: Fail when a readout differs from its committed text
         if: always() && hashFiles('readouts-new/**') != ''
-        run: |
-          ls readouts-new | sed 's/^/readout differs from its committed text: /'
-          echo "refresh: cd app && python -m tools.readouts_pull ${{ github.run_id }}"
-          exit 1
+        uses: ./.github/actions/readout-differs
 
   # What of the whole game this pull request plays (tools/pr_plan.py): its chapters' own files compared with the base's,
   # chapter by chapter. `matrix` is the touched chapters, `smoke` where every chapter's key moved or week one changed, and
@@ -351,10 +348,7 @@ jobs:
           total: ${{ strategy.job-total }}
       - name: Fail when a readout differs from its committed text
         if: always() && hashFiles('readouts-new/**') != ''
-        run: |
-          ls readouts-new | sed 's/^/readout differs from its committed text: /'
-          echo "refresh: cd app && python -m tools.readouts_pull ${{ github.run_id }}"
-          exit 1
+        uses: ./.github/actions/readout-differs
 
   # The whole game's smoke plan, beside the slice rather than after it: where a change is one every chapter reads, or week
   # one's, the shards of `WHOLE_GAME` (tools/weektwo_shards.py) play from the start, since the base's saved ends are older
@@ -418,10 +412,7 @@ jobs:
           total: ${{ strategy.job-total }}
       - name: Fail when a readout differs from its committed text
         if: always() && hashFiles('readouts-new/**') != ''
-        run: |
-          ls readouts-new | sed 's/^/readout differs from its committed text: /'
-          echo "refresh: cd app && python -m tools.readouts_pull ${{ github.run_id }}"
-          exit 1
+        uses: ./.github/actions/readout-differs
 
   # Full run only. The tests that read a whole scripted playthrough (marked playthrough; tests/opening/routes.py plays
   # each representative route once per session and they share it). Split by which session-scoped plays a test shares,
@@ -472,10 +463,7 @@ jobs:
           total: ${{ strategy.job-total }}
       - name: Fail when a readout differs from its committed text
         if: always() && hashFiles('readouts-new/**') != ''
-        run: |
-          ls readouts-new | sed 's/^/readout differs from its committed text: /'
-          echo "refresh: cd app && python -m tools.readouts_pull ${{ github.run_id }}"
-          exit 1
+        uses: ./.github/actions/readout-differs
 
   # The saved ends week two's chapters play on (app/tests/weektwo/ends.py), written by tools/chapter_saves.py, one
   # directory per chapter under that chapter's key (tests/weektwo/keys.py). Each job starts from the last nightly's saves
@@ -838,10 +826,7 @@ jobs:
           total: ${{ strategy.job-total }}
       - name: Fail when a readout differs from its committed text
         if: always() && hashFiles('readouts-new/**') != ''
-        run: |
-          ls readouts-new | sed 's/^/readout differs from its committed text: /'
-          echo "refresh: cd app && python -m tools.readouts_pull ${{ github.run_id }}"
-          exit 1
+        uses: ./.github/actions/readout-differs
   # The saved chain's first link (tests/weekone_saved): week one's saved ends equal the plays week one's job made,
   # compared on the same play, not a replay; plays nothing, so it runs the moment both jobs are done.
   playthrough-week-one-saved:
@@ -896,10 +881,7 @@ jobs:
           total: ${{ strategy.job-total }}
       - name: Fail when a readout differs from its committed text
         if: always() && hashFiles('readouts-new/**') != ''
-        run: |
-          ls readouts-new | sed 's/^/readout differs from its committed text: /'
-          echo "refresh: cd app && python -m tools.readouts_pull ${{ github.run_id }}"
-          exit 1
+        uses: ./.github/actions/readout-differs
   # Week two's plays (tests/weektwo/routes.py), each chapter played on from the saved end of the one before
   # (tests/weektwo/ends.py), one job per shard (tools/weektwo_shards.py, the names from `shards-cover`): a play and its
   # readers are in one shard, and within it share one xdist worker (tests/weektwo/conftest.py, `group_by_play`).
@@ -956,10 +938,7 @@ jobs:
           total: ${{ strategy.job-total }}
       - name: Fail when a readout differs from its committed text
         if: always() && hashFiles('readouts-new/**') != ''
-        run: |
-          ls readouts-new | sed 's/^/readout differs from its committed text: /'
-          echo "refresh: cd app && python -m tools.readouts_pull ${{ github.run_id }}"
-          exit 1
+        uses: ./.github/actions/readout-differs
   # The nightly's saves, kept for the slices and the full runs after it: the last cache's ends with this run's written ones
   # over them, the directories of keys no chapter has today removed. Not on a pull request's full run: a cache saved there
   # is its own. The nightly saves on main, which is where every pull request restores from; a dispatch on a branch saves for
