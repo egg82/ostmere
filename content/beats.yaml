@@ -560,8 +560,8 @@ day_twenty_seven:
      turn: down, outcome: "no", cost: none, opens: [C-promise-36], moves: [PC, N1, N4], thread: {id: th-faith, at: middle}, register: grim}
   - {id: I12,  kind: beat,   region: R1, target_day: 27, weekly: false, visit: 27d, target_hour: 20, gate: {hours_after: {beat: B21, hours: 20}},
      turn: down, cost: none, advances: [C-promise-36], moves: [N4, N1], thread: {id: th-faith, at: middle}, register: grim}
-  - {id: A40,  kind: action, visit: 28d, target_hour: 37, gate: {all: [{save_hours: 667}, {beat: I12}]}}   # sit at the fire, night 28
-  - {id: I13,  kind: beat,   region: R1, target_day: 28, weekly: false, visit: 28d, target_hour: 37, gate: {all: [{project: A40}, {beat: I12}]},
+  - {id: A40,  kind: action, visit: 28d, target_hour: 32, gate: {all: [{save_hours: 667}, {beat: I12}]}}   # sit at the fire, night 28
+  - {id: I13,  kind: beat,   region: R1, target_day: 28, weekly: false, visit: 28d, target_hour: 32, gate: {all: [{project: A40}, {beat: I12}]},
      turn: up, outcome: "yes_but", cost: none, pays: [C-promise-36], moves: [PC, N4], thread: {id: th-faith, at: middle}, register: warm}
 
 # The side layer: minor beats between spine beats, each with its own decision or spend (content/team/day-three.md,

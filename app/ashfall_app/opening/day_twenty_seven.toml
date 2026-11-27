@@ -29,7 +29,7 @@ outcome = { unlocks = [{ unlock_kind = "action", id = "bede_clock" }] }
 [[triggers]]
 id = "t_board"
 when = { test = "at_least", subject_kind = "store", id = "bede_clock", value = 4 }
-outcome = { doings = ["n23"], line_keys = ["l_board_1", "l_board_2"], unlocks = [{ unlock_kind = "feature", id = "board_read" }], whereabouts = [{ person = "n23", layer = "figure_n23_at_board" }] }
+outcome = { doings = ["n23"], line_keys = ["l_board_1", "l_board_2", "l_board_3"], unlocks = [{ unlock_kind = "feature", id = "board_read" }], whereabouts = [{ person = "n23", layer = "figure_n23_at_board" }] }
 
 # ---------- SL36: hands on the stones ----------
 
@@ -159,6 +159,7 @@ I13 = ["l_i13_1"]
 [line_kinds]
 l_board_1 = "story"
 l_board_2 = "story"
+l_board_3 = "story"
 l_hands = "story"
 l_names_given_1 = "story"
 l_names_given_2 = "story"
@@ -174,24 +175,25 @@ l_i13_3 = "story"
 [text]
 store_bede_clock = "clock"
 action_bede_clock = "Clock"
-l_board_1 = "the bedesman reads the board with one finger, and at the second mark says {n11}'s name."
-l_board_2 = "the first has nothing by it. Lucy sat up with him. she thinks, and says he had a cough."
-l_hands = "the bedesman kneels at each warm stone in the valley. at the camp stone, longer."
-l_names_given_1 = "the bedesman goes door to door: who have you lost, and what were they called?"
-l_names_given_2 = "the newcomers count theirs on their fingers. Lucy gives hers, and stops. that's all."
+l_board_1 = "the bedesman reads the board with one finger."
+l_board_2 = "at the second mark they say {n11}'s name. at the first they ask Lucy."
+l_board_3 = "nobody knew him. she sat up with him. he had a cough, she says."
+l_hands = "the bedesman kneels at each warm stone. at the camp stone, longer."
+l_names_given_1 = "door to door: who have you lost, and what were they called?"
+l_names_given_2 = "the newcomers count on their fingers. Lucy gives hers, and stops."
 o_j_far_snares = "Lucy says somebody has to walk out to the far snares past the gate, in the fog."
 a_j_far_snares_yes = "You walk out"
-l_j_far_snares_yes = "you take a sack and go out past the gate."
-l_j_far_snares_no = "Lucy sends somebody else out with a sack."
-l_echo_j_far_snares_no = "someone walked the far line and set the sprung snares right."
+l_j_far_snares_yes = "you take a sack out past the gate."
+l_j_far_snares_no = "Lucy sends someone else out."
+l_echo_j_far_snares_no = "someone walked the far line and reset the sprung snares."
 c_far_snares = "Walk the far snares"
 up_far_snares = "catch from the far line"
-l_far_snares = "two in the far snares, grey with ash. you carry them home."
+l_far_snares = "two in the far snares, grey with ash."
 store_night_28 = "night"
 action_night_28 = "Night"
-l_night_28 = "the light goes. the fog lies pale under the hall's light, and everyone comes to the fire."
+l_night_28 = "the light goes. everyone comes to the fire."
 c_sit_names = "Sit at the fire"
-l_i13_1 = "the bedesman stands at the fire and says every name they were given."
-l_i13_2 = "the names go down the valley and come back off the far side. {n11}'s, twice."
-l_i13_3 = "at the end they stop, and say nothing, as long as a name would take. then they sit."
+l_i13_1 = "the bedesman stands and says every name they were given."
+l_i13_2 = "the names go down the valley and come back. {n11}'s, twice."
+l_i13_3 = "at the end, nothing, as long as a name would take. then they sit."
 aim_names = "hear the names the town can give."
