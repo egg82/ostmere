@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from .camp_convert import camp_cap
 from .phase_pays import expanded
 from .town import expand
+from .workings import expand as expand_workings
 
 if TYPE_CHECKING:
     from .camp_entries import CampEntry, CampLevelEntry
@@ -38,7 +39,7 @@ def merge(o: "Opening", ch: "Chapter") -> "Opening":
         "standing": [*o.standing, *ch.standing],
         "sides": [*o.sides, *ch.sides], "threats": [*o.threats, *ch.threats], "lanes": lanes,
         "town_later_labels": [*o.town_later_labels, *ch.town_later_labels],
-        "cards": expand([*_held(o.cards, ch.while_running), *ch.cards], town, {x.id for x in lanes}, {x.id for x in ch.lanes}, len(ch.town_cards)),
+        "cards": expand([*_held(o.cards, ch.while_running), *ch.cards, *expand_workings(ch.workings)], town, {x.id for x in lanes}, {x.id for x in ch.lanes}, len(ch.town_cards)),
         "town_cards": town,
         "chips": [*o.chips, *ch.chips], "triggers": [*o.triggers, *ch.triggers],
         "features": [*o.features, *ch.features], "order_cards": [*o.order_cards, *ch.order_cards],
