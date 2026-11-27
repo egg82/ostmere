@@ -3,8 +3,8 @@ content order, so content order is writing order. Ids only."""
 import pytest
 
 from ashfall_app.engine import Unlock, UnlockKind
-from ashfall_app.opening.journal_entries import Section
-from ashfall_app.opening.schema import Opening
+from ashfall_app.rules.entries.journal_entries import Section
+from ashfall_app.rules.schema import Opening
 from tests.daythree import content as c3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer

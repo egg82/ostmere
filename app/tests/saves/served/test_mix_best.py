@@ -9,7 +9,7 @@ from sqlalchemy import Engine
 from ashfall_app import engine as e
 from ashfall_app.api.rules.mixrows import goal_key
 from ashfall_app.api.service import Game
-from ashfall_app.opening.schema import Opening
+from ashfall_app.rules.schema import Opening
 from ashfall_app.saves.interface import Played, Ruleset
 from ashfall_app.saves.service import PgSaves
 from tests.fake_clock import FakeClock

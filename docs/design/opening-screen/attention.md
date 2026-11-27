@@ -15,7 +15,7 @@ beside them. Nothing the player needs during play sits in a far corner.
   them, and as many of the newest as fit that height show (at least the newest, so one where the room holds only one).
   On a phone the strip is three rows of the story's size (`--strip-rows`), so the pinned strip never grows for the
   longest line ever written: that is a content rule, every story line fitting three rows at a 360-wide phone's 328px
-  (`tests/opening/test_strip_rows.py`, its wrap checked against Chrome's), and three short lines fit with no gap between.
+  (`tests/rules/checks/test_strip_rows.py`, its wrap checked against Chrome's), and three short lines fit with no gap between.
   The strip shows story lines only: a story beat's, a tap's, the body's. A find, a level, a rule's start or let-go and a
   fight go to the chronicle alone. The chronicle is one tap away (the tabs' Book, which opens on it: in the rail on a
   desktop, the bottom bar on a phone), dotted while a line it holds left the strip entirely before the player touched anything after it

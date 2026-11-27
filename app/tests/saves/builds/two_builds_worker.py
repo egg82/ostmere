@@ -11,7 +11,7 @@ from datetime import datetime
 
 from ashfall_app import engine as e
 from ashfall_app.db.engine import open_database
-from ashfall_app.opening.schema import load_opening
+from ashfall_app.rules.schema import load_opening
 from ashfall_app.saves.interface import SaveError
 from ashfall_app.saves.ruleset import ruleset
 from ashfall_app.saves.service import PgSaves

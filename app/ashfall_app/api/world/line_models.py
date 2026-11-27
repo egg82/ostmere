@@ -4,7 +4,7 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field
 
-from ...opening.line_kinds import LineKind
+from ...rules.line_kinds import LineKind
 from ..goals.decision_models import Condition
 
 
@@ -69,7 +69,7 @@ type LineCause = Annotated[RunnerCause | WhenCause | SkillCause | CampCause | An
 class LineInfo(BaseModel):
     key: str
     kind: LineKind
-    """How the chronicle sets the line and which of its filters holds it (opening/line_kinds.py), authored beside its
+    """How the chronicle sets the line and which of its filters holds it (rules/line_kinds.py), authored beside its
     text."""
     cause: LineCause | None
     """What writes the line, read from where its key is authored: one place, or several levels of one skill; null for

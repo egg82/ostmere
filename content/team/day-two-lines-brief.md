@@ -1,7 +1,7 @@
 # Day two's lines: the writers' brief
 
 Spoilers: under `content/`, never shown to the owner. The spec is `day-two.md` (the beats, the canon ids); the data is
-`app/ashfall_app/opening/day_two.toml`, where every key below reads "[day two: line to write]". The states are generated:
+`app/ashfall_app/rules/days/day_two.toml`, where every key below reads "[day two: line to write]". The states are generated:
 `python -m tests.daytwo.report --lines` (from `app/`) on main at `1207182`, the ten routes at seed 0.
 
 ## How the lines get written

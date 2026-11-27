@@ -21,7 +21,7 @@ from collections.abc import Generator, Iterator
 import pytest
 
 from ashfall_app import main
-from ashfall_app.opening.schema import Opening
+from ashfall_app.rules.schema import Opening
 from tests import pg
 from tests.game_client import GameClient, game_client
 from tests.shipped_ruleset import ShippedRuleset
@@ -44,9 +44,9 @@ def shipped_opening() -> Opening:
 @pytest.fixture(scope="session")
 def townsfolk_opening(shipped_opening: Opening) -> Opening:
     """The townsfolk test chapter's content on the session's shipped opening, built once per session:
-    tests/opening/test_townsfolk_loader.py's `loaded` is cached and its `shipped` reads `load_opening`, so a module
+    tests/rules/loaders/test_townsfolk_loader.py's `loaded` is cached and its `shipped` reads `load_opening`, so a module
     using them requests this."""
-    from tests.opening.test_townsfolk_loader import loaded
+    from tests.rules.loaders.test_townsfolk_loader import loaded
     with pytest.MonkeyPatch.context() as patch:
         patch.setattr(main, "load_opening", lambda: shipped_opening)
         return loaded()

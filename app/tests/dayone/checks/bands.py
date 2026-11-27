@@ -11,7 +11,7 @@ from functools import cache
 
 from ashfall_app.engine import Rules, Unlock, UnlockKind
 from ashfall_app.engine.orders import AfterTime, CardCount, SkillLevel, StoreValue, Subject, Unlocked
-from ashfall_app.opening.schema import load_opening
+from ashfall_app.rules.schema import load_opening
 
 B3_CARD = "take_stock"
 

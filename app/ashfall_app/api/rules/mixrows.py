@@ -4,7 +4,7 @@ player's own earlier best per goal from saves/mixbest.py."""
 from collections.abc import Mapping
 
 from ... import engine as e
-from ...opening.goals import GoalDef
+from ...rules.goals import GoalDef
 from ...saves.interface import Played
 from ...saves.mixbest import Best
 from ..goals import goal_models as g

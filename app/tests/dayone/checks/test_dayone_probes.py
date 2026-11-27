@@ -16,7 +16,7 @@ from tests.dayone.player.beats import STORY, near_promise_beats
 from tests.dayone.checks.checks import Window
 from tests.dayone.player.story import flatcheck
 from tests.dayone.checks.verdicts import story_problems
-from tests.opening.playthrough import News, opening_rules
+from tests.rules.play.playthrough import News, opening_rules
 
 START = 10_000
 

@@ -5,7 +5,7 @@ from dataclasses import replace
 from ashfall_app import engine as e
 from ashfall_app.api.goals import goal_models as g
 from ashfall_app.api.goals.goals import goals
-from ashfall_app.opening.goals import GoalDef
+from ashfall_app.rules.goals import GoalDef
 from tests.engine.held_impl_world import HUNT, LOST, Q, world
 
 

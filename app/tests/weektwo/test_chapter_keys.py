@@ -8,13 +8,13 @@ from pathlib import Path
 
 import pytest
 
-from ashfall_app.opening.schema import CHAPTERS as CHAPTER_FILES
+from ashfall_app.rules.schema import CHAPTERS as CHAPTER_FILES
 from tests.daythree.content import rules3
 from tests.weektwo import keys
 from tests.weektwo.routes import BEFORE, DAYS, SAVED
 
 ORDER = keys.ORDER
-COPIED = ("ashfall_app/engine", "ashfall_app/opening", "tests/dayone", "tests/daytwo", "tests/daythree", "tests/weekone",
+COPIED = ("ashfall_app/engine", "ashfall_app/rules", "tests/dayone", "tests/daytwo", "tests/daythree", "tests/weekone",
           "tests/weektwo", "tests/weekfive", "tools/chapter_saves.py")
 
 
@@ -58,13 +58,13 @@ def changed(before: dict[str, str], after: dict[str, str]) -> list[str]:
 
 @pytest.mark.parametrize("chapter", ORDER[1:])
 def test_a_changed_chapter_file_re_keys_it_and_every_chapter_after_and_none_before(tree: Path, chapter: str):
-    toml = f"ashfall_app/opening/{keys.DAY_FILES[chapter][0]}.toml"
+    toml = f"ashfall_app/rules/days/{keys.DAY_FILES[chapter][0]}.toml"
     before, after = after_editing(tree, toml)
     assert changed(before, after) == list(ORDER[ORDER.index(chapter):])
 
 
 def test_week_ones_chapter_files_and_players_re_key_everything(tree: Path):
-    for entry in ("ashfall_app/opening/day_three.toml", "tests/dayone/player/player.py", "tests/weekone/routes.py"):
+    for entry in ("ashfall_app/rules/days/day_three.toml", "tests/dayone/player/player.py", "tests/weekone/routes.py"):
         before, after = after_editing(tree, entry)
         assert changed(before, after) == list(ORDER), entry
 
@@ -76,8 +76,8 @@ def test_a_chapters_moves_re_key_the_chapters_that_file_holds_and_those_after(tr
     assert changed(before, after) == list(ORDER[1:])
 
 
-@pytest.mark.parametrize("entry", ["ashfall_app/engine/api.py", "ashfall_app/opening/schema.py",
-                                   "ashfall_app/opening/opening.toml", "ashfall_app/opening/prestige.toml",
+@pytest.mark.parametrize("entry", ["ashfall_app/engine/api.py", "ashfall_app/rules/schema.py",
+                                   "ashfall_app/rules/opening.toml", "ashfall_app/rules/prestige.toml",
                                    "tests/weektwo/routes.py", "tools/chapter_saves.py", "content/beats.yaml"])
 def test_what_every_chapter_reads_re_keys_every_chapter(tree: Path, entry: str):
     before, after = after_editing(tree, entry)

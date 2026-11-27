@@ -12,7 +12,7 @@ from sqlalchemy import Engine
 from .. import clock, logs
 from ..db.engine import open_database
 from ..db.handsfree import Latest
-from ..opening.schema import load_opening
+from ..rules.schema import load_opening
 from ..reminders.config import load_config, min_busy_s
 from ..reminders.notices import run_notices
 from ..reminders.run import run

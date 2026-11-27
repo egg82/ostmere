@@ -52,7 +52,7 @@
   .scene-box { position: relative; inset: auto; flex: none; padding: 0; --by-width: 1; --fill: 1; }   /* the whole art across the screen's width (Scene.fit), the box as tall as the art: nothing of the town cut off */
   .scene-frame { border: 0; box-shadow: none; }   /* only the desktop's scene keeps a frame */
   .stage > .strip { flex: none; padding: .35rem 1rem; }
-  .strip > .strip-room { height: calc(var(--strip-rows) * 1.35em); }   /* rows of the story's size: every story line fits it (tests/opening/test_strip_rows.py) */
+  .strip > .strip-room { height: calc(var(--strip-rows) * 1.35em); }   /* rows of the story's size: every story line fits it (tests/rules/checks/test_strip_rows.py) */
   .lines li + li { margin-top: 0; }   /* three rows hold three short lines; the older are dimmer */
   .panel-top { padding-block: .3rem .4rem; }
   .hands { grid-template-columns: minmax(0, 1fr); min-height: 0; }

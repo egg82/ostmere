@@ -10,7 +10,7 @@ from sqlalchemy import Engine, select
 
 from ashfall_app.db import saves as rows
 from ashfall_app.db.tables import save_journal
-from ashfall_app.opening.schema import Opening
+from ashfall_app.rules.schema import Opening
 from ashfall_app.saves.interface import Ruleset
 from ashfall_app.saves.journal import DAY_S, ComposedDay, Fade, Habits, Line, Note, Press, Source, Subject, compose_day
 from ashfall_app.saves.journal_rules import JournalRules, journal_rules

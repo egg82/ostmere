@@ -1,7 +1,7 @@
 # Day one's lines: the writers' brief
 
 Spoilers: under `content/`, never shown to the owner. The spec is `day-one.md` (the beats, the canon ids, and the state
-table each line here is drawn from); the data is `app/ashfall_app/opening/day_one.toml`, where every line below
+table each line here is drawn from); the data is `app/ashfall_app/rules/days/day_one.toml`, where every line below
 reads "unwritten".
 
 ## How the lines get written

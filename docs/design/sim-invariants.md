@@ -31,29 +31,29 @@ Two more classes:
 
 Paths are under `app/tests/`. Where a test's name names content, the row gives its file alone.
 
-### The opening (job `playthrough`; readout `opening/report.py`)
+### The opening (job `playthrough`; readout `rules/play/report.py`)
 
 | # | Where | What | Class | Now |
 |---|---|---|---|---|
-| O1 | `opening/test_tap_gates.py`: `test_no_story_gate_needs_many_taps_before_automation` | no story gate needs 10 or more taps of one card before mixes or rules open (`opening/tap_gates.py`); a store's amount and a level are not counted | correct (`decisions.md`, "Progress never needs the same tap repeated by hand") | fails |
+| O1 | `rules/cards/test_tap_gates.py`: `test_no_story_gate_needs_many_taps_before_automation` | no story gate needs 10 or more taps of one card before mixes or rules open (`rules/play/tap_gates.py`); a store's amount and a level are not counted | correct (`decisions.md`, "Progress never needs the same tap repeated by hand") | fails |
 | O2 | the typical route's timeline | taps and decisions between new things | taste | readout |
 | O3 | each push route | the longest run of taps of one card | taste | readout |
 | O4 | a day away from the first order | what it opens | taste | readout |
 | O5 | the crafts at first show | shown together, each blocked or ready | taste | readout |
-| O6 | `opening/test_opening_pacing.py`: `test_either_craft_first_reaches_the_end` | either order reaches the end moment | softlock | fails |
+| O6 | `rules/play/test_opening_pacing.py`: `test_either_craft_first_reaches_the_end` | either order reaches the end moment | softlock | fails |
 | O7 | same: `test_tapping_extra_early_cannot_reach_the_end_before_its_steps` | extra taps never reach the end sooner | babysit | fails |
-| O8 | `opening/test_opening_length.py`: `test_a_newcomerish_player_reaches_the_end` | the route reaches the end, with no clock; when is the readout's | softlock + taste | fails; the minutes are a readout |
-| O9 | `opening/test_level_pays.py`: `test_every_marker_pays_when_its_level_lands` | a level's marker pays when the level lands | shown | fails |
+| O8 | `rules/play/test_opening_length.py`: `test_a_newcomerish_player_reaches_the_end` | the route reaches the end, with no clock; when is the readout's | softlock + taste | fails; the minutes are a readout |
+| O9 | `rules/pacing/test_level_pays.py`: `test_every_marker_pays_when_its_level_lands` | a level's marker pays when the level lands | shown | fails |
 | O10 | same: `test_a_level_never_comes_sooner_than_the_one_before` (`dayone/growth.py`, `runaway`) | no level's pay outruns its curve step | spiral | fails |
 | O11 | `dayone/growth.py`, `climb_hours` | each skill's climb against the fastest; the 3x band is gone | taste | readout |
-| O12 | `opening/test_second_skill.py`: `test_the_skill_checks_cover_the_new_row_and_pass` | markers paid, no runaway (a blank level is O14's) | shown + spiral | fails |
-| O13 | `opening/test_phase_pays.py`: work pays are adds | later phases' work pays never multiply | spiral | fails |
-| O14 | `opening/blank_levels.py`, `blank_lines` | levels paying nothing per skill: unmarked in its row, unwaited-for in the later phases its track reaches | taste | readout |
-| O15 | `opening/report.py`, `samey_lines` | each later phase's longest stretch of levels paying only speed | taste | readout |
-| O16 | `opening/test_after_end.py`: `test_the_rest_offer_never_shows_before_the_end_lines_are_read` | the content's `after_end` gate holds the offer | correct: story order | fails |
-| O17 | `opening/test_first_rule_offer.py` | every route meets a rule offer before the end | babysit (the tool is taught) | fails |
+| O12 | `rules/pacing/test_second_skill.py`: `test_the_skill_checks_cover_the_new_row_and_pass` | markers paid, no runaway (a blank level is O14's) | shown + spiral | fails |
+| O13 | `rules/pacing/test_phase_pays.py`: work pays are adds | later phases' work pays never multiply | spiral | fails |
+| O14 | `rules/play/blank_levels.py`, `blank_lines` | levels paying nothing per skill: unmarked in its row, unwaited-for in the later phases its track reaches | taste | readout |
+| O15 | `rules/play/report.py`, `samey_lines` | each later phase's longest stretch of levels paying only speed | taste | readout |
+| O16 | `rules/play/test_after_end.py`: `test_the_rest_offer_never_shows_before_the_end_lines_are_read` | the content's `after_end` gate holds the offer | correct: story order | fails |
+| O17 | `rules/offers/test_first_rule_offer.py` | every route meets a rule offer before the end | babysit (the tool is taught) | fails |
 | O18 | the by_hand player past the end | actions between the offer and the door's glow | taste | readout |
-| O19 | `opening/speed_reach.py`, `node_size_lines` | each skill's track nodes by size in basis points per rank | taste | readout |
+| O19 | `rules/play/speed_reach.py`, `node_size_lines` | each skill's track nodes by size in basis points per rank | taste | readout |
 | O20 | same, `reach_lines` | the cards of another skill a later phase's speed pay also speeds; the loader refuses only a card that does not exist | taste | readout |
 
 ### Day one (job `playthrough`; `dayone/verdicts.py`; readouts `dayone/report.py`)
@@ -163,7 +163,7 @@ One row stands for its siblings in `weektwo/test_weektwo_routes.py` (day eight),
 | C7 | `worth/readout.py` | what a re-mix is worth per visit on keeper, tuner's moments by cause, the two control routes, moments per visit by week beside the opening's (`worth-a-change.md`) | taste | readout, compared in `weektwo/test_worth_readouts.py` |
 | C8 | `worth/test_measure.py`, `worth/test_summary.py` | the worth measure on a fixture world (a split in proportion worth nothing, a starved goal worth a lot, the first build's measure beside it) and the readout's arithmetic | control | fails |
 
-The opening's loader, lock, content-contract and cost tests (`opening/test_released.py`, `opening/test_chapters.py`
+The opening's loader, lock, content-contract and cost tests (`opening/test_released.py`, `rules/loaders/test_chapters.py`
 and the like) are content structure, not pacing, and are untouched.
 
 ## Cap loss is a readout

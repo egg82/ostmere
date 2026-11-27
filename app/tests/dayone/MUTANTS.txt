@@ -2,7 +2,7 @@ Planted mutants for day one's schema step and its pacing simulator, each applied
 against the [bracketed] tests. All must go red. Results as of the commit that adds this file.
 
 The schema and the engine questions
-chapter_replaces_unheld  chapters.py: a chapter's Camp level replaces a level that is not held   [opening/test_chapters]   killed
+chapter_replaces_unheld  chapters.py: a chapter's Camp level replaces a level that is not held   [rules/loaders/test_chapters]   killed
 camp_cap_ignores_lift    camp_convert.camp_cap: the last level's at_items despite a lifted level       [test_chapters, loader]   killed
 lift_one_short           camp_convert.camp_lifts: the raise one basis point short of the lifted level  [test_chapters]           killed
 rising_card_any_tap      checks: an at_least order card may tap a card that does not take its store [test_chapters, loader] killed
@@ -34,8 +34,8 @@ retune_past_cap          policy.retuned_roots: the roots rule raised past the ro
 
 D-63 (A14 opens the builds, the rack on the first catch, the roots card "until 15")
 reopen_counts            checks.opens: a card already open counts as opened again                 [test_dayone_probes]      killed
-offer_any_cap            opening.refs.offer_cap: every store's cap modifiers raise this one       [opening/test_chapters]   killed
-offer_counts_none        opening.refs._counted: the makers a count waits on raise nothing         [opening/test_chapters]   killed
+offer_any_cap            opening.refs.offer_cap: every store's cap modifiers raise this one       [rules/loaders/test_chapters]   killed
+offer_counts_none        opening.refs._counted: the makers a count waits on raise nothing         [rules/loaders/test_chapters]   killed
 stock_never_taken        player: the roots card "until 15" is never taken                          [test_dayone_routes]      equivalent: the mix's forage share fills roots past P0.4's 15 by itself once the larder holds 16: no verdict on the typical route moves (seed 0)
 stray_counts             checks._moments: a level landing long after the last act is activity    [test_dayone_probes]      killed
 b3_visit_lumped          verdicts: the visit B3 is seen in checked with the others again          [test_dayone_routes]      killed

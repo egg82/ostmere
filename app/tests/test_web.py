@@ -89,7 +89,7 @@ def test_the_web_server_imports_nothing_that_needs_the_database_or_a_secret(impo
     assert units <= ALLOWED, sorted(units - ALLOWED)
     assert outside & NEVER == set()
     app_units, app_outside = reach(imports, "main")   # the same probe sees them from the app, so it is not blind
-    assert {"db", "api", "opening"} <= app_units and {"psycopg", "sqlalchemy"} <= app_outside
+    assert {"db", "api", "rules"} <= app_units and {"psycopg", "sqlalchemy"} <= app_outside
 
 
 def test_every_route_of_the_app_is_a_server_path_or_a_file_the_web_pods_serve(page_files: Path):

@@ -29,7 +29,7 @@
  "app/tests/engine_contract/rebase/test_rebase.py": {
   "cast": 2
  },
- "app/tests/opening/playthrough.py": {
+ "app/tests/rules/play/playthrough.py": {
   "cast": 1
  },
  "app/tools/engine_bench.py": {

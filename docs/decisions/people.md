@@ -107,7 +107,7 @@ differently. It is taken as modules once habits' cleanup lands, never as a copy 
 
 How people stand today, moved from their row in `systems.md`. Arrival policy is the A/B target. Notables never die. A
 person's name is content beside their lane (`name_key`), which the page fills into any text's `{<lane>}` slot
-(`app/ashfall_app/opening/name_checks.py`; contract/text-and-numbers.txt, "Text and numbers"); one name per person in every save for
+(`app/ashfall_app/rules/checks/text/name_checks.py`; contract/text-and-numbers.txt, "Text and numbers"); one name per person in every save for
 now, the per-save draw from a pool still planned.
 
 **A person who matters is written into the story when they join or leave; the rest are a daily mention.** A journal
@@ -116,11 +116,11 @@ it mentions them (owner, 2026-11-13). Which a person gets is authored on their l
 required of every ruled lane), never a count threshold: a late arrival can matter and an early one may not. A `line`
 person is told by the story lines of the outcome that joins or leaves them, kind story so they reach the strip and the
 chronicle's Story; the loader refuses one whose joining or leaving writes no story line of its own, a counted join
-aside, since that person came earlier and was told then (`app/ashfall_app/opening/people_checks.py`). A `mention`
+aside, since that person came earlier and was told then (`app/ashfall_app/rules/checks/people/people_checks.py`). A `mention`
 person writes no line of their own: the loader gives each outcome that moves one a mention line with no text, so it
 lands in the save's log at the second it happened, and the page words each game day's mentions of a way as one line,
 from the `[people]` bands for how many came or went, drawn by a shuffle bag keyed by the save, the way and the band
-(`app/ashfall_app/opening/people.py`, `app/client/src/game/town/people.ts`; contract/people.txt, "PEOPLE"). The bands are words,
+(`app/ashfall_app/rules/people.py`, `app/client/src/game/town/people.ts`; contract/people.txt, "PEOPLE"). The bands are words,
 never a count, after A Dark Room, whose arrivals read as a stranger, a family, a group or a convoy by their size. The
 mention is decided in code and written by authored lines: no frequency word anywhere. Every person in the shipped
 chapters is `line`, since each joining so far is a beat with lines of its own. Rejected: a per-person line for everyone, which
@@ -147,7 +147,7 @@ their arrival's answer that clears the mark and writes the line that says why, s
 same change at its next load.
 
 **Groups follow what people can do** (#337, #569). A group holds the work its members can do and nothing more
-(`check_group_abilities` in `app/ashfall_app/opening/groups.py`). There are two crews from the first family's day,
+(`check_group_abilities` in `app/ashfall_app/rules/groups.py`). There are two crews from the first family's day,
 split by kind of work so two different jobs run at once, each under its own split: the field crew and the hearth crew,
 which share the staples. The early companions join the crew whose work suits them; where a person already has a
 hand-written card for a job the crew's list names, a town card's `own` lanes say so rather than expand a second one. A
@@ -162,8 +162,8 @@ story places in a crew names `group`. Never by names.
 withheld only where the story gives a reason someone could not (a child, an injury, a role that rules it out); skilled
 or story-bound work goes to whoever the story fits (owner, 2026-11-14). Every card on a player's lane has a town copy
 naming it in `twin_of`, or an `only_player` tag saying why not (alone, story, self, fight, magic, station, project), checked by
-`app/ashfall_app/opening/player_checks.py` and `app/tests/opening/test_player_only.py`. No person's list holds a job another beats
-outright (the same outcome, at least as fast, at no extra cost), checked by `app/ashfall_app/opening/choice_checks.py`.
+`app/ashfall_app/rules/checks/people/player_checks.py` and `app/tests/rules/checks/test_player_only.py`. No person's list holds a job another beats
+outright (the same outcome, at least as fast, at no extra cost), checked by `app/ashfall_app/rules/checks/cards/choice_checks.py`.
 Balance follows these: wide access is retuned in costs and rates, never withheld to save a number.
 
 - **A new job is said once.** A job offered to someone nobody has set to it is told in the story strip once, in the page's

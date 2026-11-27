@@ -14,7 +14,7 @@ import time
 from collections import Counter
 
 from ashfall_app.engine import view
-from ashfall_app.opening.schema import DAY_TWO
+from ashfall_app.rules.schema import DAY_TWO
 from tests.daythree import content as c3
 from tests.daythree import counters, lines
 from tests.daythree.report import absence_line

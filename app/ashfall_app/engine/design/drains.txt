@@ -155,7 +155,7 @@ KNOWN GAPS (drains and fractions)
   orchestrator's, for the first retune that uses drains): a chip's threshold sits at or above its standing healer's
   resume level, so that retune's chip reads at a quarter (`every = 4`), not a sixteenth, and the heal never stalls with
   the chip showing.
-- An at_least order card taps a card that takes its store through an input or a cost (opening/checks.py); a card that
+- An at_least order card taps a card that takes its store through an input or a cost (rules/checks/run.py); a card that
   only drains the store is refused as that rule's card. Interim: as that; a chip whose `when` has `every` has no order
   card anyway. Decided by: content's first order card meant to tap a draining cure.
 - "Every loader reader of a store threshold" names makers.py, which reads only skill levels (granted_by); it reads no

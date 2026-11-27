@@ -2,7 +2,7 @@
 (docs/decisions/principles.md, "Progress is stated, never hinted"): each unmet require of a card on the panel is one
 the page draws from the served view and content, a store the player has been shown or a tally as its have/need, a level or a
 step as its row, a clock with a part of the day as when it opens, and anything else only as the card's countdown.
-The content-wide check is tests/opening/test_requires_shown.py; this one reads real saves."""
+The content-wide check is tests/rules/cards/test_requires_shown.py; this one reads real saves."""
 import pytest
 
 from ashfall_app.api.world.content_models import StoreInfo
@@ -11,7 +11,7 @@ from ashfall_app.engine import AtLeast, CardCount, Condition, SkillLevel, StoreV
 from ashfall_app.engine.index import index
 from ashfall_app.engine.viewparts import CardView
 from ashfall_app.engine.work import unmet_conditions
-from ashfall_app.opening.schema import Opening
+from ashfall_app.rules.schema import Opening
 from ashfall_app.saves.ruleset import ruleset
 from tests.daytwo.player import DayTwoPlayer
 from tests.daytwo.conftest import PLAY_TIMEOUT_S

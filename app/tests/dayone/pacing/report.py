@@ -31,7 +31,7 @@ from tests.dayone.player.routes import PUSH_ROUTES, ROUTES, day, two_am
 from tests.dayone.human.screen import FIRST_S, aimless, chip_after, early, stated, views
 from tests.dayone.player.story import AWAY, ended_saves, flatcheck, rebase_line, rebased_case, route_json
 from tests.dayone.checks.verdicts import verdicts
-from tests.opening.playthrough import opening
+from tests.rules.play.playthrough import opening
 
 NAMES = (*(f"dayone-{name}" for name in PUSH_ROUTES), "dayone-human", "dayone-absence", "dayone-rebase")
 

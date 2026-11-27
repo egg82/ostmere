@@ -11,7 +11,7 @@ from pathlib import Path
 from .. import logs
 from ..clock import system
 from ..db.engine import open_database
-from ..opening.schema import load_opening
+from ..rules.schema import load_opening
 from .builds.check import check
 from .ruleset import build_release, ruleset
 from .builds.strip import strip

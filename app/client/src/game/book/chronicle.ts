@@ -4,7 +4,7 @@
 // player left to the second they next left. Pure; the sheet (ui/book/chroniclesheet.ts) draws them.
 import type { Content, Visit } from "../../api/types";
 
-/** How a content line is set (opening/line_kinds.py), authored beside its text. */
+/** How a content line is set (rules/line_kinds.py), authored beside its text. */
 export type LineKind = Content["line_infos"][number]["kind"];
 
 /** Every kind of entry: the content's line kinds, a rule coming on or letting go (game/rules/rulerows.ts), and the town's

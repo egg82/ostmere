@@ -24,7 +24,7 @@ from fastapi.testclient import TestClient
 from ashfall_app.api.convert import condition, mix, order_verb
 from ashfall_app.engine import SaveMix, SetOrders, SetQueue, SwitchMix, TapCard, Verb
 from ashfall_app.main import create_app
-from tests.opening.playthrough import Player, opening_rules
+from tests.rules.play.playthrough import Player, opening_rules
 CARDS = Path(__file__).parent.parent / "tests" / "cards_contract"
 sys.path.insert(0, str(CARDS))  # the contract tests' own imports
 sys.path.insert(0, str(CARDS / "views"))

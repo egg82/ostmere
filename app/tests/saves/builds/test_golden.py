@@ -15,7 +15,7 @@ from ashfall_app.engine import (
     BP, FORMAT, OLDEST_FORMAT, AfterTime, IdKind, Order, Rules, Save, Step, StoreId, StoreValue, TriggerId, Unlock,
     UnlockKind, advance, rebase, rebase_logged,
 )
-from ashfall_app.opening.schema import load_opening, to_rules
+from ashfall_app.rules.schema import load_opening, to_rules
 from tests.saves.changes import RETUNED, changed_opening
 
 GOLDEN = Path(__file__).resolve().parent.parent / "golden"

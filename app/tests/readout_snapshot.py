@@ -21,10 +21,10 @@ from types import ModuleType
 
 DIR = Path(__file__).resolve().parent / "readouts"
 PACKAGES = {
-    "opening": "tests.opening.report",
-    "tracks": "tests.opening.tracks_readout",
-    "town": "tests.opening.town_readout",
-    "closecalls": "tests.opening.close_calls_readout",
+    "opening": "tests.rules.play.report",
+    "tracks": "tests.rules.play.tracks_readout",
+    "town": "tests.rules.play.town_readout",
+    "closecalls": "tests.rules.play.close_calls_readout",
     "dayone": "tests.dayone.pacing.report",
     "daytwo": "tests.daytwo.report",
     "daythree": "tests.daythree.report",

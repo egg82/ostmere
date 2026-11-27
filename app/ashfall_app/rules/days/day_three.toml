@@ -1,0 +1,1439 @@
+# Day three: from B4 through story day 3's evening, the third night and story day 4 to B5, as data merged after
+# day_two.toml (schema.Chapter, chapters.merge). Story spoilers: never shown to the owner. Spec: content/team/day-three.md;
+# numbers: content/team/day-three-numbers.md. In schema.CHAPTERS: it ships. Its lines are checked written by
+# tests/rules/content/test_day_two.py.
+version = 1
+end_feature = "warm_ground"
+
+# ---------- the arrivals count ----------
+
+# A tally only outcomes add to (tally_checks.py): the first arrival's feature seeds 1, so a save past B3 gets it at
+# rebase; each join adds one. Nothing shows it.
+[[stores]]
+id = "arrivals"
+label_key = "store_arrivals"
+cap_items = 10
+tally = true
+
+# How many arrivals the player built for (own_hands) and how many they left to the newcomers (left_to_them): hidden
+# counts the loader adds to from each answer of that role (offer_kinds' tally), read by the pattern's triggers.
+[[stores]]
+id = "own_hands"
+label_key = "store_own_hands"
+cap_items = 10
+tally = true
+hidden = true
+
+[[stores]]
+id = "left_to_them"
+label_key = "store_left_to_them"
+cap_items = 10
+tally = true
+hidden = true
+
+[[triggers]]
+id = "t_first_arrival"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n1", value = 1 }
+outcome = { stores = [{ store = "arrivals", items = 1 }] }
+
+# ---------- A22, K1: walking the edge ----------
+
+# On the cards with B4 (either answer's feature), so a save past B4 at the rebase has it one tap away.
+[[triggers]]
+id = "t_edge_open"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "cart_news", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "walk_edge" }] }
+
+# A22: its finish is K1, opens the track and the two comforts together (every sink in view at once, the first a full
+# store's worth away), and starts the evening's clock.
+[[cards]]
+id = "walk_edge"
+site = { no_site = "a scouting step past the firelight, taken off the scene" }
+only_player = "story"
+presentation = "narrative"
+label_key = "c_walk_edge"
+work_s = 5
+cap = 1
+glows = true
+[cards.finished]
+line_keys = ["l_edge_1", "l_edge_2"]
+unlocks = [
+  { unlock_kind = "feature", id = "track_open" },
+  { unlock_kind = "card", id = "field_track" },
+  { unlock_kind = "card", id = "track_end" },
+  { unlock_kind = "card", id = "larder_floor" },
+  { unlock_kind = "card", id = "wood_stack" },
+  { unlock_kind = "card", id = "rack_roof" },
+  { unlock_kind = "action", id = "evening_3" },
+]
+
+# ---------- the track ----------
+
+# The trip: uncapped, run in the mix held against damp wood (the page's mix offer on the full line). Its three takes
+# are the three stores that overflow, in about the ratio the camp makes them, so no one take binds the others; the bar
+# is the 30 s floor and damp wood's take a full store (content/team/day-three.md, "Sinks after measuring"). Each run
+# lays one length of track; the track laid is its reach, which the hunts read (b7.toml, "the track's reach"). Each lump
+# a whole rate (work_s divides one item's quantity units). Roots 15 a run, so with both foragers it still takes over
+# half their roots (D-105).
+[[cards]]
+id = "field_track"
+site = { layer = "track" }
+presentation = "action"
+label_key = "c_field_track"
+upside_key = "up_field_track"
+stake = "reach"
+work_s = 30
+skill = "scavenging"
+xp_per_hour = 360
+inputs = [{ store = "damp_wood", items = 18 }, { store = "stones", items = 4 }, { store = "roots", items = 15 }]
+outcome = { stores = [{ store = "track_laid", items = 1 }] }
+
+# The track laid, by whoever lays it. Its cap is the last reach the hunts read.
+[[stores]]
+id = "track_laid"
+label_key = "store_track_laid"
+cap_items = 17500
+
+[[triggers]]
+id = "t_track_laid"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "field_track", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "store", id = "track_laid" }] }
+
+[[stores]]
+id = "scrap"
+label_key = "store_scrap"
+cap_items = 12
+
+# K2: the track's first run. Clay in view under the hearth's need, short of it, so the hearth shows unready.
+[[triggers]]
+id = "t_stream"
+when = { test = "at_least", subject_kind = "card_count", id = "field_track", value = 1 }
+[triggers.outcome]
+line_keys = ["l_track_first", "l_stream"]
+stores = [{ store = "clay", items = 4 }, { store = "hearth_dry", items = 1 }]
+unlocks = [
+  { unlock_kind = "store", id = "clay" },
+  { unlock_kind = "card", id = "dig_clay" },
+  { unlock_kind = "card", id = "clay_hearth" },
+  { unlock_kind = "card", id = "cure_hearth" },
+  { unlock_kind = "card", id = "stew" },
+  { unlock_kind = "card", id = "pot_shelf" },
+]
+
+# K4: walking the track to its end, a step of its own at the Scavenging level the track trains toward (a level shown
+# with the track; the level is the simulator's, day-three-numbers.md). The first scrap, so the scrap line shows here.
+[[cards]]
+id = "track_end"
+site = { layer = "track" }
+only_player = "story"
+presentation = "narrative"
+label_key = "c_track_end"
+work_s = 5
+cap = 1
+glows = true
+requires = [{ test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 16 }]
+[cards.finished]
+line_keys = ["l_field_1", "l_field_2"]
+stores = [{ store = "scrap", items = 4 }]
+unlocks = [{ unlock_kind = "store", id = "scrap" }, { unlock_kind = "feature", id = "dead_field" }]
+
+# ---------- clay ----------
+
+[[stores]]
+id = "clay"
+label_key = "store_clay"
+cap_items = 12
+
+[[cards]]
+id = "dig_clay"
+site = { no_site = "worked at the warm stream, which lies on the low ground behind the wall stub, off the scene; the scene poses its work at the gap's mouth, the way down to it" }
+presentation = "action"
+label_key = "c_dig_clay"
+upside_key = "up_dig_clay"
+work_s = 10
+skill = "foraging"
+xp_per_hour = 900
+outcome = { stores = [{ store = "clay", items = 1 }] }
+
+[[order_cards]]
+store = "clay"
+tap_card = "dig_clay"
+when = { test = "at_most", subject_kind = "store", id = "clay", value = 5, release = 11 }
+offered_after = { unlock_kind = "store", id = "clay" }
+
+# ---------- the comforts ----------
+
+# Staged crafts on the hands, queued When ready; each stage up to a full store. Each names only its upside.
+[[cards]]
+id = "larder_floor"
+site = { layer = "larder_floor_3" }
+only_player = "project"
+presentation = "craft"
+label_key = "c_larder_floor"
+upside_key = "up_larder_floor"
+work_s = 2400
+cap = 3
+inputs = [{ store = "stones", items = 18 }, { store = "damp_wood", items = 6 }]
+line_keys = ["l_larder_1", "l_larder_2", "l_larder_3"]
+[cards.finished]
+line_keys = ["l_larder_done"]
+modifiers = [{ target = "cap", id = "roots", kind = "mul_bp", amount_bp = 15000, source = "larder_floor" }]
+
+[[cards]]
+id = "rack_roof"
+site = { layer = "rack_roof_2" }
+only_player = "project"
+presentation = "craft"
+label_key = "c_rack_roof"
+upside_key = "up_rack_roof"
+work_s = 2400
+cap = 2
+inputs = [{ store = "damp_wood", items = 18 }, { store = "dry_wood", items = 6 }]
+line_keys = ["l_roof_1", "l_roof_2"]
+[cards.finished]
+line_keys = ["l_roof_done"]
+modifiers = [{ target = "lane", id = "rack", kind = "mul_bp", amount_bp = 12500, source = "rack_roof" }]
+
+# The two later comforts, in view from A22 and K2 (both moments present), each unready until the build it stands on is
+# on its way, so its stages fall in the chapter's later visits: the stack once the larder's second stage is laid, the
+# shelf once the hearth's second course is (its stages run beside the last cures). Each takes full stores and the
+# hands' time against the builds beside it (the watch fire's last stage, the rack roof's). The gate is a token taken first (the
+# hearth's idiom), not a requires, so the card's needs show it.
+[[cards]]
+id = "wood_stack"
+site = { layer = "wood_stack_3" }
+only_player = "project"
+presentation = "craft"
+label_key = "c_wood_stack"
+upside_key = "up_wood_stack"
+work_s = 2400
+cap = 3
+inputs = [{ store = "stack_ready", items = 1 }, { store = "damp_wood", items = 18 }, { store = "stones", items = 6 }]
+line_keys = ["l_stack_1", "l_stack_2", "l_stack_3"]
+[cards.finished]
+modifiers = [{ target = "cap", id = "dry_wood", kind = "mul_bp", amount_bp = 15000, source = "wood_stack" }]
+
+[[cards]]
+id = "pot_shelf"
+site = { layer = "pot_shelf_3" }
+only_player = "project"
+presentation = "craft"
+label_key = "c_pot_shelf"
+upside_key = "up_pot_shelf"
+work_s = 2400
+cap = 3
+inputs = [{ store = "shelf_ready", items = 1 }, { store = "stones", items = 12 }, { store = "damp_wood", items = 6 }]
+line_keys = ["l_shelf_1", "l_shelf_2", "l_shelf_3"]
+[cards.finished]
+modifiers = [{ target = "cap", id = "stew", kind = "mul_bp", amount_bp = 15000, source = "pot_shelf" }]
+
+# Never unlocked: a stage's worth of each later comfort, three apiece, set when the build it stands on is part laid.
+[[stores]]
+id = "stack_ready"
+label_key = "store_stack_ready"
+cap_items = 3
+
+[[stores]]
+id = "shelf_ready"
+label_key = "store_shelf_ready"
+cap_items = 3
+
+[[triggers]]
+id = "t_stack_ready"
+when = { test = "at_least", subject_kind = "card_count", id = "larder_floor", value = 2 }
+outcome = { stores = [{ store = "stack_ready", items = 3 }] }
+
+[[triggers]]
+id = "t_shelf_ready"
+when = { test = "at_least", subject_kind = "card_count", id = "clay_hearth", value = 2 }
+outcome = { stores = [{ store = "shelf_ready", items = 3 }] }
+
+# The clay hearth: four courses, each laid on the hands and then cured on a lane of its own (the rack's shape), so the
+# mix runs on meanwhile. Each course takes the dry token the last one's cure leaves (K2 leaves the first), so the next
+# course waits, unready and queueable, until the last has cured. The player lays the first; each cure starts the next
+# course as it lands, the way an order runs a staged build (a start changes nothing on a busy lane or an unready card,
+# so hands mid-tap or a short store leave that course to a tap or When ready). Laying one starts its cure with the wet
+# token, so a cure by hand with no course laid is a failed tap. A course takes 2 dry wood, the floor the dry wood rule
+# keeps: a larger take shows no ready time while the store falls (ready_at does not count the rule's refills), so When
+# ready could not wait on the next course. 10 stones, so the first course can be queued the return the clay comes in (D-105).
+[[cards]]
+id = "clay_hearth"
+site = { layer = "clay_hearth_3" }
+only_player = "project"
+presentation = "craft"
+label_key = "c_clay_hearth"
+upside_key = "up_clay_hearth"
+work_s = 1800
+cap = 4
+inputs = [{ store = "hearth_dry", items = 1 }, { store = "clay", items = 6 }, { store = "stones", items = 10 }, { store = "dry_wood", items = 2 }]
+outcome = { stores = [{ store = "hearth_wet", items = 1 }], starts = ["cure_hearth"] }
+line_keys = ["l_hearth_1", "l_hearth_2", "l_hearth_3", "l_hearth_done"]
+[cards.finished]
+unlocks = [{ unlock_kind = "card", id = "bank_hearth" }]
+modifiers = [{ target = "rate", id = "stew", flow = "make", store = "stew", kind = "add_bp", amount_bp = 5000, source = "clay_hearth" }]
+
+[[lanes]]
+id = "hearth"
+label_key = "lane_hearth"
+
+# One cure a course, four in all (the cap night 4 reads). The bar is the lever on B5's band (day-three-numbers.md,
+# "Sizing the chain"): 38 000 s since the first course comes a visit earlier (D-105), which holds B5, B6 and B7 where
+# they stood. A card's lump lands whole at any bar (engine design/cards.txt, "Rate form").
+[[cards]]
+id = "cure_hearth"
+site = { layer = "clay_hearth_3" }
+only_player = "project"
+lane = "hearth"
+presentation = "action"
+label_key = "c_cure_hearth"
+upside_key = "up_cure_hearth"
+work_s = 38000
+cap = 4
+inputs = [{ store = "hearth_wet", items = 1 }]
+outcome = { stores = [{ store = "hearth_dry", items = 1 }], starts = ["clay_hearth"] }
+
+# Never unlocked: a course laid and not yet cured.
+[[stores]]
+id = "hearth_wet"
+label_key = "store_hearth_wet"
+cap_items = 1
+
+# Never unlocked: the last course cured, ready for the next.
+[[stores]]
+id = "hearth_dry"
+label_key = "store_hearth_dry"
+cap_items = 1
+
+# The first course readies the pot (shown at K2, unready until then).
+[[triggers]]
+id = "t_hearth_1"
+when = { test = "at_least", subject_kind = "card_count", id = "clay_hearth", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "store", id = "stew" }] }
+
+# The fourth course cured: the evening's clock for night 4.
+[[triggers]]
+id = "t_cured_4"
+when = { test = "at_least", subject_kind = "card_count", id = "cure_hearth", value = 4 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "evening_4" }] }
+
+# ---------- stew ----------
+
+[[stores]]
+id = "stew"
+label_key = "store_stew"
+cap_items = 12
+group_key = "store_group_stew"
+
+[[cards]]
+id = "stew"
+site = { layer = "fire_lit" }
+presentation = "action"
+label_key = "c_stew"
+upside_key = "up_stew"
+upside_of = "pot_stew"
+variant_of = "stew"
+work_s = 20
+skill = "cooking"
+xp_per_hour = 36
+requires = [{ test = "at_least", subject_kind = "card_count", id = "clay_hearth", value = 1 }]
+inputs = [{ store = "roots", items = 4 }, { store = "smoked", items = 1 }]
+outcome = { stores = [{ store = "stew", items = 2 }] }
+
+[[triggers]]
+id = "t_stew_first"
+when = { test = "at_least", subject_kind = "card_count", id = "stew", value = 1 }
+outcome = { line_keys = ["l_stew_first"] }
+
+# The pot on the fire (#473): one kind at a time, its one task set by the player's rules as any ruled lane's is. The
+# camp eats what is on: a pot card's cost is the eating, one an hour for the first eater and as much again for each who
+# comes (the triggers on their eating), and it holds its kind's bonus while it runs. Run dry, it stops until more of
+# that kind is made; nothing switches it but a rule the player writes. A station does no work for the camp.
+[[lanes]]
+id = "pot"
+label_key = "lane_pot"
+ruled = true
+station = true
+
+[[cards]]
+id = "pot_stew"
+site = { layer = "stew_pot" }
+only_player = "station"
+lane = "pot"
+presentation = "action"
+label_key = "c_pot_stew"
+upside_key = "up_pot_stew"
+stake = "speed"
+work_s = 60
+costs = [{ store = "stew", items_per_hour = 1 }]
+while_running = [{ lane = "n2", amount_bp = 1500 }]
+
+# His eating opens the pot, on the one kind there is; the player's rules change it from here.
+[[triggers]]
+id = "t_pot_on"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "n2_eating", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "pot_stew" }], orders = [{ tap_card = "pot_stew" }] }
+
+# ---------- the evening, the third night, morning 4 ----------
+
+# Never unlocked: the quarter hour after A22, in fifths, as day two's evening.
+[[stores]]
+id = "evening_3"
+label_key = "store_evening_3"
+cap_items = 5
+clock = "evening"
+
+[[standing]]
+id = "evening_3"
+label_key = "action_evening_3"
+makes = [{ store = "evening_3", items_per_hour = 20 }]
+
+# Never unlocked: the third night, about an hour in twentieths.
+[[stores]]
+id = "night_3"
+label_key = "store_night_3"
+cap_items = 20
+clock = "night"
+
+[[standing]]
+id = "night_3"
+label_key = "action_night_3"
+makes = [{ store = "night_3", items_per_hour = 20 }]
+
+# Dusk: no feature of its own (the grade follows the night's clock), so the absence over it brings two unlocks.
+[[triggers]]
+id = "t_dusk_3"
+when = { test = "at_least", subject_kind = "store", id = "evening_3", value = 5 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "night_3" }] }
+
+# K3, three minutes into the night.
+[[triggers]]
+id = "t_night_3"
+when = { test = "at_least", subject_kind = "store", id = "night_3", value = 1 }
+outcome = { line_keys = ["l_night_3a", "l_night_3b"], unlocks = [{ unlock_kind = "feature", id = "night_3" }] }
+
+# Morning 4, and SL1 with it: the watch fire opens on either lane, the same stores either way (a card is not shown
+# before the beat it waits on). Her shift at it shows now, unready until it is lit.
+[[triggers]]
+id = "t_morning_4"
+when = { test = "at_least", subject_kind = "store", id = "night_3", value = 20 }
+[triggers.outcome]
+line_keys = ["l_morning_4", "l_watch_1", "l_watch_2"]
+unlocks = [
+  { unlock_kind = "feature", id = "morning_4" },
+  { unlock_kind = "card", id = "watch_fire" },
+  { unlock_kind = "card", id = "n1_build_watch" },
+  { unlock_kind = "card", id = "n1_watch" },
+]
+
+# ---------- night 4 ----------
+
+[[stores]]
+id = "evening_4"
+label_key = "store_evening_4"
+cap_items = 5
+clock = "evening"
+
+[[standing]]
+id = "evening_4"
+label_key = "action_evening_4"
+makes = [{ store = "evening_4", items_per_hour = 20 }]
+
+[[stores]]
+id = "night_4"
+label_key = "store_night_4"
+cap_items = 20
+clock = "night"
+
+[[standing]]
+id = "night_4"
+label_key = "action_night_4"
+makes = [{ store = "night_4", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_dusk_4"
+when = { test = "at_least", subject_kind = "store", id = "evening_4", value = 5 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "night_4" }] }
+
+[[triggers]]
+id = "t_night_4"
+when = { test = "at_least", subject_kind = "store", id = "night_4", value = 1 }
+outcome = { line_keys = ["l_night_4"], unlocks = [{ unlock_kind = "feature", id = "night_4" }] }
+
+# A20, B5: bank the hearth in night 4, at B5's Foraging level (beats.yaml). Its finish lifts Camp 10.
+[[cards]]
+id = "bank_hearth"
+site = { layer = "fire_lit" }
+only_player = "story"
+presentation = "narrative"
+label_key = "c_bank_hearth"
+work_s = 5
+cap = 1
+glows = true
+requires = [
+  { test = "at_least", subject_kind = "store", id = "night_4", value = 1 },
+  { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 5 },
+]
+[cards.finished]
+line_keys = ["l_b5_1", "l_b5_2", "l_b5_3"]
+unlocks = [{ unlock_kind = "feature", id = "warm_ground" }]
+
+# ---------- SL1, SL3: the watch fire ----------
+
+# Either lane's stage counts toward the other's: both add to watch_done, and the second stage retires both cards.
+[[cards]]
+id = "watch_fire"
+site = { layer = "watch_ring" }
+presentation = "craft"
+label_key = "c_watch_fire"
+work_s = 3600
+cap = 2
+inputs = [{ store = "stones", items = 12 }, { store = "dry_wood", items = 6 }]
+outcome = { stores = [{ store = "watch_done", items = 1 }] }
+
+# Hers: four times the hands' bar, at her lane's speed (each lump a whole rate at 1.0 and 1.2).
+[[cards]]
+id = "n1_build_watch"
+twin_of = "watch_fire"
+site = { layer = "watch_ring" }
+lane = "n1"
+presentation = "craft"
+label_key = "c_n1_build_watch"
+work_s = 14400
+cap = 2
+inputs = [{ store = "stones", items = 12 }, { store = "dry_wood", items = 6 }]
+outcome = { stores = [{ store = "watch_done", items = 1 }] }
+
+# Never unlocked: the watch fire's stages, from either lane.
+[[stores]]
+id = "watch_done"
+label_key = "store_watch_done"
+cap_items = 2
+
+[[triggers]]
+id = "t_watch_lit"
+when = { test = "at_least", subject_kind = "store", id = "watch_done", value = 2 }
+[triggers.outcome]
+line_keys = ["l_watch_lit"]
+unlocks = [
+  { unlock_kind = "retired", id = "watch_fire" },
+  { unlock_kind = "retired", id = "n1_build_watch" },
+]
+
+# Her share at the watch fire against her gathering. It feeds the sides combat's chapters declare (b7.toml's larder,
+# day_eight.toml's gap), each holding an entry while it runs.
+[[cards]]
+id = "n1_watch"
+site = { layer = "watch_lit" }
+lane = "n1"
+presentation = "action"
+label_key = "c_n1_watch"
+upside_key = "up_watch"
+stake = "side"
+work_s = 600
+requires = [{ test = "at_least", subject_kind = "store", id = "watch_done", value = 2 }]
+inputs = [{ store = "dry_wood", items = 1 }]
+
+# ---------- O-stay, the bay and K5 ----------
+
+# O-stay's moment: the first pot of stew (a step of its own, not a count of them). Its own feature, so the aim can
+# start at it.
+[[triggers]]
+id = "t_stay_offer"
+when = { test = "at_least", subject_kind = "card_count", id = "stew", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "stay_offer" }] }
+
+[[offers]]
+id = "o_stay"
+text_key = "o_stay"
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "stay_offer", value = 1 }
+line_keys = ["l_stay_1", "l_stay_2"]
+kind = "arrival"
+
+[[offers.answers]]
+id = "o_stay_room"
+label_key = "a_make_room"
+cost_key = "a_make_room_cost"
+role = "self"
+[offers.answers.outcome]
+line_keys = ["l_bay_go"]
+unlocks = [{ unlock_kind = "card", id = "make_bay" }]
+queues = ["make_bay"]
+
+[[offers.answers]]
+id = "o_stay_his"
+label_key = "a_let_him"
+cost_key = "a_let_him_cost"
+role = "other"
+[offers.answers.outcome]
+line_keys = ["l_bay_his"]
+unlocks = [{ unlock_kind = "card", id = "n2_build_bay" }]
+orders = [{ tap_card = "n2_build_bay", first = true }]
+
+# Each answer to an arrival offer lands a number when the build is done, named for the answer (the ledger shows its
+# source): built by hand, that person's lane +10%; left to them, the camp's rest +5%. Starting values, not tuned.
+[[triggers]]
+id = "t_kept_o_stay_room"
+when = { test = "at_least", subject_kind = "store", id = "bay", value = 1 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_stay_room", value = 1 },
+  { test = "at_most", subject_kind = "unlocked", unlock_kind = "answer", id = "o_stay_fire_fire", value = 0 },
+]
+[triggers.outcome]
+line_keys = ["l_kept_o_stay_room"]
+modifiers = [{ target = "lane", id = "n2", kind = "mul_bp", amount_bp = 11000, source = "o_stay_room" }]
+
+[[triggers]]
+id = "t_kept_o_stay_his"
+when = { test = "at_least", subject_kind = "store", id = "bay", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_stay_his", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_stay_his"]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_stay_his" }]
+
+# The words of the rule that answers every arrival, for whoever comes next.
+[[offer_kinds]]
+kind = "arrival"
+roles = [
+  { role = "self", label_key = "k_arrival_self", tally = "own_hands" },
+  { role = "other", label_key = "k_arrival_other", tally = "left_to_them" },
+]
+
+# A23 on the hands. Its work divides one item's quantity units at speeds 1 and a half (a tap keeps its start speed).
+[[cards]]
+id = "make_bay"
+site = { layer = "bay" }
+presentation = "craft"
+label_key = "c_make_bay"
+work_s = 18000
+cap = 1
+inputs = [{ store = "damp_wood", items = 12 }, { store = "stones", items = 12 }]
+outcome = { stores = [{ store = "bay", items = 1 }] }
+
+# A line when the hands start the bay: the build is a long wait the player chose, and a return during it needs something
+# new to see (docs/decisions.md, "Tuned means checked").
+[[triggers]]
+id = "t_bay_begun"
+when = { test = "at_least", subject_kind = "running", id = "make_bay", value = 1 }
+outcome = { line_keys = ["l_bay_help"] }
+
+# News part-way through the bay, 2 h after either builder starts it: the build runs five hours, so a return a few hours
+# into it has something new (D-105).
+[[triggers]]
+id = "t_bay_clock"
+when = { test = "at_least", subject_kind = "running", id = "make_bay", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "bay_clock" }] }
+
+[[triggers]]
+id = "t_bay_clock_his"
+when = { test = "at_least", subject_kind = "running", id = "n2_build_bay", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "bay_clock" }] }
+
+# Never unlocked: the bay's clock, in twentieths of an hour, as the walk's.
+[[stores]]
+id = "bay_clock"
+label_key = "store_bay_clock"
+cap_items = 40
+
+[[standing]]
+id = "bay_clock"
+label_key = "action_bay_clock"
+makes = [{ store = "bay_clock", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_bay_mid"
+when = { test = "at_least", subject_kind = "store", id = "bay_clock", value = 40 }
+outcome = { line_keys = ["l_bay_mid"] }
+
+# The crews (decisions/people.md, "Groups follow what people can do"): a crew holds the jobs its people do and not the
+# ones they cannot, and is tied to the hand who looks after it. The field crew's first member is the hand who leads it.
+[[lanes]]
+id = "g_field"
+label_key = "lane_g_field"
+ruled = true
+pooled = true
+tied = "n2"
+
+# His lane: a townsperson the player's rules set, as hers.
+[[lanes]]
+id = "n2"
+lodging = { build = "hall" }
+by_day = { card = "n2_watch" }
+label_key = "lane_n2"
+ruled = true
+told = "line"
+later_labels = [{ after = { unlock_kind = "feature", id = "n2_joined" }, label_key = "lane_n2_named" }]
+name_key = "name_n2"
+crews = ["g_field"]
+
+# A24 on his lane, the same real time and stores as A23.
+[[cards]]
+id = "n2_build_bay"
+site = { layer = "bay" }
+twin_of = "make_bay"
+lane = "n2"
+presentation = "craft"
+label_key = "c_n2_build_bay"
+work_s = 18000
+cap = 1
+inputs = [{ store = "damp_wood", items = 12 }, { store = "stones", items = 12 }]
+outcome = { stores = [{ store = "bay", items = 1 }] }
+
+# Never unlocked: the bay built, by either lane.
+[[stores]]
+id = "bay"
+label_key = "store_bay"
+cap_items = 1
+
+# A townsperson's cards, as the first one's (day two): the hands cards' takes and makes at base rate, no skill and no
+# XP. Defined once; a lane joins by appending to `lanes`, and expands where its lane is declared (town.py).
+[[town_cards]]
+id = "{lane}_forage"
+site = { no_site = "foraged out in the ruin and past its walls, no one place in the scene" }
+twin_of = "forage"
+lanes = ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n13", "g_field", "g_hearth"]
+presentation = "action"
+label_key = "c_forage"
+work_s = 120
+outcome = { stores = [{ store = "roots", items = 24 }] }
+
+[[town_cards]]
+id = "{lane}_gather"
+site = { no_site = "dead wood is picked up all over the ruin and beyond the wall, no one place in the scene" }
+twin_of = "gather_wood"
+lanes = ["n2", "n3", "n5", "n6", "n7"]
+presentation = "action"
+label_key = "c_gather_wood"
+work_s = 30
+outcome = { stores = [{ store = "damp_wood", items = 6 }] }
+
+[[town_cards]]
+id = "{lane}_cut"
+site = { layer = "birch_log" }
+twin_of = "woodcutting"
+lanes = ["n2", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+presentation = "action"
+label_key = "c_woodcutting"
+work_s = 12
+outcome = { stores = [{ store = "damp_wood", items = 6 }] }
+
+[[town_cards]]
+id = "{lane}_scavenge"
+site = { no_site = "stones are picked from the rubble under the far wall stub, part of the ruin's backdrop and not a layer of its own" }
+twin_of = "scavenge"
+lanes = ["n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+presentation = "action"
+label_key = "c_scavenge"
+work_s = 48
+outcome = { stores = [{ store = "stones", items = 8 }] }
+
+# K5: the bay done, either answer. He joins the town's mix foraging at his whole share (the pot feeds three; cutting
+# would pour his whole time into a full damp wood line the track cannot drink, day-three.md, "Sinks after measuring").
+# Arrivals 2; she joins on her own trigger below.
+[[triggers]]
+id = "t_joins"
+when = { test = "at_least", subject_kind = "store", id = "bay", value = 1 }
+[triggers.outcome]
+line_keys = ["l_join_1", "l_join_2", "l_his_first"]
+stores = [{ store = "arrivals", items = 1 }]
+unlocks = [
+  { unlock_kind = "feature", id = "n2_joined" },
+  { unlock_kind = "card", id = "n2_forage" },
+  { unlock_kind = "card", id = "n2_gather" },
+  { unlock_kind = "card", id = "n2_cut" },
+  { unlock_kind = "card", id = "n2_scavenge" },
+  { unlock_kind = "action", id = "n2_eating" },
+  { unlock_kind = "action", id = "n2_hour" },
+]
+joins = [{ lane = "n2", mix = "town:camp", card = "n2_forage", own_split = true }]
+whereabouts = [{ person = "n2", layer = "figure_n2_by_fire" }]
+
+[[subjects]]
+id = "s_n2_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n2", way = "joined" }
+first = { keys = ["j_n2_first"] }
+catchup = { keys = ["j_n2_catchup"] }
+late = { keys = ["j_n2_late"] }
+
+[[subjects]]
+id = "s_b5"
+kind = "beat"
+source = { source_kind = "card", id = "bank_hearth" }
+mark = "soot"
+first = { keys = ["j_b5_first"] }
+catchup = { keys = ["j_b5_catchup"] }
+
+# His cutting takes the place of his gathering by hand from the join, as hers does (choice_checks.py). Its own trigger,
+# as t_joins' outcome is released.
+[[triggers]]
+id = "t_n2_cuts"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n2_joined", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "n2_cut" }, { unlock_kind = "retired", id = "n2_gather", replaced_by = "n2_cut" }] }
+
+# She joins the town's mix with him (decisions.md, "The mix": her single task was a leftover). Her always task becomes
+# her share at her whole time, so nothing she does changes at the join; with no always task she joins with no share.
+# Her own trigger, as t_joins' outcome is released; after it, so a save past K5 gets the same mix order at rebase. She
+# was counted at B3 (t_first_arrival), so the arrivals count does not move.
+[[triggers]]
+id = "t_n1_joins"
+when = { test = "at_least", subject_kind = "store", id = "bay", value = 1 }
+outcome = { joins = [{ lane = "n1", mix = "town:camp", counted = true, own_split = true }], whereabouts = [{ person = "n1", layer = "figure_n1_by_fire_day_3" }] }
+
+# Clay and the pot, the hands' everyday jobs a person also takes (day two's weaving). The old man's leg rules out the
+# digging, so his lane has no clay card.
+[[town_cards]]
+id = "{lane}_dig_clay"
+site = { no_site = "worked at the warm stream, which lies on the low ground behind the wall stub, off the scene; the scene poses its work at the gap's mouth, the way down to it" }
+twin_of = "dig_clay"
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+presentation = "action"
+label_key = "c_dig_clay"
+upside_key = "up_dig_clay"
+work_s = 10
+outcome = { stores = [{ store = "clay", items = 1 }] }
+
+[[town_cards]]
+id = "{lane}_stew"
+site = { layer = "fire_lit" }
+twin_of = "stew"
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
+presentation = "action"
+label_key = "c_stew"
+upside_key = "up_stew"
+upside_of = "pot_stew"
+work_s = 20
+requires = [{ test = "at_least", subject_kind = "card_count", id = "clay_hearth", value = 1 }]
+inputs = [{ store = "roots", items = 4 }, { store = "smoked", items = 1 }]
+outcome = { stores = [{ store = "stew", items = 2 }] }
+
+# Laying track is everyday work (decisions/people.md, "Who can do which job"): a townsperson's card at the hands' takes
+# and makes, with no skill, filling the same store. The old man's leg rules out the walk, as it does the digging.
+[[town_cards]]
+id = "{lane}_field_track"
+site = { layer = "track" }
+twin_of = "field_track"
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+presentation = "action"
+label_key = "c_field_track"
+upside_key = "up_field_track"
+stake = "reach"
+work_s = 30
+inputs = [{ store = "damp_wood", items = 18 }, { store = "stones", items = 4 }, { store = "roots", items = 15 }]
+outcome = { stores = [{ store = "track_laid", items = 1 }] }
+
+[[triggers]]
+id = "t_n1_track"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "field_track", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n1", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n1_field_track" }] }
+
+[[triggers]]
+id = "t_n2_track"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n2_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "field_track", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n2_field_track" }] }
+
+# Hers with the hands' clay and pot.
+[[triggers]]
+id = "t_n1_clay_pot"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "stew", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n1", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n1_dig_clay" },
+  { unlock_kind = "card", id = "n1_stew" },
+]
+
+# His from the join.
+[[triggers]]
+id = "t_n2_chores"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n2_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "stew", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n2_weave_wattle" },
+  { unlock_kind = "card", id = "n2_dig_clay" },
+  { unlock_kind = "card", id = "n2_stew" },
+]
+
+# He eats what she eats (n1_eating), and from the pot (t_pot_on): the smoked line, made from the snares a little faster
+# than she eats it, has a second mouth once he joins.
+[[standing]]
+id = "n2_eating"
+label_key = "action_n2_eating"
+costs = [{ store = "smoked", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+
+# Never unlocked: his first game hour, in twentieths. SL4 at its end.
+[[stores]]
+id = "n2_hour"
+label_key = "store_n2_hour"
+cap_items = 20
+
+[[standing]]
+id = "n2_hour"
+label_key = "action_n2_hour"
+makes = [{ store = "n2_hour", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_scrap_ask"
+when = { test = "at_least", subject_kind = "store", id = "n2_hour", value = 20 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "store", id = "scrap", value = 1 }]
+outcome = { line_keys = ["l_scrap_ask"] }
+
+# ---------- SL6: whose way the camp banks the fire ----------
+
+# A small offer whose answers install modifiers; neither is judged. Three at the fire, so after K5.
+[[offers]]
+id = "o_bank"
+text_key = "o_bank"
+askers = ["n1", "n2"]
+permanence_key = "o_bank_permanence"
+gate = { test = "at_least", subject_kind = "card_count", id = "clay_hearth", value = 3 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n2_joined", value = 1 }]
+line_keys = ["l_bank_1"]
+
+[[offers.answers]]
+id = "o_bank_hers"
+label_key = "a_bank_hers"
+cost_key = "a_bank_hers_cost"
+[offers.answers.outcome]
+line_keys = ["l_bank_hers"]
+modifiers = [{ target = "rate", id = "fire", flow = "cost", store = "dry_wood", kind = "mul_bp", amount_bp = 9000, source = "o_bank_hers" }]
+
+[[offers.answers]]
+id = "o_bank_his"
+label_key = "a_bank_his"
+cost_key = "a_bank_his_cost"
+[offers.answers.outcome]
+line_keys = ["l_bank_his"]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 11000, source = "o_bank_his" }]
+
+# ---------- the Camp ----------
+
+# The wall takes 11 instead of 9: eleven ninths has no exact basis-point factor, so the cost is a hair under and the
+# make a hair over (camp_7's way).
+[[camp_levels]]
+at_items = 250000
+pays_key = "camp_pays_9"
+pays_from = 9
+pays_to = 11
+line_keys = ["l_camp_9"]
+modifiers = [
+  { target = "rate", id = "lay_to_dry", flow = "cost", store = "damp_wood", kind = "mul_bp", amount_bp = 12222, source = "camp_9" },
+  { target = "rate", id = "lay_to_dry", flow = "make", store = "dry_wood", kind = "mul_bp", amount_bp = 12223, source = "camp_9" },
+]
+
+# Held at a "?" through day three, a goal on screen; B5 lifts it.
+[[camp_levels]]
+at_items = 400000
+pays_key = "pays_unknown"
+held = true
+lifted_by = ["bank_hearth"]
+line_keys = ["l_camp_10"]
+modifiers = [{ target = "cap", id = "smoked", kind = "mul_bp", amount_bp = 15000, source = "camp_10" }]
+
+# ---------- levels and finds ----------
+
+# Finds beside the speed-ups day one put at these levels (each its own trigger: additive under the lock), each into a
+# store day three has shown (the requires), so a save already past the level gets it when the store appears.
+[[skill_levels]]
+skill = "foraging"
+levels = [{ level = 6, pays_key = "pays_furrow_seam" }, { level = 8, pays_key = "pays_lee_lichen" }]
+
+[[skill_levels]]
+skill = "scavenging"
+levels = [{ level = 17, pays_key = "pays_buckle" }]
+
+[[skill_levels]]
+skill = "cooking"
+levels = [{ level = 4, pays_key = "pays_thick_pot" }, { level = 11, pays_key = "pays_cook_faster" }, { level = 12, pays_key = "pays_cook_faster" }, { level = 13, pays_key = "pays_cook_faster" }, { level = 14, pays_key = "pays_cook_faster" }, { level = 15, pays_key = "pays_cook_faster" }, { level = 16, pays_key = "pays_cook_faster" }, { level = 17, pays_key = "pays_cook_faster" }, { level = 18, pays_key = "pays_cook_faster" }, { level = 19, pays_key = "pays_cook_faster" }, { level = 20, pays_key = "pays_cook_faster" }, { level = 21, pays_key = "pays_cook_faster" }, { level = 22, pays_key = "pays_cook_faster" }, { level = 23, pays_key = "pays_cook_faster" }, { level = 24, pays_key = "pays_cook_faster" }, { level = 25, pays_key = "pays_cook_faster" }]
+
+[[triggers]]
+id = "t_clay_seam"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 6 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "store", id = "clay", value = 1 }]
+outcome = { stores = [{ store = "clay", items = 4 }], line_keys = ["l_clay_seam"] }
+
+[[triggers]]
+id = "t_lee_lichen"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 8 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "track_open", value = 1 }]
+outcome = { stores = [{ store = "roots", items = 6 }], line_keys = ["l_lee_lichen"] }
+
+[[triggers]]
+id = "t_buckle"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 17 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "store", id = "scrap", value = 1 }]
+outcome = { stores = [{ store = "scrap", items = 2 }], line_keys = ["l_buckle"] }
+
+[[triggers]]
+id = "t_thick_pot"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 4 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "store", id = "stew", value = 1 }]
+outcome = { stores = [{ store = "stew", items = 2 }], line_keys = ["l_thick_pot"] }
+
+# Stew puts Cooking on the hands, so the mix drives it and its row is marked to the curve's top: from 11 each level
+# its work a tenth faster (day two's taper), the pot's with it.
+[[triggers]]
+id = "t_cook_11"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 11 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_11" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_11" }, { target = "work", id = "stew", kind = "mul_bp", amount_bp = 11000, source = "cook_11" }] }
+
+[[triggers]]
+id = "t_cook_12"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 12 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_12" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_12" }, { target = "work", id = "stew", kind = "mul_bp", amount_bp = 11000, source = "cook_12" }] }
+
+[[triggers]]
+id = "t_cook_13"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 13 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_13" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_13" }, { target = "work", id = "stew", kind = "mul_bp", amount_bp = 11000, source = "cook_13" }] }
+
+[[triggers]]
+id = "t_cook_14"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 14 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_14" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_14" }, { target = "work", id = "stew", kind = "mul_bp", amount_bp = 11000, source = "cook_14" }] }
+
+[[triggers]]
+id = "t_cook_15"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 15 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_15" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_15" }, { target = "work", id = "stew", kind = "mul_bp", amount_bp = 11000, source = "cook_15" }] }
+
+[[triggers]]
+id = "t_cook_16"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 16 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_16" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_16" }, { target = "work", id = "stew", kind = "mul_bp", amount_bp = 11000, source = "cook_16" }] }
+
+[[triggers]]
+id = "t_cook_17"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 17 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_17" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_17" }, { target = "work", id = "stew", kind = "mul_bp", amount_bp = 11000, source = "cook_17" }] }
+
+[[triggers]]
+id = "t_cook_18"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 18 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_18" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_18" }, { target = "work", id = "stew", kind = "mul_bp", amount_bp = 11000, source = "cook_18" }] }
+
+[[triggers]]
+id = "t_cook_19"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 19 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_19" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_19" }, { target = "work", id = "stew", kind = "mul_bp", amount_bp = 11000, source = "cook_19" }] }
+
+[[triggers]]
+id = "t_cook_20"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 20 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_20" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_20" }, { target = "work", id = "stew", kind = "mul_bp", amount_bp = 11000, source = "cook_20" }] }
+
+[[triggers]]
+id = "t_cook_21"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 21 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_21" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_21" }, { target = "work", id = "stew", kind = "mul_bp", amount_bp = 11000, source = "cook_21" }] }
+
+[[triggers]]
+id = "t_cook_22"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 22 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_22" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_22" }, { target = "work", id = "stew", kind = "mul_bp", amount_bp = 11000, source = "cook_22" }] }
+
+[[triggers]]
+id = "t_cook_23"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 23 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_23" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_23" }, { target = "work", id = "stew", kind = "mul_bp", amount_bp = 11000, source = "cook_23" }] }
+
+[[triggers]]
+id = "t_cook_24"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 24 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_24" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_24" }, { target = "work", id = "stew", kind = "mul_bp", amount_bp = 11000, source = "cook_24" }] }
+
+[[triggers]]
+id = "t_cook_25"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 25 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_25" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_25" }, { target = "work", id = "stew", kind = "mul_bp", amount_bp = 11000, source = "cook_25" }] }
+
+# ---------- the journal ----------
+
+# The ground at the camp, from B5 on.
+[[entries]]
+id = "e_warm_ground"
+title_key = "e_warm_ground_title"
+section = "places"
+sketch = "warm_ground"
+hand = "ink"
+runners = []
+
+[[notes]]
+id = "n_ground_1"
+entry = "e_warm_ground"
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "warm_ground", value = 1 }
+
+# ---------- features ----------
+
+[[features]]
+id = "track_open"
+
+[[features]]
+id = "night_3"
+
+[[features]]
+id = "morning_4"
+
+[[features]]
+id = "dead_field"
+
+[[features]]
+id = "stay_offer"
+
+[[features]]
+id = "n2_joined"
+
+[[features]]
+id = "night_4"
+
+[[features]]
+id = "warm_ground"
+
+# ---------- aims ----------
+
+# After day two's aim_after (feature cart_news), which ends at K1.
+[[aims]]
+id = "aim_field"
+text_key = "aim_field"
+after = { unlock_kind = "feature", id = "track_open" }
+
+[[aims]]
+id = "aim_one_more"
+text_key = "aim_one_more"
+after = { unlock_kind = "feature", id = "stay_offer" }
+
+[[aims]]
+id = "aim_three"
+text_key = "aim_three"
+after = { unlock_kind = "feature", id = "n2_joined" }
+
+[[aims]]
+id = "aim_warm"
+text_key = "aim_warm"
+after = { unlock_kind = "feature", id = "warm_ground" }
+
+# A day's mention of the people told by `mention` (decisions.md, "People, as built"): the band for how many came or
+# went that day, one of its lines drawn by a seeded shuffle. Words, never a count: a number is not the voice.
+[[people.came]]
+at_least = 1
+keys = ["mention_came_one_1", "mention_came_one_2", "mention_came_one_3", "mention_came_one_4", "mention_came_one_5", "mention_came_one_6"]
+
+[[people.came]]
+at_least = 2
+keys = ["mention_came_few_1", "mention_came_few_2", "mention_came_few_3", "mention_came_few_4", "mention_came_few_5", "mention_came_few_6"]
+
+[[people.came]]
+at_least = 5
+keys = ["mention_came_many_1", "mention_came_many_2", "mention_came_many_3", "mention_came_many_4", "mention_came_many_5", "mention_came_many_6"]
+
+[[people.went]]
+at_least = 1
+keys = ["mention_went_one_1", "mention_went_one_2", "mention_went_one_3", "mention_went_one_4", "mention_went_one_5", "mention_went_one_6"]
+
+[[people.went]]
+at_least = 2
+keys = ["mention_went_few_1", "mention_went_few_2", "mention_went_few_3", "mention_went_few_4", "mention_went_few_5", "mention_went_few_6"]
+
+[[people.went]]
+at_least = 5
+keys = ["mention_went_many_1", "mention_went_many_2", "mention_went_many_3", "mention_went_many_4", "mention_went_many_5", "mention_went_many_6"]
+
+# ---------- text ----------
+
+# The first line of each story beat, by its id in content/beats.yaml: the page hears a beat open from these, by no
+# key's name (api/contract/endpoints.txt, "Beat lines"). One id lists a key per way the beat can be told.
+[beat_lines]
+B5 = ["l_b5_1"]
+
+# O-stay-fire: the promise to build his bay, tested two hours into the build (the bay's clock) against the fire's wood.
+[[offers]]
+id = "o_stay_fire"
+text_key = "o_stay_fire"
+gate = { test = "at_least", subject_kind = "store", id = "bay_clock", value = 40 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_stay_room", value = 1 },
+  { test = "at_least", subject_kind = "running", id = "make_bay", value = 1 },
+]
+line_keys = ["l_stay_fire_1", "l_stay_fire_2"]
+tests = ["o_stay_room"]
+
+[[offers.answers]]
+id = "o_stay_fire_bay"
+label_key = "a_stay_fire_bay"
+cost_key = "a_stay_fire_bay_cost"
+[offers.answers.outcome]
+line_keys = ["l_stay_fire_bay"]
+modifiers = [{ target = "rate", id = "fire", flow = "cost", store = "dry_wood", kind = "mul_bp", amount_bp = 10500, source = "o_stay_fire_bay" }]
+
+[[offers.answers]]
+id = "o_stay_fire_fire"
+label_key = "a_stay_fire_fire"
+cost_key = "a_stay_fire_fire_cost"
+breaks = ["o_stay_room"]
+[offers.answers.outcome]
+line_keys = ["l_stay_fire_fire"]
+unlocks = [{ unlock_kind = "retired", id = "make_bay" }, { unlock_kind = "card", id = "n2_build_bay" }]
+orders = [{ tap_card = "n2_build_bay", first = true }]
+modifiers = [{ target = "lane", id = "n2", kind = "mul_bp", amount_bp = 9200, source = "o_stay_fire_fire" }]
+
+[line_kinds]
+l_stay_fire_1 = "story"
+l_stay_fire_2 = "story"
+l_stay_fire_bay = "story"
+l_stay_fire_fire = "story"
+l_kept_o_stay_room = "story"
+l_kept_o_stay_his = "story"
+l_edge_1 = "story"
+l_edge_2 = "story"
+l_track_first = "story"
+l_stream = "story"
+l_field_1 = "story"
+l_field_2 = "story"
+l_larder_1 = "story"
+l_larder_2 = "story"
+l_larder_3 = "story"
+l_larder_done = "story"
+l_roof_1 = "story"
+l_roof_2 = "story"
+l_roof_done = "story"
+l_hearth_1 = "story"
+l_hearth_2 = "story"
+l_hearth_3 = "story"
+l_hearth_done = "story"
+l_stew_first = "story"
+l_night_3a = "story"
+l_night_3b = "story"
+l_morning_4 = "story"
+l_watch_1 = "story"
+l_watch_2 = "story"
+l_watch_lit = "story"
+l_night_4 = "story"
+l_b5_1 = "story"
+l_b5_2 = "story"
+l_b5_3 = "story"
+l_stay_1 = "story"
+l_stay_2 = "story"
+l_bay_go = "story"
+l_bay_his = "story"
+l_bay_help = "story"
+l_bay_mid = "story"
+l_join_1 = "story"
+l_join_2 = "story"
+l_his_first = "story"
+l_scrap_ask = "story"
+l_bank_1 = "story"
+l_bank_hers = "story"
+l_bank_his = "story"
+l_camp_9 = "level"
+l_camp_10 = "level"
+l_clay_seam = "find"
+l_lee_lichen = "find"
+l_buckle = "find"
+l_thick_pot = "find"
+l_stack_1 = "story"
+l_stack_2 = "story"
+l_stack_3 = "story"
+l_shelf_1 = "story"
+l_shelf_2 = "story"
+l_shelf_3 = "story"
+
+[text]
+l_kept_o_stay_room = "he knows every knot in that bay, because you showed him. he works the quicker for it."
+l_kept_o_stay_his = "the bay he built himself stands square, and the camp sleeps a little deeper beside it."
+e_warm_ground_title = "warm ground"
+# ---------- lines: [day two: line to write] ----------
+# Every key below is a placeholder until the simulator's day-three routes give each line its states and the writers'
+# pick lands (content/team/day-three-lines-brief.md). tests/rules/content/test_day_two.py keeps this text out of any shipping
+# release: replace each value, never the marker's spelling.
+store_arrivals = "arrivals"
+store_own_hands = "built by hand"
+store_left_to_them = "left to them"
+c_walk_edge = "Scout past the firelight"
+c_field_track = "Lay the track further out"
+up_field_track = "{pct} hunting speed at each reach of track laid"
+store_track_laid = "track laid"
+c_track_end = "Walk the track to its end"
+store_scrap = "scrap"
+store_clay = "clay"
+c_dig_clay = "Dig clay"
+up_dig_clay = "clay for the hearth and the poultices"
+c_larder_floor = "Lay a larder floor"
+up_larder_floor = "{pct} root capacity"
+c_rack_roof = "Roof over the drying wood"
+up_rack_roof = "{pct} drying speed"
+c_clay_hearth = "Add a clay layer round the fire"
+up_clay_hearth = "{pct} stew from the pot"
+lane_hearth = "Hearth"
+c_cure_hearth = "Dry the new clay layer"
+up_cure_hearth = "the laid clay dry enough to build the hearth on"
+store_hearth_wet = "wet layer"
+store_hearth_dry = "dry layer"
+store_stew = "stew"
+store_group_stew = "stews"
+c_stew = "Cook stew"
+up_stew = "{pct} work speed for anyone who eats it, while it's in the pot"
+lane_pot = "The pot"
+c_pot_stew = "Stew"
+up_pot_stew = "{pct} work speed for anyone who eats"
+store_evening_3 = "evening"
+action_evening_3 = "Evening"
+store_night_3 = "night"
+action_night_3 = "Night"
+store_evening_4 = "evening"
+action_evening_4 = "Evening"
+store_night_4 = "night"
+action_night_4 = "Night"
+c_bank_hearth = "Bank the hearth for the night"
+c_watch_fire = "Build a fire at the gap"
+c_n1_build_watch = "Build a fire at the gap"
+store_watch_done = "fire at the gap"
+c_n1_watch = "Keep the fire at the gap"
+up_watch = "{pct} larder and gap strength while kept"
+o_stay = "Who builds him a sleeping bay?"
+a_make_room = "You build it"
+a_make_room_cost = "{d} of your time"
+a_let_him = "He builds it"
+a_let_him_cost = "{d} of his time"
+k_arrival_self = "You build it"
+k_arrival_other = "They build it"
+c_make_bay = "Build a sleeping bay"
+lane_n2 = "His hands"
+lane_g_field = "The field crew"
+lane_n2_named = "{n2}'s hands"
+name_n2 = "Martin"
+c_n2_build_bay = "Build a sleeping bay"
+store_bay = "bay"
+store_bay_clock = "clock"
+action_bay_clock = "Bay"
+action_n2_eating = "His share"
+store_n2_hour = "clock"
+action_n2_hour = "His first hour"
+o_bank = "Bank the hearth for the night her way, or his?"
+o_bank_permanence = "whichever way you pick, the hearth is banked that way from then on"
+a_bank_hers = "Her way"
+a_bank_hers_cost = "{pct} wood on the fire"
+a_bank_his = "His way"
+a_bank_his_cost = "{pct} rest"
+camp_pays_9 = "wall dries {to} wood at a time, was {from}"
+pays_furrow_seam = "a clay seam, {pct} foraging speed"
+pays_lee_lichen = "a cairn's lichen, {pct} foraging speed"
+pays_buckle = "a buckle, {pct} scavenging speed"
+pays_thick_pot = "a thick pot, {pct} cooking speed"
+c_wood_stack = "Build a second woodstack"
+up_wood_stack = "{pct} dry wood capacity"
+c_pot_shelf = "Build a pot shelf"
+up_pot_shelf = "{pct} stew capacity"
+store_stack_ready = "stack"
+store_shelf_ready = "shelf"
+aim_field = "see where the track goes."
+aim_one_more = "find him a place by the fire."
+aim_three = "keep three fed."
+aim_warm = "find out why the ground is warm."
+l_edge_1 = "past the firelight, thorn on three sides and one track out. the camp is easy to find."
+l_edge_2 = "the ash in camp lies thinner than anywhere you walked. you scuff it, twice."
+l_track_first = "a run: down the track, laid log to laid log, to a cairn and back."
+l_stream = "ash on everything but a stream. the clay on its bank is warm."
+l_field_1 = "you laid the track all this way for furrows."
+l_field_2 = "the track's whole yield: a rusted ploughshare. scrap."
+l_larder_1 = "a course of stone, so the roots stop sitting in wet."
+l_larder_2 = "a second course, flat enough to set a root on."
+l_larder_3 = "the last course is laid. level, give or take."
+l_larder_done = "lucy moves two roots, and looks at the rows."
+l_roof_1 = "poles go up over the wood drying by the wall."
+l_roof_2 = "thatch of anything at all. it shows."
+l_roof_done = "rain runs dark off the roof. what hangs under it stays pale."
+l_hearth_1 = "one course of clay. a mud ring, so far."
+l_hearth_2 = "more clay, pressed onto the dry course."
+l_hearth_3 = "a third course. everyone reaches over it to the fire."
+l_hearth_done = "the fourth course goes on. a whole hearth, drying."
+l_stew_first = "the first pot of stew. lucy eats hers standing."
+l_night_3a = "two howls trade across the dark, closer in."
+l_night_3b = "lucy piles on wood without a word. nothing comes."
+l_morning_4 = "frost out to the thorn. the stone round the fire stays dark."
+l_watch_1 = "lucy sets stones in a ring at the gap in the walls. she brings more."
+l_watch_2 = "the ring has room for a fire inside, looking down the track."
+l_watch_lit = "lucy keeps her fire, stick by stick, looking out."
+l_night_4 = "nightfall. three bowls, and the pot scraped."
+l_b5_1 = "you bank the new hearth. the ash on the stones round it melts back."
+l_b5_2 = "the ground is warm. all three of you sit down."
+l_b5_3 = "faint red in the cracks. nobody gets up for more wood."
+l_stay_1 = "a man at the light's edge, nose toward the pot."
+l_stay_2 = "he's alone. his spear has no head. can he stay?"
+l_bay_go = "you start him a sleeping bay against the lean-to."
+l_bay_his = "he starts the bay himself. he doesn't ask where."
+l_bay_help = "he holds the poles steady while you tie them."
+l_bay_mid = "the bay stands framed. half its roof is still sky."
+o_stay_fire = "The poles for his bay, or the fire?"
+l_stay_fire_1 = "the fire has sunk to coals while your back was turned."
+l_stay_fire_2 = "he stands holding a pole, looking from the coals to you."
+a_stay_fire_bay = "You finish the bay"
+a_stay_fire_bay_cost = "{pct} wood on the fire"
+a_stay_fire_fire = "You see to the fire"
+a_stay_fire_fire_cost = "{pct} work from him"
+l_stay_fire_bay = "the coals go grey. he ties off the last pole and does not look at them."
+l_stay_fire_fire = "you leave him the poles. he ties them off alone."
+l_join_1 = "he sits. lucy looks at him once, then works on."
+l_join_2 = "he says his name. the stores go three ways now."
+l_his_first = "he's at work before anyone tells him."
+l_scrap_ask = "he turns the scrap pile over with a boot. lifts his spear, lowers it."
+l_bank_1 = "she'd cover it in ash. he'd set stones round it."
+l_bank_hers = "ash over the coals, her way. he eyes the wood."
+l_bank_his = "a ring of stones, his way. she eyes the wood."
+l_camp_9 = "eleven lengths of wood go up against the wall, if none of them lean."
+l_camp_10 = "room for twenty-seven smoked in the larder, and three to eat them."
+l_clay_seam = "a seam of clay in the bank, grey and deep."
+l_lee_lichen = "lichen in a cairn's lee, scraped off for the pot."
+l_buckle = "a buckle in the ash. no belt, but a good buckle."
+l_thick_pot = "a thick-walled pot, whole. it will take stew."
+l_stack_1 = "stones in two rows, with room for wood across."
+l_stack_2 = "damp wood piled on the stones, bark side up."
+l_stack_3 = "the stack stands clear. the bottom logs stay dry."
+l_shelf_1 = "the pot shelf starts with a flat stone, then another."
+l_shelf_2 = "boards of damp wood laid across the stones."
+l_shelf_3 = "the pots go up, out from underfoot."
+n_ground_1 = "the ground was warm out to four paces round the hearth, then cold as anywhere. warmest after dark"
+mention_came_one_1 = "one more bowl goes round the pot."
+mention_came_one_2 = "a stranger comes in out of the ash, and stays."
+mention_came_one_3 = "someone new sleeps on the far side of the fire."
+mention_came_one_4 = "a new bedroll is laid out by the fire."
+mention_came_one_5 = "someone you don't know yet eats with you."
+mention_came_one_6 = "one more pair of hands at the woodpile."
+mention_came_few_1 = "a few more come in off the road. the pot stretches."
+mention_came_few_2 = "new faces at the fire. nobody asks where from."
+mention_came_few_3 = "the ladle scrapes bottom sooner."
+mention_came_few_4 = "a handful walk in together, carrying what they could."
+mention_came_few_5 = "everyone shuffles back to widen the ring."
+mention_came_few_6 = "bedrolls crowd in closer at night."
+mention_came_many_1 = "a crowd comes in, ash to the knees."
+mention_came_many_2 = "more come than there are blankets."
+mention_came_many_3 = "too many new faces to learn in a day."
+mention_came_many_4 = "the camp fills faster than the woodpile."
+mention_came_many_5 = "people sleep back to back by the fire."
+mention_came_many_6 = "they come in a long file, one behind the next."
+mention_went_one_1 = "a place at the fire stands empty."
+mention_went_one_2 = "one bowl fewer goes round the pot."
+mention_went_one_3 = "a bedroll by the fire stays rolled up."
+mention_went_one_4 = "a bowl stays dry by the pot."
+mention_went_one_5 = "one voice fewer at the fire."
+mention_went_one_6 = "a pair of boots is gone from the fireside."
+mention_went_few_1 = "a few places at the fire stand empty."
+mention_went_few_2 = "the camp is quieter by a few voices."
+mention_went_few_3 = "the stores stretch further, for the wrong reason."
+mention_went_few_4 = "the ring at the fire closes up a little."
+mention_went_few_5 = "a few bowls go back on the stack unused."
+mention_went_few_6 = "a few bedrolls are rolled up and gone."
+mention_went_many_1 = "a whole side of the fire sits empty."
+mention_went_many_2 = "the pot goes round fast. too many are gone."
+mention_went_many_3 = "half the bedrolls are gone."
+mention_went_many_4 = "the fire is too big for who is left."
+mention_went_many_5 = "you count heads and stop early."
+mention_went_many_6 = "no one waits for the ladle."
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_n2_first = "a man came up to the light, looking at the pot more than at us. alone. his spear had no head. {n2}. that made three to feed"
+j_n2_catchup = "{n2} came, and stayed"
+j_n2_late = "{n2} went to work before anyone told him. lucy looked at him once and that was all"
+j_b5_first = "banked the new hearth. the ash melted back from it all round. warm ground under us, a faint red in the cracks. nobody fetched wood after that"
+j_b5_catchup = "banked the new hearth. the ground was warm round it"
+# ---------- end of lines ----------

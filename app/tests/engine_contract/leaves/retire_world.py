@@ -19,7 +19,7 @@ from ashfall_app.engine import (
     validate_rules,
 )
 from leaves_world import outcome
-from ashfall_app.opening.schema import OPENING, load_opening, to_rules
+from ashfall_app.rules.schema import OPENING, load_opening, to_rules
 
 M, T0 = StoreId("m"), StoreId("t0")
 C1, C2, R1, R2 = CardId("c1"), CardId("c2"), CardId("r1"), CardId("r2")

@@ -48,7 +48,7 @@ def symbol_exists(token: str) -> bool:
     parts = token.split(".")
     found = import_prefix(parts)
     if found is None:
-        homes = [importlib.import_module(n) for n in ("ashfall_app", "ashfall_app.engine", "ashfall_app.api", "ashfall_app.opening")]
+        homes = [importlib.import_module(n) for n in ("ashfall_app", "ashfall_app.engine", "ashfall_app.api", "ashfall_app.rules")]
         owner = next((m for m in homes if hasattr(m, parts[0])), None)
         found = (getattr(owner, parts[0]), parts[1:]) if owner is not None else None
     if found is None:
@@ -111,7 +111,7 @@ def test_the_checker_can_fail():
 
 
 def test_the_real_resolvers_can_fail():
-    assert path_exists("docs/systems.md") and path_exists("DESIGN.txt") and path_exists("opening/phase_pays.toml")
+    assert path_exists("docs/systems.md") and path_exists("DESIGN.txt") and path_exists("rules/phase_pays.toml")
     assert not path_exists("docs/no-such-file.md") and not path_exists("no_such_file.py")
     assert symbol_exists("Save.ended_at") and symbol_exists("ashfall_app.engine.state.Save")
     assert not symbol_exists("Save.no_such_field") and not symbol_exists("NoSuchThing.x")

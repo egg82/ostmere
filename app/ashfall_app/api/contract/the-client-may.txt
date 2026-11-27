@@ -60,7 +60,7 @@ THE CLIENT MAY
     On a Step whose failed_tap names a card, pulse that card red and mark what its blocker names, and show no text for it: the need of its
     store (its have/need or when it opens; for a countdown the player never sees, the countdown), skill level or step;
     a blocker with nothing of its own on the card (a time) marks the countdown, and with no countdown either, the card
-    alone. Every require that can refuse a tap is one the card draws (tests/opening/test_requires_shown.py).
+    alone. Every require that can refuse a tap is one the card draws (tests/rules/cards/test_requires_shown.py).
   - draw a time for a skill's next level, a store's "full in" or its "empty in" only from the forecast it holds
     (FORECAST below), never from SkillBar.next_level_at, LedgerLine.fills_at or empties_at, which hold only until the
     next event.

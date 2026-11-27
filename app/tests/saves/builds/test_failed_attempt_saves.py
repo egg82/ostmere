@@ -10,7 +10,7 @@ from typing import Any
 import pytest
 
 from ashfall_app.engine import Rules, RunBy, advance, rebase, view
-from ashfall_app.opening.schema import DAY_ONE, load_opening, to_rules
+from ashfall_app.rules.schema import DAY_ONE, load_opening, to_rules
 
 CAPTURED = sorted((Path(__file__).resolve().parent / "captured").glob("f5-*.json"))
 DAY_S = 86_400

@@ -1,7 +1,7 @@
 """The content's fight and find infos, from the rules' fights and the opening's entries (contract/fights.txt, "FIGHTS")."""
 from ... import engine as e
-from ...opening.entries import CardEntry, FightEntry
-from ...opening.schema import Opening
+from ...rules.entries.entries import CardEntry, FightEntry
+from ...rules.schema import Opening
 from ..world import content_models as cm
 from .chain_models import ChainInfo
 

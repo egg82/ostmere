@@ -11,7 +11,7 @@ from dataclasses import replace
 from functools import cache
 
 from ashfall_app.engine import LaneBar, Rules, Save, view
-from ashfall_app.opening.schema import DAY_ONE, load_opening
+from ashfall_app.rules.schema import DAY_ONE, load_opening
 from tests.daytwo.content import STORY, rules2
 from tests.daytwo.player import DayTwoPlayer, visit_seen
 from tests.dayone.checks import checks

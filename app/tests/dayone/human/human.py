@@ -16,7 +16,7 @@ from pathlib import Path
 from ashfall_app.engine import Rules, View
 from tests.dayone.player.player import DayOnePlayer
 from tests.dayone.player.schedules import HORIZON_S, HOUR, Schedule, Visit
-from tests.opening.playthrough import opening, opening_rules
+from tests.rules.play.playthrough import opening, opening_rules
 
 THRESHOLDS = Path(__file__).with_name("human_thresholds.toml")
 DOCS = Path(__file__).resolve().parents[4] / "docs"

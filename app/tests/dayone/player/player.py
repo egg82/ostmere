@@ -16,13 +16,13 @@ from ashfall_app.engine import (
     advance_logged, next_event, units,
 )
 from ashfall_app.engine.work import completions
-from ashfall_app.opening.convert import condition
-from ashfall_app.opening.schema import load_opening
+from ashfall_app.rules.expand.convert import condition
+from ashfall_app.rules.schema import load_opening
 from tests.dayone.player import policy, sinks
 from tests.dayone.player.beats import STORY, landed
 from tests.dayone.player.schedules import Schedule
-from tests.opening.afterend import END_READ_S, AfterEnd, AfterEndPlayer
-from tests.opening.playthrough import Kind, News, offering, opening, opening_rules
+from tests.rules.play.afterend import END_READ_S, AfterEnd, AfterEndPlayer
+from tests.rules.play.playthrough import Kind, News, offering, opening, opening_rules
 
 LOOK_S = 15
 WEAVE_TRIP = sinks.Trip(CardId(policy.WEAVE), StoreId("damp_wood"))

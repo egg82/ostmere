@@ -14,6 +14,7 @@ need another; the rebased parts read typical's saved ends, so they run once typi
 one job is written in links, each after the one before. Which chapters make a link, a rebased group or a readings part is
 planned from each chapter's measured cost (tools/saves_plan.py). Locally, run it to make week two's job fast.
 """
+import gc
 import os
 import shutil
 import sys
@@ -107,6 +108,14 @@ def link_chapters(name: str) -> list[str]:
     return list(LINKS[name].chapters)
 
 
+def frozen(p: DayTwoPlayer) -> DayTwoPlayer:
+    """`p`, a saved end just loaded to be played on, with everything alive parked out of the collector's reach: the play
+    then never walks the save's objects (measured at about 8% of a late chapter's play)."""
+    gc.collect()
+    gc.freeze()
+    return p
+
+
 def write_link(name: str) -> None:
     """Link `name`'s ends: played from the start for the first link, else on from the saved end before its first. An end
     already saved under today's key is loaded, not played, so only the chapters after a change replay."""
@@ -121,7 +130,7 @@ def write_link(name: str) -> None:
             p = played(chapter, route)
         else:
             if p is None:
-                p = ends.load(BEFORE[chapter], route, laters(BEFORE[chapter], route))
+                p = frozen(ends.load(BEFORE[chapter], route, laters(BEFORE[chapter], route)))
             p = play_on(p, laters(chapter, route))
         write_end(chapter, route, p, started)
 
@@ -141,7 +150,7 @@ def typical_through(chapter: str) -> DayTwoPlayer:
     saved end of the chapter before: the play without replaying the chapters before."""
     if "typical" in SAVED.get(chapter, ()):
         return ends.load(chapter, "typical", laters(chapter, "typical"))
-    before = ends.load(BEFORE[chapter], "typical", laters(BEFORE[chapter], "typical"))
+    before = frozen(ends.load(BEFORE[chapter], "typical", laters(BEFORE[chapter], "typical")))
     return play_on(before, laters(chapter, "typical"))
 
 

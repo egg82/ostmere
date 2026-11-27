@@ -1,6 +1,6 @@
 """A modifier's change as a text's {pct} slot is filled from it."""
 from ... import engine as e
-from ...opening.entries import ModifierEntry
+from ...rules.entries.entries import ModifierEntry
 
 
 def changes(mods: list[ModifierEntry]) -> list[int]:

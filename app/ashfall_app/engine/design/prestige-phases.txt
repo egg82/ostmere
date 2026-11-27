@@ -15,7 +15,7 @@ CHOICES (prestige phases)
 - Rules: Rules.prestige (PrestigeDef: top_level, carry_window_s, menu_size) and Rules.nodes (NodeDef, a Type Object:
   skill, target, ranks, per_rank_bp). The digest leaves both out while unused, so rules without prestige keep theirs.
 - What a node may change: a make, a card's work or a store's cap, of work outside its skill (nodechecks.check_nodes;
-  the loader's schema has no way to write another, opening/prestige.py). XP, costs, lane speed and strengths are
+  the loader's schema has no way to write another, rules/prestige.py). XP, costs, lane speed and strengths are
   refused, since anything aimed at XP or at a lane's speed would make levels come sooner and the loop spiral.
 - A rank's entry: one MUL_BP entry per node, BP + n * per_rank_bp for n ranks, sourced NODE_PREFIX + the node's id,
   joining the base stack after the held entries, and the entries a store's cap reads (gates.store_cap). Ranks add within a node; separate nodes compound, so a full track
@@ -34,7 +34,7 @@ CHOICES (prestige phases)
   rules modifier, nor a new save's starting one, may be sourced NODE_PREFIX: only a pick's entry is.
 - A finished track: the skill is mastered. Prestige is refused TRACK_DONE for good, and the skill rests at its top,
   its XP stopping at the carry's end as at any top.
-- The loader's bar (opening/prestige.check_phase_spans): carry_window_s <= nodes.ORDINARY_ABSENCE_S, and per skill
+- The loader's bar (rules/prestige.check_phase_spans): carry_window_s <= nodes.ORDINARY_ABSENCE_S, and per skill
   span >= the fastest base xp_per_hour of a card or standing action training it times ORDINARY_ABSENCE_S. So the
   window binds before the ceiling, which is only the guarantee.
 - The menu: the first menu_size unfinished nodes of the track in rules order. A function of the picks alone, so fixed

@@ -1,0 +1,71 @@
+# A test chapter, merged onto the opening alone (tests/rules/expand/test_staged_lane_order.py): a ruled lane whose staged
+# three-stage card takes a store, the ruled lane's next card, and a second ruled lane whose card does not take the
+# store. Not story: the ids and words are the tests' own.
+version = 1
+
+[[stores]]
+id = "t_logs"
+label_key = "t_s_logs"
+cap_items = 20
+initial_items = 20
+
+[[lanes]]
+id = "t_builder"
+label_key = "t_l_builder"
+ruled = true
+told = "line"
+
+[[lanes]]
+id = "t_hauler"
+label_key = "t_l_hauler"
+ruled = true
+told = "line"
+
+[[cards]]
+id = "t_raise"
+lane = "t_builder"
+presentation = "craft"
+label_key = "t_c_raise"
+upside_key = "t_up_raise"
+work_s = 60
+cap = 3
+inputs = [{ store = "t_logs", items = 4 }]
+
+[[cards]]
+id = "t_sweep"
+lane = "t_builder"
+presentation = "action"
+label_key = "t_c_sweep"
+upside_key = "t_up"
+work_s = 60
+
+[[cards]]
+id = "t_haul"
+lane = "t_hauler"
+presentation = "action"
+label_key = "t_c_haul"
+upside_key = "t_up"
+work_s = 60
+makes = [{ store = "t_logs", items_per_hour = 10 }]
+
+[[order_cards]]
+store = "t_logs"
+tap_card = "t_raise"
+when = { test = "at_least", subject_kind = "store", id = "t_logs", value = 4, release = 1 }
+
+[[triggers]]
+id = "t_start"
+when = { test = "at_least", subject_kind = "store", id = "t_logs", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "t_raise" }, { unlock_kind = "card", id = "t_sweep" }, { unlock_kind = "card", id = "t_haul" }] }
+
+[line_kinds]
+
+[text]
+t_up = "what it is for"
+t_s_logs = "Logs"
+t_l_builder = "Builder"
+t_l_hauler = "Hauler"
+t_c_raise = "Raise"
+t_up_raise = "a wall raised"
+t_c_sweep = "Sweep"
+t_c_haul = "Haul"

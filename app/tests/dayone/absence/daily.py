@@ -6,9 +6,9 @@ from collections import Counter
 from collections.abc import Sequence
 
 from ashfall_app.engine import Line, Rules, Save, advance, view
-from ashfall_app.opening.schema import Opening
+from ashfall_app.rules.schema import Opening
 from tests.dayone.absence import absence
-from tests.opening.playthrough import Player
+from tests.rules.play.playthrough import Player
 
 DAY_S = 24 * 3600
 

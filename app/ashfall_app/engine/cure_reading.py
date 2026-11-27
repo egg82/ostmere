@@ -1,5 +1,5 @@
 """How the content reads a cure: the stores a card puts up. One reading, shared by the day-one cures gate
-(tests/dayone/fights/cures.py, a chip's cure) and the fight checks (opening/fight_checks.py, a lost fight's loses store)."""
+(tests/dayone/fights/cures.py, a chip's cure) and the fight checks (rules/checks/world/fight_checks.py, a lost fight's loses store)."""
 from .cards import CardDef
 from .gates import shown_chips
 from .ids import CardId, ChipId

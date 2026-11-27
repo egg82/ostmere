@@ -25,7 +25,7 @@ from ashfall_app.engine import (
     StoreId, StoreValue, SwitchMix, UnlockKind, View, advance, decide, forecast, view,
 )
 from tests.dayone.player.player import DayOnePlayer
-from tests.opening.playthrough import opening
+from tests.rules.play.playthrough import opening
 
 SAMPLE_S = 600
 CHOICE_S = 600

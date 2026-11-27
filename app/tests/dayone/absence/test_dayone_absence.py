@@ -13,7 +13,7 @@ from ashfall_app.engine import FeatureId, LedgerLine, Line, LineKey, StoreId, Un
 from tests.dayone.absence import absence
 from tests.dayone.player import arrival_rules as ar
 from tests.dayone.conftest import PLAY_TIMEOUT_S
-from tests.opening.playthrough import opening, opening_rules
+from tests.rules.play.playthrough import opening, opening_rules
 
 Run = list[absence.Point]
 CASES = Path(__file__).resolve().parents[3] / "client" / "fixtures" / "arrival_cases.json"
