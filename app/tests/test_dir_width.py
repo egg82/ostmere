@@ -7,7 +7,7 @@ import subprocess
 import sys
 from pathlib import Path, PurePosixPath
 
-from held_ledger import Ledger, dump, load, problems, total
+from held_ledger import Ledger, dump, load, problems
 
 ROOT = Path(__file__).resolve().parents[2]
 HELD = ROOT / "app/tests/held/dir_width.json"
