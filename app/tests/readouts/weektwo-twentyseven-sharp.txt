@@ -1,0 +1,32 @@
+beats sharp: no beat from B5 reached (pace_scale 1)
+  away V242->V243: 0 []
+  away V243->V244: 1 ['trigger t_board']
+  away V244->V245: 0 []
+  away V245->V246: 0 []
+  away V246->V247: 0 []
+  away V247->V248: 0 []
+  away V248->V249: 1 ['trigger t_names_given']
+days after week one's 6 with no arrival but lines: []
+day    line feature    chip   store   skill    card   level  total
+  1       9       7       0       4       0      18       3     41
+  2      30       5       2       2       0      12       2     53
+  3      33       4       0       0       0      76       2    115
+  4      19       5       0       0       0       4       3     31
+  5       0       2       1       2       0       1       1      7
+  6       3       1       0       0       0      10       1     15
+  7       2       0       0       0       0       0       2      4
+  8       9       3       0       2       0      10       0     24
+  9      14       1       0       3       0      31       3     52
+ 10      20       3       2       2       0      25       1     53
+ 11      24       2       1       0       0     118       2    147
+ 12      11       2       0       0       0       2       2     17
+ 13      11       2       0       0       0       2       3     18
+ 14       2       0       0       0       0       0       2      4
+ 15       8       2       0       1       0       1       2     14
+ 16      12       2       1       2       1      36       2     56
+ 17      19       5       2       0       0      24       2     52
+ 18      10       1       0       0       0       3       2     16
+ 19      14       1       2       0       0       2       1     20
+ 20       5       0       0       0       0       2       1      8
+ 21       1       0       0       0       0       0       1      2
+ 22      12       2       0       0       0       6       1     21

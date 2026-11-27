@@ -145,12 +145,12 @@ Its yes shows the job without queuing it (D-176), so a route taps it once it is 
 
 def day_twenty_seven(route: str) -> Later:
     """B21's visit to I13's, week four's last: day twenty-five's sinks, rules, split and shares carried on, Lucy's last
-    job answered when it shows and tapped once ready, and A40 queued When ready once shown."""
+    job answered when it shows and tapped once ready, and A40 queued When ready once shown, or tapped at once when its clock has run out first."""
     twentyfive = day_twenty_five(route)
     job = (OfferId(LAST_JOB), AnswerId(f"{LAST_JOB}_{'no' if LAST_JOB_NO.get(route) == LAST_JOB else 'yes'}"))
     return Later(
         start="B21", stop="I13",
-        sinks=twentyfive.sinks, steps=(FAR_SNARES,), order_cards=twentyfive.order_cards, keeps=twentyfive.keeps,
+        sinks=twentyfive.sinks, steps=(FAR_SNARES, SIT_NAMES), order_cards=twentyfive.order_cards, keeps=twentyfive.keeps,
         landed=TWENTY_SEVEN.of, news=("I11", "SL36", "I12", "A40", "I13"),
         answers=(*twentyfive.answers, job), shares=twentyfive.shares, cures=twentyfive.cures, own=twentyfive.own,
         queued=(SIT_NAMES,), chip_rules=twentyfive.chip_rules)

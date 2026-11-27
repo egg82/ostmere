@@ -5908,6 +5908,14 @@
       "made_by": []
     },
     {
+      "store": "work_food",
+      "made_by": []
+    },
+    {
+      "store": "work_build",
+      "made_by": []
+    },
+    {
       "store": "cut_night_clock",
       "made_by": []
     },
