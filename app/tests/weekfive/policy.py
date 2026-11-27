@@ -15,7 +15,9 @@ tests/weektwo/routes.py DAYS and keys.py MOVES as the earlier weeks' do; nothing
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, replace
 
-from ashfall_app.engine import AnswerId, CardId, ChipId, OfferId, Order, Rules, Save, Unlock, View
+from ashfall_app.engine import BP, AnswerId, CardId, CardShare, ChipId, Mix, OfferId, Order, Rules, Save, SaveMix, Unlock, View
+from ashfall_app.engine.mixes import flatten_shares
+from ashfall_app.engine.mixruns import running_town_mix
 from tests.daythree import moves
 from tests.daythree.chapter import ChipRule, Keep, Later, Offer, Share
 from tests.dayone.player.policy import Move
@@ -90,16 +92,37 @@ class Week:
 
 
 def cast_move(casts: tuple[CastCard, ...], route: str) -> Callable[[View, Save, Rules], Move | None]:
-    """The first cast card not yet in the mix, put in at the route's share once its role is cast (chapter.Share's move)."""
+    """The first cast card not yet in the mix, put in at the route's share once its role is cast. A card on the hands goes
+    in the hands' mix (chapter.Share's move); one on a person's lane in the running town mix, at that share of the
+    person's own time, their other shares scaled to leave it (engine design/towns-mix.txt, "Town share")."""
     def move(v: View, save: Save, rules: Rules) -> Move | None:
+        shown = {c.card for c in v.cards}
         for c in casts:
             lane, bp = cast_lane(save, rules, c.role), by_route(c.bp, route)
-            if lane is not None and bp > 0:
-                stub = replace(_BARE, shares=(Share(c.card_on(lane), bp),))
-                if (found := moves.share(v, save, stub)) is not None:
+            if lane is None or bp <= 0 or c.card_on(lane) not in shown:
+                continue
+            card = c.card_on(lane)
+            if str(next(x.lane for x in rules.cards if x.id == card)) == "hands":
+                if (found := moves.share(v, save, replace(_BARE, shares=(Share(card, bp),)))) is not None:
                     return found
+            elif (found := town_share(save, rules, card, lane, bp)) is not None:
+                return found
         return None
     return move
+
+
+def town_share(save: Save, rules: Rules, card: CardId, lane: str, bp: int) -> Move | None:
+    """The running town mix saved again, flattened, with `card` at `bp` of `lane`'s time and the lane's other shares scaled
+    to leave it; None when there is no running town mix or it already holds the card."""
+    mix = running_town_mix(save, rules)
+    if mix is None:
+        return None
+    flat = flatten_shares(save.mixes, mix.id)
+    if any(s.card == card for s in flat):
+        return None
+    on_lane = {x.id for x in rules.cards if str(x.lane) == lane}
+    scaled = tuple(CardShare(s.card, s.share_bp * (BP - bp) // BP) if s.card in on_lane else s for s in flat)
+    return "decision", (SaveMix(Mix(mix.id, (*scaled, CardShare(card, bp)))),)
 
 
 def _no_story(save: Save, rules: Rules) -> set[str]:

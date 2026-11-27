@@ -4,8 +4,10 @@ from collections.abc import Callable
 from pathlib import Path
 
 from ashfall_app.engine import (
-    AfterTime, AnswerId, CardId, CardShare, ChipId, OfferId, Order, Rules, Save, SaveMix, StoreId, TapCard, Unlock, UnlockKind, view,
+    AfterTime, AnswerId, CardId, CardShare, ChipId, OfferId, Order, Rules, Save, SaveMix, StoreId, TapCard, Unlock, UnlockKind, decide,
+    view,
 )
+from ashfall_app.engine.mixruns import running_town_mix
 from tests.daythree.chapter import ChipRule, Keep, Later
 from tests.dayone.player.policy import Move
 from tests.weekfive import fixtures, policy
@@ -88,6 +90,10 @@ def test_the_cast_lanes_card_is_put_in_the_mix_at_the_routes_share_once_cast(tmp
     kind, verbs = own("typical")(view(after, r), after, r) or ("", ())
     mix = next(v.mix for v in verbs if isinstance(v, SaveMix))
     assert kind == "decision" and CardShare(CardId("t_b_haul"), 2500) in mix.components
+    town = running_town_mix(after, r)
+    assert town is not None and mix.id == town.id, "a card on a person's lane goes in the running town mix"
+    for verb in verbs:   # the engine takes it: no mix holds the player's time and the town's together
+        after = decide(after, r, after.time, verb)
 
 
 def test_a_route_at_zero_share_keeps_the_card_off_the_line(tmp_path: Path):
