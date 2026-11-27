@@ -11,7 +11,7 @@ from ashfall_app.saves.journal import Purpose, roll
 from journal_world import ref_roll
 
 PURPOSES: tuple[Purpose, ...] = ("write", "late", "misremember", "mark")
-HERE = Path(__file__).parent
+HERE = Path(__file__).parent.parent
 APP = HERE.parent.parent
 
 ids = st.text(st.characters(codec="utf-8", exclude_categories=("Cs",)), min_size=1, max_size=12)

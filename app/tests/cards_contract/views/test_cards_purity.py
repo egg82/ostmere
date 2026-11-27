@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parents[1]
 APP = HERE.parents[1]
 SCRIPT = f"""
 import hashlib, sys
