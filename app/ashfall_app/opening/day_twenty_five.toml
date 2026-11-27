@@ -239,7 +239,7 @@ crews = ["g_hearth", "g_road"]
 [[lanes]]
 id = "n19"
 lodging = { build = "hall" }
-by_day = { card = "g_road_fungus_stew" }
+by_day = { card = "g_hearth_fungus_stew" }
 label_key = "lane_n19"
 ruled = true
 told = "line"
@@ -420,7 +420,7 @@ crews = ["g_hearth", "g_road"]
 [[lanes]]
 id = "n21"
 lodging = { build = "hall" }
-by_day = { card = "g_road_fungus_stew" }
+by_day = { card = "g_hearth_fungus_stew" }
 label_key = "lane_n21"
 ruled = true
 told = "mention"
