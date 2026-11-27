@@ -17,7 +17,8 @@ from .events import CascadeLimit
 from .errors import StateFormatError
 from .index import derived
 from .cards import (
-    Amount, CapRaise, CardState, HeldSpeed, Join, LaneState, Leave, Mark, Outcome, RuleInstall, WhileRunning,
+    Amount, CapRaise, Cast, CastPick, CardState, HeldSpeed, Join, LaneState, Leave, Mark, Outcome, RuleInstall,
+    WhileRunning,
 )
 from .lanes import TapCard
 from .mixes import CardShare, Mix, MixLayer, SubMix, SwitchMix
@@ -49,7 +50,7 @@ _CLASSES: dict[str, Callable[..., object]] = {c.__name__: c for c in (
     RateRef, WorkRef, LaneSpeed, StoreCap, SideStrength, ThreatStrength, Unlock, LaneState, CardState, CascadeLimit, AnswerOffer, AnswerKind,
 )}
 _OUTCOMES = _CLASSES | {c.__name__: c for c in (
-    Outcome, Amount, CapRaise, RuleInstall, Join, Mark, Leave, OfferDef, AnswerDef, WhileRunning, HeldSpeed)}
+    Outcome, Amount, CapRaise, RuleInstall, Join, Mark, Leave, Cast, CastPick, OfferDef, AnswerDef, WhileRunning, HeldSpeed)}
 _VERBS = _CLASSES | {c.__name__: c for c in (SaveMix, DeleteMix, SetOrders, SetQueue, Prestige, UndoPick, MovePick)}
 _VERB_TYPES = (
     SwitchMix, SaveMix, DeleteMix, SetOrders, SetQueue, TapCard, AnswerOffer, AnswerKind, Prestige, UndoPick, MovePick)
@@ -200,7 +201,7 @@ def _manifest_offer(o: OfferDef) -> Json:
 
 _OMITTED_WHEN_EMPTY = frozenset({("Order", "unless"), ("Order", "or_else"), ("Outcome", "joins"), ("Outcome", "retire_orders"),
                                  ("Outcome", "leaves"), ("OfferDef", "kind"), ("AnswerDef", "role"), ("PhaseState", "parked"),
-                                 ("Outcome", "marks")})
+                                 ("Outcome", "marks"), ("Outcome", "casts")})
 """Fields left out of the encoding while empty, so rules that use none keep the digest they had before the field
 existed; decoding supplies the empty default."""
 

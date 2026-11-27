@@ -1,6 +1,7 @@
 """Which unlock ids the rules know (validate_rules asks per unlock; design/core.txt, "Unlocks"), built once per rules object."""
 from typing import TYPE_CHECKING
 
+from .castparts import cast_features
 from .derived import derived
 from .unlocks import Unlock, UnlockKind
 
@@ -9,7 +10,7 @@ if TYPE_CHECKING:
 
 
 def mentioned(rules: "Rules", kind: UnlockKind) -> set[str]:
-    """The ids of `kind` the rules mention (the opening, an outcome or a finished): a feature, an entry and a note have
+    """The ids of `kind` the rules mention (the opening, an outcome, a finished or a cast): a feature, an entry and a note have
     no declaration, so they are known where they are written."""
     return derived(rules, "_mentioned", _all_mentioned)[kind]
 
@@ -20,6 +21,7 @@ def _all_mentioned(rules: "Rules") -> dict[UnlockKind, set[str]]:
     found: dict[UnlockKind, set[str]] = {k: set() for k in UnlockKind}
     for u in (*(rules.opening or ()), *(u for o in outcomes for u in o.unlocks)):
         found[u.kind].add(u.id)
+    found[UnlockKind.FEATURE] |= {f for fs in cast_features(rules).values() for f in fs}
     return found
 
 

@@ -2578,6 +2578,46 @@
         ],
         "title": "CardShare"
       },
+      "CastInfo": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "lanes": {
+            "items": {
+              "$ref": "#/components/schemas/CastLane"
+            },
+            "type": "array",
+            "title": "Lanes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "role",
+          "lanes"
+        ],
+        "title": "CastInfo",
+        "description": "A role some outcome casts: the lanes it may go to, in join order (contract/casting.txt, \"CASTING\"). A text's\n{<role>} slot is the name of the lane whose feature view.unlocked holds."
+      },
+      "CastLane": {
+        "properties": {
+          "lane": {
+            "type": "string",
+            "title": "Lane"
+          },
+          "feature": {
+            "type": "string",
+            "title": "Feature"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lane",
+          "feature"
+        ],
+        "title": "CastLane"
+      },
       "Change": {
         "properties": {
           "date": {
@@ -2883,6 +2923,13 @@
             "type": "array",
             "title": "Lane Infos"
           },
+          "cast_infos": {
+            "items": {
+              "$ref": "#/components/schemas/CastInfo"
+            },
+            "type": "array",
+            "title": "Cast Infos"
+          },
           "offer_infos": {
             "items": {
               "$ref": "#/components/schemas/OfferInfo"
@@ -2995,6 +3042,7 @@
           "skill_infos",
           "node_infos",
           "lane_infos",
+          "cast_infos",
           "offer_infos",
           "offer_kinds",
           "end_line_keys",

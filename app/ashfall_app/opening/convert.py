@@ -182,7 +182,8 @@ def _outcome(o: "OutcomeEntry", cards: set[str]) -> Outcome:
         lines=tuple(LineKey(k) for k in o.line_keys),
         orders=tuple(RuleInstall(CardId(i.tap_card), i.first) for i in o.orders), queues=tuple(CardId(q) for q in o.queues),
         joins=move_convert.joins(o.joins), marks=move_convert.marks(o.marks),
-        retire_orders=tuple(CardId(c) for c in o.retire_orders), leaves=move_convert.leaves(o.leaves))
+        retire_orders=tuple(CardId(c) for c in o.retire_orders), leaves=move_convert.leaves(o.leaves),
+        casts=move_convert.casts(o.casts))
 
 
 def _chip(c: "ChipEntry", cards: set[str]) -> ChipDef:

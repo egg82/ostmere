@@ -34,6 +34,7 @@ from .prestige import check_phase_spans
 from .order_checks import check_order_cards
 from .refs import check_refs, fail, ids_by_kind, need, outcomes
 from .groups import check_groups
+from .cast_checks import check_cast_text, check_casts
 from .leave_checks import check_leaves
 from .line_only_checks import check_line_only
 from .people_checks import check_people
@@ -94,6 +95,7 @@ def check_structure(o: "Opening") -> None:
     check_sites(o)
     check_loss_lines(o)
     check_leaves(o)
+    check_casts(o)
     check_groups(o)
     check_people(o)
     check_close_calls(o)
@@ -228,7 +230,9 @@ def _check_text(o: "Opening") -> None:
     for key in UI_KEYS:
         if key not in o.text:
             fail("text", f"missing the fixed key {key!r}")
-    check_slots(o, key_fields(o))
+    fields = list(key_fields(o))
+    check_slots(o, fields)
+    check_cast_text(o, fields)
 
 
 def _check_end(o: "Opening") -> None:

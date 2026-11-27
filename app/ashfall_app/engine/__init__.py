@@ -12,8 +12,8 @@ from .errors import (
 )
 from .events import CascadeLimit, Event, EventKind
 from .cards import (
-    HELD_PREFIX, Amount, Blocker, CapRaise, CardDef, CardState, FightDef, HeldSpeed, Join, LaneState, Leave, Mark,
-    Outcome, RuleInstall, WhileRunning,
+    HELD_PREFIX, Amount, Blocker, CapRaise, Cast, CastPick, CardDef, CardState, FightDef, HeldSpeed, Join, LaneState,
+    Leave, Mark, Outcome, RuleInstall, WhileRunning,
 )
 from .flows import Flow
 from .forecast import Forecast, ForecastPath, forecast
@@ -67,7 +67,7 @@ __all__ = [
     "OLDEST_FORMAT", "UPGRADES", "Ended", "RuleChange", "rebase", "rebase_logged",
     "EngineError", "InvalidRulesError", "InvalidVerbError", "StateFormatError", "TimeOrderError",
     "CascadeLimit", "Event", "EventKind",
-    "HELD_PREFIX", "Amount", "Blocker", "CapRaise", "CardDef", "CardState", "FightDef", "Join", "LaneState", "Leave", "Mark", "Outcome",
+    "HELD_PREFIX", "Amount", "Cast", "CastPick", "Blocker", "CapRaise", "CardDef", "CardState", "FightDef", "Join", "LaneState", "Leave", "Mark", "Outcome",
     "RuleInstall", "WhileRunning", "HeldSpeed",
     "AnswerDef", "OfferDef",
     "Flow",
