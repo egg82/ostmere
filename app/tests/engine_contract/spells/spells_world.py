@@ -4,6 +4,7 @@ from those two parts and the engine's public names alone.
 One side and one wolf threat of `members` members; a standing fight RAID on it, `PER_HR` fights an hour, with the fought,
 lost and chained tallies; a hands card SPELL, `work_s` seconds a completion, whose ChainDef names RAID. `model_links` is
 the contract's arithmetic written out: due from the tallies, reach from the base and its entries, the firing room."""
+from collections.abc import Sequence
 from dataclasses import replace
 from math import prod
 
@@ -13,7 +14,7 @@ from ashfall_app.engine import (
     BP, HANDS, QUANTITY_SCALE as Q, ActionId, AfterTime, CardDef, CardId, CardShare, ChainDef, ChainReach, FightDef,
     LaneDef, LaneId, Line, LineKey, Mix, MixId, Modifier, ModifierKind, Order, PacingCurve, Rules, Save, SaveMix,
     SetOrders, SideDef, SideId, SkillDef, SkillId, SourceId, StandingDef, StoreDef, StoreId, SwitchMix, TapCard,
-    ThreatDef, ThreatId, advance_logged, decide, decide_logged, new_save, per_hour, value,
+    ThreatDef, ThreatId, TriggerDef, advance_logged, decide, decide_logged, new_save, per_hour, value,
 )
 
 HAND, WOLF = SideId("hand"), ThreatId("wolf")
@@ -34,24 +35,23 @@ def kills(*rows: int) -> pytest.MarkDecorator:
 
 
 def spell(work_s: int = 10, reach: int = 2, lines: tuple[LineKey, ...] = LINK_KEYS[:1], *, card_id: CardId = SPELL,
-          runner: ActionId = RAID, lane: LaneId = HANDS, cap: int | None = None, own: tuple[LineKey, ...] = (),
-          **more: object) -> CardDef:
-    return CardDef(card_id, work_s, lane=lane, cap=cap, lines=own, chain=ChainDef(runner, reach, lines), **more)  # type: ignore[arg-type]
+          runner: ActionId = RAID, lane: LaneId = HANDS, cap: int | None = None, own: tuple[LineKey, ...] = ()) -> CardDef:
+    return CardDef(card_id, work_s, lane=lane, cap=cap, lines=own, chain=ChainDef(runner, reach, lines))
 
 
-def raid(chained: StoreId | None = CHAINED, *, per: int = PER_HR, **more: object) -> StandingDef:
-    return StandingDef(RAID, fight=FightDef(HAND, WOLF, RLOST, FOUGHT, per_hour(per), chained=chained), **more)  # type: ignore[arg-type]
+def raid(chained: StoreId | None = CHAINED, *, per: int = PER_HR) -> StandingDef:
+    return StandingDef(RAID, fight=FightDef(HAND, WOLF, RLOST, FOUGHT, per_hour(per), chained=chained))
 
 
 def world(m: int = 3, reach: int = 2, lines: tuple[LineKey, ...] = LINK_KEYS[:1], *, work_s: int = 10, per: int = PER_HR,
           cap: int | None = None, own: tuple[LineKey, ...] = (), fought_cap: int = BIG, side: int = 3,
-          max_firings: int = 1000, cards: tuple[CardDef, ...] | None = None, triggers: tuple = (),
+          max_firings: int = 1000, cards: tuple[CardDef, ...] | None = None, triggers: tuple[TriggerDef, ...] = (),
           lanes: tuple[LaneDef, ...] = (), standing: tuple[StandingDef, ...] | None = None) -> Rules:
     stores = (StoreDef(FOUGHT, fought_cap), StoreDef(RLOST, BIG), StoreDef(CHAINED, BIG))
     cs = cards if cards is not None else (spell(work_s, reach, lines, cap=cap, own=own),)
     return Rules(stores, (SkillDef(K),), standing if standing is not None else (raid(per=per),), PacingCurve((10**15,)),
                  max_firings_per_instant=max_firings, lanes=lanes, cards=cs, triggers=triggers,
-                 sides=(SideDef(HAND, side),), threats=(ThreatDef(WOLF, 6, members=m),))  # type: ignore[call-arg]
+                 sides=(SideDef(HAND, side),), threats=(ThreatDef(WOLF, 6, members=m),))
 
 
 def twin(r: Rules) -> Rules:
@@ -89,24 +89,25 @@ def tap_at(r: Rules, s: Save, t: int, card: CardId = SPELL) -> tuple[Save, list[
 
 def play(r: Rules, taps: tuple[int, ...], *, mods: tuple[Modifier, ...] = ()) -> tuple[Save, list[Line]]:
     """Tap the first card at each time (spaced beyond its work), collecting the lines."""
-    s, lines = new_save(r, mods), []
+    s, lines = new_save(r, mods), list[Line]()
     for t in taps:
         s, got = tap_at(r, s, t)
         lines += got
     return s, lines
 
 
-def links(lines: list[Line], card: CardId = SPELL, keys: tuple[LineKey, ...] = LINK_KEYS) -> list[Line]:
+def links(lines: Sequence[Line], card: CardId = SPELL, keys: tuple[LineKey, ...] = LINK_KEYS) -> list[Line]:
     return [x for x in lines if x.card == card and x.key in keys]
 
 
-def link_times(lines: list[Line]) -> list[int]:
+def link_times(lines: Sequence[Line]) -> list[int]:
     return [x.time for x in links(lines)]
 
 
 def model_links(r: Rules, completions: tuple[int, ...], reach: int, m: int) -> list[tuple[int, int]]:
     """(completion time, links) at each completion, from the contract: min(due, reach, room), C the links so far."""
-    out, c = [], 0
+    out: list[tuple[int, int]] = []
+    c = 0
     for at in completions:
         k = min(due_of(m, fought(r, at), c), reach, max(0, r.max_firings_per_instant - 1))
         out.append((at, k))
@@ -114,7 +115,7 @@ def model_links(r: Rules, completions: tuple[int, ...], reach: int, m: int) -> l
     return [x for x in out if x[1]]
 
 
-def per_instant(lines: list[Line], card: CardId = SPELL, keys: tuple[LineKey, ...] = LINK_KEYS) -> list[tuple[int, int]]:
+def per_instant(lines: Sequence[Line], card: CardId = SPELL, keys: tuple[LineKey, ...] = LINK_KEYS) -> list[tuple[int, int]]:
     """(time, links) for each instant that carries any."""
     times = sorted({x.time for x in links(lines, card, keys)})
     return [(t, sum(1 for x in links(lines, card, keys) if x.time == t)) for t in times]

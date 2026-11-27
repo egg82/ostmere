@@ -4,7 +4,7 @@ import random
 
 from hypothesis import given, strategies as st
 
-from ashfall_app.engine import TapCard, advance_logged, decide_logged, new_save
+from ashfall_app.engine import Line, Save, TapCard, advance_logged, decide_logged, new_save
 from contract_gen import few
 from spells_world import SPELL, kills, links, play, world
 
@@ -12,17 +12,20 @@ PER = 3600
 TAPS = (0, 11, 22)
 
 
-def sliced(cuts: list[int]):
+def sliced(cuts: list[int]) -> tuple[Save, list[Line]]:
     """The taps fixed, the advances cut at `cuts`: the final save and every line."""
     r = world(3, 2, per=PER)
-    s, lines, now = new_save(r), [], 0
+    lines: list[Line] = []
+    s, now = new_save(r), 0
     for mark in sorted({*cuts, *TAPS, 32}):
         if mark > now:
             step = advance_logged(s, r, mark)
-            s, lines, now = step.save, lines + list(step.lines), mark
+            s, now = step.save, mark
+            lines += step.lines
         if mark in TAPS:
             step = decide_logged(s, r, mark, TapCard(SPELL))
-            s, lines = step.save, lines + list(step.lines)
+            s = step.save
+            lines += step.lines
     return s, lines
 
 
@@ -36,7 +39,7 @@ def test_any_slicing_of_the_advances_gives_the_same_save_and_the_same_lines(cuts
 @kills(8)
 def test_a_chain_does_not_read_the_modules_random_state_or_the_wall_clock():
     r = world(40, 30, per=PER)
-    outcomes = []
+    outcomes: list[tuple[Save, list[tuple[int, int, str, str | None]]]] = []
     for seed in (1, 2, 3, 99):
         random.seed(seed)
         s, lines = play(r, (0, 11, 22))

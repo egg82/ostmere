@@ -88,7 +88,6 @@ def test_rules_with_no_chain_no_chained_tally_and_single_creatures_keep_the_dige
     assert rules_digest(fight_world(2, 6)) == "d226f902884e34bdef9b2aa1f6e99b795a49e2b87f4bf906ac3d4b4a4200b392"
 
 
-@kills(34)
 def test_a_chain_is_part_of_the_rules_digest():
     r = world(3, 2, per=PER)
     assert rules_digest(r) != rules_digest(replace(r, cards=(replace(r.cards[0], chain=None),)))

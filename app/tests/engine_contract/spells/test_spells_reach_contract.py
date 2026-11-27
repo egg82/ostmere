@@ -4,7 +4,7 @@ length."""
 from hypothesis import given, strategies as st
 
 from ashfall_app.engine import (
-    BP, AfterTime, ChainReach, ModifierKind, Outcome, TriggerDef, TriggerId, advance, chain_views, decide, new_save,
+    BP, AfterTime, ChainReach, Modifier, ModifierKind, Outcome, TriggerDef, TriggerId, advance, chain_views, decide, new_save,
     TapCard,
 )
 from contract_gen import few
@@ -15,12 +15,12 @@ ADD, MUL = ModifierKind.ADD_BP, ModifierKind.MUL_BP
 GROUP = 60
 
 
-def run_length(base: int, mods: tuple) -> int:
+def run_length(base: int, mods: tuple[Modifier, ...]) -> int:
     got = per_instant(play(world(GROUP, base, per=PER), (0,), mods=mods)[1])
     return got[0][1] if got else 0
 
 
-def shown(base: int, mods: tuple) -> int:
+def shown(base: int, mods: tuple[Modifier, ...]) -> int:
     r = world(GROUP, base, per=PER)
     return chain_views(new_save(r, mods), r)[0].reach.value
 

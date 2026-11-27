@@ -1,6 +1,8 @@
 """The lines a chain emits and the firing room it runs in (engine/design/spells.txt, "SPELLS": Resolving, Completion,
 Answers to the blind tests' questions; invariant 190), written blind from that part and api/contract/spells.txt alone."""
-from ashfall_app.engine import LineKey
+from collections.abc import Sequence
+
+from ashfall_app.engine import Line, LineKey
 from spells_world import LINK_KEYS, SPELL, TAP, kills, links, model_links, per_instant, play, world
 
 PER = 3600
@@ -8,7 +10,7 @@ A, B, C = LINK_KEYS
 OWNS = (LineKey("own1"), LineKey("own2"), LineKey("own3"))
 
 
-def at(lines: list, t: int) -> list:
+def at(lines: Sequence[Line], t: int) -> list[Line]:
     return [x for x in lines if x.time == t]
 
 
@@ -30,7 +32,7 @@ def test_more_keys_than_links_use_the_first_ones_and_one_key_serves_every_link_w
     assert [x.key for x in links(lines)] == [A, A, A]
 
 
-@kills(20, 24, 25)
+@kills(24, 25)
 def test_an_uncapped_tapped_cards_links_come_before_its_own_tap_line():
     r = world(5, 3, (A,), per=PER, own=(TAP,))
     _, lines = play(r, (0,))
@@ -58,7 +60,6 @@ def test_the_firing_room_bounds_a_chain_by_the_completion_and_its_links():
         assert per_instant(lines) == model_links(r, (10,), 20, 50) == [(10, min(20, c - 1))]
 
 
-@kills(11, 12)
 def test_a_chain_that_fills_the_room_makes_the_instant_a_cascade_and_one_that_does_not_does_not():
     full, roomy = world(50, 20, per=PER, max_firings=6), world(50, 20, per=PER, max_firings=30)
     s, _ = play(full, (0,))

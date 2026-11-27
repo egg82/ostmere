@@ -14,14 +14,15 @@ PER = 3600
 
 def starts(gaps: list[int]) -> tuple[int, ...]:
     """Tap start times, each a tap and its 10 s of work apart from the last."""
-    out, t = [], 0
+    out: list[int] = []
+    t = 0
     for g in gaps:
         t += 11 + g
         out.append(t)
     return tuple(out)
 
 
-@kills(2, 3, 4, 5, 8, 15)
+@kills(2, 3, 4, 8, 15)
 @given(st.integers(2, 6), st.integers(1, 8), st.lists(st.integers(0, 9), min_size=1, max_size=7))
 @few(25)
 def test_each_chain_is_min_of_due_and_reach_and_the_tally_follows(m: int, reach: int, gaps: list[int]):

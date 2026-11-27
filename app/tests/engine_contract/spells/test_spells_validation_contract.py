@@ -2,12 +2,13 @@
 paired with the valid control. Written blind from that part alone; messages are matched on the text the part gives."""
 import re
 from collections.abc import Callable
+from typing import Any
 from dataclasses import replace
 
 import pytest
 
 from ashfall_app.engine import (
-    BP, ActionId, AfterTime, Amount, CardDef, CardId, ChainDef, FightDef, Flow, InvalidRulesError, ModifierKind, Outcome,
+    BP, ActionId, AfterTime, Amount, CardDef, CardId, ChainDef, FightDef, Flow, InvalidRulesError, Modifier, ModifierKind, Outcome,
     Rules, StandingDef, StoreDef, StoreId, ThreatDef, TriggerDef, TriggerId, per_hour, validate_rules, QUANTITY_SCALE as Q,
 )
 from spells_world import (
@@ -23,19 +24,27 @@ def threat(**kw: int) -> Edit:
     return lambda r: replace(r, threats=(ThreatDef(WOLF, 6, **kw),))
 
 
-def chain(**kw: object) -> Edit:
-    return lambda r: replace(r, cards=(replace(r.cards[0], chain=replace(r.cards[0].chain, **kw)),))  # type: ignore[type-var]
+def chain(**kw: Any) -> Edit:
+    def edit(r: Rules) -> Rules:
+        c = r.cards[0].chain
+        assert c is not None
+        return replace(r, cards=(replace(r.cards[0], chain=replace(c, **kw)),))
+    return edit
 
 
 def with_stores(r: Rules) -> Rules:
     return replace(r, stores=(*r.stores, StoreDef(EXTRA, BIG), StoreDef(MORE, BIG), StoreDef(THIRD, BIG)))
 
 
-def fight(**kw: object) -> Edit:
-    return lambda r: replace(r, standing=(replace(r.standing[0], fight=replace(r.standing[0].fight, **kw)),))  # type: ignore[type-var]
+def fight(**kw: Any) -> Edit:
+    def edit(r: Rules) -> Rules:
+        f = r.standing[0].fight
+        assert f is not None
+        return replace(r, standing=(replace(r.standing[0], fight=replace(f, **kw)),))
+    return edit
 
 
-def trig(*mods) -> Edit:
+def trig(*mods: Modifier) -> Edit:
     t = TriggerDef(TriggerId("t"), AfterTime(5), Outcome(modifiers=tuple(mods)))
     return lambda r: replace(r, triggers=(t,))
 
@@ -84,6 +93,8 @@ BAD: dict[str, tuple[Edit, str]] = {
     "chained is lost": (fight(chained=RLOST), "chained tally store"),
     "a flow makes chained": (flow_makes, "chained tally store"),
     "an outcome makes chained": (outcome_makes, "chained tally store"),
+    "a trigger makes chained": (lambda r: replace(r, triggers=(TriggerDef(TriggerId("m"), AfterTime(5), Outcome(stores=(Amount(CHAINED, Q),))),)),
+                                "chained tally store"),
     "another fight lists chained": (second_raid(CHAINED), "chained tally store"),
     "a falling add": (trig(entry(SPELL, ADD, -1)), "a chain's reach only rises"),
     "a falling mul": (trig(entry(SPELL, MUL, BP - 1)), "a chain's reach only rises"),
@@ -141,7 +152,7 @@ def test_the_chained_tally_belongs_to_a_group_runner_and_is_required_where_a_cha
 
 @kills(31)
 def test_the_chained_tally_is_a_store_nothing_else_makes_or_counts():
-    refused("chained is fought", "chained is lost", "a flow makes chained", "an outcome makes chained", "another fight lists chained")
+    refused("chained is fought", "chained is lost", "a flow makes chained", "an outcome makes chained", "a trigger makes chained", "another fight lists chained")
 
 
 @kills(32)
