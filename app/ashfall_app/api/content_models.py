@@ -189,8 +189,8 @@ class AimInfo(BaseModel):
     text_key: str
     after: Unlock | None
     """Set from when view.unlocked holds this; null only on the first aim, set from the start. The page shows the last
-    aim whose `after` holds, unless that aim's `until` holds too: then it shows no aim."""
-    until: Unlock | None
+    aim whose `after` holds, unless that aim's `ends_after` holds too: then it shows no aim."""
+    ends_after: Unlock | None
     """The unlock that ends this aim's step before a later aim begins; null: it holds until the next aim."""
 
 

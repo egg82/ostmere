@@ -1754,7 +1754,7 @@
               }
             ]
           },
-          "until": {
+          "ends_after": {
             "anyOf": [
               {
                 "$ref": "#/components/schemas/Unlock"
@@ -1770,7 +1770,7 @@
           "aim",
           "text_key",
           "after",
-          "until"
+          "ends_after"
         ],
         "title": "AimInfo",
         "description": "What a stretch of play is for: one line at the band's top, in content order (CONTRACT.txt, \"The client may\")."

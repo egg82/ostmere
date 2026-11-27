@@ -22,12 +22,12 @@ function drawable(catalog: Catalog, view: View, id: string): boolean {
 }
 
 /** The aim the band's top states: the last of Content.aim_infos whose `after` view.unlocked holds (the first has none,
- * so content with aims always has one), none once that aim's `until` holds too: its step is done and the wait line or a
+ * so content with aims always has one), none once that aim's `ends_after` holds too: its step is done and the wait line or a
  * goal is the next step. */
 export function currentAim(catalog: Catalog, view: View): AimInfo | null {
   const set = catalog.content.aim_infos.filter((a) => a.after === null || catalog.unlocked(view, a.after.category, a.after.id));
   const last = set[set.length - 1] ?? null;
-  return last !== null && last.until !== null && catalog.unlocked(view, last.until.category, last.until.id) ? null : last;
+  return last !== null && last.ends_after !== null && catalog.unlocked(view, last.ends_after.category, last.ends_after.id) ? null : last;
 }
 
 /** The hands strip: from the first mix's offer on (its feature unlocked), or once a mix or rule exists. */

@@ -570,7 +570,7 @@ THE CLIENT MAY
     A chip whose ChipInfo.chore is true and that no OrderCard names carries the hint dot while it is drawn and no
     rule is set on its store and test: no card is offered for it, and its rule is the player's to write.
     Just above the art, one line: the aim, the text of the last of Content.aim_infos whose `after` view.unlocked
-    holds (the first has none, so there is always one); no line once that aim's `until` (when set) holds too: its
+    holds (the first has none, so there is always one); no line once that aim's `ends_after` (when set) holds too: its
     step is done, and the next step is the wait line's or a goal's. Content.line_infos lists every key a log line can carry
     (any LogLine.key, and end_line_keys), each once, so the page can keep the strip's room for the tallest line of a
     kind the strip shows (story, tap, body) before any arrives.

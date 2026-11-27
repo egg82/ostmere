@@ -23,9 +23,9 @@ const content: Content = {
   text_entries: [...fixtureContent.text_entries, { key: "aim.first", text: "first aim" }, { key: "aim.later", text: "later aim" },
     { key: "aim.never", text: "never aim" }],
   aim_infos: [
-    { aim: "first", text_key: "aim.first", after: null, until: null },
-    { aim: "later", text_key: "aim.later", after: { category: "card", id: "tend" }, until: { category: "card", id: "mend" } },
-    { aim: "never", text_key: "aim.never", after: { category: "feature", id: "not_in_any_view" }, until: null },
+    { aim: "first", text_key: "aim.first", after: null, ends_after: null },
+    { aim: "later", text_key: "aim.later", after: { category: "card", id: "tend" }, ends_after: { category: "card", id: "mend" } },
+    { aim: "never", text_key: "aim.never", after: { category: "feature", id: "not_in_any_view" }, ends_after: null },
   ],
 };
 const catalog = new Catalog(content);

@@ -578,7 +578,7 @@ export interface components {
             /** Text Key */
             text_key: string;
             after: components["schemas"]["Unlock"] | null;
-            until: components["schemas"]["Unlock"] | null;
+            ends_after: components["schemas"]["Unlock"] | null;
         };
         /** Amount */
         Amount: {
