@@ -1,0 +1,156 @@
+SPELLS (a working that resolves a chain on a group threat: docs/design/week-five-plan.md, item 6; blind tests from this
+part and api/contract/spells.txt alone, item 7, against app/tests/engine_contract/spells/MUTANTS_spells.txt). Where this
+part and an entry above disagree, this part holds. Examples name ids only; which working, which threat and how far is
+content's.
+
+FIT PASS
+- A working is a card (Cards: the player taps, mixes, queues or rules it like any card); what it gains is one more
+  Component on CardDef, ChainDef, as FIGHTS added FightDef (Nystrom, Component). The chain's fights belong to a standing
+  fight that already runs (Combat): the chain reads its tallies and adds to one, and changes nothing else about it.
+- Fights are flows, never events (FIGHTS, FIT PASS), so a standing fight has no queue of fights waiting to be fought.
+  What it does have, exactly, is its tallies. A threat the content marks as a group (ThreatDef.members >= 2: several
+  members, fought one after another) gives "due" an exact meaning from them: the members of the group now being fought
+  that are still to be fought. No new state: the tallies are stores the save already holds.
+- A chain is a cascade of same-instant firings under the firing cap (docs/systems.md, Spells row; CHOICES "Firing cap"):
+  each link is one firing at the working's completion, so a chain is bounded by the cap as every cascade is, and it
+  costs no instant of its own (the completion is already one).
+- Reach is a third based value with sources, the Store caps' shape (as SideStrength and ThreatStrength are): a base the
+  content sets and Modifier entries aimed at it, so a level's pay ("one more") is an outcome's modifier and "why is it
+  that number" is explain(). Nothing reads chance: the length is a minimum of three integers the save already gives.
+- How games do it: a chain spell (Diablo's chain lightning, Path of Exile's chain count, Slay the Spire's multi-hit
+  cards) has a stated count of targets it reaches, shown before the cast, and stops early when the targets run out.
+  Here the targets are the group's due members, and "stops early" is min(due, reach).
+- What is not new: no Save field, no event kind, no verb, no system. One Component (ChainDef), one Modifier target
+  (ChainReach), two authored fields (ThreatDef.members, FightDef.chained).
+
+CHOICES (spells)
+- Shapes (exported from the engine package):
+  - ThreatDef gains members: int = 1 (>= 1). members >= 2 marks the threat as a group. Nothing else reads it.
+  - FightDef gains chained: StoreId | None = None: the tally of this runner's fights that chains resolved, one unit per
+    link. Allowed only on a standing fight whose threat is a group; required there when some card's chain names the
+    runner.
+  - ChainDef(runner: ActionId, reach: int, lines: tuple[LineKey, ...]), a frozen dataclass in engine/cards.py.
+    CardDef gains chain: ChainDef | None = None. runner: the standing fight the chain resolves fights of. reach: the
+    base reach (>= 1), set by the content from the input the working takes. lines: the link lines, at least one.
+  - ChainReach(card: CardId), a Target (Modifiers): the reach of that card's chain.
+- Due. For a standing fight R whose FightDef f has a group threat of m members and a fought tally, at instant t:
+  F = floor(fought(t) / QUANTITY_SCALE), C = floor(chained(t) / QUANTITY_SCALE) (store values at t, as View.fights
+  floors them). R is fighting at t when its fought tally's segment rate at t is above 0 (store_segment: unlocked, not
+  stopped by a leave, not paused, not at the tally's cap). Then
+      due(R, t) = m - ((F + C) mod m)   if R is fighting at t,   else 0.
+  So 1 <= due <= m while R fights: the members of the group now under way, the one being fought included. A fight the
+  flow fought, won or lost, counts once in F; a link counts once in C; so the group boundary is where F + C crosses a
+  multiple of m, and a chain of `due` links ends its group exactly.
+- Reach. reach(card, t) = ChainReach(card)'s value over base_stack at t (the save's modifiers, the shown chips', the held
+  entries, the picks'), the Store caps arithmetic: base * max(0, BP + sum(add_bp)) * prod(mul_bp) // BP ** (1 + #muls),
+  rounded down once, base = ChainDef.reach. Entries aimed at a ChainReach only raise (add_bp >= 0, mul_bp >= BP), so
+  reach >= base >= 1. explain over it is a StrengthExplanation whose target is the ChainReach. Read live, at the
+  instant it is used, as a standing fight's odds are: it only rises, so the reach a completion runs is never below the
+  reach the card showed when the tap started, and at the completion's instant the reach shown is the reach run.
+- Completion. A card with a chain has a COMPLETION event at every completion, tapped or mixed, capped or not (CardDef:
+  "a completion is an event when it has a discrete effect"; the chain is one). For a capped card the completion's own
+  parts land first as before (its line, outcome and, at the cap, finished); an uncapped card has none (its tap line is
+  still the landing's, at TAP_DONE, after it). Then, in the same handling, the chain resolves.
+- Resolving. Let P be the instant's firings before the completion's event is handled (CHOICES "Firing cap"; the
+  completion's event is one firing of its own). With the save as it stands after the completion's own parts:
+      k = min(due(R, t), reach(card, t), max(0, max_firings_per_instant - P - 1)).
+  1. the chained tally gains k * QUANTITY_SCALE, held to its cap (an outcome's store add: one rebuild);
+  2. k lines are emitted at t, link i (1 to k) emitting lines[min(i, len(lines)) - 1], each naming the chain's card
+     as the line's card, in link order; then any chip on_line the rebuild shows for the first time (as any outcome);
+  3. the instant counts k more firings. When they bring its firings to the cap, evaluation is suspended for the rest
+     of it and it counts as a cascade, as any instant that reaches the cap does.
+  Nothing else moves: R's fought and lost tallies, its odds, its lines and its pauses are as they were; no store of R
+  is paid or taken by a link. A link is a won fight: it is in neither lost nor fought. What the working brings it
+  brings by its own lines (makes, inputs, outcome), as any card.
+  k = 0 (R not fighting, or the cap already reached) emits nothing and changes nothing; the completion is as without a
+  chain.
+- Same instant. A chain resolves at its card's COMPLETION, in that event's (kind, sequence) place; a second chain
+  card completing at the same instant reads the tallies as the first left them. Two chains on one runner at one
+  instant therefore never resolve more than the group's due members between them.
+- Repeating taps. A card with a chain never repeats as a rate (retap.may_repeat is false for it): each landing is an
+  event.
+- Determinism. k is a function of the save at t and the instant's firing count alone. No draw of any kind: the link
+  lines go by link index, never by a bag (rotation.bagged is the chips'), and nothing reads the save's id or a seed.
+- Validation (InvalidRulesError):
+  - "threat {t}: members must be >= 1".
+  - "card {c}: chain names {r}, which is not a standing fight" (r no declared standing action, or one with no FightDef).
+  - "card {c}: chain names {r}, whose threat {t} is not a group" (members < 2).
+  - "card {c}: chain names {r}, which has no fought or chained tally".
+  - "card {c}: chain reach must be >= 1"; "card {c}: a chain needs at least one line".
+  - "card {c}: a fight card has no chain" (a CardDef with both).
+  - "{where}: chained belongs to a standing fight on a group threat" (on a card's FightDef, or a standing fight on a
+    threat with members 1).
+  - "{runner}: chained tally store {s} ..." as the fights' tallies: made by no line of any runner (its own included)
+    and no outcome, never another fight's lost, fought or chained, and listed once across its runner's stores.
+  - Modifiers aimed at a ChainReach: "{where}: a modifier aims at an unknown id" unless the card is declared and has a
+    chain; "{where}: a chain's reach only rises" for add_bp < 0 or mul_bp < BP.
+- Read model: chain_views(save, rules) -> tuple[ChainView, ...], one per unlocked card with a chain that is neither
+  completed nor on a lane whose person has left, in rules.cards order. ChainView(card, runner, reach:
+  StrengthExplanation, due: int): reach now (the value the next completion runs if nothing lands before it), and
+  due(runner, save.time). FightView gains chained: int, floor(chained / QUANTITY_SCALE) (0 for a runner with none).
+  Reading writes nothing.
+- Codec: FORMAT unchanged. ChainReach is one more Target tag (a save's modifiers may hold one). ThreatDef.members at 1,
+  FightDef.chained at None and CardDef.chain at None are left out of the rules' encoding, so rules that use none keep
+  their digest and the saves under them decode as before.
+- Rebase: nothing a chain adds is in the save but the chained tally's store and ChainReach entries, which the store and
+  modifier rules already carry. A chain added to a released card resolves from its next completion; past completions
+  are not replayed (a released card's lines are not replayed either).
+- Answers to the blind tests' questions (spells):
+  - The fixture shape: a standing action with FightDef(side, threat, lost, fought, per_hour, chained) on a ThreatDef
+    with members m >= 2, unlocked; a hands card with ChainDef(runner, reach, lines). A test reaches a known due by
+    advancing to a time where floor(fought) is known (per_hour a whole number of fights an hour at full speed: the
+    fought tally is exact at whole hours) and C is 0.
+  - Odds do not matter to due: lost fights are fought fights. A side of strength 0 (every fight lost) gives the same
+    due as a side that wins every fight.
+  - A link's line is in the logged lines (advance_logged, decide_logged) at the completion's time, with the chain's
+    card, k of them, in link order, after the completion's own line (a capped card's) and before the TAP_DONE line (an
+    uncapped tapped card's).
+  - The firing room counts the completion's own event: with max_firings_per_instant = c and the completion the first
+    event of its instant, k <= c - 1, and k = c - 1 makes the instant a cascade.
+
+INVARIANTS (spells; numbered on from 183)
+184. Length: at a completion of a card with a chain on runner R at t, the links emitted number exactly
+     min(due(R, t), reach(card, t), max(0, max_firings_per_instant - P - 1)), and R's chained tally rises by exactly that
+     many units (less only at its cap).
+185. Never past due: over any span, between two instants where F + C is a multiple of m, the links of all chains on R
+     number at most m; a chain never makes F + C cross a multiple of m.
+186. Only a group: no rules that validate have a chain whose runner's threat has members < 2.
+187. Untouched: a chain changes no store but its runner's chained tally (and what the completion itself pays); R's
+     fought, lost, odds and pauses equal those of the same save with the chain's links removed.
+188. Shown is run: at the completion's instant, the ChainView reach of the card equals reach(card, t) used by rule 184;
+     a tap started at t0 runs a reach >= the reach its ChainView showed at t0.
+189. No chance: the links, their lines and the save after them depend only on the rules, the save before the instant
+     and the instant's firing count; two saves equal but for anything else (an id, a seed, the wall clock) give equal
+     results. Timing does not matter (invariant 81 holds for chains: one advance or any slicing gives equal saves and
+     equal lines).
+190. One line per link: k links emit k lines, never fewer; lines of one chain are never merged into one key or one
+     line.
+191. Codec: rules with no chain, no chained tally and every threat's members 1 keep their digest; decode(encode(s, r), r)
+     == s for a save holding ChainReach entries.
+
+REJECTED, AND WHY (spells)
+- A timed bonus on the side (the working raising SideStrength for a while): no chain, nothing runs, and it reads as a
+  potion (week-five-plan item 6, Rejected).
+- A random chain length, or a chain whose links are each won by a roll: chance would move how far (decisions.md,
+  "Chance decides how nice, never how far").
+- An event per fight in the engine, so a chain consumes queued fight events: FIGHTS' REJECTED (an instant per fight,
+  bag state in the save).
+- Due as the fights a flow would fight in the next hour, or since the last cast: it moves with speed and with when the
+  player looked, and is not exact against the tallies.
+- Links counted into fought: fought is the flow's integral (invariant 84), and a jump in it would break that and fold
+  links into the page's fight window, which the page tells by a shuffle bag; a link is told by its own line.
+- Paying the runner's makes per link: a standing fight's makes are per hour, not per fight, so a per-link pay would be a
+  division the content never wrote; the working's own lines carry what casting it brings.
+- A chain bounded only by reach, ignoring the cap: an unbounded cascade (the cap is what makes every cascade safe).
+- Reach as a per-level formula on the card's own skill: the pay that raises it may be another skill's level row, and a
+  Modifier target already gives sources and explain().
+- A chain on any threat, ending at the reach: the content contract says a chain longer than the pack ends at the pack;
+  members is the explicit field that says where it ends.
+
+KNOWN GAPS (spells)
+- A chain on a fight card (the player's own hunt on a group): due is defined for a standing fight only. Decided by: the
+  first fight card on a group threat a working should reach.
+- A chained tally at its cap stops counting, and due with it (as FIGHTS' tallies). Content sets its cap at least a year
+  of links.
+- More than one rule of magic combined (Spells row: rules as data combined by a small interpreter): this part resolves
+  one chain; the interpreter stays the loader's (week-five-plan item 5). Decided by: the second group threat.

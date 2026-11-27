@@ -1,7 +1,7 @@
 // Where each line a return brings goes (docs/design/opening-screen/one-thing-at-a-time.md, "Coming back"): every story line that landed
 // while the player was away plays on the band; a chip's on-line, which comes once per save, goes to the chronicle only; its
 // off-lines, which can come every cycle while away, collapse to the chip's last change, and that one and a repeat
-// task's lines go to the chronicle only too. Which line is which is read from explicit data, never the text: a chip's line
+// task's lines and a chain's link lines (each its own entry) go to the chronicle only too. Which line is which is read from explicit data, never the text: a chip's line
 // keys (ChipInfo) with no writing card, and the writing card's cap. A save's history restored on a later open places the
 // lines that landed inside a kept return (Visit) the same way, as far as history can tell (pastLines).
 import type { LogLine, View, Visit } from "../../api/types";
@@ -16,7 +16,18 @@ export type Placement = "band" | "chronicle" | "none";
 export function awayLines(catalog: Catalog, lines: LogLine[], view: View, prev: View | null): Placement[] {
   const chipped = chipPlaces(catalog, lines, (chip) => view.chips.includes(chip));
   const repeats = new Set([...view.cards, ...(prev?.cards ?? [])].filter((c) => c.cap === null).map((c) => c.card));
-  return lines.map((line, i) => chipped[i] ?? (line.card !== null && repeats.has(line.card) ? "chronicle" : "band"));
+  return lines.map((line, i) => chipped[i] ?? (isLink(catalog, line) || (line.card !== null && repeats.has(line.card)) ? "chronicle" : "band"));
+}
+
+/** One placement per line while the player is here: a chain's link line in the chronicle only, one entry each, every
+ * other line on the band (contract/spells.txt, "SPELLS"). */
+export function liveLines(catalog: Catalog, lines: readonly Pick<LogLine, "key" | "card">[]): Placement[] {
+  return lines.map((line) => (isLink(catalog, line) ? "chronicle" : "band"));
+}
+
+/** A link line: written by a card with a chain, under one of its link_line_keys. Read from explicit data, never the text. */
+function isLink(catalog: Catalog, line: Pick<LogLine, "key" | "card">): boolean {
+  return line.card !== null && (catalog.cards.get(line.card)?.chain?.link_line_keys.includes(line.key) ?? false);
 }
 
 /** One placement per restored line: a line inside a kept return as awayLines placed it, every other line on the band as

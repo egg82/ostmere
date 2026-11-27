@@ -1,0 +1,75 @@
+# A test chapter, merged onto the opening alone (tests/opening/test_chain_loader.py, tests/test_chains_wire.py): a
+# group threat, a standing fight on it with its three tallies, a working whose chain resolves the group's due fights,
+# and a trigger that raises the working's reach. Not story: the ids and words are the tests' own. The refusals are
+# edits of this file.
+version = 1
+end_feature = "combat"
+
+[[sides]]
+id = "t_hands"
+label_key = "t_side_hands"
+base = 4
+
+[[threats]]
+id = "t_pack"
+label_key = "t_threat_pack"
+base = 3
+members = 4
+
+# Tallies: made only by their fight's lines (fought, lost) or its chains (chained), never unlocked.
+[[stores]]
+id = "t_fought"
+label_key = "t_s_fought"
+cap_items = 100000
+
+[[stores]]
+id = "t_lost"
+label_key = "t_s_lost"
+cap_items = 100000
+
+[[stores]]
+id = "t_chained"
+label_key = "t_s_chained"
+cap_items = 100000
+
+[[standing]]
+id = "t_prowl"
+label_key = "t_a_prowl"
+fight = { side = "t_hands", threat = "t_pack", lost = "t_lost", fought = "t_fought", chained = "t_chained", fights_per_hour = 6 }
+
+[[cards]]
+id = "t_jump"
+presentation = "action"
+label_key = "t_c_jump"
+upside_key = "t_up"
+work_s = 600
+inputs = [{ store = "stones", items = 1 }]
+makes = [{ store = "dry_wood", items_per_hour = 1 }]
+chain = { runner = "t_prowl", reach = 2, link_line_keys = ["t_link_1", "t_link_next"] }
+
+[[features]]
+id = "combat"
+
+[[triggers]]
+id = "t_spells_on"
+when = { test = "at_least", subject_kind = "store", id = "damp_wood", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "combat" }, { unlock_kind = "card", id = "t_jump" }, { unlock_kind = "action", id = "t_prowl" }] }
+
+[[triggers]]
+id = "t_reach_pay"
+when = { test = "at_least", subject_kind = "store", id = "t_chained", value = 4 }
+outcome = { modifiers = [{ target = "chain", id = "t_jump", kind = "add_bp", amount_bp = 5000, source = "t_reach_pay" }] }
+
+[line_kinds]
+
+[text]
+t_up = "what it is for"
+t_side_hands = "The town"
+t_threat_pack = "The pack"
+t_s_fought = "Fought"
+t_s_lost = "Lost"
+t_s_chained = "Chained"
+t_a_prowl = "The pack prowls"
+t_c_jump = "Jump"
+t_link_1 = "the first"
+t_link_next = "and the next"

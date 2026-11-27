@@ -7,6 +7,7 @@ from dataclasses import replace
 
 from .conditions import all_true, changes_now, rise_time
 from .counts import unit, work_segment, work_value
+from .chains import resolve
 from .events import Event, EventKind
 from .full import has_room, is_full_pause, pause_full
 from .gates import is_unlocked, store_cap
@@ -38,15 +39,22 @@ def ignore(time: int, key: LineKey, card: CardId | None) -> None:
 
 
 def handle(save: Save, rules: Rules, event: Event, emit: Emit = ignore,
-           landing: frozenset[CardId] = frozenset()) -> tuple[Save, bool]:
+           landing: frozenset[CardId] = frozenset(), *, room: int) -> tuple[Save, bool, int]:
     """COMPLETION: work.complete. TAP_DONE: work.land. REQUIRES: rebuild, a mix card starting or stopping WAITING, or
     work.interrupt for a tapped card. STORE_LIMIT: pauses as before, over runners, and work.interrupt when it pauses a
     tapped card; `landing` are the tapped cards whose landing is still to be handled at this instant, which the
     dry rule passes over. TOP_OUT, CARRY_END: phaseevents.py. RESUME, CHIP, TRIGGER, LATCH, QUEUE_POP, READY: as
     before the cards part. Afterwards a ready
-    tap whose card no longer moves (its speed fell to 0) ends, interrupted."""
-    after, changed = _dispatch(save, rules, event, emit, landing)
-    return _stop_stalled(after, rules, changed)
+    tap whose card no longer moves (its speed fell to 0) ends, interrupted. A COMPLETION of a card with a chain resolves
+    it within `room`, the firings left under the cap after this event's own (design/spells.txt, "SPELLS"); the third
+    value is the links it resolved, each one more firing."""
+    links = 0
+    if event.kind is EventKind.COMPLETION:
+        after, changed, links = _completed(save, rules, CardId(event.subject), emit, room)
+    else:
+        after, changed = _dispatch(save, rules, event, emit, landing)
+    after, changed = _stop_stalled(after, rules, changed)
+    return after, changed, links
 
 
 def landing_cards(save: Save, rules: Rules, events: Iterable[Event]) -> frozenset[CardId]:
@@ -72,8 +80,6 @@ def _stop_stalled(save: Save, rules: Rules, changed: bool) -> tuple[Save, bool]:
 
 
 def _dispatch(save: Save, rules: Rules, event: Event, emit: Emit, landing: frozenset[CardId]) -> tuple[Save, bool]:
-    if event.kind is EventKind.COMPLETION:
-        return _completed(save, rules, CardId(event.subject), emit)
     if event.kind is EventKind.TAP_DONE:
         return _tap_done(save, rules, event.sequence, emit)
     if event.kind is EventKind.REQUIRES:
@@ -185,17 +191,25 @@ def _resume(save: Save, rules: Rules, runner: str) -> Save:
     return rebuild(replace(save, pauses=tuple(p for p in save.pauses if p.runner != runner)), rules)
 
 
-def _completed(save: Save, rules: Rules, card: CardId, emit: Emit) -> tuple[Save, bool]:
-    """A capped card's work reached a completion: its line, outcome and, at the cap, finished. Orders and the queue
-    evaluate after it."""
+def _completed(save: Save, rules: Rules, card: CardId, emit: Emit, room: int) -> tuple[Save, bool, int]:
+    """A capped card's work reached a completion: its line, outcome and, at the cap, finished; then a chain's links, the
+    card's lines (design/spells.txt, "SPELLS"). Orders and the queue evaluate after a capped card's or a chain's links."""
     c = index(rules).cards[card]
-    if c.cap is None or work_value(save, card) < unit(c):
-        return save, False
-    own = written_by(c)
-    save, lines = complete(save, rules, card)
-    for key in lines:
-        emit(save.time, key, card if key in own else None)
-    return save, True
+    if (c.cap is None and c.chain is None) or work_value(save, card) < unit(c):
+        return save, False, 0
+    if c.cap is not None:
+        own = written_by(c)
+        save, lines = complete(save, rules, card)
+        for key in lines:
+            emit(save.time, key, card if key in own else None)
+    if c.chain is None:
+        return save, True, 0
+    save, links, shown = resolve(save, rules, card, room)
+    for key in links:
+        emit(save.time, key, card)
+    for key in shown:
+        emit(save.time, key, None)
+    return save, c.cap is not None or bool(links), len(links)
 
 
 def _tap_done(save: Save, rules: Rules, lane_index: int, emit: Emit) -> tuple[Save, bool]:
