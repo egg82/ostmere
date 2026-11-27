@@ -1,4 +1,4 @@
-"""A person leaves the town, part three: a rebase lands a leave already past (engine DESIGN.txt, "LEAVES", "Rebase",
+"""A person leaves the town, part three: a rebase lands a leave already past (engine design/leaves.txt, "LEAVES", "Rebase",
 invariant 154). Written blind from that part and the public interface; the `kills` marker names the rows of
 MUTANTS_leaves.txt each test must turn red for. The save is written under rules with no leave at 55 (ac running, due at
 70, ad's order on since 50) and loaded under rules whose leave is at 40."""

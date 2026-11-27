@@ -1,7 +1,7 @@
 """The engine's entry points: pure functions over immutable saves and rules.
 
 Every function takes rules that pass validate_rules. A time argument before save.time raises TimeOrderError.
-Semantics live in DESIGN.txt: "Same instant", "Firing cap", "Cap", "Running dry".
+Semantics live in design/core.txt: "Same instant", "Firing cap", "Cap", "Running dry".
 """
 from collections.abc import Callable
 from dataclasses import dataclass, replace
@@ -36,7 +36,7 @@ from .work import first_shown
 def new_save(rules: Rules, modifiers: tuple[Modifier, ...] = ()) -> Save:
     """A save at time 0: each store at its initial value, each skill at XP 0, no mixes, no orders, an empty queue,
     nothing active, the unlock set rules.opening. `modifiers` are the save's starting modifier stack. Time 0 is
-    resolved like any instant (DESIGN.txt, "Instant 0"): triggers already true have fired, chips already true are
+    resolved like any instant (design/core.txt, "Instant 0"): triggers already true have fired, chips already true are
     latched, unlocked standing actions run in the segments. Its lines are not returned."""
     check_modifiers(modifiers)
     opening = () if rules.opening is None else tuple(sorted(set(rules.opening), key=unlock_key))
@@ -147,11 +147,11 @@ def explain(save: Save, rules: Rules, ref: RateRef) -> Explanation:
     (a card's flattened mix share, BP for an unlocked standing action or a card tapped ready, else 0), every modifier
     entry that
     applies with its source (LaneSpeed entries retargeted at ref), and its Run. Equal to modifiers.modified_rate on
-    those inputs (DESIGN.txt, "Explain").
+    those inputs (engine/design/, "Explain").
 
     A store's segment rate is the sum of its MAKE explanations minus its COST explanations, except at a limit (cap
     or empty) where it is clamped to 0. A mix card receiving a paused or spent card's share lists each in
-    `gained`, its share the saved one plus theirs (DESIGN.txt, "SPENT").
+    `gained`, its share the saved one plus theirs (design/spent.txt, "SPENT").
     """
     now = running(save, rules)
     return _sourced(line(save, rules, ref, now.shares.get(ref.runner, 0), now.runs.get(ref.runner, FULL)),
@@ -168,7 +168,7 @@ class Line:
     """One log line: a content key emitted at engine time `time`. `seq` numbers the lines of one instant within one
     Step, from 0, in emission order: (time, seq) is unique within a Step, not across Steps. `card`: the card whose
     completion or tap wrote it (one of work.written_by's keys), however the card was run; None for a
-    chip's line and a trigger's. Lines are never stored on the save (DESIGN.txt, "Lines")."""
+    chip's line and a trigger's. Lines are never stored on the save (design/core.txt, "Lines")."""
 
     time: int
     seq: int
@@ -190,9 +190,9 @@ class Step:
     """Each rule start and let-go on the way, in time order (rulelog.py)."""
     stopped_short: bool = False
     """advance_logged with a stop only: the stop ended it with instants at or before t still to resolve, so save.time
-    is the last resolved instant's, < t (DESIGN.txt, "Bounded advance")."""
+    is the last resolved instant's, < t (design/bounded-advance.txt, "Bounded advance")."""
     dropped: tuple[tuple[IdKind, int], ...] = ()
-    """rebase_logged only: how many ids of each kind the save's rules declared and these lack (DESIGN.txt, "Rebase")."""
+    """rebase_logged only: how many ids of each kind the save's rules declared and these lack (engine/design/, "Rebase")."""
 
 
 def advance_logged(save: Save, rules: Rules, t: int, stop: Callable[[], bool] | None = None) -> Step:
@@ -223,7 +223,7 @@ def decide_logged(save: Save, rules: Rules, t: int, verb: Verb) -> Step:
 def explain_work(save: Save, rules: Rules, card: CardId) -> Explanation:
     """Why a card's bar fills at this speed: base BP per second, its share (BP for a tap, its mix share otherwise), the
     WorkRef and LaneSpeed entries aimed at it (with chip effects, sources named, each retargeted at the WorkRef), and
-    its Run. ref is WorkRef(card); per_hour is work units per second, the formula rounded down (DESIGN.txt, "Work",
+    its Run. ref is WorkRef(card); per_hour is work units per second, the formula rounded down (design/core.txt, "Work",
     "Explain"). A tapped card explains its tap; else a card the running mix holds explains its mix share and Run (per_hour
     0 while paused, waiting, greyed or yielded); else, as a tap started now."""
     now = running(save, rules)

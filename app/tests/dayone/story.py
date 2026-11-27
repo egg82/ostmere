@@ -89,7 +89,7 @@ def rebased(path: Path, away: int, rules: Rules) -> Rebased:
 
 def _manifest_triggers(text: str) -> list[str]:
     """The triggers the save's own rules declared, fired or not (its manifest): only the others can fire at the load
-    as new content (engine DESIGN.txt, "Rebase", step 6)."""
+    as new content (engine design/, "Rebase", step 6)."""
     envelope: dict[str, dict[str, list[str]]] = json.loads(text)
     return [str(t) for t in envelope["manifest"]["triggers"]]
 

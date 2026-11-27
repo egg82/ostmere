@@ -125,7 +125,7 @@ drives growth, not survival: if stew empties, the eating pauses, no chip shows, 
 
 ## Odds targets (combat, from `days-four-to-seven.md`, "B7")
 
-loss_bp = T / (T + P) (engine `DESIGN.txt`, "FIGHTS"):
+loss_bp = T / (T + P) (`engine/design/`, "FIGHTS"):
 
 | Fight | Prepared | P : T | Loss share | Expected losses in 24 h at the starting rates |
 |---|---|---|---|---|

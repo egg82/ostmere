@@ -1,5 +1,5 @@
 """Who has left the town, read off the unlock set (Unlock(LEFT, lane)), and the standing actions their leaving stopped,
-read off the rules' Leave parts. Derived, never stored; a leaf below counts and rates, which both read it (DESIGN.txt,
+read off the rules' Leave parts. Derived, never stored; a leaf below counts and rates, which both read it (design/leaves.txt,
 "LEAVES")."""
 from .ids import ActionId, CardId, LaneId
 from .index import derived

@@ -273,7 +273,7 @@ def _page_built(c: w.Condition, rules: e.Rules, lane: e.LaneId | None = None) ->
     """An order's or queue entry's condition. A Running subject is taken only on a rule that taps on `lane`, a lane
     other than the hands, and only on a card of another lane (CONTRACT.txt, "Decisions"): such a rule's verb cannot
     start or stop the card it watches, and its tap runs on when it lets go, so the instant settles. Any other, a mix
-    switch above all, could stop what it watches and flip at every instant (engine DESIGN.txt, "Order mix")."""
+    switch above all, could stop what it watches and flip at every instant (engine design/cards.txt, "Order mix")."""
     if not isinstance(c, w.AfterTime) and isinstance(c.watched, w.Running):
         if lane is None:
             raise e.InvalidVerbError("only a rule tapping a card on a person's lane can watch whether a card is running")

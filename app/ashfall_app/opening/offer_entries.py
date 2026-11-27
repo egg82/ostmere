@@ -1,4 +1,4 @@
-"""The content file's offers (engine DESIGN.txt, "Offers"): an offer and its answers, as Type Objects. Beside
+"""The content file's offers (engine design/townsfolk.txt, "Offers"): an offer and its answers, as Type Objects. Beside
 entries.py, whose shapes they reuse."""
 from pydantic import Field
 
@@ -24,7 +24,7 @@ class AnswerEntry(Entry):
     outcome: OutcomeEntry = OutcomeEntry()
     role: str | None = None
     """What this answer means in its offer's kind: set exactly when the offer has a `kind`, and the same set of roles
-    in every offer of the kind (engine DESIGN.txt, "OFFER KINDS")."""
+    in every offer of the kind (engine design/offer-kinds.txt, "OFFER KINDS")."""
     echo: EchoEntry | None = None
     """A lasting part for an answer with none of its own (echoes.py)."""
 
@@ -50,7 +50,7 @@ class OfferKindEntry(Entry):
 
 class OfferEntry(Entry):
     """Someone asks the player something: shown once `gate` and every `requires` hold (a trigger the loader makes,
-    "offer_" + id), its line_keys written then; two or more answers; it never expires (engine DESIGN.txt, "Offers")."""
+    "offer_" + id), its line_keys written then; two or more answers; it never expires (engine design/townsfolk.txt, "Offers")."""
 
     id: str
     text_key: str
@@ -66,7 +66,7 @@ class OfferEntry(Entry):
     """What waiting costs, for an offer whose waiting is not free; None says nothing (an open offer pauses only itself)."""
     expiry_key: str | None = None
     """When the offer goes unanswered; None says nothing, and every offer has None until the engine has offer expiry
-    (engine DESIGN.txt, KNOWN GAPS)."""
+    (engine design/, KNOWN GAPS)."""
     gates_read_feature: list[str] = []
     """Features that later gates read in place of this offer's answers: each is unlocked by the finish of a card every
     answer unlocks, and no condition anywhere reads this offer as answered or one of its answers (ask_checks.py)."""

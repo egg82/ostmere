@@ -1,4 +1,4 @@
-"""What makes a FightDef valid (DESIGN.txt, "FIGHTS", "CHOICES"). A leaf of rules_check: the rules arrive as an argument
+"""What makes a FightDef valid (engine/design/, "FIGHTS", "CHOICES"). A leaf of rules_check: the rules arrive as an argument
 and are never imported."""
 from typing import TYPE_CHECKING
 
@@ -76,7 +76,7 @@ def check_no_odds_source(modifiers: tuple[Modifier, ...], where: str) -> None:
 
 
 def check_while_running(rules: "Rules", where: str, entries: tuple[Held, ...]) -> None:
-    """A card's or a standing action's held entries (DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS", "HELD SPEED"):
+    """A card's or a standing action's held entries (engine/design/, "ENTRIES HELD WHILE A CARD RUNS", "HELD SPEED"):
     declared sides and declared lanes (never HANDS, which is never declared), each once, amounts >= 1."""
     sides = [w.side for w in entries if isinstance(w, WhileRunning)]
     lanes = [w.lane for w in entries if isinstance(w, HeldSpeed)]

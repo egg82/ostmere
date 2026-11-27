@@ -1,4 +1,4 @@
-"""The entries a skill's prestige picks hold in the stack (DESIGN.txt, "PRESTIGE PHASES"): derived from the picks
+"""The entries a skill's prestige picks hold in the stack (design/prestige-phases.txt, "PRESTIGE PHASES"): derived from the picks
 wherever the stack is read, never stored, as heldentries.py's are. So an UndoPick is exact: the entry follows the
 picks, and nothing in save.modifiers has to be found and taken out."""
 from .ids import NodeId, SkillId, SourceId

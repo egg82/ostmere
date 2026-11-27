@@ -1,4 +1,4 @@
-"""SetOrders keeps latches (api/CONTRACT.txt "Rule runs"; DESIGN.txt, "Rule changes"): each new order equal to an old
+"""SetOrders keeps latches (api/CONTRACT.txt "Rule runs"; engine/design/, "Rule changes"): each new order equal to an old
 order (the whole order: its condition with its band, and its verb) keeps that old order's latch, the first equal one's
 for every copy; a new or edited order is latched afresh from its threshold alone. So a rule running inside its band
 stays on across an edit of another rule or a reorder, and a rule added in the same state starts off."""

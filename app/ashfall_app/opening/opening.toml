@@ -1,6 +1,6 @@
 # The opening: the first fifteen minutes, as data. Schema and units: schema.py (whole items, seconds, items per hour).
 # Everything the server and the page need to know about the opening is in this file; nothing else holds a number.
-# Every card is one card, tapped by hand or run in the mix (engine DESIGN.txt, "CARDS"); a told step is a card with a
+# Every card is one card, tapped by hand or run in the mix (engine design/cards.txt, "CARDS"); a told step is a card with a
 # cap. Progress never needs the same tap repeated by hand (docs/decisions.md): what opens the next thing is a step the
 # player takes (a first armful, the wall's first batch, a cleared spot), a cost shown as have/need, a level that pays a
 # find, or the body's clock.

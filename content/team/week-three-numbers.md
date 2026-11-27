@@ -229,7 +229,7 @@ bloom are spent early (D-125), not a cap-loss case.
 
 ## Odds targets (combat)
 
-loss_bp = T / (T + P) (engine `DESIGN.txt`, "FIGHTS").
+loss_bp = T / (T + P) (`engine/design/`, "FIGHTS").
 
 | Fight | Prepared | P : T | Loss share | Notes |
 |---|---|---|---|---|

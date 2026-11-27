@@ -49,7 +49,7 @@ are done.
 | 8 | Chance decides how nice, never how far | dec:150; `docs/systems.md`:61 | A | | flatter risk, but this is taste, not a protection | keep |
 | 9 | The game never judges | dec:335 | A | | nothing; it is the anti-D rule | keep |
 | 10 | Idle time pays mostly in the old; one or two unlocks a day away | dec:509; `app/tests/dayone/checks.py`, `absences` | taste | | nothing | keep as a design aim; what each absence opens is printed, never held to a number (`sim-invariants.md`) |
-| 11 | Dry store hands its share to the rest of the mix | dec:516; engine `DESIGN.txt`:35 | A | D | small: where the freed share goes | keep: a store can't go negative, and the share goes to the player's own mix, the answer that decides least |
+| 11 | Dry store hands its share to the rest of the mix | dec:516; `engine/design/core.txt`:35 | A | D | small: where the freed share goes | keep: a store can't go negative, and the share goes to the player's own mix, the answer that decides least |
 | 12 | A greyed mix falls through to the queue and rules | dec:740 | A | | nothing; it is the player's own plan | keep |
 | 13 | Carry window; an ordinary absence loses no prestige XP | dec:566; pp:9-14 | A | | a cap on XP about two days past a top | keep: the click is by hand, so no tool can cover it; the window is that tool's stand-in |
 | 14 | A phase takes at least 4x an ordinary absence | pp:15, pp:224 | A | | the fastest methods can't be very fast | keep while 13 stands; it exists only because of 13 |
@@ -87,8 +87,8 @@ are done.
 | 46 | Upkeep answered by offers and defaults, so ignoring it is never wasteful | wac:62, 127 (127 reverted on `offers-step-back`; 62 remains) | C | D | ignoring upkeep is made free | ignoring upkeep costs what it costs, shown in the ledger as a fact |
 | 47 | Defaults never wasteful; keeper stays in the length band; its gap to tuner is goals, never beats | wac:169-170 | C | | content must carry a player who never touches a mix | keeper is reported; its gap may include beats, inside the band's lazy end |
 | 48 | Ceiling of about one worthwhile change per ordinary absence | wac:198 | B | | caps the opportunities a keen player gets, to spare one who feels compelled | drop the ceiling and the floor; changes per absence are a readout (`sim-invariants.md`) |
-| 49 | An arrival's first task is an installed rule | `day-two-plan.md`:13, 31; engine `DESIGN.txt` "TOWNSFOLK" | A | D | small | keep: no rule could name a person before they existed, so an idle arrival would fail a tool user; it is an ordinary, editable rule |
-| 50 | A townsperson's card can't be tapped by hand | engine `DESIGN.txt`:919 | B | | removes the choice to micromanage | low priority: a hand tap on a ruled lane runs once, then the rules resume |
+| 49 | An arrival's first task is an installed rule | `day-two-plan.md`:13, 31; `engine/design/` "TOWNSFOLK" | A | D | small | keep: no rule could name a person before they existed, so an idle arrival would fail a tool user; it is an ordinary, editable rule |
+| 50 | A townsperson's card can't be tapped by hand | `engine/design/saves-across-releases.txt`:108 | B | | removes the choice to micromanage | low priority: a hand tap on a ruled lane runs once, then the rules resume |
 | 51 | Teaching cues: idle nudge, hint dots, Show me lessons, first-mix lesson, the switch-mix lesson | `app/client/src/ui/nudge.ts`, `game/teach.ts`, `game/hints.ts`, `ui/chipoffer.ts` (`offers-step-back`) | A | (D) | the switch-mix lesson names one saved mix, once per save | keep: they point and never build; the nudge stops at the first mix |
 
 **Counts.** A: 32. B: 12. C: 5. Row 10 is taste (`sim-invariants.md`, which sorted the simulator's checks after this

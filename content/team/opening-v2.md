@@ -2,7 +2,7 @@
 
 Spoilers: this file is under `content/` and never shown to the owner. The screen it runs on is
 `docs/design/opening-screen/index.md` (spoiler-free). Rules it answers to: `docs/decisions.md`, "The opening is fun first"
-and the sections after it. Engine model: every card mixable (`cards-design3`, engine `DESIGN.txt`, "CARDS").
+and the sections after it. Engine model: every card mixable (`cards-design3`, `engine/design/`, "CARDS").
 
 ## The shape
 

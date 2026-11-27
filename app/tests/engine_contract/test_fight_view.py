@@ -1,4 +1,4 @@
-"""View.fights (DESIGN.txt, "FIGHTS", "View"): reading writes nothing, a tap's kept odds show, the strengths and tallies."""
+"""View.fights (design/fights.txt, "FIGHTS", "View"): reading writes nothing, a tap's kept odds show, the strengths and tallies."""
 from ashfall_app.engine import (
     QUANTITY_SCALE as Q, AfterTime, Modifier, ModifierKind, Outcome, SideStrength, SourceId, TapCard, ThreatStrength,
     TriggerDef, TriggerId, advance, decide, new_save, next_event, strength, value, view,

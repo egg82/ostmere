@@ -132,7 +132,7 @@ save_snapshots = Table(
     Column("decisions", Integer, nullable=False),
 )
 
-# The manifest (engine DESIGN.txt, "Manifest") of each rules digest a build has played under, as canonical JSON text: a
+# The manifest (engine design/saves-across-releases.txt, "Manifest") of each rules digest a build has played under, as canonical JSON text: a
 # save or snapshot whose state leaves its manifest out is read with its digest's (db/manifests.py).
 save_manifests = Table(
     "save_manifests", metadata,

@@ -1,4 +1,4 @@
-"""Offer kinds through the loader, on a test chapter (fixtures/askkinds.toml; engine DESIGN.txt,
+"""Offer kinds through the loader, on a test chapter (fixtures/askkinds.toml; engine design/offer-kinds.txt,
 part "OFFER KINDS"): the content's kind and roles reach the rules, a kind whose offers differ in roles fails the load,
 a rule for the kind answers both offers as each shows."""
 from pathlib import Path

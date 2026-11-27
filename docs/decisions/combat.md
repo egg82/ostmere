@@ -34,7 +34,7 @@ coming. Nobody starves because you were at work; thin rations are flavour, never
 
 How these parts stand today, moved from their rows in `systems.md`.
 
-Combat: planned in `docs/design/combat-plan.md`; interface in engine `DESIGN.txt`, "FIGHTS", and
+Combat: planned in `docs/design/combat-plan.md`; interface in `engine/design/`, "FIGHTS", and
 `app/ashfall_app/api/CONTRACT.txt`, "FIGHTS". A fight (side, threat, what a loss costs) sits on a card the player runs
 or a standing action that runs alone; odds are Modifiers entries from the two strengths, losses are flows, and the
 region's ramp is triggers on a clock store. No Save field, event kind or verb: a fight is never an event, and the
@@ -45,7 +45,7 @@ a later chapter may add another side to the entries a card already holds (`pacin
 A wounded store (one a lost fight adds to, like hurt) is a level the player sees, in whole items rounded up, never a
 cost in units; the server serves it as `View.levels`, off the ledger (`CONTRACT.txt`, "FIGHTS").
 
-Expeditions: planned in `docs/design/banked-time-plan.md`; interface in engine `DESIGN.txt`, "BANKED TIME". The first
+Expeditions: planned in `docs/design/banked-time-plan.md`; interface in `engine/design/`, "BANKED TIME". The first
 slice: a trip is an uncapped card with inputs, run in the mix on its supply store; finds are triggers on its completion
 count; a fighting trip carries a FightDef on the hands' side. No roster, destination state or runner of its own: those
 were a second copy of Cards. Backup (members' strengths on the trip's side), stance and wide expeditions are that

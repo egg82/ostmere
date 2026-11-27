@@ -20,7 +20,7 @@ def check_asks(o: "Opening") -> None:
         if len(set(x.askers)) != len(x.askers):
             fail(where, "names an asker twice")
         if x.expiry_key is not None:
-            fail(where, "has an expiry_key, but an offer never goes (engine DESIGN.txt, KNOWN GAPS: offer expiry)")
+            fail(where, "has an expiry_key, but an offer never goes (engine design/, KNOWN GAPS: offer expiry)")
 
 
 def check_gates_read_feature(o: "Opening") -> None:

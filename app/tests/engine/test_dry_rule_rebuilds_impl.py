@@ -1,4 +1,4 @@
-"""The dry rule's cost, as built (engine DESIGN.txt, "Pause"): it pauses one consumer at a time and reads the store's
+"""The dry rule's cost, as built (engine design/entries-held.txt, "Pause"): it pauses one consumer at a time and reads the store's
 net after each, but rebuilds the save once, when it is done."""
 import pytest
 

@@ -31,7 +31,7 @@ def clock_ids(o: "Opening") -> list[str]:
 
 def _owner(o: "Opening", key: str) -> tuple[ConditionEntry, list[ConditionEntry]]:
     """When the line is told: the offer's own gate and requires, or the card's completion that says it (a told step's line
-    k is said at completion k, engine DESIGN.txt)."""
+    k is said at completion k, engine design/)."""
     cards, offers = [c for c in o.cards if key in c.line_keys], [x for x in o.offers if key in x.line_keys]
     if len(cards) + len(offers) != 1:
         fail(f"line_doings {key}", f"has a clock and is told by {len(cards)} cards and {len(offers)} offers, not exactly one")

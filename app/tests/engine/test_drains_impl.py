@@ -1,4 +1,4 @@
-"""Drains at 0, as built (engine DESIGN.txt, "DRAINS"): rebuild holds a store at 0 while its drains are forgiven
+"""Drains at 0, as built (engine design/drains.txt, "DRAINS"): rebuild holds a store at 0 while its drains are forgiven
 (lumps.forgiven), and the dry rule passes over the store's drains. The contract suite is in tests/engine_contract;
 these pin the two mechanisms, each beside a control without the drain."""
 from ashfall_app.engine import (

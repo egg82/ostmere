@@ -1,4 +1,4 @@
-"""Invariants 47 to 56: a save crossing releases (DESIGN.txt, part "SAVES ACROSS RELEASES"). The new rules are
+"""Invariants 47 to 56: a save crossing releases (design/saves-across-releases.txt, part "SAVES ACROSS RELEASES"). The new rules are
 generated rules transformed the way content changes them: ids added, renamed (so the old id is gone), work_s changed,
 a card moved to another lane, caps raised, declarations reordered.
 
@@ -124,7 +124,7 @@ def lane_of(s: Save, lane: str) -> LaneState:
 
 
 def rescaled(work: int, w_old: int, w_new: int) -> int:
-    """DESIGN.txt step 5: c = work // (W * BP), rem = work % (W * BP), to c * W' * BP + rem * W' // W."""
+    """engine/design/ step 5: c = work // (W * BP), rem = work % (W * BP), to c * W' * BP + rem * W' // W."""
     c, rem = divmod(work, w_old * BP)
     return c * w_new * BP + rem * w_new // w_old
 
@@ -494,7 +494,7 @@ def test_a_raised_store_cap_keeps_every_value(w: tuple[Scenario, Save, Release])
 @given(data=st.data())
 def test_a_save_skipping_a_change_rebases_straight_to_the_latest(data: st.DataObject):
     """Invariant 54: rebase(encode(s, r), r3) succeeds as rebasing through r2 does, and 49 holds between s and both
-    results for every id all three rules declare. The two results need not be equal (DESIGN.txt 54)."""
+    results for every id all three rules declare. The two results need not be equal (engine/design/ 54)."""
     sc, s, rel1 = data.draw(world_st())
     s_mid = rebase(encode(s, sc.rules), rel1.rules)
     rel2 = data.draw(release_st(rel1.rules, sources_of(s_mid), "b"))

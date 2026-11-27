@@ -1,4 +1,4 @@
-"""Evaluation applies every verb (DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS": "Evaluation applies every
+"""Evaluation applies every verb (design/townsfolk.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS": "Evaluation applies every
 verb", "Evaluation after a cascade", "A chip that shows or hides evaluates", "Shipping the evaluation change", invariant
 57). One evaluation is a loop: the TapCard of the first true order whose card can act (speed above 0 included), else,
 while no order's mix runs, the controlling queue entry's verb; applied, then picked again until nothing can act or the
@@ -236,7 +236,7 @@ def test_an_old_builds_save_with_a_ready_order_unapplied_waits_for_the_next_eval
 def can_act(s: Save, r: Rules, c: CardId) -> bool:
     """A TapCard of c can act in s: its lane is free and the player's own tap of it starts it now. On a free lane the
     player's tap raises for a locked, unknown, completed or retired card and speed 0, and is a failed tap (nothing
-    starts) when unready (DESIGN.txt, "Failed tap"), so it starting is exactly "unlocked, not completed or retired,
+    starts) when unready (engine/design/, "Failed tap"), so it starting is exactly "unlocked, not completed or retired,
     blocker None, speed above 0". The lane is read apart because a player's tap may cut in on a busy one ("CUT-IN",
     "CURE CUT-IN"), which an order's never does."""
     d = next((x for x in r.cards if x.id == c), None)

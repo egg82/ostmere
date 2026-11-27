@@ -25,7 +25,7 @@ joint project's last stage) waits on that turn.
 |---|---|---|
 | The third season's first turn as content | Clock, Gates, Standing actions, Cards on season pools, Triggers, Chips, Combat (a threat step on the season's clock) | Weeks 2 and 3's season shape; the season check runs on it unchanged |
 | A season chore with no order card | Chips (the hint dot), Standing orders (a rule the player writes on a chip condition), the simulator's policies | `docs/design/choice-not-protection.md`, row 43 (decided): the chore arrives with its problem and a hint; the rule is the player's (item 4) |
-| Expeditions into the next region: a trip, its town twin, finds on a shared count | Cards (the trip shape), Triggers (finds on a store), Stores (a count every trip adds to), the Pacing curve (a new skill row), Town map and world map (places by unlock) | DESIGN "BANKED TIME": a trip is an uncapped card with inputs; a town twin is the existing `{lane}_` expansion. Backup ("who goes") stays a KNOWN GAP: every trip this week is one person (item 5) |
+| Expeditions into the next region: a trip, its town twin, finds on a shared count | Cards (the trip shape), Triggers (finds on a store), Stores (a count every trip adds to), the Pacing curve (a new skill row), Town map and world map (places by unlock) | design/banked-time.txt "BANKED TIME": a trip is an uncapped card with inputs; a town twin is the existing `{lane}_` expansion. Backup ("who goes") stays a KNOWN GAP: every trip this week is one person (item 5) |
 | A fight whose losses are told from its own pools | Combat (a FightDef's lost tally), Chronicle and unwrap (the loss lines), Knowledge (the composer's notes from history), Catalogue (two authored fields) | The engine already pays a lost fight as a wasted attempt and counts it exactly; what is new is how the page tells it, keyed on authored fields, never a card's name (item 1) |
 | An offer whose "not now" leaves its one-off on the tasks | Offers (an answer's outcome unlocks a card; the other answer queues it), Cards, Unlocks (a feature at the card's finish) | Day 9's queued one-off and an answer's unlock, combined; no blind permanent choice (item 3) |
 | Arrivals that join as a pooled group | Offers (the work kind), Triggers (joins), GROUPS (a pooled lane over members' lanes), People (`told`: line or mention) | GROUPS was built for people; week 3's arrivals joined one lane each (item 6) |
@@ -53,7 +53,7 @@ first chapter.
    one shown per day's page, the rest folded into a count line in the journal's register; a trigger's own note from the
    same pool counts as the first draw. No engine change: the lost tally, the odds and the wasted inputs are FIGHTS' as
    built. Fits into: Combat, Chronicle and unwrap, Knowledge, Catalogue. Rejected: an event or timer in the engine (an
-   instant per fight: DESIGN "FIGHTS", REJECTED); a loss that takes stores or levels beyond the attempt's inputs, or
+   instant per fight: design/fights.txt "FIGHTS", REJECTED); a loss that takes stores or levels beyond the attempt's inputs, or
    adds a wounded store (the content's guardrail); keying the telling on the card's id or name (no behaviour from
    names: authored fields); notes per loss without a fold (a long absence would write a page of them). Accept: a
    fixture with a pooled card and a plain fight card: the pooled card's labels come only from its pool and the plain
@@ -84,7 +84,7 @@ first chapter.
    store some uncapped card's outcome makes is accepted by the find checks; the per-skill pacing check covers the new
    skill row from its first card; the 2 AM test holds a trip in the mix with finds landing away. Fits into: Cards,
    Triggers, Stores, Pacing curve. Rejected: finds on each card's own count (a find would wait on whoever the player
-   sent); a roster or destination state (DESIGN "BANKED TIME", REJECTED). Accept: a fixture of a hands trip and a twin on
+   sent); a roster or destination state (design/banked-time.txt "BANKED TIME", REJECTED). Accept: a fixture of a hands trip and a twin on
    one lane lands its nth find at the same instant however the count is split between them; a planted twin with a
    different outcome fails the player-only check. **Meets #438:** the count store always has room, so a trip whose
    material makes are at their caps keeps running and keeps counting under the rule that a job does not spend inputs on
@@ -138,7 +138,7 @@ first chapter.
 - **Banked time** (`banked-time-plan.md`): item 5 is the Expeditions row's first content past day 3's track. Its KNOWN
   GAP "Who goes" names R2's first expedition with backup as the decider; week 4's trips are all one person, so the
   decider moves to the first expedition whose fight needs a side made of who goes (week 7, by the spine): a one-line
-  edit to DESIGN "BANKED TIME" when item 5 lands.
+  edit to design/banked-time.txt "BANKED TIME" when item 5 lands.
 - **Combat** (`combat-plan.md`): item 1 uses the lost tally as built. "Whole losses that are people" stays open (nobody
   goes with the player); capped fights and stance stay open.
 - **Issue #438** (finite resources): item 5's note above; item 10's acceptance runs its content check.

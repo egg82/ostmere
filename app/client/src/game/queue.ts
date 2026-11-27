@@ -1,7 +1,7 @@
-// The player's queue as the page builds it (docs/systems.md, "Standing orders and the queue"; engine DESIGN.txt,
+// The player's queue as the page builds it (docs/systems.md, "Standing orders and the queue"; engine design/core.txt,
 // "Orders"): "When ready" lines up one tap of any step the player could not simply tap now, held until that tap's
 // completion. The engine starts the head the moment it turns ready and passes over only an entry nothing will make
-// ready (DESIGN.txt, "Never ready"); while it waits the mix runs on. Every edit sends the whole list back (set_queue
+// ready (design/cards.txt, "Never ready"); while it waits the mix runs on. Every edit sends the whole list back (set_queue
 // replaces it).
 import type { Card, Condition, Decision, GoalRow, QueueEntry, View } from "../api/types";
 import type { Catalog } from "./catalog";

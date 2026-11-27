@@ -1,4 +1,4 @@
-Wrong implementations of SPENT (engine DESIGN.txt, "SPENT", invariants 133-141), to plant one at a time in a scratch copy;
+Wrong implementations of SPENT (engine design/spent.txt, "SPENT", invariants 133-141), to plant one at a time in a scratch copy;
 a test written blind from that part alone must go red for each. "EAT" is a mix card costing a pool p; "R1", "R2" are the
 other cards of its mix and lane; a pool is a store no unlocked, live card or standing action makes. Rows 1-6 are the
 plan's list (week-three-plan.md, item 2), row 1 rewritten when every paused card became a giver (docs/decisions.md, "A
@@ -55,7 +55,7 @@ MUTANTS_drains.txt does (planted, red, survived, equivalent with the reason). `@
                    the spent card is read as YIELDED or its pause is dropped after the landing.            [19]
 
 RUNS
-- Suite tests/engine_contract/test_spent_*.py (blind, written from DESIGN.txt's SPENT part and api/CONTRACT.txt alone).
+- Suite tests/engine_contract/test_spent_*.py (blind, written from the engine design's SPENT part and api/CONTRACT.txt alone).
   Run: python -m tools.mutate_suite spent --run (specs tools/spent_mutants/mNN.py, one per row, each a list of (path,
   old, new) edits against the implementation). `--check` fails unless every row is claimed by a test marked @kills(row).
 - Against the implementation: rows 1-24 all KILLED, each with a test that claims it red or, where the planted wrong

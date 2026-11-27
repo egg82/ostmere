@@ -1,5 +1,5 @@
 """Offers: someone asks the player something, with two or more answers. Type Objects only; their state is three
-only-growing unlocks (shown, answered, which answer). Semantics: DESIGN.txt, "Offers"."""
+only-growing unlocks (shown, answered, which answer). Semantics: design/townsfolk.txt, "Offers"."""
 from dataclasses import dataclass
 
 from .cards import Outcome
@@ -13,7 +13,7 @@ class AnswerDef:
     id: AnswerId
     outcome: Outcome = Outcome()
     role: RoleId | None = None
-    """What this answer means in its offer's kind (DESIGN.txt, "OFFER KINDS"); set exactly when the offer has a kind."""
+    """What this answer means in its offer's kind (design/offer-kinds.txt, "OFFER KINDS"); set exactly when the offer has a kind."""
 
 
 @dataclass(frozen=True)

@@ -32,7 +32,7 @@ class SkillEntry(Entry):
 
 
 class FlowEntry(Entry):
-    """items_per_hour items every `every_hours` hours, refused unless exact (engine DESIGN.txt, "FRACTIONS AT THE
+    """items_per_hour items every `every_hours` hours, refused unless exact (engine design/, "FRACTIONS AT THE
     LOADER")."""
 
     store: str
@@ -118,7 +118,7 @@ class ConditionEntry(Entry):
     release: int | None = None
     """Defaults to value (a plain threshold)."""
     every: int = Field(default=1, ge=1)
-    """Divides value and release alike, on a store only, refused unless exact (engine DESIGN.txt, "FRACTIONS AT
+    """Divides value and release alike, on a store only, refused unless exact (engine design/, "FRACTIONS AT
     THE LOADER")."""
 
 

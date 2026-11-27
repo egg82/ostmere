@@ -1,4 +1,4 @@
-"""Invariants 179 and 180 (engine DESIGN.txt, "GROUPS (pooled lanes)"): crew equals people, and a tap takes one member."""
+"""Invariants 179 and 180 (engine design/groups.txt, "GROUPS (pooled lanes)"): crew equals people, and a tap takes one member."""
 from hypothesis import given, strategies as st
 
 from ashfall_app.engine import (

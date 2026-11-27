@@ -109,7 +109,7 @@ def her_first_rule(v: View, orders: tuple[Order, ...], knobs: Knobs2) -> Move | 
     """The damp wood line's order card, taken while the line is red (falling or starved, uncovered), whatever draws it
     down, as the page offers it (client ui/ledger.ts, offerFor; game/shown.ts drawnDown decides only when a line with no
     offer joins): above her default rule, since a rule below an always rule acts only while that one cannot (engine
-    DESIGN.txt, "Ruled lane")."""
+    design/townsfolk.txt, "Ruled lane")."""
     line = next((ln for ln in v.ledger if ln.store == "damp_wood"), None)
     i = her_rule_index(orders)
     if not knobs.her_rule or line is None or i is None or HER_RULE in orders:

@@ -1,4 +1,4 @@
-"""SPENT, the yield (engine DESIGN.txt, "SPENT", invariants 134, 137, 141). Written blind from that part and
+"""SPENT, the yield (engine design/spent.txt, "SPENT", invariants 134, 137, 141). Written blind from that part and
 api/CONTRACT.txt; MUTANTS_spent.txt names the wrong implementations each test must turn red for (the `kills` marker).
 Every expectation is hand-worked from "The yield": on a lane, each receiver r gains floor(s_k * s_r / Rsum) from each
 spent card k, over the SAVED shares of the lane's other cards. Pools start at 0 here, so EAT is spent from the first

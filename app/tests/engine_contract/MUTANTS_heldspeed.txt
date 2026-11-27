@@ -1,6 +1,6 @@
-Wrong implementations of held speed and entries held by standing actions (engine DESIGN.txt, "HELD SPEED", invariants
+Wrong implementations of held speed and entries held by standing actions (engine design/held-speed.txt, "HELD SPEED", invariants
 156-161, with 110-118 as that part extends them), to plant one at a time in a scratch copy of the engine; a test
-written blind from DESIGN.txt and api/CONTRACT.txt must go red for each. "Eater" is a standing action with a HeldSpeed
+written blind from engine/design/ and api/CONTRACT.txt must go red for each. "Eater" is a standing action with a HeldSpeed
 on a declared lane; "worker" is a card on that lane. Record each run below the list as MUTANTS_held.txt does.
 
  1 paused kept     a standing holder keeps its entries while paused on a dry store: its lane's work runs at the
@@ -34,7 +34,7 @@ on a declared lane; "worker" is a card on that lane. Record each run below the l
 14 rounds up       a * h // BP replaced by a ceiling for a standing holder or a HeldSpeed.           [156]
 
 RUNS
-- Suite tests/engine_contract/test_heldspeed_*.py (blind, written from DESIGN.txt and CONTRACT.txt alone). Run:
+- Suite tests/engine_contract/test_heldspeed_*.py (blind, written from engine/design/ and CONTRACT.txt alone). Run:
   python -m tools.mutate_suite heldspeed --run (specs tools/heldspeed_mutants/mNN.py).
 - Against the implementation (engine/heldentries.py and its callers): rows 1-14 all KILLED, each with a test that
   claims it red. Rows 7 and 8 first survived and got directed tests in test_heldspeed_rebuilt.py; row 7's first plant

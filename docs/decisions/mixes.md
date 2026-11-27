@@ -98,7 +98,7 @@ and you tune it, then hit go.
   rule: empty, a quarter, half, three quarters or full, or a percentage in five-point steps; an exact number stays for
   a rule that needs exactly 12. A new rule starts with shares, a rule already written keeps its numbers until either
   level is switched, and a goal stint can also run until a store is half, three quarters or full. The engine reads a
-  share against the cap at that moment (engine `DESIGN.txt`, "SHARE LEVELS"). The editor builds only a rule that
+  share against the cap at that moment (`engine/design/`, "SHARE LEVELS"). The editor builds only a rule that
   starts and stops at least one whole item apart (`valid` in `app/client/src/game/storerule.ts`), so on a small store a
   share can sit no nearer full than that allows: "down to 95%, until full" works on 54 roots but stops at 90% on 18 wood.
   Kept as it is, with nothing on screen saying why (owner, 2026-11-16: "we can leave it as is"): a rule one item from
@@ -197,37 +197,37 @@ How these engine parts behave today, moved from their rows in `systems.md`.
 
 Cards: one card per kind of work, tapped by hand or run in the mix (gathering, making, studying, resting, one-off story
 steps, building stages, recipes). A one-off is a card with a cap; at its cap it moves to Completed, and the story can
-raise the cap. Standing actions (a fire burning) are not cards. Semantics: engine `DESIGN.txt`, "CARDS".
+raise the cap. Standing actions (a fire burning) are not cards. Semantics: `engine/design/`, "CARDS".
 
 Mixes: one mechanism for both layers, the player's time (hands) and the town's. A mix is a hands mix or a town mix by
 the lanes its cards sit on (`engine.plan.mix_layer`); a town mix's share is a part of one person's time, the person
 being the lane its card is on, each person's shares summing to at most 100%, and the running one is set by the town's
-always rule, a SwitchMix order, never the player's switch (`app/ashfall_app/engine/mixruns.py`; engine `DESIGN.txt`,
+always rule, a SwitchMix order, never the player's switch (`app/ashfall_app/engine/mixruns.py`; `engine/design/`,
 "THE TOWN'S MIX"). A mix holding a completed card greys whole and falls through to the queue or the orders. A card
 paused on a dry store gives its share to the rest of its mix on its lane until its pause lifts (a store a maker refills
 at its hourly resume, a spent one, which nothing in play can make again, when an outcome refills it), each gain named
 in `explain()` and shown on the page as the split that runs now: derived at the instant, never saved
-(`app/ashfall_app/engine/spent.py`; engine `DESIGN.txt`, "SPENT"). Buildings running cards remain planned: pooled
+(`app/ashfall_app/engine/spent.py`; `engine/design/`, "SPENT"). Buildings running cards remain planned: pooled
 work is a known gap.
 
 Standing orders and the queue: an order's mix is a pushdown of one over the player's, read per layer (a town mix's
 order never moves the hands' running mix), and a tap yields the mix. Evaluation applies every verb that can
-act at an instant, not only the first, so no lane idles on a ready order (engine `DESIGN.txt`, "Evaluation applies
+act at an instant, not only the first, so no lane idles on a ready order (`engine/design/`, "Evaluation applies
 every verb"). A story outcome installs a ruled lane's always rule as an ordinary order, and an answer can queue a hands
-one-off as a When ready entry (engine `DESIGN.txt`, "Installed rule", "Queued one-off";
+one-off as a When ready entry (`engine/design/`, "Installed rule", "Queued one-off";
 `app/ashfall_app/engine/installs.py`); a new save has neither, and nothing installs a rule that watches a store.
 Content order cards are never built for the player: they feed the first rule's lesson and the hint dots. Where each
 order stands (on, waiting, outranked, passed over, behind Next) is served on the View as order_states (`engine.plan.order_states`),
 and the Rules tab says why a rule is off under it (`app/client/src/ui/rulewhy.ts`). The page queues one run of a card
 (held until its count is one past the runs planned before it), and a mix until a goal row lands (a goal
-stint: a queued switch runs over the player's mix until it pops, engine `DESIGN.txt`, "Queue mix";
+stint: a queued switch runs over the player's mix until it pops, `engine/design/`, "Queue mix";
 `app/client/src/ui/stint.ts`), and lists the queue as Next in the Rules tab (`app/client/src/game/queue.ts`).
 Next is a row among the hands' rules, moved like one (owner: not taking the next planned thing when it is ready feels
 off, but Plan should not jump every rule: a rule that cures tiredness still comes first). Rules above it outrank a ready
 entry; rules under it wait while one has the hands and pick up again after it pops. A ready entry takes the hands when
 the task under way ends, never mid-task, and a head that cannot act holds nothing, so the rules under Next run while it
 waits (the entries behind it still wait inside the queue). Where the row sits is the player's alone (`Order.below_next`,
-engine `DESIGN.txt`, "NEXT'S ROW"), never read off a rule's card or wording; every save starts with it at the bottom,
+`engine/design/`, "NEXT'S ROW"), never read off a rule's card or wording; every save starts with it at the bottom,
 which is the queue as it always was, and the why-line names Next when it is what outranks a rule.
 One queue, two ways in (owner: planning what to build next is where Plan is most useful): Next's Plan adds
 either kind of entry, cards first. It lists every card the queue takes, picked through the card's own path: steps and
@@ -237,7 +237,7 @@ under way and its earlier entries, so a running card's adds one more run after t
 go 'oh I should add this to the plan so I don't have to tap as much'"). More runs are more picks, and the queue's order
 says what happens in between; Next draws runs of one card one after another as one row, "once" or ×N, whose Remove and
 ≡ act on one entry. Each entry is checked when its turn comes, never when it is queued: one that cannot run then waits,
-and one whose card reached its cap leaves the queue at that instant (engine `DESIGN.txt`, "Greyed mix"). Plan offers a
+and one whose card reached its cap leaves the queue at that instant (`engine/design/`, "Greyed mix"). Plan offers a
 capped card only while one more run fits under its cap. Not a card on a ruled lane (the queue is the hands' plan, and
 the server refuses it). Then the steps it would take but for what they wait on, off, each saying what in its card's
 face words, then the mixes. A card's When ready stays as
@@ -247,11 +247,11 @@ runs another tap. While a staged card a tap started is running, its face offers 
 planned before the tap, its work kept: on a lane the queue takes, the entry tapping it to its cap (at Next's front, or
 a running When ready entry held on to the cap); on a person's lane, an always rule tapping it where a new lane rule
 goes, passed over at the cap (`app/ashfall_app/api/CONTRACT.txt`, "UNTIL DONE"). When ready's own default still
-never holds a staged card to its cap (engine DESIGN's REJECTED list).
+never holds a staged card to its cap (the engine design's REJECTED list).
 
 Modifiers: buildings, tools, spells, prestige, seasons, injuries and supply are all modifiers, and a cap only rises.
 Planned for combat: a side's and a threat's strength are targets too, a threat's raised only by its region's schedule
-triggers, and a fight's odds join the effective stack while it runs (engine `DESIGN.txt`, "FIGHTS"). A card's
+triggers, and a fight's odds join the effective stack while it runs (`engine/design/`, "FIGHTS"). A card's
 `while_running` entries on a side join the stack while it runs, at its share of its lane's time
 (`app/ashfall_app/engine/heldentries.py`, "ENTRIES HELD WHILE A CARD RUNS"): derived from the lanes and running mixes
 wherever the stack is read, never stored.
@@ -260,13 +260,13 @@ Lanes: tapping trades mix time one for one, so attention earns nothing. Tapping 
 time, nothing changed, its line at once (known at the tap, never chance). A glowing step not yet done cuts in on a
 hands task the queue or a rule holds (a stage an order names too, its latch having fallen as the stage drank the
 store), which takes it up again once the step lands, and a player's tap of a cure for a chip shown now cuts in on any
-hands task but a cure, the task going to the queue's front if nothing else would take it up (engine `DESIGN.txt`,
+hands task but a cure, the task going to the queue's front if nothing else would take it up (`engine/design/`,
 "CUT-IN", "CURE CUT-IN", "ORDER CARD ON A STAGED BUILD"; `app/ashfall_app/engine/decisions.py`,
 `app/ashfall_app/engine/cure_reading.py`). Other lanes (a drying rack, later buildings) never touch the player's time.
 A ruled lane's person is in the town mix once they have joined, and a tap on that lane (a rule's) takes the whole of
 the person while their shares yield, as a hands tap yields the hands' mix. A townsperson who works is a ruled lane: the
 player's rules set its task (a single task, never a mix), the player never taps it, its rules' order is its priority,
-and the view names the rule whose task it runs (engine `DESIGN.txt`, "Ruled lane", "Lane order", "THE TOWN'S MIX";
+and the view names the rule whose task it runs (`engine/design/`, "Ruled lane", "Lane order", "THE TOWN'S MIX";
 `app/ashfall_app/engine/plan.py`). A lane whose rules would start the same card again at each completion runs it as a
-rate, as a mix runs its cards, and lands only when its task changes (engine `DESIGN.txt`, "REPEATING TAPS";
+rate, as a mix runs its cards, and lands only when its task changes (`engine/design/`, "REPEATING TAPS";
 `app/ashfall_app/engine/retap.py`).

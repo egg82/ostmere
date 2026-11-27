@@ -1,7 +1,7 @@
 """Cards: one Type Object for every kind of work the player does, tapped by hand or run by the mix.
 
 A one-off, a building stage or a recipe is a card with a completion cap; gathering by hand and gathering all afternoon
-are the same card (docs/systems.md, "Cards"). Semantics: DESIGN.txt, part "CARDS". What cards do to a save: work.py.
+are the same card (docs/systems.md, "Cards"). Semantics: design/cards.txt, part "CARDS". What cards do to a save: work.py.
 """
 from dataclasses import dataclass
 
@@ -23,7 +23,7 @@ class Amount:
 
 @dataclass(frozen=True)
 class FightDef:
-    """The Component that makes a card or a standing action a fight: work with odds on it (DESIGN.txt, "FIGHTS").
+    """The Component that makes a card or a standing action a fight: work with odds on it (design/fights.txt, "FIGHTS").
 
     side and threat name the strengths whose ratio is the odds. lost: the tally store, one unit per lost fight.
     fought: the tally of all fights (a standing fight only; a card counts its completions). per_hour: a standing fight's
@@ -42,7 +42,7 @@ class FightDef:
 @dataclass(frozen=True)
 class WhileRunning:
     """An ADD_BP entry on SideStrength(side) that the card holds while it runs, at the card's share of its lane's time
-    (DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS"). Its source is HELD_PREFIX + the card's id; amount_bp >= 1."""
+    (design/entries-held.txt, "ENTRIES HELD WHILE A CARD RUNS"). Its source is HELD_PREFIX + the card's id; amount_bp >= 1."""
 
     side: SideId
     amount_bp: int
@@ -50,7 +50,7 @@ class WhileRunning:
 
 @dataclass(frozen=True)
 class HeldSpeed:
-    """An ADD_BP entry on LaneSpeed(lane) that a runner holds while it runs, at its held share (DESIGN.txt, "HELD
+    """An ADD_BP entry on LaneSpeed(lane) that a runner holds while it runs, at its held share (engine/design/, "HELD
     SPEED"). lane is a declared lane, never HANDS, whose lines keep no speed; amount_bp >= 1."""
 
     lane: LaneId
@@ -67,7 +67,7 @@ HELD_PREFIX = "held:"
 @dataclass(frozen=True)
 class CapRaise:
     """Raise `card`'s completion cap by `by` (> 0). The card must have a cap (validation). A completed card whose cap
-    rises leaves the Completed set, and a mix greyed by it is live again (DESIGN.txt, "Caps")."""
+    rises leaves the Completed set, and a mix greyed by it is live again (design/cards.txt, "Caps")."""
 
     card: CardId
     by: int
@@ -76,7 +76,7 @@ class CapRaise:
 @dataclass(frozen=True)
 class RuleInstall:
     """Install a ruled lane's always rule, Order(AfterTime(0), TapCard(card)): at the top of the orders (first) or
-    at their end, unless an equal order is already set (DESIGN.txt, "Installed rule")."""
+    at their end, unless an equal order is already set (design/townsfolk.txt, "Installed rule")."""
 
     card: CardId
     first: bool = False
@@ -86,21 +86,21 @@ class RuleInstall:
 class Join:
     """A person joins the town: `lane`'s person is present from now on, and the lane's always task becomes its share
     in the town mix `mix` (an id beginning "town:"). `card` is the share when the lane has no uncapped always rule
-    (DESIGN.txt, "THE TOWN'S MIX", "Join")."""
+    (design/towns-mix.txt, "THE TOWN'S MIX", "Join")."""
 
     lane: LaneId
     mix: MixId
     card: CardId | None = None
     own_split: bool = True
     """The person's mark as they join: False puts them in their lane's group, `card` (on that group) being the share
-    the group's split starts with when the town mix holds none (DESIGN.txt, "GROUPS (pooled lanes)"). The codec leaves
+    the group's split starts with when the town mix holds none (design/groups.txt, "GROUPS (pooled lanes)"). The codec leaves
     it out while True."""
 
 
 @dataclass(frozen=True)
 class Mark:
     """Set or clear a joined person's mark (Join.own_split) from now on; `card` is as Join's, an uncapped card on the
-    person's own lane (DESIGN.txt, "GROUPS (pooled lanes)")."""
+    person's own lane (design/groups.txt, "GROUPS (pooled lanes)")."""
 
     lane: LaneId
     own_split: bool
@@ -111,7 +111,7 @@ class Mark:
 class Leave:
     """A person leaves the town for good: `lane`'s person is gone from now on, the lane's cards go out of play, the
     orders tapping them and their shares in every saved mix are removed, and each standing action in `stops` stops
-    (DESIGN.txt, "LEAVES")."""
+    (design/leaves.txt, "LEAVES")."""
 
     lane: LaneId
     stops: tuple[ActionId, ...] = ()
@@ -127,7 +127,7 @@ class Outcome:
     stack for good. raises: cap raises. orders: rules installed (only in a trigger's or an answer's outcome:
     validation). joins: people joining the town (only in a trigger's or an answer's outcome: validation). queues: hands one-offs put at the queue's front as When ready entries (only in an answer's outcome).
     retire_orders: every order tapping one of these cards is removed, whoever set it (only in a trigger's outcome:
-    validation; DESIGN.txt, "Retired chores"). leaves: people leaving the town (only in a trigger's or an answer's
+    validation; design/townsfolk.txt, "Retired chores"). leaves: people leaving the town (only in a trigger's or an answer's
     outcome, one per lane across the rules: validation).
     starts: each tapped as an order would (TapCard; never a HANDS card from a HANDS landing: validation). lines:
     emitted after the completion's own line. Orders and the queue evaluate after it.
@@ -155,19 +155,19 @@ class CardDef:
 
     Work: work_s seconds per completion at full speed (>= 1); a completion is the card's work crossing a multiple of
     work_s * BP. Whoever runs the card advances that same work: a tap at a full share, or the mix at the card's share.
-    On HANDS a tap yields the mix, so at most one of them runs a card at any instant (DESIGN.txt, "One bar"). A tap
+    On HANDS a tap yields the mix, so at most one of them runs a card at any instant (design/cards.txt, "One bar"). A tap
     runs the card to its next completion, continuing any work the mix left. Only HANDS cards and, once their person has joined, uncapped cards on a ruled lane go in a mix.
 
     While the card runs, its lines run at the running share: makes and costs per hour at a 100% share and xp_per_hour
     into `skill` (skill None: xp_per_hour 0), per hour of running; `inputs` and `outcome.stores`, A per completion, as
-    lines of A / work_s per second at full speed, scaled by the card's work speed too (DESIGN.txt, "Rate form"). So a
+    lines of A / work_s per second at full speed, scaled by the card's work speed too (design/cards.txt, "Rate form"). So a
     completion's inputs are paid as its work is done, by whoever does it, and never twice. Each store appears at most
     once across makes, costs, inputs and outcome stores (validation).
 
     Completion events: a completion is an event (COMPLETION) when it has a discrete effect: always for a card with a
     cap, never for one without (its outcome is stores only, which ran as rates; CardCount is solved off the work
     segment). At a COMPLETION the outcome's non-store parts and the completion's line land; at the cap, `finished`
-    lands too and the card is completed (DESIGN.txt, "Completions", "Caps").
+    lands too and the card is completed (design/cards.txt, "Completions", "Caps").
 
     requires: plain thresholds (release == value, no Running subject: validation) that hold at a tap's start and while
     the card runs; one false stops it (WAITING in the mix; a tap ends, interrupted). cap: completions allowed, None for no limit. finished: lands at the completion that reaches the cap
@@ -199,7 +199,7 @@ class CardDef:
     """Sides and lane speeds this card raises while it runs (the codec leaves the field out while empty)."""
     drains: tuple[Amount, ...] = ()
     """Takes of up to `quantity` per completion, paid as inputs are and forgiven at 0: they never pause the card or
-    refuse its tap (DESIGN.txt, "DRAINS"; the codec leaves the field out while empty)."""
+    refuse its tap (design/drains.txt, "DRAINS"; the codec leaves the field out while empty)."""
 
 
 @dataclass(frozen=True)
@@ -210,8 +210,8 @@ class CardState:
     work: the card's cumulative work in work units (BP per second at full speed), a segment like a store's, advanced
     by a tap or a mix share, never both at once. completions = work.start_value // (work_s * BP); the bar is the
     remainder. Its limit is the effective cap's work, or for a tap the next completion; COMPLETION events between are
-    solved, not limits, so no completion loses a partial second (DESIGN.txt, "Completions"). raised: the sum of
-    CapRaise.by applied; effective cap = cap + raised (DESIGN.txt, "Caps").
+    solved, not limits, so no completion loses a partial second (design/cards.txt, "Completions"). raised: the sum of
+    CapRaise.by applied; effective cap = cap + raised (design/cards.txt, "Caps").
     """
 
     card: CardId
@@ -224,14 +224,14 @@ class LaneState:
     """What one lane is doing. A free lane is card None. A tap holds `card` and no timer of its own: its progress is
     the card's work, and it ends at the card's next completion (TAP_DONE). speed: a tap on HANDS keeps the effective
     stack's entries aimed at LaneSpeed(HANDS) or at its card's WorkRef as they stood at its start, and runs at them
-    to its end (DESIGN.txt, "Speed"); None on any other lane, and for a tap a format 7 save began, which reads the
+    to its end (design/core.txt, "Speed"); None on any other lane, and for a tap a format 7 save began, which reads the
     live stack."""
 
     lane: LaneId
     card: CardId | None = None
     speed: tuple[Modifier, ...] | None = None
     own_split: bool = True
-    """A person's mark: True runs their own split, False leaves it to their group (DESIGN.txt, "GROUPS (pooled
+    """A person's mark: True runs their own split, False leaves it to their group (engine/design/, "GROUPS (pooled
     lanes)"). Written only by a join and a Mark; the codec leaves it out while True."""
 
 

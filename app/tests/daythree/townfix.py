@@ -1,4 +1,4 @@
-"""A fixture chapter with two joins for the town's mix (engine DESIGN.txt, "THE TOWN'S MIX"), until a real chapter has
+"""A fixture chapter with two joins for the town's mix (engine design/towns-mix.txt, "THE TOWN'S MIX"), until a real chapter has
 them: two people, each with two uncapped cards making a store, each set to its first card by an always rule before
 they join, and a trigger apiece that joins them to one town mix. `alt_rate` is the rate of each person's second card:
 equal to the first's, the join's split is the best one; higher, a player re-splitting by hand beats it. Never a shipped

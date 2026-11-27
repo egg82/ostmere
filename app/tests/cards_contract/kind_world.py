@@ -1,4 +1,4 @@
-"""Fixture rules for the offer-kind contract tests (engine DESIGN.txt, "OFFER KINDS").
+"""Fixture rules for the offer-kind contract tests (engine design/offer-kinds.txt, "OFFER KINDS").
 Built from the engine's public types only, on top of town_world's world.
 
 Four kinded offers and one unkinded: one, two and three carry the arrival kind with the roles welcome and turn_away,

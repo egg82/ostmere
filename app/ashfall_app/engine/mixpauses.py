@@ -1,4 +1,4 @@
-"""The pauses a change of the running mixes re-decides (DESIGN.txt, "Running dry")."""
+"""The pauses a change of the running mixes re-decides (engine/design/, "Running dry")."""
 from dataclasses import replace
 
 from . import plan
@@ -35,7 +35,7 @@ def _moved(save: Save, rules: Rules) -> set[StoreId]:
 
 
 def unpaused_candidate(before: Save, after: Save, rules: Rules) -> bool:
-    """A change of the running mix cleared the Pause of a card a true order or the queue head would tap (DESIGN.txt,
+    """A change of the running mix cleared the Pause of a card a true order or the queue head would tap (engine/design/,
     "Running dry"): that card turned ready at this instant, so READY falls here and evaluation runs, as it would at the
     Pause's own resume. Without it the card waits for the next unrelated instant, which a player acting on every timer
     reaches sooner (the 2 AM test)."""

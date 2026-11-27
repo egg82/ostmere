@@ -14,8 +14,8 @@ from .prestigeverbs import MovePick, Prestige, UndoPick
 class SaveMix:
     """Save `mix` under its id, replacing any saved mix of that id in place (new ids append). If it is the running
     mix, the change takes effect at once. Invalid shares, unknown ids, a nesting cycle, a card off HANDS, a
-    locked card, or a completed card (a mix is never saved greyed: DESIGN.txt, "Greyed mix"), a new id
-    past MAX_MIXES saved mixes, or cards of the other layer under a saved mix's id (DESIGN.txt, "Reserved ids"):
+    locked card, or a completed card (a mix is never saved greyed: design/cards.txt, "Greyed mix"), a new id
+    past MAX_MIXES saved mixes, or cards of the other layer under a saved mix's id (design/towns-mix.txt, "Reserved ids"):
     InvalidVerbError."""
 
     mix: Mix
@@ -34,8 +34,8 @@ class DeleteMix:
 @dataclass(frozen=True)
 class SetOrders:
     """Replace the standing orders. An order equal to an old one keeps its latch; a new one's is set by
-    orders.initial_latch (DESIGN.txt, "Rule changes"). If that changes the running mix, every
-    pause clears (DESIGN.txt, "Order mix"); then orders evaluate at once.
+    orders.initial_latch (engine/design/, "Rule changes"). If that changes the running mix, every
+    pause clears (design/cards.txt, "Order mix"); then orders evaluate at once.
     A condition with release on the wrong side, or a verb naming an unsaved mix: InvalidVerbError. A TapCard of a
     locked card is accepted (it cannot act until unlocked)."""
 
@@ -45,7 +45,7 @@ class SetOrders:
 @dataclass(frozen=True)
 class SetQueue:
     """Replace the queue (an empty tuple clears it), then evaluate at once. Validated as SetOrders is, and an entry
-    tapping a card on a ruled lane, or an AnswerKind, raises InvalidVerbError (the queue is the hands' plan: DESIGN.txt,
+    tapping a card on a ruled lane, or an AnswerKind, raises InvalidVerbError (the queue is the hands' plan: engine/design/,
     "Ruled lane", "OFFER KINDS")."""
 
     entries: tuple[QueueEntry, ...]

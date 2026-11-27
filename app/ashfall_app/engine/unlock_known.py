@@ -1,4 +1,4 @@
-"""Which unlock ids the rules know (validate_rules asks per unlock; DESIGN.txt, "Unlocks"), built once per rules object."""
+"""Which unlock ids the rules know (validate_rules asks per unlock; design/core.txt, "Unlocks"), built once per rules object."""
 from typing import TYPE_CHECKING
 
 from .derived import derived

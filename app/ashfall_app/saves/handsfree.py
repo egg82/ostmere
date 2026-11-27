@@ -1,5 +1,5 @@
 """The hands-free answer a save keeps (docs/design/reminders.md, "The hands-free notice"): the forecast's hands_free_at
-(engine DESIGN.txt, "Forecast"), kept only when the player gave the hands that work at least `min_busy_s` before it,
+(engine design/, "Forecast"), kept only when the player gave the hands that work at least `min_busy_s` before it,
 with how far the forecast reached. The reminders job forecasts each save whose kept answer a decision dropped or time
 ran out (`refresh`); the forecast route keeps nothing, so it stays one checkout and writes nothing. Whether a notice is
 due and sending it is reminders/notices.py's."""

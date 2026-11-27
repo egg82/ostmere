@@ -134,7 +134,7 @@ next task can be given, for the times a Plan isn't wanted and the player steers 
 
 **Fit pass.** The same shape as the reminder: a pure question about stored state ("is this save's hands-free moment
 past, unseen and unsent?") polled by the same job, claimed once, sent over the same subscription by the same `Sender`.
-The moment itself is a forecast kind (engine `DESIGN.txt`, "Forecast"): the forecast already plays the save's future
+The moment itself is a forecast kind (`engine/design/`, "Forecast"): the forecast already plays the save's future
 out instant by instant with nobody deciding, so the first instant the hands free up is one more thing it records, like
 `tops_out`. Nystrom's *Observer* (an event fired when the hands free up) does not fit, for the reason Event Queue
 did not: nothing runs at that moment, because nobody is on the page. **Fits into:** Reminders (device row, job,

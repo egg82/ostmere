@@ -23,7 +23,7 @@ can express it:
 - **An offer**: the order card is not an offer, and a rule the player writes in the editor answers the same line.
 
 The defining property is checkable: an install only ever makes `Order(AfterTime(0), TapCard(c))` (engine
-`DESIGN.txt`, "Installed rule"), so an order on the lane with any other `when` was set by the player. Editing the
+`engine/design/`, "Installed rule"), so an order on the lane with any other `when` was set by the player. Editing the
 always rule's task, or an answer installing a one-off always rule above it, leaves the count unchanged.
 
 ## Interface
@@ -63,7 +63,7 @@ rule. A rule the player sets and later removes has still landed the line, since 
   code would all need to learn a shape no rule needs.
 - **A 0/1 "has a rule" subject**: the same cost as a count, and narrower only by clamping. The count stays true to
   what it reads.
-- **Marking player-set orders**: already rejected for installs (`DESIGN.txt`), because an `Order` stays (condition,
+- **Marking player-set orders**: already rejected for installs (`engine/design/`), because an `Order` stays (condition,
   verb).
 
 ## Contract tests (blind)
@@ -92,7 +92,7 @@ rule. A rule the player sets and later removes has still landed the line, since 
 | `app/ashfall_app/engine/conditions.py` | discrete branches | ~2 |
 | `app/ashfall_app/engine/rules_check.py`, `checks.py` | known ruled lane, placement, verb refusal | ~15 |
 | `app/ashfall_app/engine/renaming.py`, `app/ashfall_app/api/convert.py` | unreachable arms the exhaustive matches need | ~4 |
-| `app/ashfall_app/engine/DESIGN.txt` | a "Lane rules" entry, invariants, rejected | ~20 |
+| `app/ashfall_app/engine/design/` | a "Lane rules" entry, invariants, rejected | ~20 |
 | `app/ashfall_app/opening/entries.py`, `refs.py`, `convert.py` | `lane_rules` kind and checks | ~20 |
 | `app/ashfall_app/opening/day_two.toml` | `t_her_rule` | 4 |
 | tests (engine contract, loader) | the statements above | ~150 |

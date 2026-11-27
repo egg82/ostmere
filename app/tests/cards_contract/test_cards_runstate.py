@@ -1,6 +1,6 @@
 """How a mix card reads: CardView.by is MIX only while its mix share runs, else None; CardView.run
 is its mix share's state whoever runs the card, and when several apply the longest-lasting wins (GREYED, PAUSED, WAITING,
-YIELDED); explain_work gives a mix card its mix share and Run, and 0 per hour when it does not move (DESIGN.txt,
+YIELDED); explain_work gives a mix card its mix share and Run, and 0 per hour when it does not move (design/cards.txt,
 "Card panel")."""
 from ashfall_app.engine import (
     BP, ActionId, Amount, AtLeast, CardDef, CardId, CardShare, Flow, Mix, MixId, Rules, RunBy, RunKind, Save,

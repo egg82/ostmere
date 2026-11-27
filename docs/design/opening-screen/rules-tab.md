@@ -65,7 +65,7 @@ Rack                                                   each side lane's task rul
   `When ready` takes, ready now ones included (each reading `When ready`, picked exactly as that button picks it); a
   step with no ready time the page can see kept is listed too, its row the one its card's face draws for that wait
   (`Flint 3/4`, `Opens after dark`, `Foraging level 2/3`), and picked the same way: any unlocked step can be planned, and
-  an entry that cannot run yet waits while the hands work what can (engine DESIGN.txt, "Never ready"). Then the saved
+  an entry that cannot run yet waits while the hands work what can (engine design/cards.txt, "Never ready"). Then the saved
   mixes, a mix leading on to its goals. It is offered once there is a card or a mix to pick.
 
 ### Lately

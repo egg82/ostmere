@@ -1,7 +1,7 @@
 """Invariant 35 and "Rate form": every line of a card runs at the running share. Its flows and XP are per hour of running
 (under the modifiers aimed at them and the lane's speed); its lumps are per completion, so they run at the card's whole
 work speed too, and a completion's inputs are paid in proportion to its work as the work is done, by whoever does it,
-and never twice. The 1.5A sequence from DESIGN.txt ("REJECTED, AND WHY (cards)") is the first test."""
+and never twice. The 1.5A sequence from design/cards.txt ("REJECTED, AND WHY (cards)") is the first test."""
 import pytest
 
 from ashfall_app.engine import (

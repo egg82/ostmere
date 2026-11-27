@@ -1,4 +1,4 @@
-"""Drains, part four: the codec and the digest (engine DESIGN.txt, "DRAINS", invariant 128). Written blind from that part
+"""Drains, part four: the codec and the digest (engine design/drains.txt, "DRAINS", invariant 128). Written blind from that part
 and the public interface; the `kills` marker names the rows of MUTANTS_drains.txt each test must turn red for.
 
 fixtures/pre_drains.json holds the rules digest, the manifest and one encoded save of the rules `pinned()` builds, as a

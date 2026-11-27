@@ -1,4 +1,4 @@
-"""Invariants 116 and 117, the engine half (engine DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS": "Validation", "Rebase"):
+"""Invariants 116 and 117, the engine half (engine design/entries-held.txt, "ENTRIES HELD WHILE A CARD RUNS": "Validation", "Rebase"):
 InvalidRulesError for a WhileRunning naming an undeclared side (a threat's id included), amount_bp below 1, one side
 twice in a card, and any rules Modifier whose source begins "held:"; rebasing any save the engine returned under the
 rules without while_running into rules that add it (or the reverse) succeeds and keeps its time, stores, card work and

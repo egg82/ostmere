@@ -6,7 +6,7 @@ losses. Its design is in `content/` (`team/combat-open.md`, questions C1–C9, n
 what the code needs. Beats are named by id. Sizes: **S** under a day of agent work, **M** a few days, **L** a week or
 more.
 
-Interface for items 1–5: engine `DESIGN.txt`, "FIGHTS", and `api/CONTRACT.txt`, "FIGHTS". An implementer gets one
+Interface for items 1–5: `engine/design/`, "FIGHTS", and `api/CONTRACT.txt`, "FIGHTS". An implementer gets one
 item, those two sections and this file.
 
 ## The new kinds of things, and what they fit into
@@ -37,7 +37,7 @@ content, 9–10 the simulator and tests, 11 art.
    on a fight card, per_hour only on a standing fight, tallies unshared and never cost, no "odds:" source in content).
    Accept: invariants 80, 81, 82, 84, 85 and 86 as engine-contract tests from the interface alone (a blind writer),
    and a `MUTANTS.txt` run on loss_bp's rounding direction and on costs being left unscaled.
-3. **The fights view** (**S**, engine). View.fights from DESIGN.txt, "FIGHTS", "View". Accept: a test that reading a
+3. **The fights view** (**S**, engine). View.fights from design/fights.txt, "FIGHTS", "View". Accept: a test that reading a
    view changes nothing (the snapshot test's shape), and a running tap reports its kept loss_bp after a side entry is
    appended mid-tap.
 4. **The wire** (**S**, api). SideInfo, ThreatInfo, FightInfo on CardInfo and StandingInfo, View.fights with
@@ -74,7 +74,7 @@ content, 9–10 the simulator and tests, 11 art.
 
 ## What this slice leaves for later, and where it plugs in
 
-Each is a KNOWN GAP in engine `DESIGN.txt`, "FIGHTS", with what decides it. Walls and guards are entries on a camp or
+Each is a KNOWN GAP in `engine/design/`, "FIGHTS", with what decides it. Walls and guards are entries on a camp or
 town side (no new mechanism); the guard is a townsperson's lane given a side. Expeditions bring a side made of who goes.
 Later regions' rosters are ThreatDefs with their own clocks. A companion dying needs a whole loss landing at each unit
 of a tally. The out-of-place threat enters as logged input, never a roll in the engine. Capped fights and stance wait

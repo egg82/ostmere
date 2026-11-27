@@ -51,7 +51,7 @@ Nothing in day three depends on combat items 1–7.
    kind. Accept: each refusal has a planted failing entry; the per-week report shows spine, chapter and side counts.
 3. **The town's mix** (**L** in all, engine, api, client). At the second arrival, the townsfolk's lanes become one mix
    whose shares are people's time, over each person's cards; the first person's rules keep acting, and a save past
-   the join is rebased with them. The interface is written: engine `DESIGN.txt`, "THE TOWN'S MIX" (invariants 90–97),
+   the join is rebased with them. The interface is written: `engine/design/`, "THE TOWN'S MIX" (invariants 90–97),
    and `api/CONTRACT.txt`, "The town's mix". In short: a town mix is an ordinary saved mix whose cards sit on joined
    ruled lanes, a share being part of one person's time; the running one is set by the town's always rule (a
    SwitchMix order, no Save field); a rule's tap on a joined lane yields that person's shares, as a tap yields the
@@ -64,11 +64,11 @@ Nothing in day three depends on combat items 1–7.
      view fields, the loader's `joins`. Accept: the existing engine-contract and day-one/day-two playthrough suites
      pass unchanged (no hands route moves; a moved held counter is reported, never raised); the save-fields ledger is
      unchanged; function and file gates hold without a raise.
-   - **3b. Blind contract tests** (**M**), by an agent that never reads 3a's code: invariants 90–97 from `DESIGN.txt`
+   - **3b. Blind contract tests** (**M**), by an agent that never reads 3a's code: invariants 90–97 from `engine/design/`
      and the contract alone, on fixture rules with two ruled lanes and a cure-shaped ruled lane that never joins,
      with a `MUTANTS.txt` of planted wrong engines (shares summed across people; a tap that does not yield; town
      orders read into the hands' running mix; a join that drops a non-always rule; a capped card accepted). Accept:
-     each mutant goes red; ambiguities logged to a gaps file and answered in `DESIGN.txt` before 3a merges.
+     each mutant goes red; ambiguities logged to a gaps file and answered in `engine/design/` before 3a merges.
    - **3c. Rebase and release lock** (**S**). JOINED renamed by lane and checked in step 4; the three new lock
      refusals; a rebase fixture past the join that keeps the first person's non-always rules in order and turns its
      always task into that person's share (invariant 97); a read-only prod query that no live save holds a mix id beginning

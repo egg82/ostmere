@@ -1,4 +1,4 @@
-"""Invariant 160 and invariant 114's codec half (engine DESIGN.txt, "HELD SPEED ...": "Validation", "Codec"):
+"""Invariant 160 and invariant 114's codec half (engine design/held-speed.txt, "HELD SPEED ...": "Validation", "Codec"):
 InvalidRulesError for a HeldSpeed naming HANDS or an undeclared lane, an amount_bp below 1, one lane twice in one runner,
 a standing action's WhileRunning naming an undeclared side or one side twice, and a standing action with while_running
 whose id is a card's, the message naming the runner id and the side or lane id; rules that declare no while_running on a
