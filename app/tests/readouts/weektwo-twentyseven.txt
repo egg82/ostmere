@@ -1,0 +1,10 @@
+chapter twentyseven: 6 visits on typical
+  V117 gap   9.2 h  spend 55  decide  3  [wait, 8 lines]
+  V118 gap   4.2 h  spend 99  decide  0  [wait, 3 lines]
+  V119 gap   3.2 h  spend 41  decide  0  [wait, 1 lines]
+  V120 gap   9.2 h  spend 42  decide  1  [wait, 2 lines]
+  V121 gap   4.2 h  spend 54  decide  0
+  V122 gap   3.2 h  spend 42  decide  0  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 4 returns, spend 236, decide 0; 8h+: 2 returns, spend 97, decide 4
+  cap loss at the end, away 8 h: charwood 100%, cleared 100%, cordwood 100%, damp_wood 0%, dry_wood 53%, roots 98%, stakes 100%, stones 71%, windbreak 100%, wraps_sewn 100%
+  cap loss at the end, away 24 h: charwood 100%, cleared 100%, cordwood 100%, damp_wood 0%, dry_wood 53%, roots 98%, stakes 100%, stones 71%, windbreak 100%, wraps_sewn 100%
