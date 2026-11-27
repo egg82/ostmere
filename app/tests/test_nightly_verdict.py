@@ -109,6 +109,15 @@ def test_body_lists_ids_only():
     assert "- `dayone-typical`\n- `opening`\n" in text and "app/tests" not in text
 
 
+def test_the_refresh_names_the_cost_table_when_it_changed_and_only_then():
+    readouts, costs = "app/tests/readouts/opening.txt", nv.COSTS
+    assert nv.title([readouts], "7") == "Refresh readouts from nightly 7"
+    assert nv.title([costs], "7") == "Refresh chapter-save costs from nightly 7"
+    assert nv.title([readouts, costs], "7") == "Refresh readouts and chapter-save costs from nightly 7"
+    assert "cost table" in nv.body([costs]) and "Readouts" not in nv.body([costs])
+    assert "cost table" not in nv.body([readouts]) and "- `opening`" in nv.body([readouts, costs])
+
+
 def test_every_job_that_fails_on_drift_records_its_verdict_first():
     jobs: dict[str, Any] = yaml.safe_load((WORKFLOWS / "ci.yml").read_text())["jobs"]
     drifting = {name: job for name, job in jobs.items() if any("readout differs" in str(s.get("name", "")) for s in job["steps"])}

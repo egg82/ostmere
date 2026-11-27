@@ -80,3 +80,28 @@ class PartsMemo[T]:
         value = build()
         self._entries = ((parts, same, value), *entries[:self._size - 1])
         return value
+
+
+class KeyedMemo[T]:
+    """A PartsMemo for a build whose other input is hashable (`key`): a lookup is a dict probe, not a scan of the
+    entries, so it can keep many. The parts are matched by identity as PartsMemo does (a group holds its parts, so
+    their ids stay theirs); the last `groups` sets seen each keep up to `size` keys, and a full group starts again."""
+
+    def __init__(self, groups: int = 8, size: int = 4096) -> None:
+        self._groups: dict[tuple[int, ...], tuple[tuple[object, ...], dict[object, T]]] = {}
+        self._max, self._size = groups, size
+
+    def get(self, parts: tuple[object, ...], key: object, build: Callable[[], T]) -> T:
+        ident = tuple(map(id, parts))
+        group = self._groups.get(ident)
+        if group is None:
+            if len(self._groups) >= self._max:
+                del self._groups[next(iter(self._groups))]
+            group = self._groups[ident] = (parts, {})
+        kept = group[1]
+        found = kept.get(key)
+        if found is None:
+            if len(kept) >= self._size:
+                kept.clear()
+            found = kept[key] = build()
+        return found
