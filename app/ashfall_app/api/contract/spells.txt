@@ -1,0 +1,60 @@
+SPELLS (engine design/spells.txt, "SPELLS")
+  A working is a card. A working with a chain, cast on a threat the content marks as a group, resolves at each of its
+  completions a chain of that threat's due fights, up to its reach, each link a won fight with its own line, all in one
+  instant. Nothing on the wire is chance: the reach is exact, the length is a minimum of served numbers, and each link
+  is a line the server sends.
+  Content: ThreatInfo gains members: int, the members of one group of the threat, fought one after another (1: a single
+  creature, no group; 2 or more: a group). CardInfo gains chain: ChainInfo {runner, link_line_keys} or null. runner is
+  the standing action (a StandingInfo with a fight) whose fights the chain resolves; its threat is always a group.
+  link_line_keys are the keys a link's line uses (keys of Content.text_entries): link i of a chain, counted from 1, reads
+  link_line_keys[min(i, n) - 1], n the list's length (at least 1).
+  View.fights: Fight gains chained: int, the whole links chains have resolved for this runner since it first ran (0 for
+  a runner no chain names). A link is a won fight and is in neither fought nor lost: fought and lost stay the flow's,
+  and the page's fight window (FIGHTS, "the arrival queue") reads them as before.
+  View.chains: [Chain {card, runner, up_to: Strength}], one per unlocked card with a chain that is not completed, in
+  CardInfo order. up_to.value is the reach now: the most links the card's next completion resolves if nothing lands
+  before it. up_to.sources is a Strength's sources (FIGHTS): the base first ({source: null, form: "base", amount_bp: the
+  base reach}), then the sums, then the factors; a level's pay that raises the reach is one source. The reach only
+  rises.
+  Due. For the chain's runner R, whose threat has m members: R is fighting when its fought rises now (it is unlocked,
+  not stopped, not paused, and its tally is under its cap). Then due = m - ((fought + chained) mod m), with R's Fight's
+  fought and chained at the completion's instant; due is 0 when R is not fighting. It is the members of the group now
+  under way still to be fought, the one being fought included: 1 to m.
+  The chain. At the completion, at game time T, the chain resolves k = min(due, up_to.value, room) links, room the
+  firings left under the server's firing cap at that instant (the completion counts one firing and each link one more;
+  with ample room, as in any game, k = min(due, up_to.value)). In the same Step that carries the completion:
+  - Step.lines holds k LogLines at T, one per link, in link order, each with card = the chain's card and key
+    link_line_keys[min(i, n) - 1] for link i; after a capped working's own completion line, before an uncapped
+    tapped working's tap line.
+  - R's chained rises by k; its fought and lost do not move; nothing else of R's changes (its odds, its ledger lines,
+    its standing bar). What casting brings is the working's own lines, as for any card.
+  - k = 0 (R not fighting, or no room) sends no link line; the completion is as for a card without a chain.
+  A chain longer than the group ends at the group: k never exceeds due, and two chains at one instant share one due.
+  While away it is the same: a working queued, mixed or ruled completes at the same T with the same k and the same
+  lines, in the catching-up Steps that carry T, whatever the player looked at meanwhile. Nothing in a chain reads a seed,
+  the save's id or the time a request was made.
+  The working's other numbers (Card.needs, takes_s, inputs) are as for any card.
+  New text keys (Content.text_entries): ui.chain.up_to {n}   a working's reach on its face ("reaches up to 3")
+                                         ui.chain.base   the base row of the reach's sources
+  THE CLIENT MAY:
+  - on a card with a chain, under its makes, draw ui.chain.up_to {n} with n = up_to.value from View.chains, and open
+    the reach's sources from a tap on the number, as a strength's (FIGHTS), the base row as ui.chain.base. Reachable
+    without hover.
+  - tell each link as its own entry in the Chronicle: a LogLine whose card has a chain and whose key is one of its
+    link_line_keys is a link line; it goes to the chronicle only (never the band), one entry per line, in order, live or
+    on a return.
+  THE CLIENT MAY NOT:
+  - compute a chain's length, a due count or a reach: it draws up_to.value, the lines and Fight.chained as served.
+  - fold link lines into one entry or into a summary line (ui.fight.since is the flow's fights alone), drop a repeat of
+    the same key, or draw a link the Step's lines do not hold.
+  - draw a link as lost, or count links into fought or lost.
+
+  Rejected, and why (spells on the wire):
+  - A chain object in the Step (card, runner, length): the lines already say each link, and Fight.chained says how many
+    over time; a length beside them is a second home for one number.
+  - Serving due: the page draws nothing from it (the card says how far the working reaches, not what it will meet), and
+    it would invite the page to total a chain itself.
+  - Links counted into fought: the page's fight window tells fought's rise by a shuffle bag of won and lost, and a link is
+    never lost; links have their own lines.
+  - A reach field on CardInfo: the reach rises with level pays, so it is view data; CardInfo.reach is the stake reach,
+    another thing.
