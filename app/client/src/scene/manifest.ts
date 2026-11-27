@@ -29,6 +29,8 @@ export interface SceneGrade {
   overlay: string;
   /** Seconds the scene takes to move into this grade (default GRADE_S): a slow one is light going as it is watched. */
   ease_s?: number;
+  /** A dusk or a night grade: the `dark` condition holds while the grade shown is one. */
+  dark?: boolean;
 }
 
 /** How much of the art shows, from its top-left corner: the first is the default and a later one whose `when` holds

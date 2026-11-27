@@ -61,6 +61,7 @@ orders = [{ tap_card = "n5_build_hut", first = true }]
 # A33 on the hands, the second bay's length.
 [[cards]]
 id = "make_hut"
+site = { layer = "hut" }
 presentation = "craft"
 label_key = "c_make_hut"
 work_s = 10800
@@ -72,6 +73,7 @@ outcome = { stores = [{ store = "hut", items = 1 }] }
 # lane (decisions.md, "Never": never a worker, a cost or a fight outcome).
 [[lanes]]
 id = "n5"
+lodging = { build = "hall" }
 label_key = "lane_n5"
 ruled = true
 told = "line"
@@ -81,6 +83,7 @@ crews = ["g_field", "g_hearth"]
 
 [[lanes]]
 id = "n6"
+lodging = { build = "hall" }
 label_key = "lane_n6"
 ruled = true
 told = "line"
@@ -90,6 +93,7 @@ crews = ["g_field", "g_hearth"]
 
 [[lanes]]
 id = "n7"
+lodging = { build = "hall" }
 label_key = "lane_n7"
 ruled = true
 told = "line"
@@ -100,6 +104,7 @@ crews = ["g_field", "g_hearth"]
 # A34 on her lane, the same real time and stores as A33.
 [[cards]]
 id = "n5_build_hut"
+site = { layer = "hut" }
 twin_of = "make_hut"
 lane = "n5"
 presentation = "craft"
@@ -302,7 +307,7 @@ when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", 
 doings = ["n5", "n6", "n7"]
 whereabouts = [
   { person = "n5", layer = "figure_n5_at_wood_edge" },
-  { person = "n6", layer = "figure_n6_at_wood_edge" },
+  { person = "n6", layer = "figure_n6_at_the_watch_fire" },
   { person = "n7", layer = "figure_n7_at_pot" },
 ]
 line_keys = ["l_group_1", "l_group_2"]

@@ -255,6 +255,7 @@ unlocks = [
 # Bare hands gather; the flint edge retires this card (tools before skills), which greys any mix holding it.
 [[cards]]
 id = "gather_wood"
+site = { no_site = "dead wood is picked up all over the ruin and beyond the wall, no one place in the scene" }
 presentation = "action"
 label_key = "c_gather_wood"
 work_s = 5
@@ -262,6 +263,7 @@ outcome = { stores = [{ store = "damp_wood", items = 1 }] }
 
 [[cards]]
 id = "scavenge"
+site = { no_site = "stones are picked from the rubble under the far wall stub, part of the ruin's backdrop and not a layer of its own" }
 presentation = "action"
 label_key = "c_scavenge"
 work_s = 6
@@ -272,6 +274,7 @@ outcome = { stores = [{ store = "stones", items = 1 }] }
 # With the edge: twice the wood, faster, and it trains a skill.
 [[cards]]
 id = "woodcutting"
+site = { layer = "birch_log" }
 presentation = "action"
 label_key = "c_woodcutting"
 work_s = 4
@@ -281,6 +284,7 @@ outcome = { stores = [{ store = "damp_wood", items = 2 }] }
 
 [[cards]]
 id = "forage"
+site = { no_site = "foraged out in the ruin and past its walls, no one place in the scene" }
 presentation = "action"
 label_key = "c_forage"
 work_s = 5

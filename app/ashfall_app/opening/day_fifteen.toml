@@ -79,6 +79,7 @@ unlocks = [
 # no stage is queued: stage 4 T3, stage 8 B14. No floor: the hall shows at S4 (331 h), past sharp's 308.8 h.
 [[cards]]
 id = "hall"
+site = { layer = "hall_4" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_hall"

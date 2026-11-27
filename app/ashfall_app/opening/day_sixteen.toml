@@ -208,6 +208,7 @@ outcome = { line_keys = ["l_hall_hearth"], unlocks = [{ unlock_kind = "card", id
 
 [[cards]]
 id = "hall_hearth"
+site = { layer = "hall_hearth" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_hall_hearth"

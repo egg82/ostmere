@@ -218,6 +218,7 @@ modifiers = [
 # Townsfolk the player's rules set, as the family.
 [[lanes]]
 id = "n8"
+lodging = { build = "hall" }
 label_key = "lane_n8"
 ruled = true
 told = "line"
@@ -227,6 +228,7 @@ crews = ["g_field", "g_hearth"]
 
 [[lanes]]
 id = "n9"
+lodging = { build = "hall" }
 label_key = "lane_n9"
 ruled = true
 told = "line"
@@ -236,6 +238,7 @@ crews = ["g_field", "g_hearth"]
 
 [[lanes]]
 id = "n10"
+lodging = { build = "hall" }
 label_key = "lane_n10"
 ruled = true
 told = "line"
@@ -525,6 +528,7 @@ outcome = { stores = [{ store = "cleared", items = 1 }, { store = "damp_wood", i
 
 [[lanes]]
 id = "n11"
+lodging = { build = "hall" }
 label_key = "lane_n11"
 ruled = true
 told = "line"
@@ -534,6 +538,7 @@ crews = ["g_hearth"]
 
 [[lanes]]
 id = "n12"
+lodging = { build = "hall" }
 label_key = "lane_n12"
 ruled = true
 told = "line"

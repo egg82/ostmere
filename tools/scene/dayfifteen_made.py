@@ -11,6 +11,7 @@ from __future__ import annotations
 from PIL import Image
 
 import kit
+import smoke
 from dayone import ghost
 from daytwo import footing
 from place import canvas, put
@@ -106,6 +107,12 @@ def hall_hearth() -> Image.Image:
     out = canvas()
     put(out, stack, CHIMNEY_AT[0], CHIMNEY_AT[1] - stack.height)
     return out
+
+
+def hall_smoke() -> Image.Image:
+    """The chimney's smoke: the pack's curls going up from its cap."""
+    box = CHIMNEY[1]
+    return smoke.plume((CHIMNEY_AT[0] + (box[2] - box[0]) / 2, CHIMNEY_AT[1] - (box[3] - box[1]) - 2), 2)
 
 
 def beds(state: int) -> Image.Image:

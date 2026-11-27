@@ -245,6 +245,7 @@ export class Scene {
 
   private chooseGrade(t: number): void {
     const chosen = pickGrade(this.manifest.grades ?? {}, (when) => this.facts.holds(when, t, this.quantityPerItem));
+    this.facts.setDark(chosen?.[1].dark === true);
     if (!chosen || chosen[0] === this.gradeId) return;
     const first = this.gradeId === "";
     this.gradeId = chosen[0];
