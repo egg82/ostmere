@@ -5,6 +5,7 @@ When ready the visit it shows, built or not; an arrival offer is answered by han
 an offer of a kind is answered the kind's rule is set, so the kind's later offers are taken the instant they show,
 present or away (an offer of no kind has no rule: the page builds none, contract/offers.txt, "Offers"). The sinks are named by id in a Chapter, so the policies hold for any chapter; a
 route's knobs say which of the three it does. Ids only (CLAUDE.md, "Never spoil the owner")."""
+from collections.abc import Callable
 from dataclasses import dataclass
 
 from ashfall_app.engine import (
@@ -376,6 +377,32 @@ def tuned_share(rules: Rules, save: Save, trip: Trip, edited: Mix | None = None,
             else Mix(MixId("preview"), with_share(edited, trip.card, share).components, edited.layer)
         shown = ledger(decide(decide(bare, rules, bare.time, SaveMix(m)), rules, bare.time, SwitchMix(m.id)), rules)
         return all(ln.net_per_hour >= 0 for ln in shown if ln.store in kept)
+    key = (trip.card, edited is None)
+    if (found := confirmed(TUNED.get(key), top, holds)) is not None:
+        return found
+    TUNED[key] = result = searched(top, holds)
+    return result
+
+
+TUNED: dict[tuple[CardId, bool], int] = {}
+"""Each trip's last tuned share (per active or edited mix): the player remembers it, and it is read first next time."""
+
+
+def confirmed(last: int | None, top: int, holds: Callable[[int], bool]) -> int | None:
+    """`last` when two previews show it is the answer (it holds and the step above it does not, `top` itself if it was
+    top), None when they do not: the search then runs in full. The preview is monotone in the share, so what holds
+    below the first share that fails is the whole answer."""
+    if last == top:
+        return top if holds(top) else None
+    if last is None or last % TUNE_STEP_BP or not TUNE_STEP_BP <= last < top // TUNE_STEP_BP * TUNE_STEP_BP:
+        return None   # the search never answers a step at or past the one `top` falls in, bar `top` itself
+    above = last + TUNE_STEP_BP
+    if last == TUNE_STEP_BP:   # the floor: its own share need not hold
+        return last if not holds(above) else None
+    return last if holds(last) and not holds(above) else None
+
+
+def searched(top: int, holds: Callable[[int], bool]) -> int:
     if holds(top):
         return top
     lo, hi = 0, top // TUNE_STEP_BP   # hi does not hold; lo holds, or is the floor
