@@ -293,8 +293,8 @@ requests reach both builds. What holds:
 - A save is written by one request at a time (its row is locked for the transaction), and only forward. Builds are
   ordered by release, `BUILD_RELEASE` (the CI run number, 0 locally; `saves/ruleset.py`). A pod asked for a
   save last written by a later release answers `save_unavailable` and writes nothing, and the page asks again until a
-  newer pod answers (`app/ashfall_app/saves/load.py`). The app does not start while a live save's stored text cannot be
-  read (`app/ashfall_app/saves/check.py`): a rebase drops what the rules lack, so only corruption fails it.
+  newer pod answers (`app/ashfall_app/saves/builds/load.py`). The app does not start while a live save's stored text cannot be
+  read (`app/ashfall_app/saves/builds/check.py`): a rebase drops what the rules lack, so only corruption fails it.
 - Nothing shared between pods lives in process memory; the only per-pod state is a log-flood guard
   (`client_errors.RateLimit`) and the cap on recovery words hashed at once (`app/ashfall_app/accounts/words.py`), both
   per pod by design.
