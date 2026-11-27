@@ -2,7 +2,7 @@
 // line side by side and read back the page's whole copy, whichever half a keep went to. Which half each keep goes to is
 // keeps.test.ts's.
 import type { AccountPresentation, AccountSettings, SavePresentation } from "../src/api/types";
-import { Keeps, NEW_ACCOUNT, NEW_SAVE } from "../src/game/keeps";
+import { Keeps, NEW_ACCOUNT, NEW_SAVE } from "../src/game/account/keeps";
 
 export type Flat = AccountPresentation & SavePresentation;
 export const NEW_FLAT: Flat = { ...NEW_ACCOUNT, ...NEW_SAVE };

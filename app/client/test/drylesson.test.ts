@@ -1,4 +1,4 @@
-// The dry store's lesson (game/lessons.ts, DRY_STORE; game/dryhint.ts; docs/design/opening-screen/hands-strip.md, "Hint: the first dry
+// The dry store's lesson (game/lessons/lessons.ts, DRY_STORE; game/hands/dryhint.ts; docs/design/opening-screen/hands-strip.md, "Hint: the first dry
 // store"): a card of the running mix stopped on a store that ran dry, nothing covers it, and a card in play that makes it
 // is outside the mix. The line carries the quiet dot and the lesson walks the running mix's own Edit, the maker's add
 // button and Save; the mix saved is the player's, with the maker in it. Each fact of the cue taken away clears the mark.
@@ -7,10 +7,10 @@ import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import { townStep } from "../fixtures/town";
 import type { Card, Decision, Order, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { anySelfFedMix, dryCue } from "../src/game/dryhint";
-import { Keeps } from "../src/game/keeps";
-import { DRY_STORE, FIRST_MIX, FIRST_RULE, LESSONS, mayStart } from "../src/game/lessons";
+import { Catalog } from "../src/game/page/catalog";
+import { anySelfFedMix, dryCue } from "../src/game/hands/dryhint";
+import { Keeps } from "../src/game/account/keeps";
+import { DRY_STORE, FIRST_MIX, FIRST_RULE, LESSONS, mayStart } from "../src/game/lessons/lessons";
 import { Screen } from "../src/ui/screen";
 import { keepsOf, NEW_FLAT } from "./kept";
 

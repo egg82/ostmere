@@ -72,14 +72,16 @@ After merging a pull request that changes a readout, the merging session runs `p
 `app/tests/readouts/ANCHOR` against the owner's direction (`docs/design/drift-judge.md`). Nothing in CI runs it or
 calls a model.
 
-A job whose readout differs from its committed text fails after uploading what the code now renders;
-`python -m tools.readouts_pull <run-id>` (from `app/`) copies a red run's readouts into `app/tests/readouts/` to commit.
-Readouts are refreshed from CI, never replayed locally: push, let the pull request's run go red (each job whose readout
-differs leaves a `readouts-new-*` artifact and fails), pull, commit. A default pull request produces the readouts of the
-chapters it touches; tests that read a chapter's own readings, rebased save or saved end are the full run's. The nightly
-refreshes the rest in its own pull request, so the `playthroughs` label (the full run: every chapter from the last
-nightly's saves, replaying only the chapters whose key is new) is for a change whose wider effect must be read before
-merge, not a routine step.
+A readout that differs from its committed text is uploaded as a `readouts-new-*` artifact by the job that played it
+(`.github/actions/readout-differs`, `app/tools/nightly_verdict.py report`). On a pull request the job stays green: the
+files and the pull command are listed in the job summary, and the orchestrator reads the diff before merging. On a push to
+`main`, the nightly and a manual dispatch the same step fails the job. A failed test fails the job on every event.
+`python -m tools.readouts_pull <run-id>` (from `app/`) copies a run's readouts into `app/tests/readouts/`.
+Pull requests do not commit readouts and nothing refreshes them locally: the nightly refreshes main's in its own pull
+request, so they lag by up to a day. A default pull request produces the readouts of the chapters it touches; tests that
+read a chapter's own readings, rebased save or saved end are the full run's, so the `playthroughs` label (the full run:
+every chapter from the last nightly's saves, replaying only the chapters whose key is new) is for a change whose wider
+effect must be read before merge, not a routine step.
 
 ## Patterns
 
@@ -166,13 +168,15 @@ for the Python-run gates, `app/client/gates/held/` for the client's. `app/tools/
 | `app/tests/opening/test_answer_gate.py` (`app/ashfall_app/opening/answer_checks.py`) | the answers of an offer differ by a lasting part (a sourced modifier, an unlock or answer something reads, or a role tally; lane alone does not count), and every role of a kinded offer names a tally; and every promise (an answer that queues the player's own work) is tested by a dilemma offer (`app/ashfall_app/opening/promise_checks.py`) | `app/tests/held/answers.json` (per offer, kind or promise; only shrinks) |
 | `app/tests/test_scene_people.py` (the field is `whereabouts` on an outcome, `entries.WhereaboutsEntry`; `doings` is `entries.OutcomeEntry.doings`; layer ids come from `layers` in the committed `tools/scene/shown.json`) | every outcome that joins or leaves a person, or lists them in `doings` (an authored list of people the lines show doing something besides joining or leaving; marked in the data, never read off the lines), or is a line no outcome carries and is marked under its key in `[line_doings]` (a chapter file's table, `entries.LineDoingsEntry`: the same `doings` and `whereabouts`, owner `line:<key>`), names, per person, a scene layer that shows it or a `no_scene` reason; every named layer and person exists; fails when a held case gains its entry or names no outcome, and when a scene module names an offer, answer or lane the content lacks (the page reads `answered:<offer>`, `answer:<answer>`, `joined:<lane>` and `left:<lane>` off `view.unlocked`) | `HELD_UNPLACED` and `HELD_LINE_ONLY` in `tools/scene/people.py` (empty) |
 | `app/tests/test_scene_lodging.py` (the field is `lodging` on a lane, `lane_entries.LodgingEntry`) | every person's lane says where they sleep: a `build` naming a card, or `elsewhere` and why; the scene sends home at dusk and night (`tools/scene/people_hall.py`) only people the content lodges in the hall; fails when a lodging names neither or both, or the scene's table names a person lodged elsewhere | none |
+| `app/tests/test_scene_sites.py` (the field is `site` on a card, `site_entries.SiteEntry`; layer ids from `layers` in the committed `tools/scene/shown.json`) | every card names in `site` the scene layer its work is done at, or `no_site` and why; a site's layer exists; a card and its `twin_of` name the same site (`site_checks.check_sites`); fails too when almost no card has a site | `card_sites.json` (cards without a site, per chapter file; `python -m tests.test_scene_sites --write` from `app/`) |
 | `app/tests/test_scene_day.py` (the field is `by_day` on a lane, `lane_entries.ByDayEntry`; the scene is `tools/scene/people_day.py`) | a person's `by_day` names a card of their own lane whose `site` is a scene layer, or `at_fire` and why; the scene draws by day at a site exactly the people the content sends there, at the layer that card names; fails when the two disagree, when a lane gained a `by_day` or lost its one without the held set following, and when a card is not the lane's own or has no layer site | `people_day.HELD_UNDECIDED` (person lanes with no `by_day`; only shrinks) |
 | `app/tests/opening/test_pool_checks.py` (`app/ashfall_app/opening/pool_checks.py`) | a line a source says again and again (a chip's off lines, a fight's won and lost lines, a people band's lines) draws from at least `MIN_POOL` (6) different keys, and an uncapped card says no line; counts keys, never reads them | none |
 | `app/tests/test_canon_ids.py` | every `C-<area>-<n>` and `D-<n>` id cited in the repo's text is a row of `content/canon/` or `content/decisions.jsonl`; canon rows keep their fields, a status of canon or tentative, and a source (`file#heading`) that resolves; decision rows keep their fields, status, date and by | none |
 | `app/tests/test_ci_budget.py` | every job in `ci.yml` is classed pull-request, full-run or main-only, and the longest chain of pull-request jobs at their `timeout-minutes` is at most 10 minutes | none |
+| `app/tests/test_saves_plan.py` | every planned `chapter-saves` job is predicted within its cap less the margin; a planted chapter re-splits the plan; the workflow has the jobs and caps the plan assumes | none |
 | `app/tools/mutate_suite.py` `--plants` and `--check`, and `app/tests/journal_contract/plant_mutants.py` `--plants` for the journal plants (CI job `mutant-plants`) | every planted mutant's anchor occurs exactly once in the code it mutates, so no mutant is silently skipped, and every mutant row is claimed by a test marked `@kills` | none |
 
-The engine's own import rules (stdlib only, no clock or I/O) stay in `tests/engine_contract/test_purity.py`.
+The engine's own import rules (stdlib only, no clock or I/O) stay in `tests/engine_contract/invariants/test_purity.py`.
 `app/tests/test_household_names.py` fails when any tracked file names the household that runs the game (its people,
 pets, network, towns, hosts); the names are the CI secret `OSTMERE_HOUSEHOLD_NAMES`, so it skips everywhere but CI.
 Moving a held string to another file moves its `KEPT` entry with it, read from CI's "stale" and "over" output (paths
@@ -236,19 +240,22 @@ suite still runs in seconds.
   chapter's key (`app/tests/weektwo/keys.py`): a hash of the shared inputs (the engine, the opening's loader and shared
   data, the shape of the rules with its numbers masked, the code that plays every chapter), the chapter's own files and
   the key of the chapter before, so a change to one chapter re-keys it and the ones after it and leaves the ones before
-  alone. The typical route's heavy-step readings,
-  minutes each on day twelve, are saved beside them (`ends.READINGS`), so the counting tests read and do not compute
-  them. CI's `chapter-saves` jobs write them in parts: one per route chain, then, after typical's last link,
-  `chapter-saves-rebased` (replaying typical's decisions from its saved ends) and `chapter-saves-readings`, whose parts
-  start from typical's saved end (`chapter_saves.typical_through`) rather than replaying the play, so a part costs only
-  its own steps; a part near its limit is split by moving a span in `ends.READINGS` plus its matrix entry. Each job restores the last nightly's
+  alone. The typical route's heavy-step readings, minutes each on day twelve, are saved beside them, one file per heavy
+  step (`ends.readings_path`), so the counting tests read and do not compute them. CI's `chapter-saves` jobs write them in
+  parts that `saves-plan` (`app/tools/saves_plan.py`) plans from each chapter's measured cost (`app/tools/ci_costs.json`):
+  a route's chain is cut into links (link k of every route runs in `chapter-saves-link-k`, after link k-1, from the ends
+  it uploaded), then `chapter-saves-rebased` (typical's rebased saves, grouped) and `chapter-saves-readings` (spans of
+  heavy steps) start from typical's saved ends (`chapter_saves.typical_through`). Chapters pack in order into a job until
+  its predicted time would pass the 30-minute cap less 18 minutes of margin (`CAP_MIN`, `MARGIN_MIN`), so a new chapter
+  re-splits the parts with no list to edit; a chapter with no row in the table is planned at its `unmeasured` figure and
+  named in the plan's `estimated`. A plan needing more links than the workflow has ranks (`RANKS`) fails `saves-plan`
+  and `tests/test_saves_plan.py` until a `chapter-saves-link-k` job is copied from the last. The table holds the worst
+  of three full runs' `cpu_s` per route and chapter, rebased chapter and reading step; a stale row makes a prediction
+  wrong, not a cap larger. Each job restores the last nightly's
   saves (`publish-ends` caches the merged saves on `main`), writes only the chapters whose key is new (`chapter_saves.py`
   keeps a file present under today's key; `--prune` drops the directories of keys no chapter has), and hands what it
   wrote to the readers as artifacts they merge over the restored saves. A local `--write` is incremental the same way:
-  after a change to one chapter, only it and the chapters after it replay. A route
-  chain too long for one job is written in links (`LINKS` in `app/tools/chapter_saves.py`), each its own job after the one before
-  (`chapter-saves-sharp-a` to `-c`, `chapter-saves-whenever-a` to `-c`), starting from the saved end the link before uploaded; when a chapter pushes the
-  last link past about 18 minutes on GitHub's runner, add a link: one `LINKS` entry and one job copying the last. Week two's job runs one shard per chapter, day
+  after a change to one chapter, only it and the chapters after it replay. Week two's job runs one shard per chapter, day
   twelve's typical play in one of its own and the makers readouts in another (a test's `weektwo_shard` marker names its
   shard; `app/tools/weektwo_shards.py`), so a play's readers stay in one job; a test takes its play from a route
   fixture, since a play first built in a test's body fails it (`refuse_hidden_play` in `app/tests/weektwo/routes.py`,
@@ -294,8 +301,8 @@ requests reach both builds. What holds:
 - A save is written by one request at a time (its row is locked for the transaction), and only forward. Builds are
   ordered by release, `BUILD_RELEASE` (the CI run number, 0 locally; `saves/ruleset.py`). A pod asked for a
   save last written by a later release answers `save_unavailable` and writes nothing, and the page asks again until a
-  newer pod answers (`app/ashfall_app/saves/load.py`). The app does not start while a live save's stored text cannot be
-  read (`app/ashfall_app/saves/check.py`): a rebase drops what the rules lack, so only corruption fails it.
+  newer pod answers (`app/ashfall_app/saves/builds/load.py`). The app does not start while a live save's stored text cannot be
+  read (`app/ashfall_app/saves/builds/check.py`): a rebase drops what the rules lack, so only corruption fails it.
 - Nothing shared between pods lives in process memory; the only per-pod state is a log-flood guard
   (`client_errors.RateLimit`) and the cap on recovery words hashed at once (`app/ashfall_app/accounts/words.py`), both
   per pod by design.
@@ -381,5 +388,5 @@ the parts that apply to it.
 | Design canvas (six phone screens) | https://claude.ai/artifact/H6Foqa7diKmwDS1KGKJuxC, source in `docs/design/canvas/` |
 | Redesign comparison (six designs and the merge) | https://claude.ai/artifact/3zBFvQDBec1J6UWPqCuc6s, the chosen design in `docs/design/redesign/` |
 | Look test canvas | https://claude.ai/artifact/1EDLESML2xgre6iuvonRt1, source in `docs/design/look-test-canvas/` |
-| Writing and model tests | https://claude.ai/artifact/WbXhGSQedRy2SnN2gM3rNd, source in `docs/research/writing-test/` |
+| Writing and model tests | https://claude.ai/artifact/WbXhGSQedRy2SnN2gM3rNd, source in `docs/research/writing/writing-test/` |
 | Strawman doc (superseded by `decisions.md` where they differ) | https://claude.ai/code/artifact/571817bb-99df-498c-be29-3202fe5ef76e |

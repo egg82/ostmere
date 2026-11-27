@@ -1,13 +1,13 @@
-// Goal stints (ui/stint.ts, game/queue.ts; contract/goal-stints.txt, "Goal stints"): the editor lists the dry run's unmet goals
+// Goal stints (ui/next/stint.ts, game/mixes/queue.ts; contract/goal-stints.txt, "Goal stints"): the editor lists the dry run's unmet goals
 // and queues the mix until the picked row's `until`; Next names a stint by mix and goal, and the running one states
 // when its goal lands, or never, with the line that binds it.
 import { install } from "./fake-dom";
 import { fixtureStep } from "../fixtures/steps";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { fixtureContent, Q } from "../fixtures/content";
 import type { Condition, GoalRow, QueueEntry, View } from "../src/api/types";
-import { controllingEntry, queueStint, shareUntil, stintRow } from "../src/game/queue";
-import { stintFacts, stintParts, stintWords } from "../src/ui/stint";
+import { controllingEntry, queueStint, shareUntil, stintRow } from "../src/game/mixes/queue";
+import { stintFacts, stintParts, stintWords } from "../src/ui/next/stint";
 
 install();
 

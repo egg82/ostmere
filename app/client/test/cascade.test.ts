@@ -1,17 +1,17 @@
 // A cascade (docs/design/redesign.md, "Feel"): when one live step sets off several consequences, they light one by one,
 // about 90 ms apart, in the order one causes the next (a card finishes, its stores move, a level lands, a rule acts),
 // at most six turns, the rest with the sixth. Each link gets the lit mark at its turn; a lone effect is no chain and
-// gets none. The links take turns in the arrival queue's own stagger (game/arrivals.ts) with the reveal's tick, never a
+// gets none. The links take turns in the arrival queue's own stagger (game/story/arrivals.ts) with the reveal's tick, never a
 // timer of their own; what arrives in the same step still shows at once, as outside a return it always has. A tap shows
 // every link at once. Reduced motion keeps every link and its mark and drops the stagger. Time is a stubbed clock.
 import { install } from "./fake-dom";
 import { BP, fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
-import { ArrivalQueue, LINK_GAP_MS, LINK_PACE, MAX_LINKS } from "../src/game/arrivals";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
-import { Reveal } from "../src/ui/reveal";
+import { ArrivalQueue, LINK_GAP_MS, LINK_PACE, MAX_LINKS } from "../src/game/story/arrivals";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
+import { Reveal } from "../src/ui/feedback/reveal";
 import { Screen } from "../src/ui/screen";
 
 install();

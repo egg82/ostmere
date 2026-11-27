@@ -11,7 +11,7 @@ beside them. Nothing the player needs during play sits in a far corner.
   shows when the arrival queue releases it, held back for the reading time of the one before (`decisions.md`, "A story
   line stays until it can be read"). On a desktop the strip's height is the tallest story line in the content at the
   strip's width, so no line is ever cut and none arriving moves anything: every story line the content can write (`Content.line_infos`,
-  the kinds `game/chronicle.ts` routes to Story) is laid out unseen in the strip's one cell, the shown lines sit over
+  the kinds `game/book/chronicle.ts` routes to Story) is laid out unseen in the strip's one cell, the shown lines sit over
   them, and as many of the newest as fit that height show (at least the newest, so one where the room holds only one).
   On a phone the strip is three rows of the story's size (`--strip-rows`), so the pinned strip never grows for the
   longest line ever written: that is a content rule, every story line fitting three rows at a 360-wide phone's 328px
@@ -20,14 +20,14 @@ beside them. Nothing the player needs during play sits in a far corner.
   fight go to the chronicle alone. The chronicle is one tap away (the tabs' Book, which opens on it: in the rail on a
   desktop, the bottom bar on a phone), dotted while a line it holds left the strip entirely before the player touched anything after it
   showed. A new line slides in once, about 200 ms (no slide under reduced motion).
-- **The chronicle** (`ui/chroniclesheet.ts`; `decisions.md`, "The chronicle and unwrap, as built") is the Book's first
+- **The chronicle** (`ui/book/chroniclesheet.ts`; `decisions.md`, "The chronicle and unwrap, as built") is the Book's first
   page (The Book, below): a row of filters once two kinds have entries: Story,
   Finds, Levels, Rules, Fights, Town talk, each once it has one, and All. It opens on Story, at the top, newest first.
-  It is a diary of visits: one stretch per return after at least half an hour away (`game/chronicle.ts`), each from the
+  It is a diary of visits: one stretch per return after at least half an hour away (`game/book/chronicle.ts`), each from the
   game second the player left to the one they next left, its lines oldest first. The newest return's stretch is the
-  "Since you left" chapter (`ui/chapter.ts`): under an ember spine, never folded, titled with how long the player was
+  "Since you left" chapter (`ui/book/chapter.ts`): under an ember spine, never folded, titled with how long the player was
   away ("54m"), drawn under Story and All even with no line. Under Story its lines are followed by its figures as
-  rows of a dim label and a value (`game/chronwords.ts`, `chapterRows`): stores ("+326 Dead wood · −26 Warmth"), levels
+  rows of a dim label and a value (`game/book/chronwords.ts`, `chapterRows`): stores ("+326 Dead wood · −26 Warmth"), levels
   ("Camp 1 → 2 · Foraging 2 → 4"), rules (one per line, "… came on ×2"), waiting ("1 ask", which closes the
   chronicle and brings the first ask into view); the levels and rules labels open their filters. When anyone came or
   went, a people section follows under a hairline: the dim word "people", then the lines telling a person's joining or
@@ -40,7 +40,7 @@ beside them. Nothing the player needs during play sits in a far corner.
   drawn. With no chapter drawn, the newest stretch drawn is open under a bright spine and square unless folded by hand;
   the others are folded to their counts by filter ("Story 4 · Finds 3"). Story lines are set as in the strip, italic in the bright ink; the others in
   the body size and ink. Under each line, in the dim meta ink, "↳" and its cause (`Content.line_infos`' cause, worded
-  by `game/chronwords.ts`). Under Story, a stretch ends with its counts of the other filters, each a button that opens
+  by `game/book/chronwords.ts`). Under Story, a stretch ends with its counts of the other filters, each a button that opens
   its filter. Lines the page words itself (fights, a skill's top) carry their kind and cause where the page words them;
   a return's away lines enter by the same stamps.
 - **The panel's foot:** quiet text buttons at the rail's foot on a desktop, after the last thing in the panel elsewhere

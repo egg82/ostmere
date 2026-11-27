@@ -70,7 +70,7 @@ Rack                                                   each side lane's task rul
 
 ### Lately
 
-What the rules did, so a returning player can see why this mix is running (`research/design-101.md` §3, proposal 5). The tab's last block, under the side lanes, headed
+What the rules did, so a returning player can see why this mix is running (`research/design/design-101.md` §3, proposal 5). The tab's last block, under the side lanes, headed
 `Lately`, there once any rule has come on. One entry per rule, the most recent change first:
 
 ```

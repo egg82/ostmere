@@ -1,4 +1,4 @@
-// A chip is drawn once its cure is on screen (ui/story.ts, game/shown.ts; contract/, ChipInfo.offered_after): a
+// A chip is drawn once its cure is on screen (ui/story/story.ts, game/page/shown.ts; contract/, ChipInfo.offered_after): a
 // chip on in the view whose offered_after view.unlocked does not hold is not on the band; once it holds, it is; a chip
 // with no offered_after is drawn as soon as it is on. Its cost line follows ChipInfo.cost_key.
 import { install } from "./fake-dom";
@@ -6,8 +6,8 @@ import { testContext } from "./context";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Content, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { Story } from "../src/ui/story";
+import { Catalog } from "../src/game/page/catalog";
+import { Story } from "../src/ui/story/story";
 
 install();
 

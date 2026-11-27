@@ -1,12 +1,12 @@
-// The editors' store rows (ui/storetimes.ts; contract/store-rows.txt, "Store rows"): a row per store the edit's cards touch or whose
+// The editors' store rows (ui/mixes/storetimes.ts; contract/store-rows.txt, "Store rows"): a row per store the edit's cards touch or whose
 // rate or heading the dry run changes, net per minute now → after, with what it holds of its cap and where it heads under
 // it; the heading is marked only when its direction turns.
 import { install } from "./fake-dom";
 import { fixtureStep } from "../fixtures/steps";
-import { Catalog } from "../src/game/catalog";
+import { Catalog } from "../src/game/page/catalog";
 import { fixtureContent } from "../fixtures/content";
 import type { StoreRow, View } from "../src/api/types";
-import { storeRows } from "../src/ui/storetimes";
+import { storeRows } from "../src/ui/mixes/storetimes";
 
 install();
 

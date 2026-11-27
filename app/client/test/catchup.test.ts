@@ -1,4 +1,4 @@
-// A long absence comes back in slices (src/game/session.ts; contract/catching-up.txt, Step.catching_up_to): a Step still catching up
+// A long absence comes back in slices (src/game/page/session.ts; contract/catching-up.txt, Step.catching_up_to): a Step still catching up
 // is announced with catchingUp(at, to) and asked past at once, never drawn; once one arrives that is not, exactly one
 // stepped() follows with every slice's lines. A decision made meanwhile is held and sent after, a catching_up 409 on a
 // decision goes on catching up, and no forecast is asked on the way. Written from the contract; the api is scripted.
@@ -6,8 +6,8 @@ import { ApiFailure, type GameApi } from "../src/api/api";
 import type { Decision, JournalDay, Step, View } from "../src/api/types";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
-import { Session, type SessionEvents } from "../src/game/session";
-import { NEW_SAVE, NEW_ACCOUNT, NEW_SETTINGS } from "../src/game/keeps";
+import { Session, type SessionEvents } from "../src/game/page/session";
+import { NEW_SAVE, NEW_ACCOUNT, NEW_SETTINGS } from "../src/game/account/keeps";
 
 function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(what);

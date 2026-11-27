@@ -2,7 +2,7 @@
 shows wraps past --strip-rows rows (docs/design/redesign.md, "Phone frame"). The strip's room is that many rows, so the
 pinned stage never grows for the longest line ever written; this is the content side of that rule.
 
-What the strip shows is read from the page (client/src/game/chronicle.ts, ROUTES: the kinds routed to the Story
+What the strip shows is read from the page (client/src/game/book/chronicle.ts, ROUTES: the kinds routed to the Story
 filter), and the rows and the size from client/src/game.css. Lines wrap at spaces only, which can only add rows, never
 hide one. A person's name slot is measured as the name it shows (api/contract/text-and-numbers.txt, "Text and numbers", {<lane>})."""
 import re
@@ -61,7 +61,7 @@ def font(size_var: str = "t-story") -> ImageFont.FreeTypeFont:
 
 
 def strip_kinds() -> set[str]:
-    routes = re.search(r"ROUTES[^=]*=\s*\{([^}]*)\}", (CLIENT / "game" / "chronicle.ts").read_text())
+    routes = re.search(r"ROUTES[^=]*=\s*\{([^}]*)\}", (CLIENT / "game" / "book" / "chronicle.ts").read_text())
     assert routes, "chronicle.ts has no ROUTES"
     kinds = set(re.findall(r'(\w+):\s*"story"', routes.group(1)))
     assert kinds, "no kind routes to the Story filter"

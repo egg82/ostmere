@@ -1,14 +1,14 @@
-// The town's lesson (game/lessons.ts, TOWN_MIX), as lessons-as-data on the strip's and a person's page's own controls:
+// The town's lesson (game/lessons/lessons.ts, TOWN_MIX), as lessons-as-data on the strip's and a person's page's own controls:
 // it starts when a person's Change shows, walks Change, the person's bar, and the strip once more, and is kept on
 // the account when done or skipped, never again. Run against the rendered strip and page, not stand-in controls.
 import { fakeDocument, install } from "./fake-dom";
 import { testContext } from "./context";
 import { townStep } from "../fixtures/town";
 import type { View } from "../src/api/types";
-import { LESSONS, TOWN_MIX } from "../src/game/lessons";
-import { Glow } from "../src/ui/fresh";
-import { LaneRows } from "../src/ui/lanerows";
-import { Lessons } from "../src/ui/lessons";
+import { LESSONS, TOWN_MIX } from "../src/game/lessons/lessons";
+import { Glow } from "../src/ui/feedback/fresh";
+import { LaneRows } from "../src/ui/town/lanerows";
+import { Lessons } from "../src/ui/lessons/lessons";
 import { keepsOf, NEW_FLAT, type Flat } from "./kept";
 
 install();

@@ -1,4 +1,4 @@
-DRY RULES (docs/decisions.md, "A rule that cannot let go says so"; api/ruledry.py)
+DRY RULES (docs/decisions.md, "A rule that cannot let go says so"; api/rules/ruledry.py)
   view.order_dry[i] is null or {store, holding} for orders[i]; the server decides, the client only words it. It is set
   only for a rule whose `when` is at_most on a store_value and whose `then` is a switch_mix (a rule releases when the
   store rises above `release`), by the rates as set (GOAL ROWS above):

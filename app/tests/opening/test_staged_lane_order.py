@@ -1,7 +1,7 @@
 """An at_least order card on a ruled lane tapping a staged card on that lane (week-three-plan item 8), on
 fixtures/stagedlane.toml merged onto the opening alone. Nothing in the loader, the engine or the page needed to change:
 the card loads as one on the hands does, the order lands every stage, and at the cap it is passed over and the lane goes
-to its next rule. The page offers it under its store's line by the store alone (client/src/game/catalog.ts)."""
+to its next rule. The page offers it under its store's line by the store alone (client/src/game/page/catalog.ts)."""
 from pathlib import Path
 
 import pytest

@@ -1,6 +1,6 @@
 // The stall offer: two hand-starts in a row of the card an order would start, and no other count.
 import { fixtureContent } from "../fixtures/content";
-import { HandStreak, stalled } from "../src/game/stall";
+import { HandStreak, stalled } from "../src/game/cards/stall";
 
 const card = fixtureContent.order_cards[0]!;   // taps "gather"
 

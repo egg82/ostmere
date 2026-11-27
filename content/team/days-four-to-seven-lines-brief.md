@@ -213,7 +213,7 @@ stone's heat past what the player's hand does, nothing of week 2.
 - **Rows and stores:** lane_n3, lane_n4 (before their names), their named forms; store_pelt, store_hurt; skill_arcana,
   skill_melee; the mix offer on the full damp wood line for the stone ("add hand on stone, held at 12")
 - **Aims:** aim_dry, aim_stone, aim_pair, aim_keep
-- **End cards:** dayend4_*, dayend5_*, the B7 card, dayend6_* (the edge of week 1's content, `waits-and-ends.md`)
+- **End cards:** dayend4_*, dayend5_*, the B7 card, dayend6_* (the edge of week 1's content, `design/waits-and-ends.md`)
 - **Never drawn:** store_night_5..7, store_b7_clock, store_r1_clock, the tallies, store_arrivals
 
 Two to check first: **o_pair** sits on screen across absences and neither answer may read as the right one; **o_pelt**

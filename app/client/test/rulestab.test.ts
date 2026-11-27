@@ -1,4 +1,4 @@
-// The Rules tab (docs/design/opening-screen/rules-tab.md, "The Rules tab"; ui/rules.ts, ui/condition.ts): one line per rule;
+// The Rules tab (docs/design/opening-screen/rules-tab.md, "The Rules tab"; ui/rules/rules.ts, ui/condition/condition.ts): one line per rule;
 // changing a rule's levels never gated, writing a new one gated by the taught step; a chip's rule edited with no level
 // and no number; ≡ dragged or moved by key or menu sending the permuted set_orders (task rules keep their places); a
 // mix dropped on a slot, or tapped then a slot, or picked, re-pointing the rule; Otherwise setting the default; the
@@ -9,19 +9,19 @@ import { fakeDocument, FakeEl, FakeEvent, install, pointer } from "./fake-dom";
 import { fixtureContent, TIRED } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Decision, Order, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
-import { pointSlot, reorderRule } from "../src/game/orders";
-import { HandStreak } from "../src/game/stall";
-import { buildRule } from "../src/game/storerule";
-import { Flight } from "../src/ui/flight";
-import { Glow, GlowWhile } from "../src/ui/fresh";
-import { Hands } from "../src/ui/hands";
-import { Ledger } from "../src/ui/ledger";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
+import { pointSlot, reorderRule } from "../src/game/rules/orders";
+import { HandStreak } from "../src/game/cards/stall";
+import { buildRule } from "../src/game/condition/storerule";
+import { Flight } from "../src/ui/asks/flight";
+import { Glow, GlowWhile } from "../src/ui/feedback/fresh";
+import { Hands } from "../src/ui/hands/hands";
+import { Ledger } from "../src/ui/ledger/ledger";
 import type { PartContext } from "../src/ui/part";
-import type { Arrivals } from "../src/ui/reveal";
-import { RulesTab } from "../src/ui/rules";
-import { MixSelector } from "../src/ui/selector";
+import type { Arrivals } from "../src/ui/feedback/reveal";
+import { RulesTab } from "../src/ui/rules/rules";
+import { MixSelector } from "../src/ui/mixes/selector";
 
 install();
 
@@ -283,7 +283,7 @@ expect("a task rule doesn't move", reorderRule(tab, 3, 0), null);
   expect("opened: gone, and not back", label.classList.contains("glow"), false);
 }
 
-// Behind a line (the line-first queue, ui/reveal.ts): a fired rule's pulse, the tab's glow and the flight's landing
+// Behind a line (the line-first queue, ui/feedback/reveal.ts): a fired rule's pulse, the tab's glow and the flight's landing
 // pulse each wait their turn rather than show while a line is read.
 {
   const waiting: Array<{ kind: string; run: () => void }> = [];

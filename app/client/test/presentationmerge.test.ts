@@ -5,8 +5,8 @@ import type { Account, AccountPresentation, NewSave, SavePresentation } from "..
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { GameApi } from "../src/api/api";
-import { NEW_ACCOUNT, NEW_SAVE, NEW_SETTINGS, type Keeps } from "../src/game/keeps";
-import { Session } from "../src/game/session";
+import { NEW_ACCOUNT, NEW_SAVE, NEW_SETTINGS, type Keeps } from "../src/game/account/keeps";
+import { Session } from "../src/game/page/session";
 
 const none = (): Promise<never> => Promise.reject(new Error("not in this test"));
 const save = { save_id: 7, number: 1, decisions: 0, game_time: 0, ended_at: null, started_at: "2026-10-17T09:00:00Z", played_at: "2026-10-17T09:00:00Z", camp_level: 0 };

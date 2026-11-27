@@ -1,10 +1,10 @@
-// The glow on a marked card (ui/cardglow.ts) is for a card not yet put to work: running it by a mix, a rule or the
+// The glow on a marked card (ui/cards/cardglow.ts) is for a card not yet put to work: running it by a mix, a rule or the
 // queue takes the glow away and keeps it away, and a page opened on a card already used or done never lights it.
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, Step } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
 import { Screen } from "../src/ui/screen";
 import { install } from "./fake-dom";
 

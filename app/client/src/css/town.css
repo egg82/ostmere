@@ -1,4 +1,4 @@
-/* The town (ui/townstrip.ts): under the hands strip one block per person present: their time as a bar of
+/* The town (ui/town/townstrip.ts): under the hands strip one block per person present: their time as a bar of
    the cards that hold a share and the idle remainder, and the card they are on with its bar. Shared with the lane rows:
    .hands, .hands-label, .lane-bar, .card-fill; new: the person block and its segments. */
 /* the Town tab: its title, then the town's people and lanes, then a phone's ledger and skills,
@@ -33,7 +33,7 @@
 .person-cards .card .card-tap:disabled { opacity: 1; cursor: default; }   /* a face to read, not a control that is off */
 .person-cards .card-share { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--ink-hi); }   /* the share a task holds, on its face */
 .town-title { font-size: var(--t-body); font-weight: 500; color: var(--ink-hi); flex: 1 1 auto; }
-/* The split that runs now (ui/runningnow.ts): the town's split shapes, a stopped card's slice a greyed sliver; once
+/* The split that runs now (ui/mixes/runningnow.ts): the town's split shapes, a stopped card's slice a greyed sliver; once
    arrived its row keeps its room while the splits match on a desktop; a phone's pinned strip gives it back. */
 .running-now { margin-top: .3rem; }
 .running-now.matched { visibility: hidden; }
@@ -44,7 +44,7 @@
 .town-key-item.stopped::before { filter: saturate(.15) brightness(.6); }
 .person-then { display: block; margin-top: .3rem; }   /* "then Forage 100%": the split a person goes back to once their one-off lands */
 .town-key-then { color: var(--ink); }
-/* A person with nothing to do (ui/stucknote.ts): it takes the place of the split that runs now, which would only grey
+/* A person with nothing to do (ui/town/stucknote.ts): it takes the place of the split that runs now, which would only grey
    every card; what each held card is stopped on, then the tasks to put them on, each a 44 px control */
 .person-row > .stuck-note { grid-area: now; }
 .person-row.stuck > .running-now { display: none; }
@@ -60,7 +60,7 @@
 .stuck-offers .stuck-offer { border-left: 3px solid var(--hue); }
 .stuck-offers .stuck-more { color: var(--ink); }
 .town-doing.stuck, .town-doing.wasted { color: var(--ember-hot); }
-.card-need.wasted { color: var(--ember-hot); }   /* a running card's work thrown away: its stores are full (game/wasted.ts) */
+.card-need.wasted { color: var(--ember-hot); }   /* a running card's work thrown away: its stores are full (game/cards/wasted.ts) */
 .town-ident { display: flex; align-items: baseline; gap: .6rem; margin-right: auto; }
 .town-count { font-size: var(--t-meta); color: var(--ink); }   /* a group's head count, beside its label */
 .town-face.stack .ask-face + .ask-face { margin-left: -.45rem; }   /* a group's members' faces overlap into one stack */

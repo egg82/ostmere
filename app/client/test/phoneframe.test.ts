@@ -1,4 +1,4 @@
-// The phone frame (docs/design/redesign.md, "Phone frame"; ui/tabs.ts, ui/partseat.ts, ui/asks.ts): on a phone the tabs
+// The phone frame (docs/design/redesign.md, "Phone frame"; ui/tabs.ts, ui/partseat.ts, ui/asks/asks.ts): on a phone the tabs
 // are the bottom bar, Tasks · Town · Rules · Book. Town holds the ledger and skills after the town's own rows; Book opens
 // as a sheet whose Done page holds the finished cards (shown once there are some). On a landscape phone the ledger and
 // skills stay off the tabs, and Book is a view as on a desktop, Done in it. The shown ask is one row whose way in names how many wait and
@@ -9,9 +9,9 @@ import { testContext } from "./context";
 import { asksStep } from "../fixtures/asks";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
-import { Asks } from "../src/ui/asks";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
+import { Asks } from "../src/ui/asks/asks";
 import { PHONE } from "../src/ui/layout";
 import { Screen } from "../src/ui/screen";
 

@@ -1,16 +1,16 @@
-// The Settings sheet (src/ui/settings.ts): this device's reminders live in it and not in "Another device", and the
+// The Settings sheet (src/ui/settings/settings.ts): this device's reminders live in it and not in "Another device", and the
 // reminders mention opens it with the row focused.
 import { FakeEvent, fakeDocument, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import type { GameApi } from "../src/api/api";
 import { browserStraight } from "../src/app/straight";
-import { Keeps, NEW_ACCOUNT } from "../src/game/keeps";
-import { Text, UI } from "../src/game/text";
-import { Devices } from "../src/ui/devices";
+import { Keeps, NEW_ACCOUNT } from "../src/game/account/keeps";
+import { Text, UI } from "../src/game/page/text";
+import { Devices } from "../src/ui/devices/devices";
 import { el } from "../src/ui/dom";
-import { ReminderMention } from "../src/ui/remindermention";
-import { ReminderRow, type ReminderDeps } from "../src/ui/reminders";
-import { SettingsSheet } from "../src/ui/settings";
+import { ReminderMention } from "../src/ui/settings/remindermention";
+import { ReminderRow, type ReminderDeps } from "../src/ui/settings/reminders";
+import { SettingsSheet } from "../src/ui/settings/settings";
 
 install();
 

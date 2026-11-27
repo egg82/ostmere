@@ -6,9 +6,9 @@ import { install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { fightsStep, withHurtChip } from "../fixtures/fights";
 import type { View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { tryRule } from "../src/game/storerule";
-import { draftWhen, editDraft } from "../src/ui/conditiondraft";
+import { Catalog } from "../src/game/page/catalog";
+import { tryRule } from "../src/game/condition/storerule";
+import { draftWhen, editDraft } from "../src/ui/condition/conditiondraft";
 
 install();
 

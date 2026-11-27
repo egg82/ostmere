@@ -1,5 +1,5 @@
 """A pool of lines said in turn: the k-th draw of a seeded shuffle bag (design/core.txt, "Chips"). The same draw as the
-page's (client/src/game/fights.ts, bagged), so a pool reads alike wherever it is worded."""
+page's (client/src/game/ledger/fights.ts, bagged), so a pool reads alike wherever it is worded."""
 from collections.abc import Callable, Sequence
 
 _MASK = 0xFFFFFFFF

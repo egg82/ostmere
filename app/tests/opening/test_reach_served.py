@@ -2,7 +2,7 @@
 (CardInfo.reach). The thresholds are the triggers', never retyped."""
 import pytest
 
-from ashfall_app.api.content_models import Content
+from ashfall_app.api.world.content_models import Content
 from ashfall_app.api.service import Game
 from ashfall_app.opening.schema import load_opening
 from ashfall_app.saves.ruleset import ruleset

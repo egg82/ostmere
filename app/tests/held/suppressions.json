@@ -26,7 +26,7 @@
  "app/tests/engine_contract/conftest.py": {
   "cast": 1
  },
- "app/tests/engine_contract/test_rebase.py": {
+ "app/tests/engine_contract/rebase/test_rebase.py": {
   "cast": 2
  },
  "app/tests/opening/playthrough.py": {
