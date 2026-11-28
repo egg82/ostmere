@@ -2,7 +2,7 @@ GROUPS (pooled lanes: many people who do the same work under one split; blind te
 name ids only; who is in a group, who keeps their own split and when is content's.
 
 FIT PASS
-- A group is a Type Object over people (Nystrom, Type Object): the group owns the cards its members can do and one
+- A group is a Type Object over people (Nystrom, Type Object): the group owns the cards of its kind of work and one
   split; a person points at their group. The group never changes for a person in play (LaneDef.group is authored), so
   there is no "can the type change" machinery, and no parent groups: nothing to share yet. What does change, the mark
   (a person keeps their own split or not), is State on the person, not part of their type (Type Object's See Also:

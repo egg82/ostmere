@@ -71,6 +71,9 @@ class LaneEntry(Entry):
     """The pooled lanes this person can join, in preference order: the loader sets `group` to the smallest of them
     (most members among the lanes declared before this one; a tie goes to the first listed). A person only one crew can
     take lists that one. Never set beside `group`."""
+    kind: str | None = None
+    """On a pooled lane, the kind of work the crew does: it takes every town card whose `kinds` names it (expand/town.py).
+    Authored on every crew, never on a person."""
     lodging: LodgingEntry | None = None
     """On a person's ruled lane, where they sleep (the scene shows who is at home at night). Authored on every person."""
     by_day: ByDayEntry | None = None

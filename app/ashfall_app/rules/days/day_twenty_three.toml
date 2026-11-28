@@ -201,6 +201,7 @@ id = "g_road"
 label_key = "lane_g_road"
 ruled = true
 pooled = true
+kind = "road"
 
 [[standing]]
 id = "n14_eating"

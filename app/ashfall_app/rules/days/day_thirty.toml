@@ -105,7 +105,8 @@ outcome = { stores = [{ store = "cleared", items = 3 }] }
 id = "{lane}_clear_track"
 site = { no_site = "the track runs from the road's end out to the post, past the wall, off the scene" }
 twin_of = "clear_track"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field", "g_road"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23"]
+kinds = ["field", "road"]
 presentation = "action"
 label_key = "c_clear_track"
 upside_key = "up_clear_track"
@@ -200,6 +201,7 @@ tally = true
 id = "{lane}_track"
 site = { no_site = "the tracker walks the track ahead of the carts, past the wall, off the scene" }
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n13", "n14", "n15"]
+kinds = []
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "tracker_{lane}", value = 1 }]
 presentation = "action"
 label_key = "c_track"
@@ -309,7 +311,8 @@ outcome = { stores = [{ store = "dust", items = 1 }] }
 id = "{lane}_net_moths"
 site = { no_site = "the moths are over the fungus round the post, past the wall, off the scene" }
 twin_of = "net_moths"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field", "g_road"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23"]
+kinds = ["field", "road"]
 presentation = "action"
 label_key = "c_net_moths"
 upside_key = "up_net_moths"
@@ -333,7 +336,8 @@ while_running = [{ side = "line", amount_bp = 20000 }]
 id = "{lane}_dust_line"
 site = { no_site = "the dust goes on the carts' wheels and the post's hasp, past the wall, off the scene" }
 twin_of = "dust_line"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field", "g_road"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23"]
+kinds = ["field", "road"]
 presentation = "action"
 label_key = "c_dust_line"
 upside_key = "up_dust_line"
@@ -425,7 +429,8 @@ outcome = { stores = [{ store = "hair", items = 3 }] }
 id = "{lane}_comb_pelts"
 site = { no_site = "the combing is done by the fire, which the scene draws; the card itself is no work at a place" }
 twin_of = "comb_pelts"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field", "g_road"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23"]
+kinds = ["field", "road"]
 presentation = "action"
 label_key = "c_comb_pelts"
 upside_key = "up_comb_pelts"
