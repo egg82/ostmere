@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any
 
 CAP_MIN = 30
-"""The `timeout-minutes` of every job planned here (tests/test_ci_budget.py reads ci.yml against it)."""
+"""The `timeout-minutes` of every job planned here (tests/tools/test_ci_budget.py reads ci.yml against it)."""
 MARGIN_MIN = 18
 """What a job is kept short of its cap: measured runs of one job differ by up to 2.5 times, and the table holds the worst of
 three."""

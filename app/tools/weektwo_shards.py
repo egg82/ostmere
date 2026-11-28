@@ -61,7 +61,7 @@ setup. Day twenty-seven's typical and sharp shards are here unmeasured, split as
 on from the chapter before's end with the same tests; the first nightly to play them gives their wall time. Day
 twenty-nine's and day thirty's are the same, unmeasured, and their goals and inputs walks read the whole game's history. The nightly
 plays these. A shard leaves the set by being split or sped up, never by a longer timeout; the 6 minutes
-is what tests/test_ci_budget.py's 10 leaves after `changes`, `slice` and `ci-ok`."""
+is what tests/tools/test_ci_budget.py's 10 leaves after `changes`, `slice` and `ci-ok`."""
 WHOLE_GAME = frozenset({"makers"})
 """The shards whose readouts read the whole game, not one chapter: a pull request's smoke plan plays them from the start where
 the change is one every chapter reads (tools/pr_plan.py `whole_game`, CI's `playthrough-whole-game`), since no chapter's
