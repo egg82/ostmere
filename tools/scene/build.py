@@ -23,6 +23,8 @@ from day_eleven import dayeleven_layers as d11
 from day_fifteen import dayfifteen_layers as d15
 from day_sixteen import daysixteen_layers as d16
 from day_twenty_five import daytwentyfive_layers as d25
+from day_twenty_seven import daytwentyseven_layers as d27
+from day_twenty_two import daytwentytwo_layers as d22
 from day_twenty_nine import daytwentynine_layers as d29
 from day_thirty import daythirty_layers as d30
 from day_thirty_one import daythirtyone_layers as d31
@@ -140,6 +142,7 @@ def _ground_layers(rng: random.Random, walls: Image.Image) -> list[Layer]:
         *d29.made_layers(),
         *d31.made_layers(),
         *d4.hang_layers(dayone.meat_on_rack()),
+        *d22.world_layers(),
     ]
 
 
@@ -194,12 +197,15 @@ def _people_layers(walls: Image.Image) -> list[Layer]:
         *d8.figure_layers(AWAY),
         *d11.figure_layers(AWAY),
         *d12.figure_layers(AWAY),
+        *d25.figure_layers(),
+        *d27.figure_layers(),
         *d29.figure_layers(),
         *d30.figure_layers(),
         *d31.figure_layers(),
         *d33.figure_layers(),
         *d4.creature_layers(),
         *d4.fog_layers(walls),
+        *d22.fog_layers(walls),
         Layer(id="smoke_plume", img=world.smoke_plume(ImageChops.lighter(walls, rack().getchannel("A"))), when=SMOKING),
     ]
 

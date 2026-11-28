@@ -139,10 +139,12 @@ STEP_ASIDE: dict[str, tuple[str, ...]] = {
     "figure_n7_by_fire": ("running:g_field_pick|mix:g_field_pick",),
     "figure_n5_at_hall_door_dark": ("running:g_field_forage|mix:g_field_forage",),
     "figure_n6_at_hall_door_dark": ("running:g_hearth_watch|mix:g_hearth_watch",),
+    "figure_n13_arrived": (people_moments.WINDOWS["fiddle_2"],),
     "figure_n23_at_hall_door": (people_moments.WINDOWS["board"], people_moments.WINDOWS["hands"], "project:sit_names&dark"),
 }
-"""Each by-the-fire pose, and each lodger seen at the hall's door, with the runs that take the person from it: it gives
-way to them (a person is drawn in one place)."""
+"""Each by-the-fire pose, each lodger seen at the hall's door, and the stranger at the gate, with the runs and moments
+that take the person from it: it gives way to them (a person is drawn in one place; the stranger steps back while the
+next newcomers come in at the gate)."""
 
 
 def _join(*terms: str | None) -> str:
