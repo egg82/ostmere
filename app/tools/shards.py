@@ -9,6 +9,7 @@ those same paths, so a new test directory lands in B and nothing falls between t
 import os
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor
 
 A_PATHS = ("tests/saves", "tests/accounts", "tests/api_contract")
 C_PATHS = ("tests/rules",)
@@ -37,8 +38,8 @@ def collected(extra: list[str], select: tuple[str, ...] = SELECT, env: dict[str,
 
 
 def check() -> int:
-    whole = collected([])
-    a, b, c = (collected(shard_args(name)) for name in "abc")
+    with ThreadPoolExecutor(4) as pool:
+        whole, a, b, c = pool.map(collected, [[], *(shard_args(name) for name in "abc")])
     print(f"unsharded {len(whole)} tests; shard a {len(a)}, shard b {len(b)}, shard c {len(c)}")
     both, missing, extra = (a & b) | (a & c) | (b & c), whole - a - b - c, (a | b | c) - whole
     for label, ids in (("in both shards", both), ("in neither shard", missing), ("only in a shard", extra)):
