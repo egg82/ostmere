@@ -140,8 +140,8 @@ beats:
      turn: up, outcome: "yes_but", pays: [C-promise-38], cost: time, moves: [PC], thread: {id: th-magic, at: end}, register: wonder}
   - {id: B24, region: R2, target_day: 33, weekly: true, gate: {all: [{project: A43}, {beat: B23}]},
      turn: down, outcome: "yes_but", opens: [C-promise-11], advances: [C-promise-2, C-promise-3, C-promise-5, C-promise-10], pays: [C-promise-9, C-promise-39], cost: time, moves: [PC, N3], thread: {id: th-network, at: end}, register: dread}
-  - {id: B25, region: R2, target_day: 35, weekly: false, unlocks: {system: skill_prestige}, gate: {all: [{beat: B24}, {skill_level: {skill: wayfinding, level: 25}}]},
-     turn: up, outcome: "yes", advances: [C-promise-1, C-promise-2], cost: none, moves: [PC], thread: {id: th-self, at: middle}, register: dread}
+  - {id: B25, region: R2, target_day: 35, weekly: false, gate: {all: [{project: A44}, {beat: B24}]},
+     turn: up, outcome: "yes", advances: [C-promise-1, C-promise-2], pays: [C-promise-40], cost: none, moves: [PC], thread: {id: th-self, at: middle}, register: dread}
   # week 6
   - {id: B26, region: R3, target_day: 36, weekly: true, gate: {project: P6},
      turn: up, outcome: "yes_but", advances: [C-promise-7], cost: option, moves: [PC], thread: {id: th-seams, at: start}, register: wonder}
@@ -619,6 +619,30 @@ day_thirty_one:
      turn: up, outcome: "yes", cost: none, moves: [PC], thread: {id: th-survive, at: middle}, register: wry}
   - {id: A43,  kind: action, visit: 33a, target_hour: 55, gate: {all: [{completions: {card: waystation, n: 8}}, {beat: Y9}]}}   # wake the house
   - {id: B24,  kind: ref,    visit: 33a, target_hour: 56}
+
+# Day thirty-three: from B24 through the black door (Y12) and its hollow (Y13, A44 shown) to A44 and B25, which pays the
+# day's near promise. Spec: content/team/week-five.md, "Day thirty-three". Ids only. Kinds as day_two:. target_hour: game
+# hours after B24 lands, typical route (week-five-numbers.md's estimate until the week-five simulator measures it).
+day_thirty_three_near_promise: C-promise-40
+day_thirty_three:
+  - {id: B24,  kind: ref,    visit: 33a, target_hour: 0}
+  - {id: Y12,  kind: beat,   region: R2, target_day: 33, weekly: false, visit: 33b, target_hour: 6, gate: {hours_after: {beat: B24, hours: 6}},
+     turn: down, cost: none, opens: [C-promise-40], moves: [PC, N5], thread: {id: th-network, at: middle}, register: dread}
+  - {id: Y13,  kind: beat,   region: R2, target_day: 34, weekly: false, visit: 34a, target_hour: 20, gate: {all: [{hours_after: {beat: B24, hours: 20}}, {beat: Y12}]},
+     turn: up, outcome: "no", cost: none, advances: [C-promise-40], moves: [N5], thread: {id: th-self, at: middle}, register: wry}
+  - {id: A44,  kind: action, visit: 35a, target_hour: 44, gate: {all: [{hours_after: {beat: B24, hours: 44}}, {beat: Y13}]}}   # lay the wrist to it
+  - {id: B25,  kind: ref,    visit: 35a, target_hour: 44}
+
+# Night 35: from B25 through Y14 to Y15 at dusk 35, week five's last beat, which pays its own near promise (no closing
+# ref, as day_nineteen_night:). Spec: content/team/week-five.md, "The clocks". Ids only. Kinds as day_two:. target_hour:
+# game hours after B25 lands, typical route (the estimate until the simulator measures it).
+day_thirty_five_night_near_promise: C-promise-41
+day_thirty_five_night:
+  - {id: B25,  kind: ref,    visit: 35a, target_hour: 0}
+  - {id: Y14,  kind: beat,   region: R2, target_day: 35, weekly: false, visit: 35b, target_hour: 6, gate: {hours_after: {beat: B25, hours: 6}},
+     turn: up, cost: none, opens: [C-promise-41], moves: [N5], thread: {id: th-self, at: middle}, register: warm}
+  - {id: Y15,  kind: beat,   region: R1, target_day: 35, weekly: false, visit: 35c, target_hour: 14, gate: {all: [{save_hours: 834}, {beat: Y14}]},
+     turn: down, cost: none, pays: [C-promise-41], moves: [N5, PC], thread: {id: th-self, at: middle}, register: wry}
 
 # The side layer: minor beats between spine beats, each with its own decision or spend (content/team/day-three.md,
 # "Side layer"). No turn fields: the flat check reads the spine and the chapters only. Never a gate for a beat.

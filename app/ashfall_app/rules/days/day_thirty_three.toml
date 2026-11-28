@@ -1,0 +1,367 @@
+# Day thirty-three: from B24 (the house woken) through Y12, Y13 and A44 to B25, then night 35's own list, Y14 and Y15,
+# week five's last chapter and the edge of written content, as data merged after day_thirty_one.toml (schema.Chapter,
+# chapters.merge). Story spoilers: never shown to the owner. Spec: content/team/week-five.md, "Day thirty-three"; numbers:
+# content/team/week-five-numbers.md. Its moments run on day thirty-one's ward_clock, from B24, and on the calendar.
+version = 1
+end_feature = "week_five_end"
+
+# ---------- Y12 and Y13: the second door ----------
+
+[[triggers]]
+id = "t_y12"
+when = { test = "at_least", subject_kind = "store", id = "ward_clock", value = 6 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "house_woken", value = 1 }]
+outcome = { line_keys = ["l_y12_1", "l_y12_2"], unlocks = [{ unlock_kind = "feature", id = "black_door" }] }
+
+# Y13 shows A44, unready with its countdown to the ward's forty-fourth hour (D-233).
+[[triggers]]
+id = "t_y13"
+when = { test = "at_least", subject_kind = "store", id = "ward_clock", value = 20 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "black_door", value = 1 }]
+outcome = { line_keys = ["l_y13_1", "l_y13_2"], unlocks = [{ unlock_kind = "card", id = "open_ward" }] }
+
+# A44: a story step, no odds. Its one require is the ward's clock, so its face draws the countdown (face_checks.py).
+[[cards]]
+id = "open_ward"
+site = { no_site = "the black door is at the back of the house on the far hill, off the scene" }
+only_player = "story"
+presentation = "narrative"
+label_key = "c_open_ward"
+work_s = 60
+cap = 1
+glows = true
+requires = [{ test = "at_least", subject_kind = "store", id = "ward_clock", value = 44 }]
+
+# ---------- B25 ----------
+
+# B25 at A44's finish. It unlocks nothing systemic (D-213). The mark's clock (hidden) times Y14.
+[[triggers]]
+id = "t_b25"
+when = { test = "at_least", subject_kind = "card_count", id = "open_ward", value = 1 }
+outcome = { line_keys = ["l_b25_1", "l_b25_2", "l_b25_3", "l_b25_4"], unlocks = [{ unlock_kind = "feature", id = "ward_open" }, { unlock_kind = "action", id = "mark_clock" }] }
+
+# Never drawn: game hours since B25.
+[[stores]]
+id = "mark_clock"
+label_key = "store_mark_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "mark_clock"
+label_key = "action_mark_clock"
+makes = [{ store = "mark_clock", items_per_hour = 1 }]
+
+# ---------- night 35: Y14 and Y15, the night's own list ----------
+
+[[triggers]]
+id = "t_y14"
+when = { test = "at_least", subject_kind = "store", id = "mark_clock", value = 6 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "ward_open", value = 1 }]
+outcome = { line_keys = ["l_y14"], unlocks = [{ unlock_kind = "feature", id = "mark_kept" }] }
+
+# Dusk 35 at 834 h on the calendar, a hidden clock the scene's night grade reads (day_twenty_seven.toml's night_28).
+[[stores]]
+id = "night_35"
+label_key = "store_night_35"
+cap_items = 20
+hidden = true
+clock = "night"
+
+[[standing]]
+id = "night_35"
+label_key = "action_night_35"
+makes = [{ store = "night_35", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_night_35"
+when = { test = "after_time", value = 3002400 }
+outcome = { line_keys = ["l_night_35"], unlocks = [{ unlock_kind = "action", id = "night_35" }] }
+
+# Y15 at dusk once Y14 has landed (D-216): week five's last beat, the chapter's end feature and the edge of written
+# content. No glowing step: the night arrives on its own.
+[[triggers]]
+id = "t_y15"
+when = { test = "after_time", value = 3002400 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "mark_kept", value = 1 }]
+outcome = { doings = ["n14"], line_keys = ["l_y15_1", "l_y15_2"], unlocks = [{ unlock_kind = "feature", id = "week_five_end" }], whereabouts = [{ person = "n14", no_scene = "plays out in the yard at night, a figure the week's art adds; until then the line tells it" }] }
+
+# ---------- the ward's later hours: what the chapter's middle visits find ----------
+
+# Facts the finds below require, so each lands in this chapter's span and never in an earlier one: a route already past
+# a find's level gets it here.
+[[triggers]]
+id = "t_ward_26h"
+when = { test = "at_least", subject_kind = "store", id = "ward_clock", value = 26 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "ward_26h" }] }
+
+[[triggers]]
+id = "t_ward_30h"
+when = { test = "at_least", subject_kind = "store", id = "ward_clock", value = 30 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "ward_30h" }] }
+
+# ---------- levels and finds ----------
+
+# Each on the next speed-only level past what typical held at the turn (#27's 672 h figures: Foraging 15, Wayfinding 17,
+# Spellcraft 10, Arcana 14), restating its row with a pays naming both.
+[[skill_levels]]
+skill = "foraging"
+levels = [{ level = 16, pays_key = "pays_find_for_16" }]
+
+[[skill_levels]]
+skill = "wayfinding"
+levels = [{ level = 18, pays_key = "pays_find_way_18" }]
+
+[[skill_levels]]
+skill = "spellcraft"
+levels = [{ level = 12, pays_key = "pays_spell_12_gate" }]
+
+[[skill_levels]]
+skill = "arcana"
+levels = [{ level = 16, pays_key = "pays_arc_16_reach" }]
+
+[[triggers]]
+id = "t_find_for_16"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 16 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "drift_two", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "ward_26h", value = 1 },
+]
+outcome = { stores = [{ store = "fungus", items = 8 }], line_keys = ["l_find_ash_caps"] }
+
+# The road marker on the hill path, drawn on the map with its find.
+[[triggers]]
+id = "t_find_way_18"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 18 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "ward_30h", value = 1 }]
+outcome = { line_keys = ["l_find_marker"], unlocks = [{ unlock_kind = "feature", id = "marker_found" }] }
+
+[[triggers]]
+id = "t_spell_12_gate"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 12 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "ward_26h", value = 1 }]
+outcome = { modifiers = [{ target = "work", id = "ward_gate", kind = "mul_bp", amount_bp = 13333, source = "spellcraft_12_gate" }] }
+
+# The call through the pack reaches one more: 3 x 1.3334 floors to 4 (engine design/spells.txt, "Reach").
+[[triggers]]
+id = "t_arc_16_reach"
+when = { test = "at_least", subject_kind = "skill_level", id = "arcana", value = 16 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "ward_30h", value = 1 }]
+outcome = { modifiers = [{ target = "chain", id = "jump_pack", kind = "add_bp", amount_bp = 3334, source = "arcana_16_reach" }] }
+
+# ---------- Lucy's last job ----------
+
+# After j_new_pins, once the house is woken: a yes shows a short hands job paying a one-off rather than queuing it
+# (D-176); a no costs nothing and comes back as someone else's work.
+[[offers]]
+id = "j_hill_stakes"
+text_key = "o_j_hill_stakes"
+askers = ["n1"]
+gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_new_pins", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "house_woken", value = 1 },
+]
+
+[[offers.answers]]
+id = "j_hill_stakes_yes"
+label_key = "a_j_hill_stakes_yes"
+cost_key = "a_job_yes_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 24 }]
+line_keys = ["l_j_hill_stakes_yes"]
+unlocks = [{ unlock_kind = "card", id = "hill_stakes" }]
+
+[[offers.answers]]
+id = "j_hill_stakes_no"
+label_key = "a_job_no"
+cost_key = "a_job_no_cost"
+[offers.answers.echo]
+after_h = 8
+line_key = "l_echo_j_hill_stakes_no"
+modifier = { target = "work", id = "walk_hill", kind = "mul_bp", amount_bp = 10300, source = "j_hill_stakes_no" }
+[offers.answers.outcome]
+doings = ["n1"]
+stores = [{ store = "ask_wait", items = 24 }]
+line_keys = ["l_j_hill_stakes_no"]
+whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
+
+[[cards]]
+id = "hill_stakes"
+site = { no_site = "the path runs up the far hill, a walk from the post, off the scene" }
+only_player = "story"
+presentation = "action"
+label_key = "c_hill_stakes"
+upside_key = "up_hill_stakes"
+work_s = 1200
+cap = 1
+inputs = [{ store = "stakes", items = 6 }]
+outcome = { stores = [{ store = "stones", items = 3 }] }
+line_keys = ["l_hill_stakes"]
+
+# ---------- the map ----------
+
+# The house on the hill, a stamp on the hill's (D-220): drawn from the first walk up it, named at Y9.
+[[places]]
+id = "p_house"
+stamp = "fort"
+at = [3, 7]
+over = "p_square_hill"
+reveal = { unlock_kind = "feature", id = "hill_walked" }
+label_key = "place_house"
+labelled_after = { unlock_kind = "feature", id = "house_found" }
+
+# B24's wall: the network's marks at the larger scale, revealed together and unnamed, one on the ridge the old road
+# crosses, four in a ring round a dark place far off.
+[[places]]
+id = "p_mark_ridge"
+stamp = "village"
+at = [0, 2]
+over = "p_ridge"
+reveal = { unlock_kind = "feature", id = "house_woken" }
+
+[[places]]
+id = "p_mark_west"
+stamp = "village"
+at = [-4, 3]
+reveal = { unlock_kind = "feature", id = "house_woken" }
+
+[[places]]
+id = "p_ring_north"
+stamp = "village"
+at = [6, 8]
+reveal = { unlock_kind = "feature", id = "house_woken" }
+
+[[places]]
+id = "p_ring_east"
+stamp = "village"
+at = [8, 6]
+reveal = { unlock_kind = "feature", id = "house_woken" }
+
+[[places]]
+id = "p_ring_south"
+stamp = "village"
+at = [6, 4]
+reveal = { unlock_kind = "feature", id = "house_woken" }
+
+[[places]]
+id = "p_ring_west"
+stamp = "village"
+at = [4, 6]
+reveal = { unlock_kind = "feature", id = "house_woken" }
+
+# The road marker on the path up the hill, from its find.
+[[places]]
+id = "p_marker_hill"
+stamp = "crossing"
+at = [2, 6]
+reveal = { unlock_kind = "feature", id = "marker_found" }
+label_key = "place_marker_hill"
+
+# ---------- aims ----------
+
+[[aims]]
+id = "aim_shaft"
+text_key = "aim_shaft"
+after = { unlock_kind = "feature", id = "ward_open" }
+
+# ---------- the journal ----------
+
+[[subjects]]
+id = "s_b25"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b25" }
+first = { keys = ["n_day_b25"] }
+catchup = { keys = ["j_b25_catchup"] }
+late = { keys = ["j_b25_late"] }
+
+# ---------- features ----------
+
+[[features]]
+id = "black_door"
+
+[[features]]
+id = "ward_open"
+
+[[features]]
+id = "mark_kept"
+
+[[features]]
+id = "ward_26h"
+
+[[features]]
+id = "ward_30h"
+
+[[features]]
+id = "marker_found"
+
+[[features]]
+id = "week_five_end"
+
+# ---------- text ----------
+
+[beat_lines]
+Y12 = ["l_y12_1"]
+Y13 = ["l_y13_1"]
+B25 = ["l_b25_1"]
+Y14 = ["l_y14"]
+Y15 = ["l_y15_1"]
+
+[line_kinds]
+l_y12_1 = "story"
+l_y12_2 = "story"
+l_y13_1 = "story"
+l_y13_2 = "story"
+l_b25_1 = "story"
+l_b25_2 = "story"
+l_b25_3 = "story"
+l_b25_4 = "story"
+l_y14 = "story"
+l_night_35 = "story"
+l_y15_1 = "story"
+l_y15_2 = "story"
+l_find_ash_caps = "find"
+l_find_marker = "find"
+l_j_hill_stakes_yes = "story"
+l_j_hill_stakes_no = "story"
+l_echo_j_hill_stakes_no = "story"
+l_hill_stakes = "story"
+
+[text]
+l_y12_1 = "clearing the last ash from the back of the house, the walkers find a second door, black stone, set flush."
+l_y12_2 = "no handle, no keyhole. it is warm to the hand, warmer than the hearth."
+l_y13_1 = "the tracker and two of the walkers put a bar to its edge and lean on it until the bar bends. it doesn't move."
+l_y13_2 = "in the middle of its face, at waist height, there is a shallow hollow, long and narrow, about the width of a wrist."
+c_open_ward = "Lay your wrist to it"
+l_b25_1 = "you lay your wrist in the hollow, the mark uppermost. the door goes in a hand's width and swings."
+l_b25_2 = "the tracker looks at your wrist a long time, then draws the same mark on their own with a stick of charcoal."
+l_b25_3 = "they swing the door shut and lay their wrist in the hollow, and it opens for them too. they try it again. it doesn't."
+l_b25_4 = "behind the door a shaft goes down into the dark. warm air comes up it."
+store_mark_clock = "hours since the door"
+action_mark_clock = "Since the door"
+l_y14 = "at supper the tracker eats with one sleeve rolled to the elbow, that wrist held away from the pot's steam. nobody gets near it."
+store_night_35 = "night"
+action_night_35 = "Night"
+l_night_35 = "the light goes. it stays warm, and the ash keeps coming down."
+l_y15_1 = "everyone is out in the yard. nobody can sleep inside in the heat. {n14} plays."
+l_y15_2 = "the tracker spits on their wrist and rubs the charcoal off with a thumb. it comes away grey."
+pays_find_for_16 = "a find, {pct} foraging speed"
+pays_find_way_18 = "a find, {pct} speed walking the Ashwood"
+pays_spell_12_gate = "{pct} spellcraft speed, {pct_b} speed warding the gate"
+pays_arc_16_reach = "{pct} arcana speed, {pct_b} reach calling through the pack"
+l_find_ash_caps = "ash-caps on the dead trunks round the post, opened in the wind."
+l_find_marker = "on the path up the far hill, a road marker with its face still cut. the letters can't be read."
+o_j_hill_stakes = "Lucy says somebody has to stake the path up the far hill, so the walkers keep to it in the dark."
+a_j_hill_stakes_yes = "I'll stake it"
+l_j_hill_stakes_yes = "you carry a bundle of stakes out past the post."
+l_j_hill_stakes_no = "Lucy finds someone else."
+l_echo_j_hill_stakes_no = "someone staked the hill path. the walkers keep to it quicker."
+c_hill_stakes = "Stake the hill path"
+up_hill_stakes = "the path marked, and stones dug up setting it"
+l_hill_stakes = "a line of stakes runs up the far hill, pale in the ash."
+place_house = "The house on the hill"
+place_marker_hill = "The road marker"
+aim_shaft = "the way down."
+n_day_b25 = "the black door opened to the mark on my wrist. the tracker drew it in charcoal, and it opened once for them"
+j_b25_catchup = "the black door at the back of the house was opened"
+j_b25_late = "the black door at the back of the house stands open"

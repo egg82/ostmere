@@ -6006,6 +6006,22 @@
       ],
       "takes": [],
       "wounds": []
+    },
+    {
+      "card": "open_ward",
+      "makes": [],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "hill_stakes",
+      "makes": [
+        "stones"
+      ],
+      "takes": [
+        "stakes"
+      ],
+      "wounds": []
     }
   ],
   "chips": [
@@ -6219,7 +6235,8 @@
         "n15_walk_hill",
         "pull_wall",
         "n23_walk_hill",
-        "walk_hill"
+        "walk_hill",
+        "hill_stakes"
       ]
     },
     {
@@ -7561,6 +7578,14 @@
       "made_by": []
     },
     {
+      "store": "mark_clock",
+      "made_by": []
+    },
+    {
+      "store": "night_35",
+      "made_by": []
+    },
+    {
       "store": "his_watch_clock",
       "made_by": []
     },
@@ -7666,6 +7691,10 @@
     },
     {
       "store": "echo_j_new_pins_no_clock",
+      "made_by": []
+    },
+    {
+      "store": "echo_j_hill_stakes_no_clock",
       "made_by": []
     },
     {

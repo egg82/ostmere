@@ -10,7 +10,8 @@ day fifteen's copied at B14's, day eighteen's day sixteen's copied at B15's, day
 at B16's, day twenty-two's, week four's first, day nineteen's copied at T13's, and day twenty-three's day twenty-two's
 copied at B19's, day twenty-five's day twenty-three's copied at B20's, day twenty-seven's day twenty-five's copied
 at B21's, day twenty-nine's, week five's first, day twenty-seven's copied at I13's, day thirty's day
-twenty-nine's copied at B22's, and day thirty-one's day thirty's copied at B23's.
+twenty-nine's copied at B22's, day thirty-one's day thirty's copied at B23's, and day thirty-three's day
+thirty-one's copied at B24's.
 Each chapter plays on from the saved end of the one before (ends.py) where the route's is saved and the saves are present, so a session plays each
 chapter once and week one not at all; `played` is the same chain from the start, which the saved ends are written from."""
 import copy
@@ -54,6 +55,8 @@ THIRTY_PUSH_ROUTES = NINE_PUSH_ROUTES
 """Day thirty's, the same."""
 THIRTY_ONE_PUSH_ROUTES = NINE_PUSH_ROUTES
 """Day thirty-one's, the same."""
+THIRTY_THREE_PUSH_ROUTES = NINE_PUSH_ROUTES
+"""Day thirty-three's, the same."""
 REPORT_ROUTES = ("typical", "sharp", "evenings", "whenever", "babysitter")
 
 
@@ -69,25 +72,27 @@ def play_on(p: DayTwoPlayer, laters: tuple[Later, ...]) -> DayTwoPlayer:
 
 
 CHAPTERS = keys.ORDER[1:]
-"""Week two's chapters, week three's four, week four's four and week five's first three, in the order their plays build on
+"""Week two's chapters, week three's four, week four's four and week five's four, in the order their plays build on
 each other."""
 BEFORE = {"eight": "week1", "nine": "eight", "eleven": "nine", "twelve": "eleven", "fifteen": "twelve",
           "sixteen": "fifteen", "eighteen": "sixteen", "nineteen": "eighteen", "twentytwo": "nineteen",
           "twentythree": "twentytwo", "twentyfive": "twentythree", "twentyseven": "twentyfive",
-          "twentynine": "twentyseven", "thirty": "twentynine", "thirtyone": "thirty"}
+          "twentynine": "twentyseven", "thirty": "twentynine", "thirtyone": "thirty",
+          "thirtythree": "thirtyone"}
 SAVED = {"week1": PUSH_ROUTES, "eight": NINE_PUSH_ROUTES, "nine": ELEVEN_PUSH_ROUTES, "eleven": TWELVE_PUSH_ROUTES,
          "twelve": FIFTEEN_PUSH_ROUTES, "fifteen": SIXTEEN_PUSH_ROUTES, "sixteen": EIGHTEEN_PUSH_ROUTES,
          "eighteen": NINETEEN_PUSH_ROUTES, "nineteen": TWENTYTWO_PUSH_ROUTES,
          "twentytwo": TWENTYTHREE_PUSH_ROUTES, "twentythree": TWENTYFIVE_PUSH_ROUTES,
          "twentyfive": TWENTYSEVEN_PUSH_ROUTES, "twentyseven": TWENTYNINE_PUSH_ROUTES,
-         "twentynine": THIRTY_PUSH_ROUTES, "thirty": THIRTY_ONE_PUSH_ROUTES}
+         "twentynine": THIRTY_PUSH_ROUTES, "thirty": THIRTY_ONE_PUSH_ROUTES,
+         "thirtyone": THIRTY_THREE_PUSH_ROUTES}
 """The routes whose end of each chapter is saved (ends.py): the ones the next chapter plays on a push, seed 0."""
 DAYS = {"eight": w2.day_eight, "nine": w2.day_nine, "eleven": w2.day_eleven, "twelve": w2.day_twelve,
         "fifteen": w2.day_fifteen, "sixteen": w2.day_sixteen, "eighteen": w2.day_eighteen,
         "nineteen": w2.day_nineteen, "twentytwo": w4.day_twenty_two,
         "twentythree": w4.day_twenty_three, "twentyfive": w4.day_twenty_five, "twentyseven": w4.day_twenty_seven,
         "twentynine": w5.day_twenty_nine, "thirty": w5.day_thirty,
-        "thirtyone": w5.day_thirty_one}
+        "thirtyone": w5.day_thirty_one, "thirtythree": w5.day_thirty_three}
 
 
 def laters(chapter: str, name: str) -> tuple[Later, ...]:
@@ -214,5 +219,10 @@ def thirty(name: str, seed: int = 0) -> DayTwoPlayer:
 
 
 def thirtyone(name: str, seed: int = 0) -> DayTwoPlayer:
-    """Day thirty's play played on through day thirty-one to B24's visit, the edge of written content."""
+    """Day thirty's play played on through day thirty-one to B24's visit."""
     return from_saved("thirtyone", name, seed)
+
+
+def thirtythree(name: str, seed: int = 0) -> DayTwoPlayer:
+    """Day thirty-one's play played on through day thirty-three to Y15's visit, night 35 and the edge of written content."""
+    return from_saved("thirtythree", name, seed)

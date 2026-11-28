@@ -107,3 +107,27 @@ def day_thirty_one(route: str) -> Later:
     cards, O-burners by the route's answer (or the kind's rule), Lucy's jobs answered when they show and tapped once
     ready, and A43 queued When ready once shown, or tapped when ready."""
     return later(day_thirty(route), week_thirty_one(route), route)
+
+
+THIRTY_THREE = Landings(
+    {"Y12": ("t_y12",), "Y13": ("t_y13",), "B25": ("t_b25",), "Y14": ("t_y14",), "Y15": ("t_y15",)},
+    {"A44": ("open_ward",)}, {}, {})
+OPEN_WARD, HILL_STAKES = CardId("open_ward"), CardId("hill_stakes")
+LAST_JOB = "j_hill_stakes"
+LAST_JOB_NO = {"sharp": LAST_JOB}
+"""Lucy's last job, from B24, answered yes when it shows but on the route here that declines it: both answers measured."""
+
+
+def week_thirty_three(route: str) -> Week:
+    """Day thirty-three's ids for `route`: B24's visit to Y15's, night 35 on the calendar."""
+    no = LAST_JOB_NO.get(route) == LAST_JOB
+    return Week(
+        start="B24", stop="Y15", landed=THIRTY_THREE.of, news=("Y12", "Y13", "A44", "B25", "Y14", "Y15"),
+        asks=((OfferId(LAST_JOB), AnswerId(f"{LAST_JOB}_{'no' if no else 'yes'}")),),
+        steps=(HILL_STAKES, OPEN_WARD), queued=(OPEN_WARD,))
+
+
+def day_thirty_three(route: str) -> Later:
+    """B24's visit to Y15's, week five's last: day thirty-one's moves carried on, Lucy's last job answered when it shows
+    and tapped once ready, and A44 queued When ready once shown, or tapped when ready."""
+    return later(day_thirty_one(route), week_thirty_three(route), route)
