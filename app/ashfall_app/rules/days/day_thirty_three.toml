@@ -195,6 +195,7 @@ label_key = "c_hill_stakes"
 upside_key = "up_hill_stakes"
 work_s = 1200
 cap = 1
+inputs = [{ store = "stakes", items = 6 }]
 outcome = { stores = [{ store = "stones", items = 3 }] }
 line_keys = ["l_hill_stakes"]
 
