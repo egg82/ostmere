@@ -609,7 +609,7 @@ day_thirty_one:
   - {id: B23,  kind: ref,    visit: 31a, target_hour: 0}
   - {id: Y8,   kind: beat,   region: R1, target_day: 31, weekly: false, visit: 31b, target_hour: 6, gate: {all: [{hours_after: {beat: B23, hours: 6}}, {beat: B23}]},
      turn: down, outcome: "no", cost: stores, moves: [PC, N2], thread: {id: th-network, at: middle}, register: grim}
-  - {id: Y9,   kind: beat,   region: R2, target_day: 31, weekly: false, visit: 31c, target_hour: 10, gate: {all: [{store_at_least: {store: hill_trips, n: 2}}, {hours_after: {beat: B23, hours: 10}}]},
+  - {id: Y9,   kind: beat,   region: R2, target_day: 31, weekly: false, visit: 31c, target_hour: 10, gate: {all: [{store_at_least: {store: hill_trips, n: 1}}, {hours_after: {beat: B23, hours: 10}}]},
      turn: up, cost: none, opens: [C-promise-39], moves: [PC], thread: {id: th-network, at: middle}, register: wonder}
   - {id: O-burners, kind: offer, target_day: 31, visit: 31d, target_hour: 12, gate: {all: [{store_at_least: {store: meals, n: 380}}, {hours_after: {beat: B23, hours: 12}}]},
      moves: [PC], thread: {id: th-town, at: middle}}

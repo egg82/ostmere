@@ -82,23 +82,23 @@ offered_after = { unlock_kind = "card", id = "iron_latch" }
 
 # ---------- Y9: the house on the hill, and P5 ----------
 
-# The second walk to the hill, a fact a requirement can read.
+# The first walk to the hill, a fact a requirement can read.
 [[triggers]]
-id = "t_hill_twice"
-when = { test = "at_least", subject_kind = "store", id = "hill_trips", value = 2 }
-outcome = { unlocks = [{ unlock_kind = "feature", id = "hill_twice" }] }
+id = "t_hill_walked"
+when = { test = "at_least", subject_kind = "store", id = "hill_trips", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "hill_walked" }] }
 
-# Ten hours after the call, once the hill has been walked twice: the house, and the town's work to clear it out.
+# Ten hours after the call, once the hill has been walked: the house, and the town's work to clear it out.
 [[triggers]]
 id = "t_y9"
 when = { test = "at_least", subject_kind = "store", id = "call_clock", value = 10 }
 requires = [
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pack_called", value = 1 },
-  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "hill_twice", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "hill_walked", value = 1 },
 ]
 outcome = { line_keys = ["l_y9_1", "l_y9_2", "l_p5_shown"], unlocks = [{ unlock_kind = "feature", id = "house_found" }, { unlock_kind = "card", id = "waystation" }] }
 
-# P5: eight stages, each eating at the post (D-212). Stage 3 is Y10; its last shows A43. Run by its order card.
+# P5: eight stages, each eating at the post (D-212); stakes, not cord, which the town makes too slowly to feed it. Stage 3 is Y10; its last shows A43. Run by its order card.
 [[cards]]
 id = "waystation"
 site = { no_site = "the house stands on the far hill, a walk from the post, off the scene" }
@@ -111,15 +111,15 @@ cap = 8
 inputs = [
   { store = "charwood", items = 6 },
   { store = "stones", items = 4 },
-  { store = "cord", items = 2 },
+  { store = "stakes", items = 2 },
   { store = "post_stores", items = 2 },
 ]
 
-# "When the post's store reaches 4, work on the house": two stages' worth, so the walks keep a share of the line.
+# "When the post's store reaches 2, work on the house": one stage's worth.
 [[order_cards]]
 store = "post_stores"
 tap_card = "waystation"
-when = { test = "at_least", subject_kind = "store", id = "post_stores", value = 4, release = 4 }
+when = { test = "at_least", subject_kind = "store", id = "post_stores", value = 2, release = 2 }
 offered_after = { unlock_kind = "card", id = "waystation" }
 
 [[triggers]]
@@ -206,12 +206,34 @@ modifiers = [
   { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_burners_build" },
 ]
 
-# Either way they keep the post's fire and bring its crew what they trap in the wood, so the crew out there eats half
-# what it did from the post's store: the line's surplus is what moves P5 and the hill's walks.
+# Either way they keep the post's fire and feed its crew from what they trap in the wood, so the crew out there eats a
+# tenth of what it did from the post's store, and her son carries for the carts, half again as fast: the line's surplus
+# is what moves P5 and the hill's walks.
 [[triggers]]
 id = "t_burners_fire"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_burners", value = 1 }
-outcome = { line_keys = ["l_burners_fire"], modifiers = [{ target = "rate", id = "post_upkeep", flow = "cost", store = "post_stores", kind = "mul_bp", amount_bp = 5000, source = "t_burners_fire" }] }
+[triggers.outcome]
+line_keys = ["l_burners_fire"]
+modifiers = [
+  { target = "rate", id = "post_upkeep", flow = "cost", store = "post_stores", kind = "mul_bp", amount_bp = 1000, source = "t_burners_fire" },
+  { target = "work", id = "run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n1_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n2_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n3_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n5_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n6_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n7_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n8_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n9_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n10_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n12_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n13_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n14_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n15_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n23_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "g_field_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "g_road_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+]
 
 # The outpost's first people of its own (D-215): they keep the post's fire and sleep there.
 [[lanes]]
@@ -513,7 +535,7 @@ late = { keys = ["j_b24_late"] }
 id = "larder_raided"
 
 [[features]]
-id = "hill_twice"
+id = "hill_walked"
 
 [[features]]
 id = "house_found"
@@ -628,7 +650,7 @@ a_burners_food_cost = "{pct} smoked from the rack, {pct_b} smoked at the table"
 a_burners_build_cost = "{pct} all road clearing, {pct_b} smoked at the table"
 l_burners_food = "{n24} and {n25} take the carts. {n2} sets them with the road crew."
 l_burners_build = "{n24} and {n25} take the stakes and the road. {n2} sets them with the road crew."
-l_burners_fire = "{n24} feeds the post's crew from her own snares. they eat less of what the carts bring."
+l_burners_fire = "{n24} feeds the post's crew from her snares, and {n25} pushes the carts out with whoever runs them."
 lane_n24 = "The burner's hands"
 lane_n24_named = "{n24}'s hands"
 name_n24 = "Marian"
