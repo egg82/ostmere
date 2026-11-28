@@ -56,7 +56,7 @@ check them.
 - Regenerate `app/client/fixtures/real_chip_cards.json` when a card, chip or store changes; its test
   (`app/tests/api/test_rule_chip_cases_wire.py`) runs in CI, not in `gates.sh`, so run it.
 - A new chapter goes in `CHAPTERS` (or `IN_WRITING`) in `rules/schema.py`, with its `content/beats.yaml` ids and
-  `content/decisions.jsonl` rows.
+  `content/decisions/` rows.
 - A new working is a `[[workings]]` row in its chapter (its axes; a declared cost must equal the computed one); a new
   kind pair or link is a row in `app/ashfall_app/rules/working_rules.toml`, never a hand-priced card.
 - A new gate goes in `app/tools/gates.sh` **and** the "Structural gates" table in `docs/engineering.md` (via
