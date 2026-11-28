@@ -5955,6 +5955,57 @@
         "hair"
       ],
       "wounds": []
+    },
+    {
+      "card": "iron_latch",
+      "makes": [],
+      "takes": [
+        "stakes",
+        "charwood",
+        "cord"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "waystation",
+      "makes": [],
+      "takes": [
+        "charwood",
+        "stones",
+        "stakes",
+        "post_stores"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "wake_ward",
+      "makes": [],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "post_roof",
+      "makes": [
+        "ash"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "drag_elk",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "new_pins",
+      "makes": [
+        "cord"
+      ],
+      "takes": [],
+      "wounds": []
     }
   ],
   "chips": [
@@ -6682,7 +6733,8 @@
         "n10_cord",
         "n12_cord",
         "n8_cord",
-        "n9_cord"
+        "n9_cord",
+        "new_pins"
       ]
     },
     {
@@ -6802,7 +6854,8 @@
         "stir_air",
         "dig_midden",
         "ward_gate",
-        "jump_pack"
+        "jump_pack",
+        "post_roof"
       ]
     },
     {
@@ -7110,7 +7163,8 @@
         "n15_clear_road",
         "n23_clear_track",
         "n23_clear_road",
-        "clear_track"
+        "clear_track",
+        "drag_elk"
       ]
     },
     {
@@ -7491,6 +7545,22 @@
       "made_by": []
     },
     {
+      "store": "larder_torn",
+      "made_by": []
+    },
+    {
+      "store": "hall_fought",
+      "made_by": []
+    },
+    {
+      "store": "hall_lost",
+      "made_by": []
+    },
+    {
+      "store": "ward_clock",
+      "made_by": []
+    },
+    {
       "store": "his_watch_clock",
       "made_by": []
     },
@@ -7584,6 +7654,18 @@
     },
     {
       "store": "echo_j_far_snares_no_clock",
+      "made_by": []
+    },
+    {
+      "store": "echo_j_post_roof_no_clock",
+      "made_by": []
+    },
+    {
+      "store": "echo_j_drag_elk_no_clock",
+      "made_by": []
+    },
+    {
+      "store": "echo_j_new_pins_no_clock",
       "made_by": []
     },
     {

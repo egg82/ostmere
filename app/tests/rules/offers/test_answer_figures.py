@@ -86,7 +86,7 @@ HIDDEN = {
     "sorrel_clock", "sorrel_12h", "sorrel_16h", "cache_torn", "night_24",
     "kept_clock", "kept_4h", "kept_12h", "kept_24h", "walkers_clock", "walkers_6h", "bede_wait", "bede_clock", "night_28",
     "still_end_left", "fish_end_left", "gifts_left", "run_town_left", "run_town",
-    "track_left", "road_ash", "line_clock", "night_30", "call_clock",
+    "track_left", "road_ash", "line_clock", "night_30", "call_clock", "larder_torn", "ward_clock",
     "own_hands", "left_to_them", "work_food", "work_build", "bay2_mid", "hut_mid",
 }
 

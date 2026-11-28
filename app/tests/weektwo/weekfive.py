@@ -2,6 +2,7 @@
 players (tests/weekfive/policy.py `later`): which content step is which story id, read off a save, and what each
 chapter's Week names for the policies. Ids only (CLAUDE.md, "Never spoil the owner")."""
 from ashfall_app.engine import AnswerId, CardId, OfferId, StoreId
+from tests.daythree import content as c3
 from tests.daythree.chapter import Keep, Landings, Later
 from tests.weekfive.policy import CastCard, RouteShare, TwoAnswer, Week, chip_cure, later
 from tests.dayone.player.sinks import SINKS
@@ -70,3 +71,39 @@ def day_thirty(route: str) -> Later:
     the ward and the jump in the hands' mix once shown, and A42 queued When ready once shown, or tapped when ready."""
     return later(day_twenty_nine(route), WEEK_THIRTY, route)
 
+
+THIRTY_ONE = Landings(
+    {"Y8": ("t_y8",), "Y9": ("t_y9",), "SL40": ("t_scrape",), "Y10": ("t_y10",), "SL41": ("t_bear_sign_2",),
+     "Y11": ("t_y11",), "B24": ("t_b24",)},
+    {"A43": ("wake_ward",)}, {}, {"O-burners": OfferId("o_burners")})
+WAKE_WARD = CardId("wake_ward")
+BURNERS = {"typical": AnswerId("o_burners_food"), "sharp": AnswerId("o_burners_build")}
+"""Where the burners work first, as each route answers (a route not named follows typical): both answers measured. The
+whenever player's kind rule, set in week three, answers it."""
+JOBS = ("j_post_roof", "j_drag_elk", "j_new_pins")
+JOB_NO = {"sharp": "j_drag_elk"}
+"""Lucy's jobs from B23, each answered yes when it shows, but for the one each route here declines. A yes shows the job
+without queuing it (D-176), so a route taps it once it is ready."""
+
+
+def jobs(route: str) -> tuple[tuple[OfferId, AnswerId], ...]:
+    no = JOB_NO.get(route)
+    return tuple((OfferId(j), AnswerId(f"{j}_{'no' if j == no else 'yes'}")) for j in JOBS)
+
+
+def week_thirty_one(route: str) -> Week:
+    """Day thirty-one's ids for `route`: the latch's order card is on stakes, which every route since day eight takes."""
+    return Week(
+        start="B23", stop="B24", landed=THIRTY_ONE.of,
+        news=("Y8", "Y9", "O-burners", "SL40", "Y10", "SL41", "Y11", "A43", "B24"),
+        order_cards=c3.order_cards(c3.opening3(), ("post_stores",)),
+        arrivals=((OfferId("o_burners"), BURNERS.get(route, BURNERS["typical"])),),
+        asks=jobs(route),
+        steps=(CardId("post_roof"), CardId("drag_elk"), CardId("new_pins"), WAKE_WARD), queued=(WAKE_WARD,))
+
+
+def day_thirty_one(route: str) -> Later:
+    """B23's visit to B24's, week five's third: day thirty's moves carried on, the latch and the house by their order
+    cards, O-burners by the route's answer (or the kind's rule), Lucy's jobs answered when they show and tapped once
+    ready, and A43 queued When ready once shown, or tapped when ready."""
+    return later(day_thirty(route), week_thirty_one(route), route)

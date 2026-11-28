@@ -74,10 +74,11 @@ BUILDS: Mapping[str, tuple[str, ...]] = {
 }
 """Each build and the layers that are it: its states, its parts, what it carries."""
 
-NO_SCENE: frozenset[str] = frozenset({"post_door", "post", "bind_book"})
+NO_SCENE: frozenset[str] = frozenset({"post_door", "post", "bind_book", "waystation", "iron_latch"})
 """Builds (craft cards with a cap, app/tests/scene/test_scene_shown.py) the player makes that stand nowhere in the scene:
-`post` and `post_door` are out in the wood, a map stamp and not a scene stamp (content/team/week-four.md, Art);
-`bind_book` is a book handed to a person, which the journal shows, not the camp."""
+`post` and `post_door` are out in the wood and `waystation` on the far hill, map stamps and not scene stamps
+(content/team/week-four.md and week-five.md, Art); `bind_book` is a book handed to a person, which the journal shows, not
+the camp. `iron_latch` is here until week five's art draws it on the hall's larder door: that state takes it out."""
 
 HELD_UNSHOWN: frozenset[str] = frozenset({"screen_fire"})
 """Builds with no scene state today, held so the check stays on for the rest: may only shrink."""

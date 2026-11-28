@@ -1,0 +1,710 @@
+# Day thirty-one: from B23 (the pack called) through Y8 (the hall's raid and the latch), Y9 (the house and P5), O-burners,
+# SL40, Y10, SL41, Y11 and Camp 20 to A43 and B24, week five's third chapter, as data merged after day_thirty.toml
+# (schema.Chapter, chapters.merge). Story spoilers: never shown to the owner. Spec: content/team/week-five.md, "Day
+# thirty-one"; numbers: content/team/week-five-numbers.md. Its moments run on day thirty's call_clock, from B23.
+version = 1
+end_feature = "house_woken"
+
+# ---------- Y8: the hall's larder, the latch and the hall's raid ----------
+
+# Six hours after the call. The larder is raided on its own two-hour drain that pauses at empty (the visitor's idiom),
+# the same watched or not; from here the mourners raid the hall as well as the line, and the latch is what holds it.
+[[triggers]]
+id = "t_y8"
+when = { test = "at_least", subject_kind = "store", id = "call_clock", value = 6 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pack_called", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_y8_1", "l_y8_2"]
+stores = [{ store = "larder_torn", items = 6 }]
+unlocks = [
+  { unlock_kind = "feature", id = "larder_raided" },
+  { unlock_kind = "action", id = "larder_torn" },
+  { unlock_kind = "action", id = "raid_hall" },
+  { unlock_kind = "feature", id = "combat" },
+  { unlock_kind = "card", id = "iron_latch" },
+]
+
+# Never drawn but by its drain: the hams taken off the larder's hooks.
+[[stores]]
+id = "larder_torn"
+label_key = "store_larder_torn"
+cap_items = 6
+hidden = true
+
+[[standing]]
+id = "larder_torn"
+label_key = "action_larder_torn"
+costs = [{ store = "larder_torn", items_per_hour = 3 }, { store = "smoked", items_per_hour = 3 }]
+
+# The hall's larder: a side of its own, which the watch at the gap does not hold (they come over the roof).
+[[sides]]
+id = "latch"
+label_key = "side_latch"
+base = 20
+
+[[stores]]
+id = "hall_fought"
+label_key = "store_hall_fought"
+cap_items = 20000
+
+[[stores]]
+id = "hall_lost"
+label_key = "store_hall_lost"
+cap_items = 20000
+
+[[standing]]
+id = "raid_hall"
+label_key = "action_raid_hall"
+fight = { side = "latch", threat = "mourner", lost = "hall_lost", fought = "hall_fought", fights_per_hour = 1, loses = [{ store = "smoked", items = 1 }], won_line_keys = ["l_fight_hall_won_1", "l_fight_hall_won_2", "l_fight_hall_won_3", "l_fight_hall_won_4", "l_fight_hall_won_5", "l_fight_hall_won_6"], lost_line_keys = ["l_fight_hall_lost_1", "l_fight_hall_lost_2", "l_fight_hall_lost_3", "l_fight_hall_lost_4", "l_fight_hall_lost_5", "l_fight_hall_lost_6"] }
+
+# The latch: a staged hands build run by its order card (D-119), its last stage a lasting hold on the larder's side
+# (day twelve's lamps on the gap). Forged and fitted from what the town makes without end, so nothing finite feeds it.
+[[cards]]
+id = "iron_latch"
+site = { no_site = "the latch goes on the hall's larder door; the week's art adds it from the last stage, until then the line tells it" }
+only_player = "project"
+presentation = "craft"
+label_key = "c_iron_latch"
+upside_key = "up_iron_latch"
+work_s = 1800
+cap = 4
+inputs = [{ store = "stakes", items = 4 }, { store = "charwood", items = 2 }, { store = "cord", items = 1 }]
+line_keys = ["l_latch_1", "l_latch_2", "l_latch_3", "l_latch_done"]
+[cards.finished]
+modifiers = [{ target = "side", id = "latch", kind = "add_bp", amount_bp = 20000, source = "iron_latch" }]
+
+# "When stakes reach 16, work on the latch": stakes stand at their cap, so it is a sink that was waiting.
+[[order_cards]]
+store = "stakes"
+tap_card = "iron_latch"
+when = { test = "at_least", subject_kind = "store", id = "stakes", value = 16, release = 16 }
+offered_after = { unlock_kind = "card", id = "iron_latch" }
+
+# ---------- Y9: the house on the hill, and P5 ----------
+
+# The first walk to the hill, a fact a requirement can read.
+[[triggers]]
+id = "t_hill_walked"
+when = { test = "at_least", subject_kind = "store", id = "hill_trips", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "hill_walked" }] }
+
+# Ten hours after the call, once the hill has been walked: the house, and the town's work to clear it out.
+[[triggers]]
+id = "t_y9"
+when = { test = "at_least", subject_kind = "store", id = "call_clock", value = 10 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pack_called", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "hill_walked", value = 1 },
+]
+outcome = { line_keys = ["l_y9_1", "l_y9_2", "l_p5_shown"], unlocks = [{ unlock_kind = "feature", id = "house_found" }, { unlock_kind = "card", id = "waystation" }] }
+
+# P5: eight stages, each eating at the post (D-212); stakes, not cord, which the town makes too slowly to feed it. Stage 3 is Y10; its last shows A43. Run by its order card.
+[[cards]]
+id = "waystation"
+site = { no_site = "the house stands on the far hill, a walk from the post, off the scene" }
+only_player = "project"
+presentation = "craft"
+label_key = "c_waystation"
+upside_key = "up_waystation"
+work_s = 3600
+cap = 8
+inputs = [
+  { store = "charwood", items = 6 },
+  { store = "stones", items = 4 },
+  { store = "stakes", items = 2 },
+  { store = "post_stores", items = 2 },
+]
+
+# "When the post's store reaches 2, work on the house": one stage's worth.
+[[order_cards]]
+store = "post_stores"
+tap_card = "waystation"
+when = { test = "at_least", subject_kind = "store", id = "post_stores", value = 2, release = 2 }
+offered_after = { unlock_kind = "card", id = "waystation" }
+
+[[triggers]]
+id = "t_y10"
+when = { test = "at_least", subject_kind = "card_count", id = "waystation", value = 3 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "house_found", value = 1 }]
+outcome = { line_keys = ["l_y10_1", "l_y10_2"] }
+
+# ---------- O-burners ----------
+
+# Twelve hours after the call, a fact the offer can require.
+[[triggers]]
+id = "t_call_12h"
+when = { test = "at_least", subject_kind = "store", id = "call_clock", value = 12 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "call_12h" }] }
+
+# The tier's count at 380 meals, twelve hours after the call. Both join on either answer, at the post, their first work
+# by the answer (the kind's roles, day_eighteen.toml); what the answer keeps is D-147's size. The table feeds two more.
+[[offers]]
+id = "o_burners"
+text_key = "o_burners"
+kind = "work"
+gate = { test = "at_least", subject_kind = "store", id = "meals", value = 380 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "call_12h", value = 1 }]
+line_keys = ["l_burners_1", "l_burners_2"]
+
+[[offers.answers]]
+id = "o_burners_food"
+label_key = "a_burners_food"
+cost_key = "a_burners_food_cost"
+role = "food"
+[offers.answers.outcome]
+line_keys = ["l_burners_food"]
+stores = [{ store = "arrivals", items = 2 }]
+joins = [
+  { lane = "n24", mix = "town:camp", card = "g_road_run_cart", own_split = false },
+  { lane = "n25", mix = "town:camp", card = "g_road_run_cart", own_split = false },
+]
+whereabouts = [
+  { person = "n24", no_scene = "runs the carts out to the post, past the wall, off the scene" },
+  { person = "n25", no_scene = "runs the carts out to the post, past the wall, off the scene" },
+]
+modifiers = [
+  { target = "rate", id = "smoke_catch", flow = "make", store = "smoked", kind = "mul_bp", amount_bp = 11000, source = "o_burners_food" },
+  { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_burners_food" },
+]
+
+[[offers.answers]]
+id = "o_burners_build"
+label_key = "a_burners_build"
+cost_key = "a_burners_build_cost"
+role = "build"
+[offers.answers.outcome]
+line_keys = ["l_burners_build"]
+stores = [{ store = "arrivals", items = 2 }]
+joins = [
+  { lane = "n24", mix = "town:camp", card = "g_road_stakes", own_split = false },
+  { lane = "n25", mix = "town:camp", card = "g_road_clear_road", own_split = false },
+]
+whereabouts = [
+  { person = "n24", no_scene = "works the stakes, which the scene draws as the stack growing and never as anyone at it" },
+  { person = "n25", no_scene = "clears the cut road, out past the palisade above the story strip's clearance, where no figure's head may sit" },
+]
+modifiers = [
+  { target = "work", id = "shovel_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "n1_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "n2_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "n3_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "n4_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "n5_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "n6_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "n7_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "n8_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "n9_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "n10_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "n11_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "n12_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "n14_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "n15_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "n23_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "g_field_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "g_hearth_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "work", id = "g_road_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
+  { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_burners_build" },
+]
+
+# Either way they keep the post's fire and feed its crew from what they trap in the wood, so the crew out there eats a
+# tenth of what it did from the post's store, and her son carries for the carts, half again as fast: the line's surplus
+# is what moves P5 and the hill's walks.
+[[triggers]]
+id = "t_burners_fire"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_burners", value = 1 }
+[triggers.outcome]
+line_keys = ["l_burners_fire"]
+modifiers = [
+  { target = "rate", id = "post_upkeep", flow = "cost", store = "post_stores", kind = "mul_bp", amount_bp = 1000, source = "t_burners_fire" },
+  { target = "work", id = "run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n1_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n2_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n3_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n5_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n6_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n7_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n8_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n9_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n10_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n12_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n13_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n14_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n15_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "n23_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "g_field_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+  { target = "work", id = "g_road_run_cart", kind = "mul_bp", amount_bp = 15000, source = "t_burners_fire" },
+]
+
+# The outpost's first people of its own (D-215): they keep the post's fire and sleep there.
+[[lanes]]
+id = "n24"
+lodging = { elsewhere = "sleeps at the post's fire, out past the wall" }
+by_day = { off_scene = "keeps the post's fire out past the wall, which the scene does not draw" }
+label_key = "lane_n24"
+ruled = true
+told = "line"
+later_labels = [{ after = { unlock_kind = "answered", id = "o_burners" }, label_key = "lane_n24_named" }]
+name_key = "name_n24"
+crews = ["g_road"]
+
+[[lanes]]
+id = "n25"
+lodging = { elsewhere = "sleeps at the post's fire, out past the wall" }
+by_day = { off_scene = "carries for the post out past the wall, which the scene does not draw" }
+label_key = "lane_n25"
+ruled = true
+told = "line"
+later_labels = [{ after = { unlock_kind = "answered", id = "o_burners" }, label_key = "lane_n25_named" }]
+name_key = "name_n25"
+crews = ["g_road"]
+
+# ---------- SL40: a habit kept ----------
+
+[[triggers]]
+id = "t_scrape"
+when = { test = "at_least", subject_kind = "store", id = "call_clock", value = 14 }
+outcome = { doings = ["n3"], line_keys = ["l_scrape"], whereabouts = [{ person = "n3", no_scene = "scrapes the meat on the racks each morning, a pose the week's art adds; until then the line tells it" }] }
+
+# ---------- SL41: the bear's sign again ----------
+
+[[triggers]]
+id = "t_bear_sign_2"
+when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 590 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "drift_two", value = 1 }]
+outcome = { line_keys = ["l_bear_sign_2"] }
+
+# ---------- Y11 and Camp 20 ----------
+
+# The latch's last stage, once the larder was raided.
+[[triggers]]
+id = "t_y11"
+when = { test = "at_least", subject_kind = "card_count", id = "iron_latch", value = 4 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "larder_raided", value = 1 }]
+outcome = { line_keys = ["l_y11"] }
+
+# Day twenty-five's held marker filled in, lifted by the latch's last stage: the post's store holds half again.
+[[camp_levels]]
+at_items = 6000000
+pays_key = "camp_pays_20"
+pays_from = 24
+pays_to = 36
+held = true
+lifted_by = ["iron_latch"]
+line_keys = ["l_camp_20"]
+modifiers = [{ target = "cap", id = "post_stores", kind = "mul_bp", amount_bp = 15000, source = "camp_20" }]
+
+# Held at a "?" past the chapter, a goal on screen.
+[[camp_levels]]
+at_items = 7200000
+pays_key = "pays_unknown"
+held = true
+
+# ---------- A43 and B24 ----------
+
+# The house's last stage shows A43: the player wakes what is in its walls (D-212).
+[[triggers]]
+id = "t_house_cleared"
+when = { test = "at_least", subject_kind = "card_count", id = "waystation", value = 8 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "house_found", value = 1 }]
+outcome = { line_keys = ["l_house_cleared"], unlocks = [{ unlock_kind = "card", id = "wake_ward" }] }
+
+# A43: a story step on the hands, no odds. Arcana L1 is the level typical holds at the turn (D-226).
+[[cards]]
+id = "wake_ward"
+site = { no_site = "the player kneels at the house's hearthstone on the far hill, off the scene" }
+only_player = "magic"
+presentation = "action"
+label_key = "c_wake_ward"
+upside_key = "up_wake_ward"
+work_s = 600
+cap = 1
+glows = true
+requires = [{ test = "at_least", subject_kind = "skill_level", id = "arcana", value = 14 }]
+
+# B24 at A43's finish. The ward's clock (hidden) times day thirty-three.
+[[triggers]]
+id = "t_b24"
+when = { test = "at_least", subject_kind = "card_count", id = "wake_ward", value = 1 }
+[triggers.outcome]
+doings = ["n13"]
+whereabouts = [{ person = "n13", no_scene = "sleeps outside the house's door on the far hill, off the scene" }]
+line_keys = ["l_b24_1", "l_b24_2", "l_b24_3", "l_b24_4", "l_b24_5"]
+unlocks = [{ unlock_kind = "feature", id = "house_woken" }, { unlock_kind = "action", id = "ward_clock" }]
+
+# Never drawn: game hours since B24, for day thirty-three.
+[[stores]]
+id = "ward_clock"
+label_key = "store_ward_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "ward_clock"
+label_key = "action_ward_clock"
+makes = [{ store = "ward_clock", items_per_hour = 1 }]
+
+# ---------- Lucy's jobs ----------
+
+# From B23, after her last, on day nine's countdown after the last answer. Each yes shows a short hands job paying a
+# one-off rather than queuing it (D-176); each no costs nothing and comes back as someone else's work.
+[[offers]]
+id = "j_post_roof"
+text_key = "o_j_post_roof"
+askers = ["n1"]
+gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_far_snares", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pack_called", value = 1 },
+]
+
+[[offers.answers]]
+id = "j_post_roof_yes"
+label_key = "a_j_post_roof_yes"
+cost_key = "a_job_yes_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 24 }]
+line_keys = ["l_j_post_roof_yes"]
+unlocks = [{ unlock_kind = "card", id = "post_roof" }]
+
+[[offers.answers]]
+id = "j_post_roof_no"
+label_key = "a_job_no"
+cost_key = "a_job_no_cost"
+[offers.answers.echo]
+after_h = 8
+line_key = "l_echo_j_post_roof_no"
+modifier = { target = "rate", id = "post_upkeep", flow = "make", store = "charwood", kind = "mul_bp", amount_bp = 10300, source = "j_post_roof_no" }
+[offers.answers.outcome]
+doings = ["n1"]
+stores = [{ store = "ask_wait", items = 24 }]
+line_keys = ["l_j_post_roof_no"]
+whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
+
+[[cards]]
+id = "post_roof"
+site = { no_site = "the post's roof, out past the wall, off the scene" }
+only_player = "story"
+presentation = "action"
+label_key = "c_post_roof"
+upside_key = "up_post_roof"
+work_s = 900
+cap = 1
+outcome = { stores = [{ store = "ash", items = 3 }] }
+line_keys = ["l_post_roof"]
+
+[[offers]]
+id = "j_drag_elk"
+text_key = "o_j_drag_elk"
+askers = ["n1"]
+gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_post_roof", value = 1 }]
+
+[[offers.answers]]
+id = "j_drag_elk_yes"
+label_key = "a_j_drag_elk_yes"
+cost_key = "a_job_yes_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 24 }]
+line_keys = ["l_j_drag_elk_yes"]
+unlocks = [{ unlock_kind = "card", id = "drag_elk" }]
+
+[[offers.answers]]
+id = "j_drag_elk_no"
+label_key = "a_job_no"
+cost_key = "a_job_no_cost"
+[offers.answers.echo]
+after_h = 10
+line_key = "l_echo_j_drag_elk_no"
+modifier = { target = "work", id = "run_cart", kind = "mul_bp", amount_bp = 10300, source = "j_drag_elk_no" }
+[offers.answers.outcome]
+doings = ["n1"]
+stores = [{ store = "ask_wait", items = 24 }]
+line_keys = ["l_j_drag_elk_no"]
+whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
+
+[[cards]]
+id = "drag_elk"
+site = { no_site = "the track runs from the road's end out to the post, past the wall, off the scene" }
+only_player = "story"
+presentation = "action"
+label_key = "c_drag_elk"
+upside_key = "up_drag_elk"
+work_s = 1200
+cap = 1
+outcome = { stores = [{ store = "cleared", items = 3 }] }
+line_keys = ["l_drag_elk"]
+
+[[offers]]
+id = "j_new_pins"
+text_key = "o_j_new_pins"
+askers = ["n1"]
+gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_drag_elk", value = 1 }]
+
+[[offers.answers]]
+id = "j_new_pins_yes"
+label_key = "a_j_new_pins_yes"
+cost_key = "a_job_yes_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 24 }]
+line_keys = ["l_j_new_pins_yes"]
+unlocks = [{ unlock_kind = "card", id = "new_pins" }]
+
+[[offers.answers]]
+id = "j_new_pins_no"
+label_key = "a_job_no"
+cost_key = "a_job_no_cost"
+[offers.answers.echo]
+after_h = 9
+line_key = "l_echo_j_new_pins_no"
+modifier = { target = "work", id = "clear_track", kind = "mul_bp", amount_bp = 10300, source = "j_new_pins_no" }
+[offers.answers.outcome]
+doings = ["n1"]
+stores = [{ store = "ask_wait", items = 24 }]
+line_keys = ["l_j_new_pins_no"]
+whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
+
+[[cards]]
+id = "new_pins"
+site = { no_site = "the pins are whittled by the fire, which the scene draws; the card itself is no work at a place" }
+only_player = "story"
+presentation = "action"
+label_key = "c_new_pins"
+upside_key = "up_new_pins"
+work_s = 600
+cap = 1
+outcome = { stores = [{ store = "cord", items = 2 }] }
+line_keys = ["l_new_pins"]
+
+# ---------- aims ----------
+
+[[aims]]
+id = "aim_latch"
+text_key = "aim_latch"
+after = { unlock_kind = "feature", id = "larder_raided" }
+
+[[aims]]
+id = "aim_house"
+text_key = "aim_house"
+after = { unlock_kind = "feature", id = "house_found" }
+
+# ---------- the journal ----------
+
+[[entries]]
+id = "e_waystation"
+title_key = "e_waystation_title"
+section = "places"
+hand = "ink"
+runners = []
+
+[[notes]]
+id = "n_house_1"
+entry = "e_waystation"
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "house_found", value = 1 }
+
+[[notes]]
+id = "n_house_2"
+entry = "e_waystation"
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "house_woken", value = 1 }
+
+[[subjects]]
+id = "s_n24_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n24", way = "joined" }
+first = { keys = ["j_n24_first"] }
+catchup = { keys = ["j_n24_catchup"] }
+
+[[subjects]]
+id = "s_n25_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n25", way = "joined" }
+first = { keys = ["j_n25_first"] }
+catchup = { keys = ["j_n25_catchup"] }
+
+[[subjects]]
+id = "s_b24"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b24" }
+first = { keys = ["n_day_b24"] }
+catchup = { keys = ["j_b24_catchup"] }
+late = { keys = ["j_b24_late"] }
+
+# ---------- features ----------
+
+[[features]]
+id = "larder_raided"
+
+[[features]]
+id = "hill_walked"
+
+[[features]]
+id = "house_found"
+
+[[features]]
+id = "call_12h"
+
+[[features]]
+id = "house_woken"
+
+# ---------- text ----------
+
+[beat_lines]
+Y8 = ["l_y8_1"]
+Y9 = ["l_y9_1"]
+Y10 = ["l_y10_1"]
+Y11 = ["l_y11"]
+B24 = ["l_b24_1"]
+
+[line_kinds]
+l_y8_1 = "story"
+l_y8_2 = "story"
+l_fight_hall_won_1 = "fight"
+l_fight_hall_won_2 = "fight"
+l_fight_hall_won_3 = "fight"
+l_fight_hall_won_4 = "fight"
+l_fight_hall_won_5 = "fight"
+l_fight_hall_won_6 = "fight"
+l_fight_hall_lost_1 = "fight"
+l_fight_hall_lost_2 = "fight"
+l_fight_hall_lost_3 = "fight"
+l_fight_hall_lost_4 = "fight"
+l_fight_hall_lost_5 = "fight"
+l_fight_hall_lost_6 = "fight"
+l_latch_1 = "story"
+l_latch_2 = "story"
+l_latch_3 = "story"
+l_latch_done = "story"
+l_y9_1 = "story"
+l_y9_2 = "story"
+l_p5_shown = "story"
+l_y10_1 = "story"
+l_y10_2 = "story"
+l_burners_1 = "story"
+l_burners_2 = "story"
+l_burners_food = "story"
+l_burners_build = "story"
+l_burners_fire = "story"
+l_scrape = "story"
+l_bear_sign_2 = "story"
+l_y11 = "story"
+l_camp_20 = "level"
+l_house_cleared = "story"
+l_b24_1 = "story"
+l_b24_2 = "story"
+l_b24_3 = "story"
+l_b24_4 = "story"
+l_b24_5 = "story"
+l_j_post_roof_yes = "story"
+l_j_post_roof_no = "story"
+l_echo_j_post_roof_no = "story"
+l_post_roof = "story"
+l_j_drag_elk_yes = "story"
+l_j_drag_elk_no = "story"
+l_echo_j_drag_elk_no = "story"
+l_drag_elk = "story"
+l_j_new_pins_yes = "story"
+l_j_new_pins_no = "story"
+l_echo_j_new_pins_no = "story"
+l_new_pins = "story"
+
+[text]
+l_y8_1 = "in the morning the hall's larder door stands open. the bar is out of its brackets, leaned neatly against the wall."
+l_y8_2 = "the long-toed prints go in and come out. the hams are gone off the hooks."
+store_larder_torn = "the larder's loss"
+action_larder_torn = "The larder raided"
+side_latch = "The larder"
+store_hall_fought = "Raids on the hall"
+store_hall_lost = "Hall raids lost"
+action_raid_hall = "Raids on the hall"
+l_fight_hall_won_1 = "the larder is as it was this morning."
+l_fight_hall_won_2 = "prints on the roof, nothing taken."
+l_fight_hall_won_3 = "the bar holds in its brackets."
+l_fight_hall_won_4 = "something tried the larder door and left it."
+l_fight_hall_won_5 = "scratches round the bar, and the meat still on its hooks."
+l_fight_hall_won_6 = "the hall's larder keeps."
+l_fight_hall_lost_1 = "a ham gone off its hook."
+l_fight_hall_lost_2 = "the larder door open again at dawn."
+l_fight_hall_lost_3 = "the bar leaned against the wall, and a strip gone."
+l_fight_hall_lost_4 = "the larder is lighter."
+l_fight_hall_lost_5 = "prints in, prints out, and a hook bare."
+l_fight_hall_lost_6 = "smoked meat dragged off over the roof."
+c_iron_latch = "Forge the larder latch"
+up_iron_latch = "{pct} the larder's strength"
+l_latch_1 = "{n2} and {n4} heat the scrap iron from the ruin and beat it flat."
+l_latch_2 = "the hasp is bent round and fitted to the larder door."
+l_latch_3 = "the catch goes on inside, where a hand from outside can't reach it."
+l_latch_done = "the latch is on. it drops shut by itself."
+l_y9_1 = "at the top of the far hill the square thing is a house of dressed stone, its roof fallen in."
+l_y9_2 = "the doorway has a door of the same stone and no hinges, standing a hand open. nothing has nested in it."
+l_p5_shown = "Lucy says the town can clear it out, if the post can feed them up there."
+c_waystation = "Clear out the house on the hill"
+up_waystation = "the house on the hill, cleared"
+l_y10_1 = "clearing the fallen roof out, the walkers find a hearth with no ash in it."
+l_y10_2 = "under a drift on the back wall there are lines cut into the stone, long and straight, with marks along them."
+o_burners = "Two people who burn charcoal in the wood have come in to the post's fire. Where do they work first?"
+l_burners_1 = "two figures come in to the post's fire with a barrow of charcoal, black to the elbows."
+l_burners_2 = "{n24} does the talking. {n25}, her son, carries. they knew the house on the hill was there. it's not theirs, she says."
+a_burners_food = "To the food"
+a_burners_build = "To the building"
+a_burners_food_cost = "{pct} smoked from the rack, {pct_b} smoked at the table"
+a_burners_build_cost = "{pct} all road clearing, {pct_b} smoked at the table"
+l_burners_food = "{n24} and {n25} take the carts. {n2} sets them with the road crew."
+l_burners_build = "{n24} and {n25} take the stakes and the road. {n2} sets them with the road crew."
+l_burners_fire = "{n24} feeds the post's crew from her snares, and {n25} pushes the carts out with whoever runs them."
+lane_n24 = "The burner's hands"
+lane_n24_named = "{n24}'s hands"
+name_n24 = "Marian"
+lane_n25 = "Her son's hands"
+lane_n25_named = "{n25}'s hands"
+name_n25 = "Nicholas"
+l_scrape = "every morning {n3} scrapes the meat on the racks strip by strip with her thumbnail, though nothing settles on it in the wind."
+l_bear_sign_2 = "at the bloom in the scrub there is bear sign again: the fungus torn up, the stumps clawed."
+l_y11 = "the latch holds. at first light one of the cats sits on the hall's ridge, front feet together, watching whoever comes out. then it goes."
+camp_pays_20 = "the post's store holds {to}, was {from}"
+l_camp_20 = "the post gets a second shut store."
+l_house_cleared = "the house on the hill is cleared to the floor. the hearthstone is warm under the hand."
+c_wake_ward = "Wake the house"
+up_wake_ward = "what is in its walls"
+l_b24_1 = "you lay both hands on the house's hearthstone and move heat into it."
+l_b24_2 = "the lines on the back wall fill with a dull red light, like the cracks at camp at night."
+l_b24_3 = "roads, and the marks of houses along them, and a great ring of marks round a dark place far off."
+l_b24_4 = "one mark, near the edge, is where the camp is."
+l_b24_5 = "the walkers and the tracker sleep inside. {n13} sleeps outside the door, in the ash, and won't come in."
+store_ward_clock = "hours since the house woke"
+action_ward_clock = "Since the house woke"
+o_j_post_roof = "Lucy says somebody has to get the ash off the post's roof before it comes in."
+a_j_post_roof_yes = "I'll go up"
+l_j_post_roof_yes = "you take a shovel out to the post."
+l_j_post_roof_no = "Lucy finds someone else."
+l_echo_j_post_roof_no = "someone cleared the post's roof. the crew out there cut longer in the dry."
+c_post_roof = "Clear the post's roof"
+up_post_roof = "ash off the post's roof"
+l_post_roof = "the post's roof is clear, the ash in a heap by the door."
+o_j_drag_elk = "Lucy says somebody has to drag the walked elk off the track before the carts reach it."
+a_j_drag_elk_yes = "I'll drag it"
+l_j_drag_elk_yes = "you take a rope out along the track."
+l_j_drag_elk_no = "Lucy finds someone else."
+l_echo_j_drag_elk_no = "someone dragged the elk off the track. the carts run quicker past the place."
+c_drag_elk = "Drag the elk off the track"
+up_drag_elk = "the track clear"
+l_drag_elk = "the elk is off the track, in the ash beside it."
+o_j_new_pins = "Lucy says somebody has to whittle new pins for every cart, longer ones."
+a_j_new_pins_yes = "I'll whittle them"
+l_j_new_pins_yes = "you sit by the fire with a knife and a pile of green wood."
+l_j_new_pins_no = "Lucy finds someone else."
+l_echo_j_new_pins_no = "someone made the carts new pins. the track's crew clear round them faster."
+c_new_pins = "Whittle new cart pins"
+up_new_pins = "longer pins, and the ends for cord"
+l_new_pins = "a pile of new pins by the carts, long enough to need two hands to draw."
+aim_latch = "a latch they can't lift."
+aim_house = "clear out the house on the hill."
+e_waystation_title = "The house on the hill"
+n_house_1 = "dressed stone. a door with no hinges. nothing nests in it"
+n_house_2 = "the back wall lit red: roads, houses, a ring round a dark place. a mark where we are"
+j_n24_first = "{n24} came in to the post's fire with a barrow of charcoal. she does the bargaining"
+j_n24_catchup = "{n24} came in from the wood to the post"
+j_n25_first = "{n25} came in behind his mother, carrying"
+j_n25_catchup = "{n25} came in from the wood with his mother"
+n_day_b24 = "woke the house on the hill. the wall lit up with roads. one mark is where we are"
+j_b24_catchup = "the house on the hill was woken, and its wall lit"
+j_b24_late = "the house on the hill stands woken"
