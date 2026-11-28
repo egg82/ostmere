@@ -1,0 +1,8 @@
+[
+  {"kind": "crossed", "required": true, "text": []},
+  {"kind": "study", "id": "lock", "required": true, "text": ["one lock, close.", "stuck hard"]},
+  {"kind": "study", "id": "print", "required": true, "text": ["print, 2 toes", "+ dewclaws"]},
+  {"kind": "label", "anchor": [300, 232], "text": ["bristles up", "over the shoulders"]},
+  {"kind": "label", "anchor": [300, 424], "text": ["caked. hangs off", "in lumps"]},
+  {"kind": "label", "anchor": [110, 340], "text": ["head kept low"]}
+]

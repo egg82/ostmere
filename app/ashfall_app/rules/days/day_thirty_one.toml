@@ -506,6 +506,7 @@ gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", 
 id = "n_house_2"
 entry = "e_waystation"
 gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "house_woken", value = 1 }
+sketch = "house_2"
 
 [[subjects]]
 id = "s_n24_joined"

@@ -1,0 +1,8 @@
+[
+  {"kind": "crossed", "required": true, "text": []},
+  {"kind": "study", "id": "antenna", "required": true, "text": ["feeler, combed", "both sides"]},
+  {"kind": "study", "id": "scales", "required": true, "text": ["the dust, under", "the glass"]},
+  {"kind": "label", "anchor": [96, 222], "text": ["~9 in. across"]},
+  {"kind": "label", "anchor": [300, 266], "text": ["body furred"]},
+  {"kind": "label", "anchor": [180, 300], "text": ["one line through", "both wings"]}
+]

@@ -1,0 +1,8 @@
+[
+  {"kind": "crossed", "required": true, "text": []},
+  {"kind": "study", "id": "hand", "required": true, "text": ["fore foot, opened.", "toes in 2 joints"]},
+  {"kind": "study", "id": "print", "required": true, "text": ["fore print"]},
+  {"kind": "label", "anchor": [186, 452], "text": ["toes spread", "like fingers"]},
+  {"kind": "label", "anchor": [560, 420], "text": ["tail low"]},
+  {"kind": "label", "anchor": [168, 312], "text": ["head small"]}
+]

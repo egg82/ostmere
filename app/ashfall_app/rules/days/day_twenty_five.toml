@@ -115,6 +115,7 @@ fight = { side = "hands", threat = "ash_boar", lost = "boar_lost", won_line_keys
 id = "e_ash_boar"
 title_key = "e_ash_boar_title"
 section = "creatures"
+sketch = "ash_boar"
 hand = "ink"
 runners = ["hunt_boar"]
 
