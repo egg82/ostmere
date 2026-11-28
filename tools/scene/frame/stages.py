@@ -152,10 +152,15 @@ STAGES["51_sitter"] = STAGES["51_lamps"].then({"feature:sitter"}, drift_clock=15
 STAGES["52_night_fourteen"] = STAGES["51_sitter"].then({"action:night_14"}, drift_clock=163, night_14=20)
 STAGES["52_week_end"] = STAGES["52_night_fourteen"].then({"project:sit_last_night", "feature:week_two_end"})
 # Day fifteen (app/ashfall_app/opening/day_fifteen.toml; content/team/week-three.md, Art): the hall's states.
-STAGES["56_hall_raised"] = STAGES["52_week_end"].then({"running:hall"} | _built("hall", 2))
+STAGES["56_hall_raised"] = STAGES["52_week_end"].then({"feature:clear", "running:hall"} | _built("hall", 2))
 STAGES["56_hall_walls"] = STAGES["56_hall_raised"].then(_built("hall", 4))
 STAGES["56_hall_roofing"] = STAGES["56_hall_walls"].then(_built("hall", 6))
 STAGES["57_hall_built"] = STAGES["56_hall_roofing"].then(_built("hall", 8) | {"project:hall"}, {"running:hall"})
+# Week three's and week four's light (frame/grades.py), each day and night on the stale clocks of the nights before it.
+STAGES["53_clear"] = STAGES["52_week_end"].then({"feature:clear"})
+STAGES["54_dusk_15"] = STAGES["53_clear"].then({"action:night_15"}, night_15=6)
+STAGES["54_frost_night"] = STAGES["53_clear"].then({"action:night_15"}, night_15=20)
+STAGES["54_day_16"] = STAGES["54_frost_night"].then(clear_clock=18)
 # Builds finished on the day each can be (day-three.md, week-two.md and week-three.md, Art), then all of them at once.
 STAGES["31_stack_shelf"] = STAGES["31_warm_ground"].then(_built("wood_stack", 3) | _built("pot_shelf", 3)
                                                          | {"project:wood_stack", "project:pot_shelf"})
@@ -190,13 +195,14 @@ STAGES["65_bedesman"] = STAGES["65_stranger"].then({"feature:bedesman_home"})
 STAGES["65_groups"] = _ALL.then({"running:g_field_forage", "running:g_field_pick", "running:g_hearth_watch"})
 STAGES["65_singing"] = _ALL.then({"answered:o_choir"}, still_clock=30)
 STAGES["65_singing_unanswered"] = _ALL.then(still_clock=30)
-STAGES["66_ash_and_cord"] = _ALL.then(drift_clock=12)
+STAGES["66_ash_and_cord"] = STAGES["41_drift"].then(drift_clock=12)
 STAGES["66_naming"] = STAGES["65_stranger"].then(drift_clock=16, choir_clock=7, sorrel_clock=6)
 STAGES["66_bowl"] = _ALL.then(drift_clock=16, choir_clock=7, sorrel_clock=10, kept_clock=8)
 STAGES["66_after_the_moments"] = _ALL.then(drift_clock=16, choir_clock=7, sorrel_clock=10, kept_clock=11)
 # The one-off moments of people_moments.py, each in its window, by day and by night.
-_NIGHT = _ALL.then({"action:night_14"}, night_14=20)
-_DAY = _ALL.then({"action:morning_13"}, {"action:night_12", "action:night_14"}, night_12=0, night_14=0)
+# A week-four day after morning 25 and night 28, the earlier nights' clocks still full, as the game keeps them.
+_DAY = _ALL.then({"feature:still", "action:night_24"}, night_24=20, dawn_25=20)
+_NIGHT = _DAY.then({"action:night_28"}, night_28=20)
 for _name, _clock in (("shed", "shed_stack_clock"), ("his_watch", "his_watch_clock"), ("old_watch", "old_watch_clock"),
                       ("spear", "spear_clock"), ("thorn", "thorn_clock"), ("caps", "caps_clock"), ("posts", "posts_clock")):
     STAGES[f"67_{_name}"] = State(_DAY.facts, (*_DAY.stores, (_clock, 4)))
@@ -234,6 +240,12 @@ STAGES["71_hands"] = _DAY.then(_HOME | _JOINED, bede_clock=11)
 STAGES["71_names_given"] = _DAY.then(_HOME | _JOINED, bede_clock=21)
 STAGES["71_names_night"] = _NIGHT.then(_HOME | _JOINED | {"project:sit_names"}, bede_clock=38)
 STAGES["71_names_day"] = _DAY.then(_HOME | _JOINED | {"project:sit_names"}, bede_clock=38)
+STAGES["66_night_21"] = _ALL.then({"action:night_15", "action:night_21"}, night_15=20, night_21=20)
+STAGES["66_dawn_22"] = STAGES["66_night_21"].then(dawn_22=12)
+STAGES["67_still"] = STAGES["66_night_21"].then({"feature:still"}, dawn_22=20)
+STAGES["72_dusk_24"] = STAGES["67_still"].then({"action:night_24"}, night_24=6)
+STAGES["72_night_24"] = STAGES["67_still"].then({"action:night_24"}, night_24=20)
+STAGES["72_day_25"] = STAGES["72_night_24"].then(dawn_25=12)
 STAGES["69_before_the_join"] = _ALL.then({"running:g_field_reap", "running:g_hearth_reap", "running:g_road_fungus_stew"})
 # Week five (app/ashfall_app/rules/days/day_twenty_nine.toml to day_thirty_three.toml; content/team/week-five.md, Art), on
 # the camp as week four left it, its stale night clocks still full: the Drift's grades have to win over them.

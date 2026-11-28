@@ -10,15 +10,14 @@ from frame.stages import STAGES
 
 
 def test_dark_holds_at_dusk_and_night_and_not_by_day():
-    day = STAGES["64_all_built"].then({"action:morning_13"}, {"action:night_14"}, night_12=0, night_14=0)
-    assert not holds("dark", day)
-    assert holds("dark", day.then({"action:night_14"}))
-    assert holds("dark", day.then({"action:night_14"}, night_14=20))
+    assert not holds("dark", STAGES["53_clear"])
+    assert holds("dark", STAGES["54_dusk_15"])
+    assert holds("dark", STAGES["54_frost_night"])
+    assert holds("day", STAGES["54_day_16"]) and not holds("dark", STAGES["54_day_16"])
     assert holds("dark", STAGES["10_night"]) and not holds("dark", STAGES["11_morning"])
 
 
 def test_a_dark_condition_is_per_alternative():
     assert in_dark("a:x|b:y&c:z") == "a:x&dark|b:y&c:z&dark"
-    day = STAGES["64_all_built"].then({"action:morning_13", "chip:a"}, {"action:night_14"}, night_12=0, night_14=0)
-    assert not holds(in_dark("chip:a|chip:b"), day)
-    assert holds(in_dark("chip:a|chip:b"), day.then({"action:night_14"}))
+    assert not holds(in_dark("chip:a|chip:b"), STAGES["53_clear"].then({"chip:a"}))
+    assert holds(in_dark("chip:a|chip:b"), STAGES["54_dusk_15"].then({"chip:a"}))
