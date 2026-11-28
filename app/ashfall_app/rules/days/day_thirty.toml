@@ -214,6 +214,7 @@ while_running = [{ side = "line", amount_bp = 40000 }]
 id = "e_mourner"
 title_key = "e_mourner_title"
 section = "creatures"
+sketch = "mourner"
 hand = "ink"
 runners = ["raid_line"]
 
@@ -350,6 +351,7 @@ while_running = [{ side = "line", amount_bp = 20000 }]
 id = "e_hush_moth"
 title_key = "e_hush_moth_title"
 section = "creatures"
+sketch = "hush_moth"
 hand = "ink"
 runners = []
 
