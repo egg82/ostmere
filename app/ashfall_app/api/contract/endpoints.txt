@@ -145,7 +145,7 @@ ENDPOINTS
   a line by its kind and never by its key or words.
   Line causes: each LineInfo also carries cause, what writes the line, read from where the content authors its key
   (api/world/line_causes.py): runner {runner}, a card's line, outcome or finish, or a fight's pool on a card or standing
-  action; when {when: Condition}, what a beat, an offer's arrival or a chip waited on; skill {skill}, a line several
+  action, or a working's chain link lines (CardInfo.chain.link_line_keys), whose kind is fight; when {when: Condition}, what a beat, an offer's arrival or a chip waited on; skill {skill}, a line several
   levels of one skill share (a phase's pool), so which level is not known; camp {level}, a Camp level from 1; answer
   {offer}, the player's answer to that offer (an offer's own lines take the offer's cause: OFFERS). Null for the end's
   lines, a beat waiting on a lane's rules, and a `when` on a store the player is never shown (neither unlocked by any

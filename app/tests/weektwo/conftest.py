@@ -2,12 +2,12 @@
 tests, which their CI job's timeout budgets): `eight_route` takes its route by indirect parametrization, `eight_counts` the typical
 route's per-visit counts (its heavy steps read first, a part to a setup, `week_part`), `eight_marks` its visits marked for the readout, `two_am_eight_run` the 2 AM replay pair;
 the `nine_`, `eleven_`, `twelve_`, `fifteen_`, `sixteen_`, `eighteen_`, `nineteen_`, `twentytwo_`, `twentythree_` and
-`twentyfive_`, `twentyseven_` and `twentynine_` fixtures the same for days nine, eleven, twelve, fifteen, sixteen, eighteen, nineteen, twenty-two, twenty-three, twenty-five, twenty-seven and twenty-nine, `twelve_cures`, `fifteen_cures`, `sixteen_cures`, `eighteen_cures`, `nineteen_cures`, `twentytwo_cures`, `twentythree_cures`, `twentyfive_cures`, `twentyseven_cures` and `twentynine_cures` the cures gate over typical's days twelve to twenty-nine, `twelve_ladder` a route's ladder readout, `fifteen_worth` and `fifteen_stints` typical's worth readouts, and `rebased_eight`, `rebased_nine`, `rebased_eleven`, `rebased_twelve`, `rebased_fifteen`, `rebased_sixteen`, `rebased_eighteen`, `rebased_nineteen`, `rebased_twentytwo`, `rebased_twentythree`, `rebased_twentyfive` and `rebased_twentyseven` typical's
+`twentyfive_`, `twentyseven_`, `twentynine_` and `thirty_` fixtures the same for days nine, eleven, twelve, fifteen, sixteen, eighteen, nineteen, twenty-two, twenty-three, twenty-five, twenty-seven, twenty-nine and thirty, `twelve_cures`, `fifteen_cures`, `sixteen_cures`, `eighteen_cures`, `nineteen_cures`, `twentytwo_cures`, `twentythree_cures`, `twentyfive_cures`, `twentyseven_cures`, `twentynine_cures` and `thirty_cures` the cures gate over typical's days twelve to thirty, `twelve_ladder` a route's ladder readout, `fifteen_worth` and `fifteen_stints` typical's worth readouts, and `rebased_eight`, `rebased_nine`, `rebased_eleven`, `rebased_twelve`, `rebased_fifteen`, `rebased_sixteen`, `rebased_eighteen`, `rebased_nineteen`, `rebased_twentytwo`, `rebased_twentythree`, `rebased_twentyfive`, `rebased_twentyseven` and `rebased_twentynine` typical's
 saved day-eight end loaded under day nine, its day-nine end under day eleven, its day-eleven end under day twelve, its
 day-twelve end under day fifteen, its day-fifteen end under day sixteen, its day-sixteen end under day eighteen, its
 day-eighteen end under day nineteen, its day-nineteen end under day twenty-two, its day-twenty-two end under day
-twenty-three, its day-twenty-three end under day twenty-five, its day-twenty-five end under day twenty-seven and its
-day-twenty-seven end under day twenty-nine;
+twenty-three, its day-twenty-three end under day twenty-five, its day-twenty-five end under day twenty-seven, its
+day-twenty-seven end under day twenty-nine and its day-twenty-nine end under day thirty;
 `chapter_end` a chapter's play
 beside its saved end and `rebased_inputs` a saved rebased save's stamped inputs beside today's (ends.py). A test reading
 one is marked playthrough."""
@@ -31,7 +31,7 @@ from tests.worth import stints
 from tests.weektwo import routes
 from tests.weektwo.rebased import Rebased
 from tests.weektwo.routes import (
-    CHAPTERS, eighteen, eleven, fifteen, nine, nineteen, saved_end, sixteen, twelve, twentyfive, twentynine, twentyseven, twentythree, twentytwo, week2,
+    CHAPTERS, eighteen, eleven, fifteen, nine, nineteen, saved_end, sixteen, thirty, twelve, twentyfive, twentynine, twentyseven, twentythree, twentytwo, week2,
 )
 
 EIGHT_PLAYS = frozenset({"eight_route", "eight_counts", "week_part", "two_am_eight_run", "nine_route", "nine_counts",
@@ -51,12 +51,14 @@ EIGHT_PLAYS = frozenset({"eight_route", "eight_counts", "week_part", "two_am_eig
                          "twentyfive_marks", "rebased_twentythree", "twentyseven_route", "twentyseven_counts",
                          "two_am_twentyseven_run", "twentyseven_cures", "twentyseven_marks", "rebased_twentyfive",
                          "twentynine_route", "twentynine_counts", "two_am_twentynine_run", "twentynine_cures",
-                         "twentynine_marks", "rebased_twentyseven"})
+                         "twentynine_marks", "rebased_twentyseven",
+                         "thirty_route", "thirty_counts", "two_am_thirty_run", "thirty_cures", "thirty_marks",
+                         "rebased_twentynine"})
 
 
 ROUTE_PLAYS = ("eight_route", "nine_route", "eleven_route", "twelve_route", "fifteen_route", "sixteen_route",
                "eighteen_route", "nineteen_route", "twentytwo_route",
-               "twentythree_route", "twentyfive_route", "twentyseven_route", "twentynine_route")
+               "twentythree_route", "twentyfive_route", "twentyseven_route", "twentynine_route", "thirty_route")
 """The route fixtures in the order their plays build on each other (each chapter's play is the one before it played on)."""
 
 
@@ -72,7 +74,8 @@ AFTER = {"rebased_eight": "nine", "rebased_nine": "eleven", "rebased_eleven": "t
          "rebased_fifteen": "sixteen", "rebased_sixteen": "eighteen",
          "rebased_eighteen": "nineteen", "rebased_nineteen": "twentytwo",
          "rebased_twentytwo": "twentythree", "rebased_twentythree": "twentyfive",
-         "rebased_twentyfive": "twentyseven", "rebased_twentyseven": "twentynine"}
+         "rebased_twentyfive": "twentyseven", "rebased_twentyseven": "twentynine",
+         "rebased_twentynine": "thirty"}
 """The chapter whose play each saved-end fixture's test plays on."""
 
 
@@ -655,3 +658,38 @@ def twentynine_cures() -> list[str]:
 @pytest.fixture(scope="session")
 def rebased_twentyseven() -> Rebased:
     return rebased.from_saved("twentyseven")
+
+
+@pytest.fixture(scope="session")
+def thirty_route(request: pytest.FixtureRequest) -> tuple[str, DayTwoPlayer]:
+    name: str = request.param
+    return name, thirty(name)
+
+
+@pytest.fixture(scope="session")
+def thirty_counts() -> tuple[DayTwoPlayer, list[counters.Counts]]:
+    p = thirty("typical")
+    return p, verdicts.counts(p, verdicts.THIRTY, verdicts.typical_decided("thirty"))
+
+
+@pytest.fixture(scope="session")
+def thirty_marks() -> dict[str, str]:
+    """The typical route's visits marked for the readout (daytwo/checks.marks), read in setup."""
+    return checks2.marks(thirty("typical"), first=1)
+
+
+@pytest.fixture(scope="session")
+def two_am_thirty_run() -> tuple[Measured, Measured]:
+    return verdicts.two_am(0, "thirty")
+
+
+@pytest.fixture(scope="session")
+def thirty_cures() -> list[str]:
+    """The cures gate over typical's play from B22's landing: every chip shown has a cure on offer."""
+    p = thirty("typical")
+    return cures.uncured(p, p.landed_at["B22"])
+
+
+@pytest.fixture(scope="session")
+def rebased_twentynine() -> Rebased:
+    return rebased.from_saved("twentynine")

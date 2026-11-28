@@ -1,0 +1,680 @@
+# Day thirty: from B22 (the post an outpost) through the track's chore, the line's raids, Y4, SL38, Y5, Y6 (night 30),
+# SL39 and Y7 to A42 and B23, week five's second chapter, as data merged after day_twenty_nine.toml (schema.Chapter,
+# chapters.merge). Story spoilers: never shown to the owner. Spec: content/team/week-five.md, "Day thirty"; numbers:
+# content/team/week-five-numbers.md. What day twenty-nine left here opens on its end feature, outpost (D-223).
+version = 1
+end_feature = "pack_called"
+
+# ---------- the track's chore: a season chip with cures and no order card ----------
+
+# From the outpost the ash drifts over the cleared track to the post, one an hour on a pool sized to last to about the
+# Clear's turn. Its chip comes with its hint dot and no ready-made rule (D-155, D-203).
+[[triggers]]
+id = "t_track_drifts"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "outpost", value = 1 }
+outcome = { stores = [{ store = "track_left", items = 144 }], unlocks = [{ unlock_kind = "action", id = "track_drift" }] }
+
+# Never drawn: the hours the track keeps drifting over.
+[[stores]]
+id = "track_left"
+label_key = "store_track_left"
+cap_items = 144
+hidden = true
+
+# Never drawn: the chip is its face.
+[[stores]]
+id = "road_ash"
+label_key = "store_road_ash"
+cap_items = 48
+hidden = true
+
+[[standing]]
+id = "track_drift"
+label_key = "action_track_drift"
+costs = [{ store = "track_left", items_per_hour = 1 }]
+makes = [{ store = "road_ash", items_per_hour = 1 }]
+
+# The chip opens with its cures, on the hands and on the town's lanes, the first time it would show.
+[[triggers]]
+id = "t_track_drifted"
+when = { test = "at_least", subject_kind = "store", id = "road_ash", value = 12 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "chip", id = "drifted" },
+  { unlock_kind = "card", id = "clear_track" },
+  { unlock_kind = "card", id = "n1_clear_track" },
+  { unlock_kind = "card", id = "n2_clear_track" },
+  { unlock_kind = "card", id = "n3_clear_track" },
+  { unlock_kind = "card", id = "n5_clear_track" },
+  { unlock_kind = "card", id = "n6_clear_track" },
+  { unlock_kind = "card", id = "n7_clear_track" },
+  { unlock_kind = "card", id = "n8_clear_track" },
+  { unlock_kind = "card", id = "n9_clear_track" },
+  { unlock_kind = "card", id = "n10_clear_track" },
+  { unlock_kind = "card", id = "n12_clear_track" },
+  { unlock_kind = "card", id = "n13_clear_track" },
+  { unlock_kind = "card", id = "n14_clear_track" },
+  { unlock_kind = "card", id = "n15_clear_track" },
+  { unlock_kind = "card", id = "n23_clear_track" },
+  { unlock_kind = "card", id = "g_field_clear_track" },
+  { unlock_kind = "card", id = "g_road_clear_track" },
+]
+
+# Every cart a third slower while the track is drifted over: the post and the hill's walks later, never stopped.
+[[chips]]
+id = "drifted"
+label_key = "chip_drifted"
+tone = "cold"
+when = { test = "at_least", subject_kind = "store", id = "road_ash", value = 12 }
+cost_key = "chip_drifted_cost"
+on_line_key = "l_drifted"
+effects = [
+  { target = "work", id = "run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+  { target = "work", id = "n1_run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+  { target = "work", id = "n2_run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+  { target = "work", id = "n3_run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+  { target = "work", id = "n5_run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+  { target = "work", id = "n6_run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+  { target = "work", id = "n7_run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+  { target = "work", id = "n8_run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+  { target = "work", id = "n9_run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+  { target = "work", id = "n10_run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+  { target = "work", id = "n12_run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+  { target = "work", id = "n13_run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+  { target = "work", id = "n14_run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+  { target = "work", id = "n15_run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+  { target = "work", id = "n23_run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+  { target = "work", id = "g_field_run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+  { target = "work", id = "g_road_run_cart", kind = "mul_bp", amount_bp = 6700, source = "drifted" },
+]
+
+# Clearing the track makes cleared, the post's material, so the chore feeds the builds it slows.
+[[cards]]
+id = "clear_track"
+site = { no_site = "the track runs from the road's end out to the post, past the wall, off the scene" }
+presentation = "action"
+label_key = "c_clear_track"
+upside_key = "up_clear_track"
+work_s = 600
+skill = "scavenging"
+xp_per_hour = 360
+inputs = [{ store = "road_ash", items = 12 }]
+outcome = { stores = [{ store = "cleared", items = 3 }] }
+
+[[town_cards]]
+id = "{lane}_clear_track"
+site = { no_site = "the track runs from the road's end out to the post, past the wall, off the scene" }
+twin_of = "clear_track"
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field", "g_road"]
+presentation = "action"
+label_key = "c_clear_track"
+upside_key = "up_clear_track"
+work_s = 2400
+inputs = [{ store = "road_ash", items = 12 }]
+outcome = { stores = [{ store = "cleared", items = 3 }] }
+
+# ---------- the line: a standing fight on the supply line, and what holds its side ----------
+
+# From the outpost the mourners take from the post's store, one fight an hour; a lost fight costs one of its stores.
+# The line's clock (hidden) times the chapter's later beats. The tracker's card is on every person's lane, each
+# requiring their own lane's cast (D-208), so only the cast lane ever has it.
+[[triggers]]
+id = "t_line_opens"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "outpost", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "action", id = "raid_line" },
+  { unlock_kind = "feature", id = "combat" },
+  { unlock_kind = "action", id = "line_clock" },
+  { unlock_kind = "card", id = "n1_track" },
+  { unlock_kind = "card", id = "n2_track" },
+  { unlock_kind = "card", id = "n3_track" },
+  { unlock_kind = "card", id = "n4_track" },
+  { unlock_kind = "card", id = "n5_track" },
+  { unlock_kind = "card", id = "n6_track" },
+  { unlock_kind = "card", id = "n7_track" },
+  { unlock_kind = "card", id = "n8_track" },
+  { unlock_kind = "card", id = "n9_track" },
+  { unlock_kind = "card", id = "n10_track" },
+  { unlock_kind = "card", id = "n11_track" },
+  { unlock_kind = "card", id = "n12_track" },
+  { unlock_kind = "card", id = "n13_track" },
+  { unlock_kind = "card", id = "n14_track" },
+  { unlock_kind = "card", id = "n15_track" },
+]
+
+# Never drawn: game hours since the outpost, for Y5 and SL39.
+[[stores]]
+id = "line_clock"
+label_key = "store_line_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "line_clock"
+label_key = "action_line_clock"
+makes = [{ store = "line_clock", items_per_hour = 1 }]
+
+[[sides]]
+id = "line"
+label_key = "side_line"
+base = 10
+
+[[threats]]
+id = "mourner"
+label_key = "threat_mourner"
+base = 10
+
+# Tallies: made only by the fight's lines, never unlocked.
+[[stores]]
+id = "line_fought"
+label_key = "store_line_fought"
+cap_items = 20000
+
+[[stores]]
+id = "line_lost"
+label_key = "store_line_lost"
+cap_items = 20000
+
+[[standing]]
+id = "raid_line"
+label_key = "action_raid_line"
+fight = { side = "line", threat = "mourner", lost = "line_lost", fought = "line_fought", fights_per_hour = 1, loses = [{ store = "post_stores", items = 1 }], won_line_keys = ["l_fight_line_won_1", "l_fight_line_won_2", "l_fight_line_won_3", "l_fight_line_won_4", "l_fight_line_won_5", "l_fight_line_won_6"], lost_line_keys = ["l_fight_line_lost_1", "l_fight_line_lost_2", "l_fight_line_lost_3", "l_fight_line_lost_4", "l_fight_line_lost_5", "l_fight_line_lost_6"] }
+
+# R2's step on the mourner (regions.md, R2 days 13+), on the region's clock.
+[[triggers]]
+id = "t_mourner_step"
+when = { test = "at_least", subject_kind = "store", id = "r2_clock", value = 312 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "outpost", value = 1 }]
+outcome = { modifiers = [{ target = "threat", id = "mourner", kind = "add_bp", amount_bp = 2500, source = "t_mourner_step" }] }
+
+# Never drawn: the tracker's walks ahead of the carts, a count SL38 reads.
+[[stores]]
+id = "line_walks"
+label_key = "store_line_walks"
+cap_items = 8760
+tally = true
+
+# The tracker walks the track ahead of the carts: holds the line while it runs. The first walk is SL38's.
+[[town_cards]]
+id = "{lane}_track"
+site = { no_site = "the tracker walks the track ahead of the carts, past the wall, off the scene" }
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n13", "n14", "n15"]
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "tracker_{lane}", value = 1 }]
+presentation = "action"
+label_key = "c_track"
+upside_key = "up_track"
+work_s = 2400
+outcome = { stores = [{ store = "line_walks", items = 1 }] }
+while_running = [{ side = "line", amount_bp = 40000 }]
+
+[[entries]]
+id = "e_mourner"
+title_key = "e_mourner_title"
+section = "creatures"
+hand = "ink"
+runners = ["raid_line"]
+
+[[notes]]
+id = "n_mourner_1"
+entry = "e_mourner"
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "line_raided", value = 1 }
+
+# ---------- Y4 and SL38 ----------
+
+# Y4 at the line's first lost fight (the shuffle bag's draw: the same watched or not); the mourners' page is written with it.
+[[triggers]]
+id = "t_y4"
+when = { test = "at_least", subject_kind = "store", id = "line_lost", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "outpost", value = 1 }]
+outcome = { line_keys = ["l_y4_1", "l_y4_2"], unlocks = [{ unlock_kind = "feature", id = "line_raided" }] }
+
+# SL38: the tracker's first walk ahead of the carts.
+[[triggers]]
+id = "t_line_walked"
+when = { test = "at_least", subject_kind = "store", id = "line_walks", value = 1 }
+outcome = { line_keys = ["l_track_walked"] }
+
+# ---------- Y5: a finite pool and the card on it ----------
+
+# Y5 fourteen hours into the line: a pool of moths to net, their dust a second thing that holds the line.
+[[triggers]]
+id = "t_moths"
+when = { test = "at_least", subject_kind = "store", id = "line_clock", value = 14 }
+[triggers.outcome]
+line_keys = ["l_moths_1", "l_moths_2"]
+stores = [{ store = "moths_up", items = 24 }]
+unlocks = [
+  { unlock_kind = "store", id = "dust" },
+  { unlock_kind = "card", id = "net_moths" },
+  { unlock_kind = "card", id = "dust_line" },
+  { unlock_kind = "card", id = "n1_net_moths" },
+  { unlock_kind = "card", id = "n2_net_moths" },
+  { unlock_kind = "card", id = "n3_net_moths" },
+  { unlock_kind = "card", id = "n5_net_moths" },
+  { unlock_kind = "card", id = "n6_net_moths" },
+  { unlock_kind = "card", id = "n7_net_moths" },
+  { unlock_kind = "card", id = "n8_net_moths" },
+  { unlock_kind = "card", id = "n9_net_moths" },
+  { unlock_kind = "card", id = "n10_net_moths" },
+  { unlock_kind = "card", id = "n12_net_moths" },
+  { unlock_kind = "card", id = "n13_net_moths" },
+  { unlock_kind = "card", id = "n14_net_moths" },
+  { unlock_kind = "card", id = "n15_net_moths" },
+  { unlock_kind = "card", id = "n23_net_moths" },
+  { unlock_kind = "card", id = "g_field_net_moths" },
+  { unlock_kind = "card", id = "g_road_net_moths" },
+  { unlock_kind = "card", id = "n1_dust_line" },
+  { unlock_kind = "card", id = "n2_dust_line" },
+  { unlock_kind = "card", id = "n3_dust_line" },
+  { unlock_kind = "card", id = "n5_dust_line" },
+  { unlock_kind = "card", id = "n6_dust_line" },
+  { unlock_kind = "card", id = "n7_dust_line" },
+  { unlock_kind = "card", id = "n8_dust_line" },
+  { unlock_kind = "card", id = "n9_dust_line" },
+  { unlock_kind = "card", id = "n10_dust_line" },
+  { unlock_kind = "card", id = "n12_dust_line" },
+  { unlock_kind = "card", id = "n13_dust_line" },
+  { unlock_kind = "card", id = "n14_dust_line" },
+  { unlock_kind = "card", id = "n15_dust_line" },
+  { unlock_kind = "card", id = "n23_dust_line" },
+  { unlock_kind = "card", id = "g_field_dust_line" },
+  { unlock_kind = "card", id = "g_road_dust_line" },
+]
+
+# A finite pool nothing refills; nothing progress needs reads it.
+[[stores]]
+id = "moths_up"
+label_key = "store_moths_up"
+cap_items = 24
+
+[[stores]]
+id = "dust"
+label_key = "store_dust"
+cap_items = 12
+
+[[cards]]
+id = "net_moths"
+site = { no_site = "the moths are over the fungus round the post, past the wall, off the scene" }
+presentation = "action"
+label_key = "c_net_moths"
+upside_key = "up_net_moths"
+work_s = 900
+skill = "foraging"
+xp_per_hour = 360
+inputs = [{ store = "moths_up", items = 1 }]
+outcome = { stores = [{ store = "dust", items = 1 }] }
+
+[[town_cards]]
+id = "{lane}_net_moths"
+site = { no_site = "the moths are over the fungus round the post, past the wall, off the scene" }
+twin_of = "net_moths"
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field", "g_road"]
+presentation = "action"
+label_key = "c_net_moths"
+upside_key = "up_net_moths"
+work_s = 3600
+inputs = [{ store = "moths_up", items = 1 }]
+outcome = { stores = [{ store = "dust", items = 1 }] }
+
+# The carts' wheels and the post's hasp dusted: nothing hears them while it runs.
+[[cards]]
+id = "dust_line"
+site = { no_site = "the dust goes on the carts' wheels and the post's hasp, past the wall, off the scene" }
+presentation = "action"
+label_key = "c_dust_line"
+upside_key = "up_dust_line"
+work_s = 600
+inputs = [{ store = "dust", items = 1 }]
+stake = "side"
+while_running = [{ side = "line", amount_bp = 20000 }]
+
+[[town_cards]]
+id = "{lane}_dust_line"
+site = { no_site = "the dust goes on the carts' wheels and the post's hasp, past the wall, off the scene" }
+twin_of = "dust_line"
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field", "g_road"]
+presentation = "action"
+label_key = "c_dust_line"
+upside_key = "up_dust_line"
+work_s = 2400
+inputs = [{ store = "dust", items = 1 }]
+stake = "side"
+while_running = [{ side = "line", amount_bp = 20000 }]
+
+[[entries]]
+id = "e_hush_moth"
+title_key = "e_hush_moth_title"
+section = "creatures"
+hand = "ink"
+runners = []
+
+[[notes]]
+id = "n_moth_1"
+entry = "e_hush_moth"
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "net_moths", value = 1 }
+
+# SL39 four hours after the moths, on the line's clock.
+[[triggers]]
+id = "t_elk_words"
+when = { test = "at_least", subject_kind = "store", id = "line_clock", value = 18 }
+outcome = { doings = ["n4"], line_keys = ["l_elk_words"], whereabouts = [{ person = "n4", no_scene = "walks out to the track by the post to say the words and back, off the scene" }] }
+
+# ---------- Y6: night 30, and a new input store ----------
+
+# Y6 on the season's clock (night 30), once the post is an outpost. The combing opens: hair, rule 3's reagent, from pelts.
+[[triggers]]
+id = "t_pack_yard"
+when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 540 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "outpost", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_y6_1", "l_y6_2"]
+unlocks = [
+  { unlock_kind = "feature", id = "pack_yard" },
+  { unlock_kind = "action", id = "night_30" },
+  { unlock_kind = "action", id = "dawn_31" },
+  { unlock_kind = "store", id = "hair" },
+  { unlock_kind = "card", id = "comb_pelts" },
+  { unlock_kind = "card", id = "n1_comb_pelts" },
+  { unlock_kind = "card", id = "n2_comb_pelts" },
+  { unlock_kind = "card", id = "n3_comb_pelts" },
+  { unlock_kind = "card", id = "n5_comb_pelts" },
+  { unlock_kind = "card", id = "n6_comb_pelts" },
+  { unlock_kind = "card", id = "n7_comb_pelts" },
+  { unlock_kind = "card", id = "n8_comb_pelts" },
+  { unlock_kind = "card", id = "n9_comb_pelts" },
+  { unlock_kind = "card", id = "n10_comb_pelts" },
+  { unlock_kind = "card", id = "n12_comb_pelts" },
+  { unlock_kind = "card", id = "n13_comb_pelts" },
+  { unlock_kind = "card", id = "n14_comb_pelts" },
+  { unlock_kind = "card", id = "n15_comb_pelts" },
+  { unlock_kind = "card", id = "n23_comb_pelts" },
+  { unlock_kind = "card", id = "g_field_comb_pelts" },
+  { unlock_kind = "card", id = "g_road_comb_pelts" },
+]
+
+# Night 30 on the season's clock, a hidden clock the scene's night grade reads (day_twenty_seven.toml's night_28).
+[[stores]]
+id = "night_30"
+label_key = "store_night_30"
+cap_items = 20
+hidden = true
+clock = "night"
+
+[[standing]]
+id = "night_30"
+label_key = "action_night_30"
+makes = [{ store = "night_30", items_per_hour = 20 }]
+
+[[stores]]
+id = "hair"
+label_key = "store_hair"
+cap_items = 12
+
+[[cards]]
+id = "comb_pelts"
+site = { no_site = "the combing is done by the fire, which the scene draws; the card itself is no work at a place" }
+presentation = "action"
+label_key = "c_comb_pelts"
+upside_key = "up_comb_pelts"
+work_s = 900
+inputs = [{ store = "pelt", items = 1 }]
+outcome = { stores = [{ store = "hair", items = 3 }] }
+
+[[town_cards]]
+id = "{lane}_comb_pelts"
+site = { no_site = "the combing is done by the fire, which the scene draws; the card itself is no work at a place" }
+twin_of = "comb_pelts"
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field", "g_road"]
+presentation = "action"
+label_key = "c_comb_pelts"
+upside_key = "up_comb_pelts"
+work_s = 3600
+inputs = [{ store = "pelt", items = 1 }]
+outcome = { stores = [{ store = "hair", items = 3 }] }
+
+# ---------- Y7 and A42 ----------
+
+# Y7 at the first three hair, once the pack has sat in the yard: A42 shows, ready on the season's morning (720 h).
+[[triggers]]
+id = "t_hair_warm"
+when = { test = "at_least", subject_kind = "store", id = "hair", value = 3 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pack_yard", value = 1 }]
+outcome = { line_keys = ["l_hair_1", "l_hair_2"], unlocks = [{ unlock_kind = "card", id = "call_pack" }] }
+
+# A42: a story step on the hands, no odds (D-209), ready at dawn 31. Arcana L1 is the level typical holds at the turn (#27, 672 h figures),
+# so it binds no route that kept Arcana in a mix.
+[[cards]]
+id = "call_pack"
+site = { no_site = "the player stands in the hall door; the scene's art adds the pose, until then the line tells it" }
+only_player = "magic"
+presentation = "action"
+label_key = "c_call_pack"
+upside_key = "up_call_pack"
+work_s = 600
+cap = 1
+glows = true
+inputs = [{ store = "hair", items = 3 }]
+requires = [
+  { test = "at_least", subject_kind = "store", id = "dawn_31", value = 12 },
+  { test = "at_least", subject_kind = "skill_level", id = "arcana", value = 14 },
+]
+
+# The hours from night 30 (Y6, 708 h) to dawn 31 at 720 h, the season's morning (drift_clock 552): A42's face says
+# "opens at dawn" where a countdown beside its hair could not be drawn, and the clock runs from Y6, so A42 has a known
+# ready time to be queued When ready by.
+[[stores]]
+id = "dawn_31"
+label_key = "store_dawn_31"
+cap_items = 12
+clock = "dawn"
+
+[[standing]]
+id = "dawn_31"
+label_key = "action_dawn_31"
+makes = [{ store = "dawn_31", items_per_hour = 1 }]
+
+# ---------- B23: the ward and the jump ----------
+
+# B23 at A42's finish. The ward holds the gap; the jump is the Spells row's first slice, a working that resolves a chain of
+# the pack's due fights (item 6). The call's clock (hidden) times day thirty-one.
+[[triggers]]
+id = "t_b23"
+when = { test = "at_least", subject_kind = "card_count", id = "call_pack", value = 1 }
+[triggers.outcome]
+line_keys = ["l_b23_1", "l_b23_2", "l_b23_3", "l_b23_4"]
+unlocks = [
+  { unlock_kind = "feature", id = "pack_called" },
+  { unlock_kind = "action", id = "call_clock" },
+  { unlock_kind = "card", id = "ward_gate" },
+  { unlock_kind = "card", id = "jump_pack" },
+]
+
+# Never drawn: game hours since B23, for day thirty-one.
+[[stores]]
+id = "call_clock"
+label_key = "store_call_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "call_clock"
+label_key = "action_call_clock"
+makes = [{ store = "call_clock", items_per_hour = 1 }]
+
+# Like into like along a piece of the target: the cheapest workings (working_rules.toml).
+[[workings]]
+id = "ward_gate"
+site = { no_site = "the ward is worked at the gate stone; the week's art adds the pose, until then the card tells it" }
+label_key = "c_ward_gate"
+upside_key = "up_ward_gate"
+work_s = 1200
+skill = "spellcraft"
+xp_per_hour = 360
+input = { store = "hair", items = 1 }
+from_kind = "heat"
+to_kind = "heat"
+distance = 0
+link = "piece"
+tithe = 1
+while_running = [{ side = "gap", amount_bp = 5000 }]
+
+[[workings]]
+id = "jump_pack"
+site = { no_site = "the working runs through the pack out past the wall, off the scene" }
+label_key = "c_jump_pack"
+upside_key = "up_jump_pack"
+work_s = 1200
+skill = "spellcraft"
+xp_per_hour = 360
+input = { store = "hair", items = 2 }
+from_kind = "heat"
+to_kind = "heat"
+distance = 2
+link = "piece"
+tithe = 2
+chain = { runner = "pack", reach = 3, link_line_keys = ["l_jump_link_1", "l_jump_link_2", "l_jump_link_next"] }
+
+# ---------- the journal ----------
+
+[[subjects]]
+id = "s_b23"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b23" }
+first = { keys = ["n_day_b23"] }
+catchup = { keys = ["j_b23_catchup"] }
+late = { keys = ["j_b23_late"] }
+
+# ---------- features ----------
+
+[[features]]
+id = "line_raided"
+
+[[features]]
+id = "pack_yard"
+
+[[features]]
+id = "t_mourner_step"
+label_key = "feature_t_mourner_step"
+
+[[features]]
+id = "pack_called"
+
+# ---------- text ----------
+
+[beat_lines]
+Y4 = ["l_y4_1"]
+Y5 = ["l_moths_1"]
+Y6 = ["l_y6_1"]
+Y7 = ["l_hair_1"]
+B23 = ["l_b23_1"]
+
+[line_kinds]
+l_drifted = "body"
+l_fight_line_won_1 = "fight"
+l_fight_line_won_2 = "fight"
+l_fight_line_won_3 = "fight"
+l_fight_line_won_4 = "fight"
+l_fight_line_won_5 = "fight"
+l_fight_line_won_6 = "fight"
+l_fight_line_lost_1 = "fight"
+l_fight_line_lost_2 = "fight"
+l_fight_line_lost_3 = "fight"
+l_fight_line_lost_4 = "fight"
+l_fight_line_lost_5 = "fight"
+l_fight_line_lost_6 = "fight"
+l_y4_1 = "story"
+l_y4_2 = "story"
+l_track_walked = "story"
+l_moths_1 = "story"
+l_moths_2 = "story"
+l_elk_words = "story"
+l_y6_1 = "story"
+l_y6_2 = "story"
+l_hair_1 = "story"
+l_hair_2 = "story"
+l_b23_1 = "story"
+l_b23_2 = "story"
+l_b23_3 = "story"
+l_b23_4 = "story"
+l_jump_link_1 = "fight"
+l_jump_link_2 = "fight"
+l_jump_link_next = "fight"
+
+[text]
+store_track_left = "the drifting season"
+store_line_clock = "hours of the line"
+store_line_walks = "walks ahead of the carts"
+action_line_clock = "The line's hours"
+store_call_clock = "hours since the call"
+action_call_clock = "Since the call"
+store_road_ash = "ash on the track"
+action_track_drift = "Ash drifting on the track"
+chip_drifted = "Drifted"
+chip_drifted_cost = "{pct} cart speed"
+l_drifted = "the track to the post is drifted over again. the carts bog."
+c_clear_track = "Clear the track"
+up_clear_track = "the carts back to their pace, and cleared ground"
+side_line = "The line"
+threat_mourner = "Mourners"
+store_line_fought = "Raids on the line"
+store_line_lost = "Raids lost"
+action_raid_line = "Raids on the line"
+l_fight_line_won_1 = "a cart comes in whole."
+l_fight_line_won_2 = "tracks round the post, nothing taken."
+l_fight_line_won_3 = "the carts get through."
+l_fight_line_won_4 = "the hasp holds."
+l_fight_line_won_5 = "something followed the cart and turned back."
+l_fight_line_won_6 = "the post's store is as it was."
+l_fight_line_lost_1 = "a cart comes in light."
+l_fight_line_lost_2 = "the post's store is short."
+l_fight_line_lost_3 = "pins in the ash by the wheel."
+l_fight_line_lost_4 = "the hasp is open and the store is lighter."
+l_fight_line_lost_5 = "a load gone off into the trees."
+l_fight_line_lost_6 = "the carts come in short again."
+c_track = "Walk the track ahead of the carts"
+up_track = "{pct} the line's strength while they walk it"
+e_mourner_title = "Mourners"
+n_mourner_1 = "a big cat whose front feet open like hands. learned pins the way we did: by having hands"
+l_y4_1 = "a cart doesn't come in. the tracker finds it on the track at the trees with its load gone."
+l_y4_2 = "its four pins are laid in a row in the ash beside the wheel, like tools put down."
+l_track_walked = "the tracker walks the track ahead of the carts and comes back at dusk to tell Lucy where they crossed, and how many."
+store_moths_up = "moths over the post"
+store_dust = "moth-dust"
+c_net_moths = "Net moths at the post"
+up_net_moths = "moth-dust"
+c_dust_line = "Dust the carts and the hasp"
+up_dust_line = "{pct} the line's strength while it runs"
+e_hush_moth_title = "Hush-moths"
+n_moth_1 = "wide as two hands. they eat the fungus. under them you can't hear your own feet. the dust stays on your sleeves"
+l_moths_1 = "over the fungus round the post, moths as wide as two hands come up out of the brown dark in hundreds."
+l_moths_2 = "under them nobody can hear their own feet. the dust off their wings sits on everyone's sleeves."
+l_elk_words = "a walked elk stops on the warm patch by the post. the crew burn it there, and {n4} walks out to say the words."
+l_y6_1 = "in the warm dark the pack comes past the watch fire into the yard and sits down facing the hall door."
+l_y6_2 = "they don't come closer. nobody goes out. in the morning the yard is printed all over."
+store_night_30 = "night"
+store_dawn_31 = "dawn"
+action_dawn_31 = "Dawn"
+feature_t_mourner_step = "The mourners know the road"
+action_night_30 = "Night"
+store_hair = "wolf hair"
+c_comb_pelts = "Comb the pelts"
+up_comb_pelts = "wolf hair"
+l_hair_1 = "you hold a hank of combed wolf hair over the coals to dry it, and the heat goes into it all at once."
+l_hair_2 = "the way it never goes into stone. it comes back out into your hand."
+c_call_pack = "Call the heat out"
+up_call_pack = "the pack, through its hair"
+l_b23_1 = "the next time the pack comes into the yard you stand in the hall door with a twist of wolf hair in your fist."
+l_b23_2 = "you take the heat out of the nearest one through it, and it doesn't stop at one. the next shivers, and the next."
+l_b23_3 = "they get up and go, all of them, into the dark. the grey on your hand goes to the elbow."
+l_b23_4 = "Lucy, behind you, says nothing at all."
+c_ward_gate = "Ward the gate"
+up_ward_gate = "{pct} strength at the gap while it runs"
+c_jump_pack = "Call through the pack"
+up_jump_pack = "the pack's next fights, one to the next"
+l_jump_link_1 = "the heat goes out of one."
+l_jump_link_2 = "and the next."
+l_jump_link_next = "and the next, along the pack."
+n_day_b23 = "took the heat out of one wolf through its hair. it ran through the whole pack. they went"
+j_b23_catchup = "the pack came into the yard and went again, all of them"
+j_b23_late = "the pack keeps off the yard now"

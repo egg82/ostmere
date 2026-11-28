@@ -36,7 +36,8 @@ def _causes(o: Opening) -> dict[str, LineCause]:
                 found[key] = got
 
     for c in o.cards:
-        put([*c.line_keys, *c.outcome.line_keys, *c.finished.line_keys], RunnerCause(runner=c.id))
+        put([*c.line_keys, *c.outcome.line_keys, *c.finished.line_keys, *(c.chain.link_line_keys if c.chain else ())],
+            RunnerCause(runner=c.id))
     for runner, fight in [*((c.id, c.fight) for c in o.cards), *((a.id, a.fight) for a in o.standing)]:
         if fight is not None:
             put([*fight.won_line_keys, *fight.lost_line_keys], RunnerCause(runner=runner))

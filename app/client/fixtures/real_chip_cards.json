@@ -260,6 +260,52 @@
       "wounds": []
     },
     {
+      "card": "n1_clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n1_track",
+      "makes": [
+        "line_walks"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n1_net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n1_dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n1_comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n1_run_cart",
       "makes": [
         "post_stores"
@@ -739,6 +785,52 @@
       "wounds": []
     },
     {
+      "card": "n2_clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n2_track",
+      "makes": [
+        "line_walks"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n2_net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n2_dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n2_comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n2_run_cart",
       "makes": [
         "post_stores"
@@ -1014,6 +1106,44 @@
       "wounds": []
     },
     {
+      "card": "g_field_clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_field_net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_field_dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_field_comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "g_field_run_cart",
       "makes": [
         "post_stores"
@@ -1249,6 +1379,52 @@
       "takes": [
         "damp_wood",
         "stones"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n3_clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n3_track",
+      "makes": [
+        "line_walks"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n3_net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n3_dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n3_comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
       ],
       "wounds": []
     },
@@ -1506,6 +1682,14 @@
       "takes": [
         "dry_wood"
       ],
+      "wounds": []
+    },
+    {
+      "card": "n4_track",
+      "makes": [
+        "line_walks"
+      ],
+      "takes": [],
       "wounds": []
     },
     {
@@ -2019,6 +2203,52 @@
       "wounds": []
     },
     {
+      "card": "n5_clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n5_track",
+      "makes": [
+        "line_walks"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n5_net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n5_dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n5_comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n5_run_cart",
       "makes": [
         "post_stores"
@@ -2334,6 +2564,52 @@
       "wounds": []
     },
     {
+      "card": "n7_clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n7_track",
+      "makes": [
+        "line_walks"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n7_net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n7_dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n7_comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n7_run_cart",
       "makes": [
         "post_stores"
@@ -2623,6 +2899,52 @@
       "makes": [],
       "takes": [
         "stakes"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n6_clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n6_track",
+      "makes": [
+        "line_walks"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n6_net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n6_dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n6_comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
       ],
       "wounds": []
     },
@@ -3212,6 +3534,14 @@
       "wounds": []
     },
     {
+      "card": "n11_track",
+      "makes": [
+        "line_walks"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
       "card": "n11_weave_wattle",
       "makes": [
         "wattle"
@@ -3444,6 +3774,52 @@
       ],
       "takes": [
         "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_track",
+      "makes": [
+        "line_walks"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n10_net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
       ],
       "wounds": []
     },
@@ -3725,6 +4101,52 @@
       "wounds": []
     },
     {
+      "card": "n12_clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_track",
+      "makes": [
+        "line_walks"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n12_net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n12_run_cart",
       "makes": [
         "post_stores"
@@ -4002,6 +4424,52 @@
       "wounds": []
     },
     {
+      "card": "n8_clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n8_track",
+      "makes": [
+        "line_walks"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n8_net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n8_dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n8_comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n8_run_cart",
       "makes": [
         "post_stores"
@@ -4275,6 +4743,52 @@
       ],
       "takes": [
         "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_track",
+      "makes": [
+        "line_walks"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n9_net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
       ],
       "wounds": []
     },
@@ -4618,6 +5132,52 @@
       "wounds": []
     },
     {
+      "card": "n13_clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n13_track",
+      "makes": [
+        "line_walks"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n13_net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n13_dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n13_comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n13_run_cart",
       "makes": [
         "post_stores"
@@ -4734,6 +5294,44 @@
       "wounds": []
     },
     {
+      "card": "g_road_clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_road_net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_road_dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_road_comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "g_road_run_cart",
       "makes": [
         "post_stores"
@@ -4815,6 +5413,52 @@
       "wounds": []
     },
     {
+      "card": "n14_clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n14_track",
+      "makes": [
+        "line_walks"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n14_net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n14_dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n14_comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n14_run_cart",
       "makes": [
         "post_stores"
@@ -4892,6 +5536,52 @@
       ],
       "takes": [
         "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n15_clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n15_track",
+      "makes": [
+        "line_walks"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n15_net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n15_dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n15_comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
       ],
       "wounds": []
     },
@@ -5021,6 +5711,44 @@
       "wounds": []
     },
     {
+      "card": "n23_clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n23_net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n23_dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n23_comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n23_run_cart",
       "makes": [
         "post_stores"
@@ -5131,6 +5859,72 @@
       ],
       "takes": [
         "post_stores"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "clear_track",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [
+        "road_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "net_moths",
+      "makes": [
+        "dust"
+      ],
+      "takes": [
+        "moths_up"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "dust_line",
+      "makes": [],
+      "takes": [
+        "dust"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "comb_pelts",
+      "makes": [
+        "hair"
+      ],
+      "takes": [
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "call_pack",
+      "makes": [],
+      "takes": [
+        "hair"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "ward_gate",
+      "makes": [
+        "ash"
+      ],
+      "takes": [
+        "hair"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "jump_pack",
+      "makes": [
+        "ash"
+      ],
+      "takes": [
+        "hair"
       ],
       "wounds": []
     }
@@ -5261,6 +6055,20 @@
         "value_of_cap": false,
         "release_of_cap": false
       }
+    },
+    {
+      "chip": "drifted",
+      "when": {
+        "kind": "at_least",
+        "watched": {
+          "kind": "store_value",
+          "store": "road_ash"
+        },
+        "value": 43200000,
+        "release": 43200000,
+        "value_of_cap": false,
+        "release_of_cap": false
+      }
     }
   ],
   "stores": [
@@ -5347,7 +6155,8 @@
         "scavenge",
         "field_track",
         "pull_beams",
-        "shovel_road"
+        "shovel_road",
+        "clear_track"
       ]
     },
     {
@@ -5410,7 +6219,8 @@
         "scavenge",
         "field_track",
         "pull_beams",
-        "shovel_road"
+        "shovel_road",
+        "clear_track"
       ]
     },
     {
@@ -5420,7 +6230,8 @@
         "dig_clay",
         "pick_fungus",
         "reap",
-        "fog_fish"
+        "fog_fish",
+        "net_moths"
       ]
     },
     {
@@ -5959,7 +6770,9 @@
         "n8_clear_roofs",
         "n9_clear_roofs",
         "stir_air",
-        "dig_midden"
+        "dig_midden",
+        "ward_gate",
+        "jump_pack"
       ]
     },
     {
@@ -5974,6 +6787,10 @@
     },
     {
       "store": "pack_lost",
+      "made_by": []
+    },
+    {
+      "store": "pack_chained",
       "made_by": []
     },
     {
@@ -6226,27 +7043,44 @@
     {
       "store": "cleared",
       "made_by": [
+        "n1_clear_track",
         "n1_clear_road",
+        "n2_clear_track",
         "n2_clear_road",
+        "g_field_clear_track",
         "g_field_clear_road",
+        "n3_clear_track",
         "n3_clear_road",
         "n4_clear_road",
         "g_hearth_clear_road",
+        "n5_clear_track",
         "n5_clear_road",
+        "n7_clear_track",
         "n7_clear_road",
+        "n6_clear_track",
         "n6_clear_road",
         "shovel_road",
         "n11_first_out",
         "n11_clear_road",
+        "n10_clear_track",
         "n10_clear_road",
+        "n12_clear_track",
         "n12_clear_road",
+        "n8_clear_track",
         "n8_clear_road",
+        "n9_clear_track",
         "n9_clear_road",
         "n11_first_over",
+        "n13_clear_track",
+        "g_road_clear_track",
         "g_road_clear_road",
+        "n14_clear_track",
         "n14_clear_road",
+        "n15_clear_track",
         "n15_clear_road",
-        "n23_clear_road"
+        "n23_clear_track",
+        "n23_clear_road",
+        "clear_track"
       ]
     },
     {
@@ -6525,6 +7359,106 @@
         "n23_walk_hill",
         "walk_hill"
       ]
+    },
+    {
+      "store": "track_left",
+      "made_by": []
+    },
+    {
+      "store": "road_ash",
+      "made_by": []
+    },
+    {
+      "store": "line_clock",
+      "made_by": []
+    },
+    {
+      "store": "line_fought",
+      "made_by": []
+    },
+    {
+      "store": "line_lost",
+      "made_by": []
+    },
+    {
+      "store": "line_walks",
+      "made_by": [
+        "n1_track",
+        "n2_track",
+        "n3_track",
+        "n4_track",
+        "n5_track",
+        "n7_track",
+        "n6_track",
+        "n11_track",
+        "n10_track",
+        "n12_track",
+        "n8_track",
+        "n9_track",
+        "n13_track",
+        "n14_track",
+        "n15_track"
+      ]
+    },
+    {
+      "store": "moths_up",
+      "made_by": []
+    },
+    {
+      "store": "dust",
+      "made_by": [
+        "n1_net_moths",
+        "n2_net_moths",
+        "g_field_net_moths",
+        "n3_net_moths",
+        "n5_net_moths",
+        "n7_net_moths",
+        "n6_net_moths",
+        "n10_net_moths",
+        "n12_net_moths",
+        "n8_net_moths",
+        "n9_net_moths",
+        "n13_net_moths",
+        "g_road_net_moths",
+        "n14_net_moths",
+        "n15_net_moths",
+        "n23_net_moths",
+        "net_moths"
+      ]
+    },
+    {
+      "store": "night_30",
+      "made_by": []
+    },
+    {
+      "store": "hair",
+      "made_by": [
+        "n1_comb_pelts",
+        "n2_comb_pelts",
+        "g_field_comb_pelts",
+        "n3_comb_pelts",
+        "n5_comb_pelts",
+        "n7_comb_pelts",
+        "n6_comb_pelts",
+        "n10_comb_pelts",
+        "n12_comb_pelts",
+        "n8_comb_pelts",
+        "n9_comb_pelts",
+        "n13_comb_pelts",
+        "g_road_comb_pelts",
+        "n14_comb_pelts",
+        "n15_comb_pelts",
+        "n23_comb_pelts",
+        "comb_pelts"
+      ]
+    },
+    {
+      "store": "dawn_31",
+      "made_by": []
+    },
+    {
+      "store": "call_clock",
+      "made_by": []
     },
     {
       "store": "his_watch_clock",

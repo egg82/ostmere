@@ -503,10 +503,12 @@ id = "gap"
 label_key = "side_gap"
 base = 4
 
+# A group fought one after another, so a working can resolve a chain of its due fights (day_thirty.toml's jump).
 [[threats]]
 id = "wolf_pack"
 label_key = "threat_wolf_pack"
 base = 8
+members = 6
 
 # The watch shares week 1 shipped, each held on the gap while it runs beside the larder b7.toml gave it, at its share of
 # its lane's time.
@@ -553,10 +555,16 @@ id = "pack_lost"
 label_key = "store_pack_lost"
 cap_items = 10000
 
+# Made only by the chains a working resolves on the pack.
+[[stores]]
+id = "pack_chained"
+label_key = "store_pack_chained"
+cap_items = 10000
+
 [[standing]]
 id = "pack"
 label_key = "action_pack"
-fight = { side = "gap", threat = "wolf_pack", lost = "pack_lost", fought = "pack_fought", fights_per_hour = 1, loses = [{ store = "smoked", items = 1 }], won_line_keys = ["l_fight_pack_won_1", "l_fight_pack_won_2", "l_fight_pack_won_3", "l_fight_pack_won_4", "l_fight_pack_won_5", "l_fight_pack_won_6"], lost_line_keys = ["l_fight_pack_lost_1", "l_fight_pack_lost_2", "l_fight_pack_lost_3", "l_fight_pack_lost_4", "l_fight_pack_lost_5", "l_fight_pack_lost_6"] }
+fight = { side = "gap", threat = "wolf_pack", lost = "pack_lost", fought = "pack_fought", chained = "pack_chained", fights_per_hour = 1, loses = [{ store = "smoked", items = 1 }], won_line_keys = ["l_fight_pack_won_1", "l_fight_pack_won_2", "l_fight_pack_won_3", "l_fight_pack_won_4", "l_fight_pack_won_5", "l_fight_pack_won_6"], lost_line_keys = ["l_fight_pack_lost_1", "l_fight_pack_lost_2", "l_fight_pack_lost_3", "l_fight_pack_lost_4", "l_fight_pack_lost_5", "l_fight_pack_lost_6"] }
 
 # ---------- B9: the book comes out ----------
 
@@ -922,6 +930,7 @@ l_pack_1 = "a handful of wolves gather near the gap. a brand turns the first."
 l_pack_2 = "the rest wait past the light, and leave by dawn with the rack's low strips."
 store_pack_fought = "pack fights"
 store_pack_lost = "pack fights lost"
+store_pack_chained = "pack fights called through"
 action_pack = "Pack"
 l_fight_pack_won_1 = "a brand swung low and the pack backs off."
 l_fight_pack_won_2 = "the wolves give the gap up and trot off."
