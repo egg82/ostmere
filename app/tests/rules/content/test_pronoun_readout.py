@@ -1,5 +1,6 @@
-"""The pronouns readout (tests/rules/play/pronouns_readout.py) flags a line whose he/she has no one in the line to point
-at, and none whose line holds a person's slot, a name or a word for a person; it reports and fails nothing."""
+"""The pronouns readout (tests/rules/play/pronouns_readout.py) flags a text that can show alone (a line, an aim, an upside)
+whose he/she has no one in it to point at, and none that holds a person's slot, a name or a word for a person; it
+reports and fails nothing."""
 from ashfall_app.rules.schema import Opening
 from tests import readout_snapshot as rs
 from tests.rules.play import pronouns_readout as readout
@@ -32,3 +33,13 @@ def test_a_pronoun_with_no_one_in_its_line_is_flagged_and_one_with_someone_is_no
     assert flagged.get("zz_alone") == ["he"]
     assert not {"zz_slot", "zz_name", "zz_word", "zz_none"} & set(flagged)
     assert "zz_alone" in readout.render(o)
+
+
+def test_an_aim_and_an_upside_are_read_too_and_a_number_slot_names_no_one(shipped_opening: Opening):
+    aim = shipped_opening.aims[0]
+    card = next(c for c in shipped_opening.cards if c.upside_key is not None)
+    o = shipped_opening.model_copy(update={"text": {**shipped_opening.text, aim.text_key: "find him a place.",
+                                                    card.upside_key or "": "{pct} her work speed"}})
+    flagged = dict(readout.unanchored(o))
+    assert flagged.get(aim.text_key) == ["him"]
+    assert flagged.get(card.upside_key or "") == ["her"]
