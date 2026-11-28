@@ -32,7 +32,7 @@ FLAT = frozenset({
 })
 """Lie on the ground or are the backdrop: drawn first, in manifest order, under everything that stands."""
 
-OVERLAY = frozenset({"fog_dense", "fog_haze", "ash_drift", "smoke_plume", "wood_steam", "ash"})
+OVERLAY = frozenset({"fog_dense", "fog_haze", "fog_still", "ash_drift", "smoke_plume", "wood_steam", "ash"})
 """Not things in the scene (a layer with a blend is one too): drawn last, in manifest order."""
 
 BASE_OVERRIDE: Mapping[str, int] = {
@@ -55,7 +55,7 @@ PART_OF: Mapping[str, str] = {
     "pelt_in_bay_1": "bay", "pelt_in_bay_2": "bay2", "pelt_in_bay_3": "lean_to", "spear_leaning": "n1_shelter",
     "lean_to_ghost": "lean_to", "larder_ghost": "larder", "smoke_rack_ghost": "smoke_rack",
     "n1_shelter_ghost": "n1_shelter", "woodstack_ghost": "woodstack", "bay_ghost": "bay", "bay2_ghost": "bay2",
-    "hut_ghost": "hut", "meat_on_rack": "smoke_rack", "meat_on_rack_again": "smoke_rack", "fungus_birch": "birch_log",
+    "hut_ghost": "hut", "meat_on_rack": "smoke_rack", "meat_on_rack_again": "smoke_rack", "racks_film": "smoke_rack", "fungus_birch": "birch_log",
     "fungus_torn": "birch_log", "claw_marks": "birch_log", "birch_stump": "birch_log", "pyre_flames": "pyre",
     "lamp_1": "palisade_9", "lamp_2": "palisade_9", "lamps_lit": "palisade_9", "gap_laid": "gap_ring", "gap_lit": "gap_ring",
     "watch_laid": "watch_ring", "watch_lit": "watch_ring", "clay_hearth_2_front": "clay_hearth_1_front",

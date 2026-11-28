@@ -52,7 +52,7 @@ BUILDS: Mapping[str, tuple[str, ...]] = {
     "lean_to": ("lean_to", "bay", "pelt_in_bay_1", "pelt_in_bay_3", "roof_ash_bay", "roof_ash_lean_to", "hide_flaps_1"),
     "larder": ("larder",),
     "smoke_rack": (
-        "smoke_rack", "rack_roof_1", "rack_roof_2", "roof_ash_rack_roof", "meat_on_rack", "meat_on_rack_again",
+        "smoke_rack", "rack_roof_1", "rack_roof_2", "roof_ash_rack_roof", "meat_on_rack", "meat_on_rack_again", "racks_film",
     ),
     "n1_shelter": ("n1_shelter", "spear_leaning", "roof_ash_n1_shelter"),
     "woodstack": ("woodstack",),

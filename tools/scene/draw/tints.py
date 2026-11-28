@@ -22,7 +22,7 @@ BAKES: dict[str, kit.Grade | None] = {
     "ridge_bare": None, "woodstack": None, "woodstack_ghost": None,
     "track": None, "dead_field": None, "frost": None, **{f"cairns_{i}": None for i in (1, 2, 3)},
     **{f"larder_floor_{i}": None for i in (1, 2, 3)}, "watch_ring": ACCENT, "watch_ring_ghost": ACCENT,
-    "fog_dense": None, "fog_haze": None, "kill": None, "wolf_prints": None, "ring_prints": None, "ridge_shapes": None,
+    "fog_dense": None, "fog_haze": None, "fog_still": None, "kill": None, "wolf_prints": None, "ring_prints": None, "ridge_shapes": None,
     "wood_steam": None, **{f"hearth_stones_{i}": None for i in (1, 2, 3)}, "wolf_edge_1": None, "wolf_edge_2": None,
     "rat_larder": None, "crows_roof": None, "crows_hang": None, **{f"turned_{i}": SOIL for i in (1, 2, 3)},
 "turned_pelt": WOOD,

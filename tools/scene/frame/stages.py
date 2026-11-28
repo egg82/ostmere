@@ -246,6 +246,29 @@ STAGES["67_still"] = STAGES["66_night_21"].then({"feature:still"}, dawn_22=20)
 STAGES["72_dusk_24"] = STAGES["67_still"].then({"action:night_24"}, night_24=6)
 STAGES["72_night_24"] = STAGES["67_still"].then({"action:night_24"}, night_24=20)
 STAGES["72_day_25"] = STAGES["72_night_24"].then(dawn_25=12)
+# Week four's moments (content/team/week-four.md, Art), in order on the camp week three left, joining as the content does.
+_W4 = STAGES["67_still"].then({"joined:n8", "joined:n9", "joined:n10", "joined:n12"})
+STAGES["68_ashwood"] = _W4.then(still_clock=4, ashwood_trips=1)
+STAGES["69_walked_elk"] = _W4.then(still_clock=8, ashwood_trips=2)
+STAGES["70_film"] = _W4.then({"chip:ashed"}, still_clock=16, ashwood_trips=3)
+STAGES["71_bowl"] = _W4.then(still_clock=26, ashwood_trips=3)
+STAGES["72_keeping_pace"] = _W4.then(still_clock=28, ashwood_trips=4)
+_SORREL = _W4.then({"feature:stranger_home"}, still_clock=30, ashwood_trips=6)
+STAGES["73_stranger_home"] = _SORREL
+STAGES["74_fiddle"] = _SORREL.then({"joined:n14", "joined:n15"}, still_clock=36, sorrel_clock=5, fiddle_2_clock=4)
+_POST = _SORREL.then({"joined:n14", "joined:n15"}, still_clock=44, sorrel_clock=12, ashwood_trips=14)
+STAGES["75_cache"] = _POST
+STAGES["76_ring"] = _POST.then(still_clock=56, sorrel_clock=24)
+STAGES["77_fog"] = _POST.then({"action:night_24"}, still_clock=66, sorrel_clock=34, night_24=20)
+_KEPT = STAGES["77_fog"].then({"feature:kept"}, still_clock=74, dawn_25=20)
+STAGES["78_stone_wake"] = _KEPT.then(kept_clock=1)
+STAGES["79_bowl_set"] = _KEPT.then(kept_clock=9)
+_WALKERS = {"joined:n16", "joined:n17", "joined:n18", "joined:n19"}
+STAGES["80_thanks"] = _KEPT.then(_WALKERS, kept_clock=31)
+_B21 = _KEPT.then(_WALKERS | {"joined:n20", "joined:n21", "joined:n22", "feature:bedesman_home"}, kept_clock=60)
+STAGES["81_bedesman"] = _B21.then(bede_clock=1)
+STAGES["82_board"] = _B21.then(bede_clock=5)
+STAGES["83_names_night"] = _B21.then({"project:sit_names", "action:night_28"}, bede_clock=38, night_28=20)
 STAGES["69_before_the_join"] = _ALL.then({"running:g_field_reap", "running:g_hearth_reap", "running:g_road_fungus_stew"})
 # Week five (app/ashfall_app/rules/days/day_twenty_nine.toml to day_thirty_three.toml; content/team/week-five.md, Art), on
 # the camp as week four left it, its stale night clocks still full: the Drift's grades have to win over them.
