@@ -16,7 +16,7 @@ per-PR set: `tests` (three shards, on a `postgres:18.6` container, production's 
 `playthrough-slice` plays): a chapter is touched when its own files changed from the base's (its day toml, the file its
 moves live in, week one's own code), and each touched chapter's tests play on from the last nightly's saved end of the
 chapter before it. `playthrough-slice` runs one job per week-two shard of a touched chapter
-(`weektwo_shards.shards_of_chapter`), with a 6-minute timeout: the 10-minute critical path in `test_ci_budget.py` less
+(`weektwo_shards.shards_of_chapter`), with a 6-minute timeout: the 10-minute critical path in `tests/tools/test_ci_budget.py` less
 `changes`, `slice` and `ci-ok`. `slice` restores the last nightly's saves and plans the smoke instead when a shard's
 saved end of the chapter before is missing, saying why in the job summary. Shards whose wall time (the sum of the builds and heavy calls of their longest xdist
 loadgroup, not their slowest play), plus setup and 10% margin, is over 6 minutes are named in `weektwo_shards.NIGHTLY_ONLY` and play only in the full run; a pull request
@@ -174,7 +174,7 @@ for the Python-run gates, `app/client/gates/held/` for the client's. `app/tools/
 | `app/tests/scene/test_scene_day.py` (the field is `by_day` on a lane, `lane_entries.ByDayEntry`; the scene is `tools/scene/cast/people_day.py`) | a person's `by_day` names a card of their own lane or their crew's whose `site` is a scene layer, or `at_fire` or `off_scene` and why (exactly one); a crew's member stands at their site by day from their join, giving way to their crew pose; the scene draws by day at a site exactly the people the content sends there, at the layer that card names; fails when the two disagree, when a lane gained a `by_day` or lost its one without the held set following, and when a card is not the lane's own or has no layer site | `people_day.HELD_UNDECIDED` (person lanes with no `by_day`; empty, only shrinks) |
 | `app/tests/rules/checks/test_pool_checks.py` (`app/ashfall_app/rules/checks/text/pool_checks.py`) | a line a source says again and again (a chip's off lines, a fight's won and lost lines, a people band's lines) draws from at least `MIN_POOL` (6) different keys, and an uncapped card says no line; counts keys, never reads them | none |
 | `app/tests/gates/test_canon_ids.py` | every `C-<area>-<n>` and `D-<n>` id cited in the repo's text is a row of `content/canon/` or `content/decisions.jsonl`; canon rows keep their fields, a status of canon or tentative, and a source (`file#heading`) that resolves; decision rows keep their fields, status, date and by | none |
-| `app/tests/test_ci_budget.py` | every job in `ci.yml` is classed pull-request, full-run or main-only, and the longest chain of pull-request jobs at their `timeout-minutes` is at most 10 minutes | none |
+| `app/tests/tools/test_ci_budget.py` | every job in `ci.yml` is classed pull-request, full-run or main-only, and the longest chain of pull-request jobs at their `timeout-minutes` is at most 10 minutes | none |
 | `app/tests/tools/test_saves_plan.py` | every planned `chapter-saves` job is predicted within its cap less the margin; a planted chapter re-splits the plan; the workflow has the jobs and caps the plan assumes | none |
 | `app/tools/mutate_suite.py` `--plants` and `--check`, and `app/tests/journal_contract/plant_mutants.py` `--plants` for the journal plants (CI job `mutant-plants`) | every planted mutant's anchor occurs exactly once in the code it mutates, so no mutant is silently skipped, and every mutant row is claimed by a test marked `@kills` | none |
 
@@ -190,7 +190,7 @@ A single-player web game with an API, played by its owner. **A pull request's CI
 (a docs-only one about a minute), and the nightly full run is where the whole-game simulations live. The yardstick is
 an outside one, never the suite's own history: a unit test costs milliseconds, 0.05 s at most. Each job's
 `timeout-minutes` in `ci.yml` is its budget, so a job that outgrows it goes red instead of quietly slowing every pull
-request. The pull-request jobs' timeouts sum to at most 10 minutes on their longest chain, which `test_ci_budget.py`
+request. The pull-request jobs' timeouts sum to at most 10 minutes on their longest chain, which `tests/tools/test_ci_budget.py`
 checks; a job that needs more is split or moves to the nightly, never given a longer timeout. Locally, and in every subagent, run the tests a change touches plus the structural gates; CI runs the rest.
 
 Test depth follows risk. The engine, saves, catch-up maths, the content loader and its checks, accounts and anything
