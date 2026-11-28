@@ -135,6 +135,7 @@ export const UI = {
   cardLevelled: "ui.card.levelled", // "{skill}{n}{before}{after}": a level on the card it speeds up, its old and new time
   retired: "ui.card.retired",
   full: "ui.ledger.full",
+  campLifted: "ui.camp.lifted", // "{level} {card}": a held Camp level the bar is filled to, and the unlocked card whose finish lifts it
   campPays: "ui.camp.pays", // "{level} {pays}": the next Camp level and its pays words, their own {from} and {to} filled
   starved: "ui.ledger.starved",
   unfed: "ui.ledger.unfed", // "{pct}": a dry store that only feeds a bonus (StoreInfo.bonus_bp), the bonus it holds back
