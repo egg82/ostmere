@@ -14,11 +14,7 @@ export function openAsks(view: View): string[] {
 
 /** The people who ask, by name: a lane's name text, else its label as it reads now; "" when no one person asks. */
 export function askedBy(catalog: Catalog, view: View, info: OfferInfo): string {
-  const { text } = catalog;
-  return names.format(info.askers.map((lane) => {
-    const key = catalog.content.lane_infos.find((l) => l.lane === lane)?.name_key;
-    return key ? text.get(key) : catalog.laneLabel(lane, view);
-  }));
+  return names.format(info.askers.map((lane) => catalog.personName(lane, view)));
 }
 
 /** What led to the ask, worded as a chronicle line's cause. Null when the content gives none or the page cannot word it. */

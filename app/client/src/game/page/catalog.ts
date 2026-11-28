@@ -137,6 +137,13 @@ export class Catalog {
     return this.label(later?.label_key ?? info?.label_key);
   }
 
+  /** A person as a sentence names them: their lane's name text, else the lane's label as `view` has it. A lane's label
+   * titles a row ("…'s hands"); it is no name to put in a sentence. */
+  personName(lane: string, view?: View): string {
+    const key = this.lanes.get(lane)?.name_key;
+    return key ? this.text.get(key) : this.laneLabel(lane, view);
+  }
+
   /** The display name of the role `lane`'s person holds in `view`, null when they hold none (Content.cast_infos: the role
    * whose CastLane feature for this lane `view` has unlocked). */
   castTitle(lane: string, view: View): string | null {

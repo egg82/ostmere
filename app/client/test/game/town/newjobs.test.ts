@@ -48,3 +48,14 @@ const installed: View = { ...one, mixes: [{ ...(one.mixes[0] ?? ({} as never)), 
 expect("a card that arrives in a mix is no offer", newJobs(catalog, town, installed), []);
 
 expect("a player's card is no offer", newJobs(catalog, town, { ...town, cards: [...town.cards, { ...haul, card: "chop2", share_bp: 0 }] }), []);
+
+// A person with a name is named by it, never by their lane's label: a label titles a row ("…'s hands") and read as a
+// sentence's subject it says a crew member still works a split of their own.
+const namedContent: Content = {
+  ...content,
+  lane_infos: content.lane_infos.map((l) => (l.lane === "helper" ? { ...l, name_key: "name.helper" } : l)),
+  text_entries: [...content.text_entries, { key: "name.helper", text: "Ada" }],
+};
+const namedCatalog = new Catalog(namedContent);
+expect("a named person: their name, not the lane's label", jobLine(namedCatalog, one, newJobs(namedCatalog, town, one)), "Ada has something new to try: Chop logs.");
+expect("a named person's several jobs: their name", jobLine(namedCatalog, two, newJobs(namedCatalog, town, two)), "Ada has a few new things to try.");
