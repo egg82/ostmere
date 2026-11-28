@@ -3,7 +3,7 @@
 Run from app/: python -m tools.readouts_pull <run-id>
 
 A job whose readout differs from its committed text fails after uploading the new text as a `readouts-new-*` artifact.
-This downloads that run's artifacts and copies each readout into tests/readouts/; commit the result. A file whose name is
+This downloads that run's artifacts and copies each readout into its group under tests/readouts/; commit the result. A file whose name is
 no readout's (a package's name, then `-` and a readout's name, then `.txt`) is refused.
 """
 import re
@@ -13,7 +13,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from tests.readout_snapshot import DIR, PACKAGES
+from tests.readout_snapshot import DIR, PACKAGES, path
 
 NAME = re.compile(r"(?:%s)(?:-[a-z0-9_-]+)?\.txt" % "|".join(map(re.escape, PACKAGES)))
 
@@ -30,7 +30,8 @@ def copy_in(source: Path, root: Path = DIR) -> tuple[list[Path], list[str]]:
         if f.is_symlink() or not accepted(f.name):
             refused.append(str(f.relative_to(source)))
             continue
-        target = root / f.name
+        target = path(f.stem, root)
+        target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(f, target)
         written.append(target)
     return written, refused

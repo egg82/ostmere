@@ -59,6 +59,8 @@ def test_stray_names_committed_files_nothing_writes_and_readouts_never_committed
     for name in ("dayone-a", "dayone-gone", "daytwo-a", "dayonex"):
         rs.write(name, TEXT, tmp_path)
     assert rs.stray("dayone", ("dayone-a", "dayone-new"), tmp_path) == (["dayone-gone"], ["dayone-new"])
+    assert rs.path("dayone-a", tmp_path) == tmp_path / "dayone" / "dayone-a.txt"
+    assert rs.path("opening", tmp_path) == tmp_path / "rules" / "opening.txt"
 
 
 def test_every_package_names_a_report_module_with_names_of_its_own():
