@@ -15,11 +15,11 @@ result."""
 
 
 def line_keys(o: "Opening") -> list[str]:
-    """Every text key a log line can carry: cards' lines, outcomes', chips' on and off, the camp's,
+    """Every text key a log line can carry: cards' lines and chain links, outcomes', chips' on and off, the camp's,
     the start's and the end's, and the fights' pools (the page writes those into the log)."""
     keys = [*o.start_line_keys, *o.end_line_keys]
     for c in o.cards:
-        keys += [*c.line_keys, *c.outcome.line_keys, *c.finished.line_keys]
+        keys += [*c.line_keys, *c.outcome.line_keys, *c.finished.line_keys, *(c.chain.link_line_keys if c.chain else ())]
     for t in o.triggers:
         keys += t.outcome.line_keys
     for x in o.offers:

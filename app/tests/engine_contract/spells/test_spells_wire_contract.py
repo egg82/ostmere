@@ -49,7 +49,8 @@ def game() -> Game:
     chain = ChainEntry(runner=RAID, reach=REACH, link_line_keys=list(KEYS))
     o = shipped().model_copy(update={"sides": [*shipped().sides, SideEntry(id=HAND, label_key="side.hand", base=300)],
                                      "threats": [*shipped().threats, ThreatEntry(id=WOLF, label_key="threat.wolf", base=100, members=MEMBERS)],
-                                     "cards": [c.model_copy(update={"chain": chain}) if c.id == WORKING else c for c in shipped().cards]})
+                                     "cards": [c.model_copy(update={"chain": chain}) if c.id == WORKING else c for c in shipped().cards],
+                                     "line_kinds": {**shipped().line_kinds, **{k: "fight" for k in KEYS}}})
     return Game(o, replace(ruleset(shipped(), "test", 1), rules=rules()))
 
 
@@ -72,10 +73,10 @@ def tapped(*mods: e.Modifier) -> e.Step:
 def test_the_content_serves_the_group_size_and_the_chain_of_the_working():
     c = game().content()
     assert [x.members for x in c.threat_infos if x.threat == "wolf"] == [MEMBERS]
-    assert {x.members for x in c.threat_infos if x.threat != "wolf"} == {1}
+    assert {x.members for x in c.threat_infos if x.threat not in ("wolf", "wolf_pack")} == {1}
     chain = [x.chain for x in c.card_infos if x.card == "gather_wood"]
     assert chain[0] is not None and (chain[0].runner, chain[0].link_line_keys) == ("chill", list(KEYS))
-    assert [x.card for x in c.card_infos if x.chain is not None] == ["gather_wood"]
+    assert [x.card for x in c.card_infos if x.chain is not None and x.card != "jump_pack"] == ["gather_wood"]
 
 
 @kills(39)

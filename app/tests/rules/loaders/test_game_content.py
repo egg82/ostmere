@@ -16,7 +16,7 @@ from ashfall_app.rules.expand.camp_convert import camp_cap
 from ashfall_app.rules.checks.text.name_checks import without_slots
 from ashfall_app.rules.schema import (
     B7, CHAPTERS, DAY_EIGHTEEN, DAY_ELEVEN, DAY_FIFTEEN, DAY_FIVE, DAY_FOUR, DAY_NINETEEN, DAY_SIX, DAY_SIXTEEN, DAY_TWELVE,
-    DAY_TWENTY_FIVE, DAY_TWENTY_NINE, DAY_TWENTY_SEVEN, DAY_TWENTY_THREE, DAY_TWENTY_TWO,
+    DAY_THIRTY, DAY_TWENTY_FIVE, DAY_TWENTY_NINE, DAY_TWENTY_SEVEN, DAY_TWENTY_THREE, DAY_TWENTY_TWO,
 )
 from ashfall_app.saves.ruleset import ruleset
 from tests.rules.play.playthrough import Player, opening, opening_rules
@@ -136,7 +136,8 @@ def test_a_short_need_can_name_the_card_that_makes_it(content: Content):
                                         (DAY_ELEVEN, ["n5_gather", "n5_cut", "n7_gather", "n7_cut", "n6_gather", "n6_cut"]),
                                         (DAY_EIGHTEEN, ["n11_first_out", "n11_cut", "n10_cut", "n12_cut", "n8_cut", "n9_cut"]),
                                         (DAY_NINETEEN, ["n11_first_over"]))
-    assert made["flint"] == shipped(["scavenge", "field_track"], (DAY_FIFTEEN, ["pull_beams"]), (DAY_SIXTEEN, ["shovel_road"]))
+    assert made["flint"] == shipped(["scavenge", "field_track"], (DAY_FIFTEEN, ["pull_beams"]), (DAY_SIXTEEN, ["shovel_road"]),
+                                   (DAY_THIRTY, ["clear_track"]))
     assert made["nails"] == ["scavenge"]
     assert made["warmth"] == []
 
@@ -166,7 +167,8 @@ def test_step_needs_glows_order_offers_and_carried_things_are_served(content: Co
         ["stand_up", "strike_fire", "give_stool", "walk_edge", "track_end", "bank_hearth"],
         (DAY_FOUR, ["sit_up_5"]), (DAY_FIVE, ["hand_on_stone"]), (B7, ["bank_fire_6", "b7_stand"]), (DAY_SIX, ["sit_fire_7"]), (DAY_ELEVEN, ["keep_vigil"]),
         (DAY_TWELVE, ["sit_last_night"]), (DAY_SIXTEEN, ["try_stone"]), (DAY_NINETEEN, ["sit_road_end"]),
-        (DAY_TWENTY_THREE, ["go_wallow"]), (DAY_TWENTY_FIVE, ["post_door"]), (DAY_TWENTY_SEVEN, ["sit_names"]), (DAY_TWENTY_NINE, ["first_run"]))
+        (DAY_TWENTY_THREE, ["go_wallow"]), (DAY_TWENTY_FIVE, ["post_door"]), (DAY_TWENTY_SEVEN, ["sit_names"]), (DAY_TWENTY_NINE, ["first_run"]),
+        (DAY_THIRTY, ["call_pack"]))
     roots = next(c for c in content.order_cards if c.store == "roots")
     assert roots.offered_after is not None and (roots.offered_after.category, roots.offered_after.id) == ("action", "eating")
     assert next(c for c in content.order_cards if c.store == "dry_wood").offered_after is None
@@ -175,7 +177,7 @@ def test_step_needs_glows_order_offers_and_carried_things_are_served(content: Co
         (DAY_ELEVEN, ["door_gate", "ditch_dug"]),
         (DAY_TWELVE, ["spoil_ring", "shaft_bound", "meat_below", "rack_kept", "crows_off", "crows_kept"]),
         (DAY_FIFTEEN, ["rack_sunned"]), (DAY_SIXTEEN, ["t_pack_clear"]), (DAY_TWENTY_TWO, ["t_still_step"]),
-        (DAY_TWENTY_FIVE, ["t_boar_sounders"]))
+        (DAY_TWENTY_FIVE, ["t_boar_sounders"]), (DAY_THIRTY, ["t_mourner_step"]))
     authored = opening().camp
     assert content.camp is not None and authored is not None
     assert [lv.held for lv in content.camp.camp_levels] == [lv.held for lv in authored.levels]

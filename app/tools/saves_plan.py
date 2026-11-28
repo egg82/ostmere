@@ -24,7 +24,7 @@ MARGIN_MIN = 18
 """What a job is kept short of its cap: measured runs of one job differ by up to 2.5 times, and the table holds the worst of
 three."""
 TARGET_S = (CAP_MIN - MARGIN_MIN) * 60
-RANKS = 10
+RANKS = 11
 """The links of a route the workflow has jobs for (one `chapter-saves-link-k` job each)."""
 LINK_LOAD_S = 20
 """A link after the first first loads the saved end before it; a table figure measured mid-link does not include that."""
