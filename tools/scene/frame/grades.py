@@ -63,6 +63,29 @@ GRADES["dusk_14"] = {**GRADES["dusk"], "when": "action:night_14"}
 GRADES["night_14"] = {**GRADES["night"], "when": "store:night_14@20"}
 """Morning 13 returns the Drift's light; night 14 comes as night 12 did (day_twelve.toml, `morning_13`, `night_14`).
 Night 14 has no morning in week 2: week 3's first morning ends it."""
+GRADES["clear"] = {"when": "feature:clear", "filter": "brightness(1.0) saturate(0.82) contrast(1.24)",
+                   "overlay": "rgba(190,210,236,0.08)"}
+GRADES["dusk_15"] = {**GRADES["dusk"], "when": "action:night_15"}
+GRADES["night_15"] = {"when": "store:night_15@20", "filter": "brightness(0.6) saturate(0.55) contrast(1.16)",
+                      "overlay": "rgba(10,22,58,0.34)", "dark": True}
+GRADES["day_16"] = {**GRADES["clear"], "when": "store:clear_clock@18"}
+GRADES["dusk_21"] = {**GRADES["dusk"], "when": "action:night_21"}
+GRADES["night_21"] = {**GRADES["night_15"], "when": "store:night_21@20"}
+GRADES["day_22"] = {**GRADES["clear"], "when": "store:dawn_22@12"}
+"""Week three's Clear (content/team/week-three.md, Art), from B13 (`clear`): pale sun, cool, clean and hard, ending
+night 14. Nights 15 and 21 are a starry night colder than the Drift's: dusk at each night's standing action, night once
+its hidden clock has run its hour (day_fifteen.toml `night_15`, day_nineteen.toml `night_21`); night 15 ends at
+morning 16 (`clear_clock` 18) and night 21 at dawn 22's twelfth hour."""
+GRADES["still"] = {"when": "feature:still", "filter": "brightness(0.9) saturate(0.6) contrast(0.94)",
+                   "overlay": "rgba(150,156,162,0.20)"}
+GRADES["dusk_24"] = {**GRADES["dusk"], "when": "action:night_24"}
+GRADES["night_24"] = {**GRADES["night"], "when": "store:night_24@20"}
+GRADES["day_25"] = {**GRADES["still"], "when": "store:dawn_25@12"}
+GRADES["dusk_28"] = {**GRADES["dusk"], "when": "action:night_28"}
+GRADES["night_28"] = {**GRADES["night"], "when": "store:night_28@20"}
+"""Week four's Still (content/team/week-four.md, Art), from I1 (`still`): flat grey light, cool and close. Nights 24
+and 28 are the night grade, each the same way (day_twenty_three.toml `night_24`, day_twenty_seven.toml `night_28`);
+night 24 ends at dawn 25's twelfth hour, night 28 at week five's Drift, next in the list."""
 GRADES["drift_2"] = {**GRADES["drift"], "when": "feature:drift_two"}
 GRADES["dusk_30"] = {"when": "action:night_30", "filter": "brightness(0.62) saturate(0.66) contrast(1.18)",
                         "overlay": "rgba(64,38,16,0.36)", "ease_s": 40, "dark": True}
