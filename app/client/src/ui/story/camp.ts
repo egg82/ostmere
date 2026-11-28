@@ -4,7 +4,8 @@
 // past the opening: the bar fills to it and holds, its marker still showing, and it is not counted as reached until the
 // step that lifts it (one of lifted_by) has finished, when the bar fills on to it and passes. A marker words its pays only
 // once what that names is unlocked (CampLevel.names), so it never names a store or card the player has not met; until
-// then it reads UI.nextUnnamed, so the bar still shows there is a next thing to reach. Warm,
+// then it reads UI.nextUnnamed, so the bar still shows there is a next thing to reach. Held and filled to, the marker
+// names the lifting card once that is unlocked (UI.campLifted), so the wait has a lead-in; a locked one is not named. Warm,
 // because it is the player's; not a control, so it does not look like one. It arrives at its first level, its burst
 // with it, already pointing at the next; a level landing bursts on it (ui/feedback/ladder.ts). Under the level, a story beat's
 // store with no line yet (ui/story/goals.ts): the box shows for one alone before the first level.
@@ -64,7 +65,9 @@ export class CampBar implements Part {
     const next = levels[reached];
     this.next.hidden = !next;
     const { catalog } = this.ctx;
-    if (next && !this.named(next)) setText(this.next, catalog.text.get(UI.nextUnnamed));   // there is a next; what it is waits
+    const lifts = next && next.held && v >= next.at ? this.lifting(next) : null;
+    if (next && lifts) setText(this.next, catalog.text.fill(UI.campLifted, { level: catalog.format.count(reached + 1), card: catalog.cardLabel(lifts) }));
+    else if (next && !this.named(next)) setText(this.next, catalog.text.get(UI.nextUnnamed));   // there is a next; what it is waits
     else if (next) setText(this.next, this.pays(next, reached + 1));
     this.show(reached);
     if (reached === this.shown) return;
@@ -93,6 +96,12 @@ export class CampBar implements Part {
   private named(level: CampLevel): boolean {
     const view = this.view;
     return view !== null && level.names.every((u) => this.ctx.catalog.unlocked(view, u.category, u.id));
+  }
+
+  /** The card to name on a held level the bar is filled to: the first that lifts it and is unlocked; null names nothing. */
+  private lifting(level: CampLevel): string | null {
+    const view = this.view;
+    return view === null ? null : level.lifted_by.find((card) => this.ctx.catalog.unlocked(view, "card", card)) ?? null;
   }
 
   /** A held level counts once one of the steps that lift it has finished. */
