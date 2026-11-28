@@ -28,6 +28,7 @@ def alone_keys(o: Opening) -> set[str]:
     """The keys of text that can show alone."""
     upsides = {c.upside_key for c in o.cards if c.upside_key is not None}
     return (set(o.line_kinds) | {a.text_key for a in o.aims} | upsides | {a.label_key for a in o.standing}
+            | {lb.label_key for a in o.standing for lb in a.later_labels}
             | set(PAYS_KEY.findall(o.model_dump_json())))
 
 

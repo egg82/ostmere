@@ -2497,6 +2497,8 @@ export interface components {
             action: string;
             /** Label Key */
             label_key: string;
+            /** Later Labels */
+            later_labels: components["schemas"]["LaneLabel"][];
             /** Skill */
             skill: string | null;
             fight: components["schemas"]["FightInfo"] | null;

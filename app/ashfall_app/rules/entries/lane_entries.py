@@ -1,9 +1,9 @@
-"""The lane entries: a lane besides the hands, and the label it takes once something is unlocked."""
+"""The lane entries: a lane besides the hands, and the labels it takes once something is unlocked (entries.LaneLabelEntry)."""
 from typing import Literal
 
 from pydantic import model_validator
 
-from .entries import Entry, UnlockEntry
+from .entries import Entry, LaneLabelEntry
 
 
 class LodgingEntry(Entry):
@@ -35,13 +35,6 @@ class ByDayEntry(Entry):
         if sum(x is not None for x in (self.card, self.at_fire, self.off_scene)) != 1:
             raise ValueError("by_day: name exactly one of card, at_fire and off_scene")
         return self
-
-
-class LaneLabelEntry(Entry):
-    """The lane row's label once `after` is unlocked (the last one held wins, as aims do)."""
-
-    after: UnlockEntry
-    label_key: str
 
 
 class LaneEntry(Entry):

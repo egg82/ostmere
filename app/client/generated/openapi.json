@@ -7054,6 +7054,13 @@
             "type": "string",
             "title": "Label Key"
           },
+          "later_labels": {
+            "items": {
+              "$ref": "#/components/schemas/LaneLabel"
+            },
+            "type": "array",
+            "title": "Later Labels"
+          },
           "skill": {
             "anyOf": [
               {
@@ -7080,6 +7087,7 @@
         "required": [
           "action",
           "label_key",
+          "later_labels",
           "skill",
           "fight"
         ],

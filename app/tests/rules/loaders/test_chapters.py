@@ -223,3 +223,17 @@ def test_a_chapter_gives_an_earlier_lane_a_later_label_and_refuses_an_unknown_la
     planted.write_text(text.replace("\nn13 = [{ after", "\nn99 = [{ after"))
     with pytest.raises(ValueError, match=r"lane_labels: unknown lanes \['n99'\]"):
         load_opening(OPENING, tuple(planted if c == DAY_TWENTY_THREE else c for c in CHAPTERS))
+
+
+def test_a_chapter_gives_an_earlier_standing_action_a_later_label_and_refuses_an_unknown_one(tmp_path: Path):
+    """Chapter.standing_labels, as lane_labels: day two names day one's n1_eating; a label for an action nobody declared
+    fails."""
+    day_two = next(c for c in CHAPTERS if c.name == "day_two.toml")
+    eating = next(a for a in opening().standing if a.id == "n1_eating")
+    assert [lb.after.id for lb in eating.later_labels] == ["n1_named"]
+    text = day_two.read_text()
+    assert text.count("\nn1_eating = [{ after") == 1
+    planted = tmp_path / day_two.name
+    planted.write_text(text.replace("\nn1_eating = [{ after", "\nno_such_action = [{ after"))
+    with pytest.raises(ValueError, match=r"standing_labels: unknown actions \['no_such_action'\]"):
+        load_opening(OPENING, tuple(planted if c == day_two else c for c in CHAPTERS))

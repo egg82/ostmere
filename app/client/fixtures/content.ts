@@ -427,7 +427,7 @@ export const fixtureContent: Content = {
   side_infos: [{ side: "hands", label_key: "side.hands" }],
   find_infos: [{ line_key: "line.find", store: "wood", quantity: 12 * Q }],
   threat_infos: [{ threat: "wolves", label_key: "threat.wolves", members: 1 }, { threat: "raiders", label_key: "threat.raiders", members: 1 }],
-  standing_infos: [{ action: "raiders", label_key: "standing.raiders", skill: null, fight: { side: "hands", threat: "raiders", loses: [{ store: "stone", quantity: 2 * Q }], wounds: [], won_line_keys: [], lost_line_keys: [], loss_pool: null, loss_notes: null, on_loss_key: null } }],
+  standing_infos: [{ action: "raiders", label_key: "standing.raiders", later_labels: [], skill: null, fight: { side: "hands", threat: "raiders", loses: [{ store: "stone", quantity: 2 * Q }], wounds: [], won_line_keys: [], lost_line_keys: [], loss_pool: null, loss_notes: null, on_loss_key: null } }],
   card_infos: [
     card("stand", "hands", "narrative"),
     card("look", "hands", "narrative", [{ store: "stone", quantity: 4 * Q }]),

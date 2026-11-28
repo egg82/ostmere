@@ -1,7 +1,7 @@
 """A Chapter merged onto an Opening (schema.Chapter): its lists appended, its text added, its Camp levels and skill
 levels filling the markers the content so far left past its end. Pure; raises ValueError on a merge that would
 overwrite rather than add. Ids are checked unique afterwards, by check_opening on the result."""
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol, Self
 
 from .expand.camp_convert import camp_cap
 from .groups import with_crews
@@ -11,8 +11,7 @@ from .expand.workings import expand as expand_workings
 
 if TYPE_CHECKING:
     from .entries.camp_entries import CampEntry, CampLevelEntry
-    from .entries.entries import CardEntry, LevelPaysEntry, SkillEntry, WhileRunningEntry
-    from .entries.lane_entries import LaneEntry, LaneLabelEntry
+    from .entries.entries import CardEntry, LaneLabelEntry, LevelPaysEntry, SkillEntry, WhileRunningEntry
     from .schema import Chapter, Opening, SkillLevelsEntry
 
 
@@ -30,14 +29,14 @@ def merge(o: "Opening", ch: "Chapter") -> "Opening":
     if beats:
         raise ValueError(f"chapter beat_lines: beats already have a first line: {beats}")
     camp = _camp(o.camp, ch.camp_levels)
-    town, lanes = [*o.town_cards, *ch.town_cards], with_crews([*_labelled(o.lanes, ch.lane_labels), *ch.lanes])
+    town, lanes = [*o.town_cards, *ch.town_cards], with_crews([*_labelled(o.lanes, ch.lane_labels, "lane_labels", "lanes"), *ch.lanes])
     stores = [*o.stores, *ch.stores]
     if camp is not None:
         stores = [s.model_copy(update={"cap_items": camp_cap(camp)}) if s.id == camp.store else s for s in stores]
     return expanded(o.model_copy(update={
         "stores": stores,
         "skills": [*_skills(o.skills, ch.skill_levels), *ch.skills],
-        "standing": [*o.standing, *ch.standing],
+        "standing": [*_labelled(o.standing, ch.standing_labels, "standing_labels", "actions"), *ch.standing],
         "sides": [*o.sides, *ch.sides], "threats": [*o.threats, *ch.threats], "lanes": lanes,
         "town_later_labels": [*o.town_later_labels, *ch.town_later_labels],
         "cards": expand([*_held(o.cards, ch.while_running), *ch.cards, *expand_workings(ch.workings)], town, {x.id for x in lanes}, {x.id for x in ch.lanes}, len(ch.town_cards),
@@ -77,12 +76,23 @@ def _held(cards: "list[CardEntry]", added: "dict[str, list[WhileRunningEntry]]")
     return [c.model_copy(update={"while_running": [*c.while_running, *added[c.id]]}) if c.id in added else c for c in cards]
 
 
-def _labelled(lanes: "list[LaneEntry]", added: "dict[str, list[LaneLabelEntry]]") -> "list[LaneEntry]":
-    """Earlier lanes given more later labels (Chapter.lane_labels), after the ones they have."""
-    unknown = sorted(set(added) - {x.id for x in lanes})
+class Labelled(Protocol):
+    """An entry that takes later labels: a lane, a standing action."""
+
+    @property
+    def id(self) -> str: ...
+    @property
+    def later_labels(self) -> "list[LaneLabelEntry]": ...
+    def model_copy(self, *, update: dict[str, object] | None = None, deep: bool = False) -> Self: ...
+
+
+def _labelled[T: Labelled](items: list[T], added: "dict[str, list[LaneLabelEntry]]", table: str, what: str) -> list[T]:
+    """Earlier lanes or standing actions given more later labels (Chapter.lane_labels, Chapter.standing_labels), after
+    the ones they have."""
+    unknown = sorted(set(added) - {x.id for x in items})
     if unknown:
-        raise ValueError(f"chapter lane_labels: unknown lanes {unknown}")
-    return [x.model_copy(update={"later_labels": [*x.later_labels, *added[x.id]]}) if x.id in added else x for x in lanes]
+        raise ValueError(f"chapter {table}: unknown {what} {unknown}")
+    return [x.model_copy(update={"later_labels": [*x.later_labels, *added[x.id]]}) if x.id in added else x for x in items]
 
 
 def _camp(camp: "CampEntry | None", added: "list[CampLevelEntry]") -> "CampEntry | None":

@@ -138,8 +138,9 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
         side_infos=[cm.SideInfo(side=s.id, label_key=s.label_key) for s in o.sides],
         threat_infos=[cm.ThreatInfo(threat=t.id, label_key=t.label_key, members=t.members) for t in o.threats],
         find_infos=find_infos(o),
-        standing_infos=[cm.StandingInfo(action=a.id, label_key=a.label_key, skill=a.skill,
-                                        fight=fight_info(standing_fights.get(e.ActionId(a.id)), a.fight)) for a in o.standing],
+        standing_infos=[cm.StandingInfo(action=a.id, label_key=a.label_key, later_labels=later_labels(a.later_labels),
+                                        skill=a.skill, fight=fight_info(standing_fights.get(e.ActionId(a.id)), a.fight))
+                        for a in o.standing],
         card_infos=[cm.CardInfo(
             card=c.id, lane=c.lane, presentation=cm.CardPresentation(c.presentation), label_key=c.label_key,
             upside_key=c.upside_key, change_bp=[v for v, _ in _card_slots(c, o)], work_s=c.work_s, variant_of=c.variant_of,
