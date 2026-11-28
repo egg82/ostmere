@@ -61,7 +61,7 @@ fight = { side = "latch", threat = "mourner", lost = "hall_lost", fought = "hall
 # (day twelve's lamps on the gap). Forged and fitted from what the town makes without end, so nothing finite feeds it.
 [[cards]]
 id = "iron_latch"
-site = { no_site = "the latch goes on the hall's larder door; the week's art adds it from the last stage, until then the line tells it" }
+site = { layer = "larder_latch" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_iron_latch"
@@ -263,7 +263,7 @@ crews = ["g_road"]
 [[triggers]]
 id = "t_scrape"
 when = { test = "at_least", subject_kind = "store", id = "call_clock", value = 14 }
-outcome = { doings = ["n3"], line_keys = ["l_scrape"], whereabouts = [{ person = "n3", no_scene = "scrapes the meat on the racks each morning, a pose the week's art adds; until then the line tells it" }] }
+outcome = { doings = ["n3"], line_keys = ["l_scrape"], whereabouts = [{ person = "n3", layer = "figure_n3_scrapes_the_racks" }] }
 
 # ---------- SL41: the bear's sign again ----------
 

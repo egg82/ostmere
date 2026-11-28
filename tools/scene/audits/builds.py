@@ -25,7 +25,8 @@ NOT_BUILDS = frozenset({
     "stream_steam_2", "stream_steam_3", "wolf_gap", "palisade_3", "palisade_6", "palisade_9", "palisade_12",
     "scored_line", "roof_posts", "lean_to_ghost", "larder_ghost", "smoke_rack_ghost", "n1_shelter_ghost",
     "woodstack_ghost", "bay_ghost", "bay2_ghost", "hut_ghost", "hall_ghost", "lamp_1", "lamp_2", "lamps_lit", "vigil_body",
-    "pyre_flames", "wolf_sitting", "wolf_edge_1", "wolf_edge_2", "rat_larder", "crows_roof", "crows_hang",
+    "pyre_flames", "wolf_sitting", "wolf_edge_1", "wolf_edge_2", "rat_larder", "crows_roof", "crows_hang", "yard_tracks",
+    "wolves_yard_pack", "cat_ridge",
 })
 """Layers that are not a build: the backdrop and the world beyond it, marks on the ground, the palisade, the lamps,
 a body, the beasts and birds, and the ghosts a build shows while it is being made."""
@@ -67,18 +68,19 @@ BUILDS: Mapping[str, tuple[str, ...]] = {
     "snare_2": ("snare_2",),
     "snare_3": ("snare_3",),
     "pyre": ("pyre",),
-    "hall": ("hall_1", "hall_2", "hall_3", "hall_4", "hall_hearth", "hall_smoke"),
+    "hall": ("hall_1", "hall_2", "hall_3", "hall_4", "hall_hearth", "hall_smoke", "roof_ash_hall", "larder_bar",
+             "larder_latch"),
     "n6_posts": ("n6_posts",),
     "midden": ("midden_pit",),
     "road": ("road_1", "road_2", "road_3", "road_4", "road_over_1", "road_over_2", "road_cloths"),
 }
 """Each build and the layers that are it: its states, its parts, what it carries."""
 
-NO_SCENE: frozenset[str] = frozenset({"post_door", "post", "bind_book", "waystation", "iron_latch"})
+NO_SCENE: frozenset[str] = frozenset({"post_door", "post", "bind_book", "waystation"})
 """Builds (craft cards with a cap, app/tests/scene/test_scene_shown.py) the player makes that stand nowhere in the scene:
 `post` and `post_door` are out in the wood and `waystation` on the far hill, map stamps and not scene stamps
 (content/team/week-four.md and week-five.md, Art); `bind_book` is a book handed to a person, which the journal shows, not
-the camp. `iron_latch` is here until week five's art draws it on the hall's larder door: that state takes it out."""
+the camp."""
 
 HELD_UNSHOWN: frozenset[str] = frozenset({"screen_fire"})
 """Builds with no scene state today, held so the check stays on for the rest: may only shrink."""

@@ -23,12 +23,17 @@ from day_eleven import dayeleven_layers as d11
 from day_fifteen import dayfifteen_layers as d15
 from day_sixteen import daysixteen_layers as d16
 from day_twenty_five import daytwentyfive_layers as d25
+from day_twenty_nine import daytwentynine_layers as d29
+from day_thirty import daythirty_layers as d30
+from day_thirty_one import daythirtyone_layers as d31
+from day_thirty_three import daythirtythree_layers as d33
 from day_twelve import daytwelve_layers as d12
 from day_four import dayfour_layers as d4
 from day_three import daythree_layers as d3
 from day_two import daytwo_layers as d2
 from day_one import dayone_world as world
 from draw import night
+from cast import give_way
 from cast import people_day
 from cast import people_hall
 from cast import people_layers
@@ -73,7 +78,7 @@ def layers(rng: random.Random) -> list[Layer]:
     walls = ruin().getchannel("A")
     every = people_layers.step_aside([*_ground_layers(rng, walls), *_player_layers(), *_people_layers(walls),
                                       *people_layers.people_layers(walls), *light_layers()])
-    return builds.retire(people_hall.at_home(people_day.at_work(every)))
+    return builds.retire(people_hall.at_home(give_way.step_aside_late(people_day.at_work(every))))
 
 
 def _ground_layers(rng: random.Random, walls: Image.Image) -> list[Layer]:
@@ -95,6 +100,7 @@ def _ground_layers(rng: random.Random, walls: Image.Image) -> list[Layer]:
         *d8.world_layers(walls),
         *d16.world_layers(walls),
         *d25.world_layers(),
+        *d30.world_layers(),
         Layer(id="roof_posts", img=dayone.roof_posts(EAVE_Y, int(LIP) + 2 + EAVE, (ROOF_X[0] + 24, ROOF_X[1] - 14)),
               when="always"),
         Layer(id="cleared", img=cleared(rng), when="pushes:clear_spot@2"),
@@ -131,6 +137,8 @@ def _ground_layers(rng: random.Random, walls: Image.Image) -> list[Layer]:
         *d11.made_layers(),
         *d12.made_layers(),
         *d15.made_layers(),
+        *d29.made_layers(),
+        *d31.made_layers(),
         *d4.hang_layers(dayone.meat_on_rack()),
     ]
 
@@ -186,6 +194,10 @@ def _people_layers(walls: Image.Image) -> list[Layer]:
         *d8.figure_layers(AWAY),
         *d11.figure_layers(AWAY),
         *d12.figure_layers(AWAY),
+        *d29.figure_layers(),
+        *d30.figure_layers(),
+        *d31.figure_layers(),
+        *d33.figure_layers(),
         *d4.creature_layers(),
         *d4.fog_layers(walls),
         Layer(id="smoke_plume", img=world.smoke_plume(ImageChops.lighter(walls, rack().getchannel("A"))), when=SMOKING),
@@ -204,6 +216,8 @@ def light_layers() -> list[Layer]:
         *d8.light_layers(),
         *d11.light_layers(),
         *d12.light_layers(),
+        *d30.light_layers(),
+        *d33.light_layers(),
         Layer(id="ridge_light", img=night.ridge_light((W, H), RIDGE), when="end:showing", until="feature:morning", blend="screen"),
         Layer(id="ash", img=specks(420, (196, 188, 176), SEED), when="always"),
     ]

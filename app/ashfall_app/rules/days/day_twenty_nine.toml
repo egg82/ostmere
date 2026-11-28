@@ -27,7 +27,7 @@ season = true
 when = { test = "after_time", value = 2419200 }
 [triggers.outcome]
 doings = ["n2"]
-whereabouts = [{ person = "n2", no_scene = "up on the hall roof with a shovel, a pose the week's art adds; until then the line tells it" }]
+whereabouts = [{ person = "n2", layer = "figure_n2_shovels_the_hall_roof" }]
 line_keys = ["l_y1_1", "l_y1_2", "l_y1_3"]
 stores = [
   { store = "drift_left", items = 336 },
@@ -86,7 +86,7 @@ costs = [{ store = "fish_end_left", items_per_hour = 1 }, { store = "fish_rising
 id = "t_fiddle_plays"
 when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 508 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "drift_two", value = 1 }]
-outcome = { doings = ["n14"], line_keys = ["l_fiddle_plays"], whereabouts = [{ person = "n14", no_scene = "plays at the fire in the evening, a figure the week's art adds; until then the line tells it" }] }
+outcome = { doings = ["n14"], line_keys = ["l_fiddle_plays"], whereabouts = [{ person = "n14", layer = "figure_n14_plays_at_the_fire" }] }
 
 # ---------- Y2: prints at the post's door ----------
 
