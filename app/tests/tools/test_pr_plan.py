@@ -33,6 +33,8 @@ def test_a_chapter_with_two_routes_plays_one_job_per_shard_and_a_long_shard_is_l
     assert (got["shards"], got["left"]) == (["twentynine-whenever"], ["twentynine-sharp", "twentynine"])
     got = plan(changed(thirty="x"), False, [])
     assert (got["shards"], got["left"]) == (["thirty-whenever"], ["thirty-sharp", "thirty"])
+    got = plan(changed(thirtyone="x"), False, [])
+    assert (got["shards"], got["left"]) == (["thirtyone-whenever"], ["thirtyone-sharp", "thirtyone"])
     assert plan(changed(eighteen="x"), False, [])["shards"] == ["eighteen"]
     assert plan(changed(fifteen="x"), False, [])["shards"] == ["fifteen"]
 

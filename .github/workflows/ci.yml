@@ -496,6 +496,7 @@ jobs:
       rank9: ${{ steps.plan.outputs.rank9 }}
       rank10: ${{ steps.plan.outputs.rank10 }}
       rank11: ${{ steps.plan.outputs.rank11 }}
+      rank12: ${{ steps.plan.outputs.rank12 }}
       rebased: ${{ steps.plan.outputs.rebased }}
       readings: ${{ steps.plan.outputs.readings }}
     steps:
@@ -738,8 +739,23 @@ jobs:
       AFTER: ${{ matrix.after }}
     steps: *chapter-saves-steps
 
-  chapter-saves-rebased:
+  chapter-saves-link-12:
     needs: [saves-plan, chapter-saves-link-11]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.saves-plan.outputs.rank12) }}
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: ${{ matrix.part }}
+      NAMES: ${{ matrix.names }}
+      AFTER: ${{ matrix.after }}
+    steps: *chapter-saves-steps
+
+  chapter-saves-rebased:
+    needs: [saves-plan, chapter-saves-link-12]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -785,7 +801,7 @@ jobs:
   # The typical route's heavy-step readings (planned by tools/saves_plan.py), each part read from typical's saved end, so a part pays for
   # its own steps and not for replaying typical's play to reach them.
   chapter-saves-readings:
-    needs: [saves-plan, chapter-saves-link-11]
+    needs: [saves-plan, chapter-saves-link-12]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -878,7 +894,7 @@ jobs:
   # The saved chain's first link (tests/weekone_saved): week one's saved ends equal the plays week one's job made,
   # compared on the same play, not a replay; plays nothing, so it runs the moment both jobs are done.
   playthrough-week-one-saved:
-    needs: [chapter-saves, chapter-saves-readings, chapter-saves-link-11, chapter-saves-rebased, playthrough-week-one]
+    needs: [chapter-saves, chapter-saves-readings, chapter-saves-link-12, chapter-saves-rebased, playthrough-week-one]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -934,7 +950,7 @@ jobs:
   # (tests/weektwo/ends.py), one job per shard (tools/weektwo_shards.py, the names from `shards-cover`): a play and its
   # readers are in one shard, and within it share one xdist worker (tests/weektwo/conftest.py, `group_by_play`).
   playthrough-week-two:
-    needs: [chapter-saves, chapter-saves-readings, chapter-saves-link-11, chapter-saves-rebased, shards-cover]
+    needs: [chapter-saves, chapter-saves-readings, chapter-saves-link-12, chapter-saves-rebased, shards-cover]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -992,7 +1008,7 @@ jobs:
   # is its own. The nightly saves on main, which is where every pull request restores from; a dispatch on a branch saves for
   # the pull requests based on it.
   publish-ends:
-    needs: [changes, chapter-saves, chapter-saves-readings, chapter-saves-link-11, chapter-saves-rebased]
+    needs: [changes, chapter-saves, chapter-saves-readings, chapter-saves-link-12, chapter-saves-rebased]
     if: needs.changes.outputs.full == 'true' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -1214,6 +1230,7 @@ jobs:
       - chapter-saves-link-9
       - chapter-saves-link-10
       - chapter-saves-link-11
+      - chapter-saves-link-12
       - chapter-saves-rebased
       - playthrough-week-one
       - playthrough-week-one-saved
@@ -1258,6 +1275,7 @@ jobs:
                "chapter-saves-link-2", "chapter-saves-link-3", "chapter-saves-link-4", "chapter-saves-link-5",
                "chapter-saves-link-6", "chapter-saves-link-7", "chapter-saves-link-8",
                "chapter-saves-link-9", "chapter-saves-link-10", "chapter-saves-link-11",
+               "chapter-saves-link-12",
                "chapter-saves-rebased", "playthrough-week-one", "playthrough-week-one-saved",
                "playthrough-week-two"] as $full_run
             | (["changes"] + (if $code == "true" then $per_pr else ["docs"] end)

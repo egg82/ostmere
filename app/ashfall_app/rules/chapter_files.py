@@ -24,11 +24,13 @@ DAY_TWENTY_FIVE = Path(__file__).resolve().parent / "days" / "day_twenty_five.to
 DAY_TWENTY_SEVEN = Path(__file__).resolve().parent / "days" / "day_twenty_seven.toml"
 DAY_TWENTY_NINE = Path(__file__).resolve().parent / "days" / "day_twenty_nine.toml"
 DAY_THIRTY = Path(__file__).resolve().parent / "days" / "day_thirty.toml"
+DAY_THIRTY_ONE = Path(__file__).resolve().parent / "days" / "day_thirty_one.toml"
 PRESTIGE = Path(__file__).resolve().parent / "prestige.toml"
 PHASE_PAYS = Path(__file__).resolve().parent / "phase_pays.toml"
 CHAPTERS = (DAY_ONE, DAY_TWO, DAY_THREE, DAY_FOUR, DAY_FIVE, B7, DAY_SIX, DAY_EIGHT, DAY_NINE, DAY_ELEVEN,
             DAY_TWELVE, DAY_FIFTEEN, DAY_SIXTEEN, DAY_EIGHTEEN, DAY_NINETEEN, DAY_TWENTY_TWO,
-            DAY_TWENTY_THREE, DAY_TWENTY_FIVE, DAY_TWENTY_SEVEN, DAY_TWENTY_NINE, DAY_THIRTY, PRESTIGE, PHASE_PAYS)
+            DAY_TWENTY_THREE, DAY_TWENTY_FIVE, DAY_TWENTY_SEVEN, DAY_TWENTY_NINE, DAY_THIRTY,
+            DAY_THIRTY_ONE, PRESTIGE, PHASE_PAYS)
 """The chapters after the opening, merged on in this order (Chapter): what ships. Prestige and its phase pays come
 last, since the phase pays expand over every skill row the chapters before them wrote."""
 IN_WRITING: tuple[Path, ...] = ()

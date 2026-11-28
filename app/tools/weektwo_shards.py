@@ -48,10 +48,14 @@ SHARDS: dict[str, frozenset[str]] = {
     "thirty-sharp": frozenset({"thirty-sharp"}),
     "thirty-whenever": frozenset({"thirty-whenever"}),
     "thirty": frozenset({"thirty"}),
+    "thirtyone-sharp": frozenset({"thirtyone-sharp"}),
+    "thirtyone-whenever": frozenset({"thirtyone-whenever"}),
+    "thirtyone": frozenset({"thirtyone"}),
     "makers": frozenset({"makers"}),
 }
 NIGHTLY_ONLY = frozenset({"twentyfive-sharp", "twentyfive", "twentyseven-sharp", "twentyseven", "twentynine-sharp",
-                          "twentynine", "thirty-sharp", "thirty"})
+                          "twentynine", "thirty-sharp", "thirty", "thirtyone-sharp",
+                          "thirtyone"})
 """The shards a pull request's slice does not play: the shard's wall time, as the last nightly measured it, plus the slice
 job's 26 s of setup and 10% margin, is over `playthrough-slice`'s 6 minutes. A shard's wall time is the SUM of the builds
 and heavy calls of its longest xdist loadgroup (`--dist loadgroup` puts every test of one play in one worker, one after
@@ -59,7 +63,7 @@ another), not its slowest play or test, and with more loadgroups than the job's 
 measured (#540): day twenty-five's typical shard 490 s and its sharp 612 s, against the ~334 s a slice job has after
 setup. Day twenty-seven's typical and sharp shards are here unmeasured, split as day twenty-five's were, since each plays
 on from the chapter before's end with the same tests; the first nightly to play them gives their wall time. Day
-twenty-nine's and day thirty's are the same, unmeasured, and their goals and inputs walks read the whole game's history. The nightly
+twenty-nine's, day thirty's and day thirty-one's are the same, unmeasured, and their goals and inputs walks read the whole game's history. The nightly
 plays these. A shard leaves the set by being split or sped up, never by a longer timeout; the 6 minutes
 is what tests/tools/test_ci_budget.py's 10 leaves after `changes`, `slice` and `ci-ok`."""
 WHOLE_GAME = frozenset({"makers"})
