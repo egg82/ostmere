@@ -20,7 +20,7 @@ from day_four import dayfour_poses as day4_poses
 from day_one import dayone
 from day_two import daytwo
 from frame.output import Layer
-from frame.stages import in_dark
+from frame.conditions import in_dark
 
 PALISADE = "running:palisade|mix:palisade"
 HANDS_AWAY = [PALISADE]

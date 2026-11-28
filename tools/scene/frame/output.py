@@ -20,7 +20,8 @@ from frame import views
 from drift import source_digest
 from draw.place import H, W, canvas
 from frame.storeset import write_list
-from frame.stages import CONDITIONS, KINDS, STAGES, State, holds
+from frame.conditions import CONDITIONS, KINDS, State, holds
+from frame.stages import STAGES
 from draw.tints import BAKES, WOOD
 
 

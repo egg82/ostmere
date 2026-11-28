@@ -8,7 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from draw.kit import T
-from frame.stages import State, holds
+from frame.conditions import State, holds
 
 
 @dataclass(frozen=True)
