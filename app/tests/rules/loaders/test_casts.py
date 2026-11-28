@@ -17,6 +17,7 @@ from ashfall_app.saves.ruleset import ruleset
 
 PATTERNS = ["{lane}_forage", "{lane}_gather"]
 LINE = "line.cast_test"
+LABEL = "role.cast_test"
 
 
 def then(o: Opening, **text: str) -> Opening:
@@ -24,12 +25,12 @@ def then(o: Opening, **text: str) -> Opening:
 
 
 def casting(o: Opening, role: str = "scout", patterns: list[str] | None = None, line: str | None = None,
-            where: str = "t_cast_test") -> Opening:
+            where: str = "t_cast_test", label_key: str = LABEL) -> Opening:
     """`o` with one more trigger that casts `role` by `patterns`, its line `line` when given."""
-    out = OutcomeEntry(casts=[CastEntry(role=role, patterns=PATTERNS if patterns is None else patterns)],
+    out = OutcomeEntry(casts=[CastEntry(role=role, label_key=label_key, patterns=PATTERNS if patterns is None else patterns)],
                        line_keys=[] if line is None else [line])
     trigger = TriggerEntry(id=where, when=ConditionEntry(test="after_time", value=1), outcome=out)
-    return with_cast_picks(o.model_copy(update={"triggers": [*o.triggers, trigger]}))
+    return with_cast_picks(o.model_copy(update={"triggers": [*o.triggers, trigger], "text": {**o.text, LABEL: "Scout"}}))
 
 
 def refused(o: Opening, message: str) -> None:
@@ -65,6 +66,7 @@ def test_the_content_serves_each_role_with_its_lanes_in_join_order(shipped_openi
     infos = Game(o, ruleset(o, "test", 1)).content().cast_infos
     assert [i.role for i in infos] == ["tracker", "scout"]
     assert [(x.lane, x.feature) for x in infos[1].lanes][:2] == [("n1", "scout_n1"), ("n2", "scout_n2")]
+    assert infos[1].label_key == LABEL
     assert [i.role for i in Game(shipped_opening, ruleset(shipped_opening, "test", 1)).content().cast_infos] == ["tracker"]
 
 
@@ -86,13 +88,16 @@ def test_the_refusals(shipped_opening: Opening):
     refused(casting(o, role="two words"), "casts two words, which is not a word")
     refused(casting(o, patterns=["{lane}_nothing"]), "casts scout by {lane}_nothing, which is no town card's id pattern")
     refused(casting(o, patterns=["{lane}_forage", "{lane}_forage"]), "casts scout by {lane}_forage twice")
+    refused(casting(o, label_key="role.nothing"), "casts scout, which has no display name")
+    blank = casting(o)
+    refused(blank.model_copy(update={"text": {**blank.text, LABEL: "  "}}), "casts scout, which has no display name")
     twice = casting(casting(o), where="t_cast_again")
     refused(twice, "trigger t_cast_again: casts scout, which another outcome already casts")
     with pytest.raises(ValueError):
-        CastEntry(role="scout", patterns=[])
+        CastEntry(role="scout", label_key=LABEL, patterns=[])
     with pytest.raises(ValueError, match="the loader's"):
-        CastEntry.model_validate({"role": "scout", "patterns": PATTERNS, "picks": []})
-    card = o.cards[0].model_copy(update={"outcome": OutcomeEntry(casts=[CastEntry(role="scout", patterns=PATTERNS)])})
+        CastEntry.model_validate({"role": "scout", "label_key": LABEL, "patterns": PATTERNS, "picks": []})
+    card = o.cards[0].model_copy(update={"outcome": OutcomeEntry(casts=[CastEntry(role="scout", label_key=LABEL, patterns=PATTERNS)])})
     refused(o.model_copy(update={"cards": [card, *o.cards[1:]]}), f"card {card.id}: only a trigger's or an answer's outcome casts")
 
 

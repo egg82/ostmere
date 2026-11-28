@@ -897,6 +897,8 @@ export interface components {
         CastInfo: {
             /** Role */
             role: string;
+            /** Label Key */
+            label_key: string;
             /** Lanes */
             lanes: components["schemas"]["CastLane"][];
         };

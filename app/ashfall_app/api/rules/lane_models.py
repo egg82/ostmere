@@ -47,4 +47,6 @@ class CastInfo(BaseModel):
     {<role>} slot is the name of the lane whose feature view.unlocked holds."""
 
     role: str
+    label_key: str
+    """The role's display name: the title of the cast person's row in the town list, their own name beside it."""
     lanes: list[CastLane]

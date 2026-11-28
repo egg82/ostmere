@@ -5,7 +5,7 @@ from pathlib import Path
 
 from casting_world import LEAD, at, held, kills, lead_of, rules_of
 
-SCOUT = '{ role = "scout", patterns = ["{lane}_haul"] }'
+SCOUT = '{ role = "scout", label_key = "t_role", patterns = ["{lane}_haul"] }'
 TWO = f'{LEAD}, {SCOUT}'
 
 

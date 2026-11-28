@@ -6,11 +6,13 @@ CASTING (docs/design/week-five-plan.md, item 3; blind tests from this section al
   decision, no endpoint.
 
   Content. An outcome part `casts`, in a trigger's or an answer's outcome only (as joins and leaves are): a list of
-  { role, patterns }.
+  { role, label_key, patterns }.
     role      a word of letters, digits and underscores that starts with a letter, authored. It is not a lane id, and not a
               slot the page fills elsewhere ({n}, {card}, {pct} ...). One outcome casts a role: two parts naming the same
               role, in one outcome or two, are refused.
-    patterns  one or more town-card id patterns, in priority order, each written exactly as a `[[town_cards]]` entry's
+    label_key the text key of the role's display name, authored: the title of the cast person's row in the Town list. Its text
+            must exist and not be blank.
+  patterns  one or more town-card id patterns, in priority order, each written exactly as a `[[town_cards]]` entry's
               `id` is, with its {lane} (such as "<word>_{lane}"). Each is the id of a town-card entry the content holds;
               none twice.
   A role's candidates are the lanes that are a single person: ruled, with a name_key, not pooled (never a group) and not a
@@ -45,9 +47,13 @@ CASTING (docs/design/week-five-plan.md, item 3; blind tests from this section al
   instant from the counts the save holds then, the same pick as live play at that instant.
   A cast changes no Card, rule or rate: a role is a fact other content reads, nothing more.
 
-  Served. Content.cast_infos: one CastInfo { role, lanes } per role cast by any outcome, in content order; lanes is the role's
+  Served. Content.cast_infos: one CastInfo { role, label_key, lanes } per role cast by any outcome, in content order; lanes is the role's
   candidates in join order, each CastLane { lane, feature }: the lane id and the feature id its cast unlocks. The cast
   lane is the one whose `feature` view.unlocked holds (category feature), none until the cast. Nothing else is served.
+
+  The Town list. A row whose single person holds a cast feature is titled with the role's display name (the text of the
+  CastInfo's label_key) and shows the person's own name (their LaneInfo.name_key text) beside it as detail. A row whose
+  person holds no role is drawn as before, with no detail.
 
   Text. A slot {<role>} is the cast lane's person's name: the text of that lane's LaneInfo.name_key, lowercased in a line
   (a key of Content.line_infos) as {<lane>} is (contract/text-and-numbers.txt, "Text and numbers"). The page resolves a slot
@@ -68,6 +74,7 @@ CASTING (docs/design/week-five-plan.md, item 3; blind tests from this section al
     "{where}: only a trigger's or an answer's outcome casts a role"
     "{where}: casts {role}, which is not a word of letters, digits and underscores"
     "{where}: casts {role}, which names a lane or a slot the page fills elsewhere"
+    "{where}: casts {role}, which has no display name (text key {key} is missing or empty)"
     "{where}: casts {role}, which another outcome already casts"   (also for a role named twice in one outcome)
     "{where}: casts {role} by {pattern}, which is no town card's id pattern"
     "{where}: casts {role} by {pattern} twice"

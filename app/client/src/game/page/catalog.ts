@@ -137,6 +137,15 @@ export class Catalog {
     return this.label(later?.label_key ?? info?.label_key);
   }
 
+  /** The display name of the role `lane`'s person holds in `view`, null when they hold none (Content.cast_infos: the role
+   * whose CastLane feature for this lane `view` has unlocked). */
+  castTitle(lane: string, view: View): string | null {
+    for (const c of this.content.cast_infos) {
+      if (c.lanes.some((l) => l.lane === lane && this.unlocked(view, "feature", l.feature))) return this.label(c.label_key);
+    }
+    return null;
+  }
+
   /** The town's shown name: the last of Content.town_later_labels whose unlock `view` holds, else ui.town.title. */
   townTitle(view: View): string {
     const later = this.content.town_later_labels.filter((l) => this.unlocked(view, l.after.category, l.after.id)).at(-1);
