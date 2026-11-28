@@ -5,7 +5,7 @@ hours of the day (a workday player's: nothing 09:30-18:30) can place each visit;
 V1 is the end of the opening's own session (the end lines read, then V1_S more). A babysitter's one visit never
 ends. Every list runs to HORIZON_S; the player stops once the day is done."""
 import random
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 HOUR = 3600
 MINUTE = 60
@@ -28,6 +28,10 @@ class Schedule:
     name: str
     visits: tuple[Visit, ...]
     """V1 first, at 0."""
+    end_at: int = 0
+    seed: int = 0
+    horizon: int | None = None
+    """What `schedule` built it from; None for a list made by hand, which `extended` leaves as it is."""
 
 
 def _gaps(name: str, gaps_h: list[float], length: int = VISIT_S, horizon: int = HORIZON_S) -> Schedule:
@@ -72,6 +76,18 @@ def schedule(name: str, end_at: int, seed: int = 0, horizon: int = HORIZON_S) ->
     sleep; lazy: once a day; evenings: a workday player's day (evenings, early morning, nothing 09:30-18:30); lunch: the same day
     with a lunch-break visit; return_22h: one return 22 h after the opening, then typical; babysitter: never leaves. Each runs
     to `horizon` after the end (day two plays past day one's)."""
+    return replace(_visits(name, end_at, seed, horizon), end_at=end_at, seed=seed, horizon=horizon)
+
+
+def extended(s: Schedule, horizon: int) -> Schedule:
+    """`s` run on to `horizon` where that is past its own. Each list is built visit by visit (a seeded one from its
+    seed), so the visits it had come first and unchanged; babysitter's one visit grows instead."""
+    if s.horizon is None or horizon <= s.horizon:
+        return s
+    return schedule(s.name, s.end_at, s.seed, horizon)
+
+
+def _visits(name: str, end_at: int, seed: int, horizon: int) -> Schedule:
     if name == "babysitter":
         return Schedule(name, (Visit(0, horizon),))
     if name == "whenever":
