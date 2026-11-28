@@ -34,6 +34,8 @@ def check_casts(o: "Opening") -> None:
         if c.role in named:
             fail(where, f"casts {c.role}, which another outcome already casts")
         named.add(c.role)
+        if not o.text.get(c.label_key, "").strip():
+            fail(where, f"casts {c.role}, which has no display name (text key {c.label_key!r} is missing or empty)")
         for i, pattern in enumerate(c.patterns):
             if pattern not in town:
                 fail(where, f"casts {c.role} by {pattern}, which is no town card's id pattern")

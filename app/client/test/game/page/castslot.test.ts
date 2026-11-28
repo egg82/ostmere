@@ -11,11 +11,11 @@ const lane = (id: string, name_key: string) => ({ lane: id, label_key: `lane.${i
 const content = {
   ...fixtureContent,
   lane_infos: [...fixtureContent.lane_infos, lane("n1", "name_n1"), lane("n2", "name_n2")],
-  cast_infos: [{ role: "scout", lanes: [{ lane: "n1", feature: "scout_n1" }, { lane: "n2", feature: "scout_n2" }] }],
+  cast_infos: [{ role: "scout", label_key: "role.scout", lanes: [{ lane: "n1", feature: "scout_n1" }, { lane: "n2", feature: "scout_n2" }] }],
   text_entries: [...fixtureContent.text_entries,
     { key: "name_n1", text: "Ada" }, { key: "name_n2", text: "Bram" },
     { key: "label.scout", text: "{scout}'s watch" }, { key: "line.scout", text: "{scout} comes back." },
-    { key: "label.plain", text: "{n1}'s watch" }],
+    { key: "label.plain", text: "{n1}'s watch" }, { key: "role.scout", text: "Scout" }],
   line_infos: [...fixtureContent.line_infos, { key: "line.scout", kind: "story" as const, cause: null, person: false, mention: null }],
 };
 const feature = (id: string) => ({ category: "feature" as const, id });

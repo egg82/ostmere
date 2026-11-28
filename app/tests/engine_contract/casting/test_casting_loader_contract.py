@@ -18,13 +18,13 @@ def second(casts: str) -> str:
 @pytest.mark.parametrize("role, why", [("t_a", "a lane"), ("n", "a slot"), ("card", "a slot"), ("pct", "a slot")])
 def test_a_role_that_is_a_lane_id_or_a_slot_the_page_fills_is_refused(tmp_path: Path, role: str, why: str):
     refused(tmp_path, rf"casts {role}, which names a lane or a slot the page fills elsewhere",
-            casts=f'{{ role = "{role}", patterns = ["{{lane}}_chop"] }}')
+            casts=f'{{ role = "{role}", label_key = "t_role", patterns = ["{{lane}}_chop"] }}')
 
 
 @kills(15)
 def test_a_role_named_for_the_hands_lane_is_refused(tmp_path: Path):
     refused(tmp_path, r"casts hands, which names a lane or a slot the page fills elsewhere",
-            casts='{ role = "hands", patterns = ["{lane}_chop"] }')
+            casts='{ role = "hands", label_key = "t_role", patterns = ["{lane}_chop"] }')
 
 
 @kills(16)
@@ -40,34 +40,34 @@ def test_a_role_named_twice_in_one_outcome_is_refused(tmp_path: Path):
 @kills(17)
 def test_a_pattern_that_is_no_town_cards_id_is_refused_naming_role_and_pattern(tmp_path: Path):
     refused(tmp_path, r"casts lead by \{lane\}_nothing, which is no town card's id pattern",
-            casts='{ role = "lead", patterns = ["{lane}_nothing"] }')
+            casts='{ role = "lead", label_key = "t_role", patterns = ["{lane}_nothing"] }')
 
 
 @kills(17)
 def test_a_pattern_is_the_town_cards_id_written_exactly_so_a_lanes_own_card_id_is_no_pattern(tmp_path: Path):
     refused(tmp_path, r"casts lead by t_a_chop, which is no town card's id pattern",
-            casts='{ role = "lead", patterns = ["t_a_chop"] }')
+            casts='{ role = "lead", label_key = "t_role", patterns = ["t_a_chop"] }')
 
 
 @kills(18)
 def test_a_pattern_named_twice_is_refused(tmp_path: Path):
     refused(tmp_path, r"casts lead by \{lane\}_chop twice",
-            casts='{ role = "lead", patterns = ["{lane}_chop", "{lane}_haul", "{lane}_chop"] }')
+            casts='{ role = "lead", label_key = "t_role", patterns = ["{lane}_chop", "{lane}_haul", "{lane}_chop"] }')
 
 
 def test_a_cast_with_no_patterns_is_refused_at_the_entry(tmp_path: Path):
-    refused(tmp_path, "patterns", casts='{ role = "lead", patterns = [] }')
+    refused(tmp_path, "patterns", casts='{ role = "lead", label_key = "t_role", patterns = [] }')
 
 
 @kills(15)
 @pytest.mark.parametrize("role", ["1lead", "le-ad", "_lead"])
 def test_a_role_that_is_not_a_word_starting_with_a_letter_is_refused_naming_it(tmp_path: Path, role: str):
     refused(tmp_path, rf"casts {role}, which is not a word of letters, digits and underscores",
-            casts=f'{{ role = "{role}", patterns = ["{{lane}}_chop"] }}')
+            casts=f'{{ role = "{role}", label_key = "t_role", patterns = ["{{lane}}_chop"] }}')
 
 
 def test_an_empty_role_is_refused(tmp_path: Path):
-    refused(tmp_path, "which is not a word of letters, digits and underscores", casts='{ role = "", patterns = ["{lane}_chop"] }')
+    refused(tmp_path, "which is not a word of letters, digits and underscores", casts='{ role = "", label_key = "t_role", patterns = ["{lane}_chop"] }')
 
 
 @kills(19)
@@ -135,7 +135,7 @@ def test_a_label_a_lane_takes_once_a_feature_of_the_role_is_unlocked_may_hold_th
 
 @kills(5, 20)
 def test_a_text_gated_on_a_feature_of_the_role_may_hold_the_slot_and_one_gated_on_another_role_may_not(tmp_path: Path):
-    scout = '{ role = "scout", patterns = ["{lane}_haul"] }'
+    scout = '{ role = "scout", label_key = "t_role", patterns = ["{lane}_haul"] }'
     opening_of(tmp_path, casts=f"{LEAD}, {scout}", extra_text=SLOT_TEXT, **after_cast("lead_t_a"))
     with pytest.raises(ValueError, match=r"text t_l_x: holds the slot \{lead\}"):
         opening_of(tmp_path, casts=f"{LEAD}, {scout}", extra_text=SLOT_TEXT, **after_cast("scout_t_a"))

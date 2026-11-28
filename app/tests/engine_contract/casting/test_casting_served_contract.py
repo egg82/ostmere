@@ -8,7 +8,7 @@ from ashfall_app.api.world.content_models import CastInfo
 
 from casting_world import LEAD, PEOPLE, at, feature, game, held, kills, rules_of
 
-SCOUT = '{ role = "scout", patterns = ["{lane}_haul"] }'
+SCOUT = '{ role = "scout", label_key = "t_role", patterns = ["{lane}_haul"] }'
 LATER = ('[[triggers]]\nid = "t_scout"\nwhen = { test = "after_time", value = 210 }\n'
          f'outcome = {{ casts = [{SCOUT}] }}\n\n')
 
@@ -22,6 +22,12 @@ def test_one_cast_info_per_role_lists_the_single_person_lanes_in_declared_order_
     [lead] = infos(tmp_path)
     assert lead.role == "lead"
     assert [(x.lane, x.feature) for x in lead.lanes] == [(p, f"lead_{p}") for p in PEOPLE]
+
+
+def test_each_cast_info_serves_the_key_of_the_roles_display_name(tmp_path: Path):
+    [lead] = infos(tmp_path)
+    assert lead.label_key == "t_role"
+    assert {t.key: t.text for t in game(tmp_path).content().text_entries}[lead.label_key] == "Role"
 
 
 @kills(8, 21)
