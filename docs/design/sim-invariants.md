@@ -137,7 +137,7 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 
 ### Week two (job `playthrough-week-two`; `weektwo/verdicts.py`; readouts `weektwo/report.py`)
 
-One row stands for its siblings in `weektwo/test_weektwo_routes.py` (day eight), `test_weektwo_nine.py`,
+One row stands for its siblings in `weektwo/chapters/test_weektwo_routes.py` (day eight), `test_weektwo_nine.py`,
 `test_weektwo_eleven.py` and `test_weektwo_twelve.py`.
 
 | # | Where | What | Class | Now |
@@ -157,10 +157,10 @@ One row stands for its siblings in `weektwo/test_weektwo_routes.py` (day eight),
 
 | # | Where | What | Class | Now |
 |---|---|---|---|---|
-| C1 | `weekone_saved/`, `weektwo/test_weektwo_saved.py`, `weekone/test_weekone_export.py` | the saved ends are today's play, link by link | correct: contract (each chapter plays on from the saved end before it) | fails |
-| C2 | `ladder/readout.py` | each skill's ladder, each card's share by day, each skill's XP by source per band of days, and whether one saved mix shape always wins (`ladder/dominance.py`; its control sets in `ladder/test_dominance.py`) | taste | readout, compared in `weektwo/test_ladder_readouts.py` |
+| C1 | `weekone_saved/`, `weektwo/saves/test_weektwo_saved.py`, `weekone/test_weekone_export.py` | the saved ends are today's play, link by link | correct: contract (each chapter plays on from the saved end before it) | fails |
+| C2 | `ladder/readout.py` | each skill's ladder, each card's share by day, each skill's XP by source per band of days, and whether one saved mix shape always wins (`ladder/dominance.py`; its control sets in `ladder/test_dominance.py`) | taste | readout, compared in `weektwo/readouts/test_ladder_readouts.py` |
 | C3-C6 | `ladder/test_*.py`, `banked/` | the ladder's arithmetic; 2 AM, the checks past the sinks and the sink policies on a fixture chapter | control; babysit | fails |
-| C7 | `worth/readout.py` | what a re-mix is worth per visit on keeper, tuner's moments by cause, the two control routes, moments per visit by week beside the opening's (`worth-a-change.md`) | taste | readout, compared in `weektwo/test_worth_readouts.py` |
+| C7 | `worth/readout.py` | what a re-mix is worth per visit on keeper, tuner's moments by cause, the two control routes, moments per visit by week beside the opening's (`worth-a-change.md`) | taste | readout, compared in `weektwo/readouts/test_worth_readouts.py` |
 | C8 | `worth/test_measure.py`, `worth/test_summary.py` | the worth measure on a fixture world (a split in proportion worth nothing, a starved goal worth a lot, the first build's measure beside it) and the readout's arithmetic | control | fails |
 
 The opening's loader, lock, content-contract and cost tests (`opening/test_released.py`, `rules/loaders/test_chapters.py`

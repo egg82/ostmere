@@ -91,7 +91,7 @@ def test_a_changed_shape_re_keys_every_chapter(tree: Path, monkeypatch: pytest.M
 
 
 def test_a_test_file_is_not_an_input(tree: Path):
-    before, after = after_editing(tree, "tests/weektwo/test_weektwo_saved.py")
+    before, after = after_editing(tree, "tests/weektwo/saves/test_weektwo_saved.py")
     assert changed(before, after) == []
 
 

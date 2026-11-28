@@ -42,8 +42,8 @@ def test_a_chapter_with_two_routes_plays_one_job_per_shard_and_a_long_shard_is_l
 
 
 def test_a_changed_week_two_test_file_is_sliced_with_no_chapter_touched():
-    got = plan(BASE, False, ["app/tests/weektwo/test_weektwo_twelve.py", "app/tests/weektwo/ends.py", "docs/x.md"])
-    assert (got["mode"], got["chapters"], got["files"]) == ("slice", [], ["app/tests/weektwo/test_weektwo_twelve.py"])
+    got = plan(BASE, False, ["app/tests/weektwo/chapters/test_weektwo_twelve.py", "app/tests/weektwo/ends.py", "docs/x.md"])
+    assert (got["mode"], got["chapters"], got["files"]) == ("slice", [], ["app/tests/weektwo/chapters/test_weektwo_twelve.py"])
     assert got["shards"] == [n for n in SHARDS if n not in NIGHTLY_ONLY]
 
 
