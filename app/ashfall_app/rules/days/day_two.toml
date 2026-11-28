@@ -736,10 +736,15 @@ l_straight_poles = "find"
 l_root_plate = "find"
 l_tighter_rack = "level"
 
+# Her share by her name once she gives it (as her lane's label).
+[standing_labels]
+n1_eating = [{ after = { unlock_kind = "feature", id = "n1_named" }, label_key = "action_n1_eating_named" }]
+
 [text]
 # ---------- lines ----------
 lane_n1 = "Her hands"
 lane_n1_named = "{n1}'s hands"
+action_n1_eating_named = "{n1}'s share"
 name_n1 = "Lucy"
 store_evening_2 = "evening"
 store_night_2 = "night"
