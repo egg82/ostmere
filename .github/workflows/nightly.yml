@@ -77,7 +77,7 @@ jobs:
       pull-requests: write
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      BRANCH: bot/readout-refresh
+      BRANCH: bot/readout-refresh-${{ github.run_id }}
     steps:
       - uses: actions/checkout@v4
       - id: decide
@@ -108,11 +108,12 @@ jobs:
           git commit -m "$title"
           git push --force origin "$BRANCH"
           number=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
-          if [ -n "$number" ]; then
-            gh pr edit "$number" --title "$title" --body-file "$RUNNER_TEMP/body.md"
-          else
+          if [ -z "$number" ]; then
             gh pr create --base main --head "$BRANCH" --title "$title" --body-file "$RUNNER_TEMP/body.md"
           fi
+          gh pr list --state open --json number,headRefName \
+            --jq ".[] | select(.headRefName | startswith(\"bot/readout-refresh\")) | select(.headRefName != \"$BRANCH\") | .number" |
+            while read -r old; do gh pr close "$old" --delete-branch --comment "Superseded by nightly $GITHUB_RUN_ID."; done
 
   # The last week of pull-request CI against its budget, and the runs that failed a test job and passed on a rerun
   # (app/tools/ci_health.py): one open issue per problem, updated each night, or one log line.

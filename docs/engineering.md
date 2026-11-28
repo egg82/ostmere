@@ -32,7 +32,9 @@ nightly holds the next release (`release` fails while the last completed nightly
 only because readouts differ: each readout job records whether its tests passed and which readouts changed
 (`.github/actions/readout-verdict`), `ci-ok` turns those into `readouts_only` (`app/tools/nightly_verdict.py`; a job with
 no verdict or a failed test is a real failure), and the nightly's `refresh-readouts` job uploads the `nightly-verdict`
-`release` reads and opens or updates one pull request from `bot/readout-refresh` with the pulled files. That pull
+`release` reads and opens one pull request with the pulled files from a branch named for the run
+(`bot/readout-refresh-<run id>`), closing any older refresh pull request: GITHUB_TOKEN may not update a branch in a way
+that changes workflow files, so a force-push over an older branch fails once main's workflows have moved. That pull
 request is made with GITHUB_TOKEN, so it runs no CI until the orchestrator closes and reopens it. Otherwise dispatch Nightly on
 `main` once it is fixed, and re-run the held job when it is green. A pull request builds the
 image and pushes nothing. On `main` the image is pushed by
