@@ -28,7 +28,7 @@ def run(text: str, tmp: Path, *extra: str) -> tuple[int, list[tuple[str, str]]]:
 
 
 def test_the_shipped_chapters_raise_nothing_but_recorded_acceptances(tmp_path: Path):
-    code, flags = run(SHIPPED, tmp_path, "--decisions", str(BEATS_YAML.parent / "decisions.jsonl"))
+    code, flags = run(SHIPPED, tmp_path, "--decisions", str(BEATS_YAML.parent / "decisions"))
     assert code == 0 and flags  # the acceptances print, so the run examined them
 
 
