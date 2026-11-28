@@ -902,7 +902,7 @@ pot_fungus_stew = [{ lane = "n8", amount_bp = 1000 }, { lane = "n9", amount_bp =
 [text]
 l_kept_o_choir_beds = "the three you put to the beds are at it before light now. the camp wakes to it and rests a little easier."
 l_kept_o_choir_road = "the three on the road have worn a path to it. your hands go the quicker for the road being shorter."
-l_kept_o_cutter_beds = "the two at the beds have the rhythm of it. the camp rests easier for the food they keep coming."
+l_kept_o_cutter_beds = "{n12} at the beds has the rhythm of it. the camp rests easier for the food she keeps coming."
 l_kept_o_cutter_road = "the two on the road have worked it smooth, and your hands go quicker over it."
 store_work_food = "put to the food"
 store_work_build = "put to the building"
