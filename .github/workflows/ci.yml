@@ -353,7 +353,7 @@ jobs:
   # The whole game's smoke plan, beside the slice rather than after it: where a change is one every chapter reads, or week
   # one's, the shards of `WHOLE_GAME` (tools/weektwo_shards.py) play from the start, since the base's saved ends are older
   # than the change and no chapter's slice reads their readouts. It decides for itself (tools/pr_plan.py, `whole_game`)
-  # so that it waits on `changes` alone: a job after `slice` has 6 minutes (tests/test_ci_budget.py), which the plays
+  # so that it waits on `changes` alone: a job after `slice` has 6 minutes (tests/tools/test_ci_budget.py), which the plays
   # from the start overran on half the runs; beside `slice` it has 8, the same 10-minute chain.
   playthrough-whole-game:
     needs: changes

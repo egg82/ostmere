@@ -7,7 +7,7 @@ from typing import Any
 
 import yaml
 
-from tests.test_ci_budget import CI, needs
+from tests.tools.test_ci_budget import CI, needs
 from tests.weektwo import keys, rebased
 from tests.weektwo.routes import CHAPTERS, SAVED
 from tools import saves_plan

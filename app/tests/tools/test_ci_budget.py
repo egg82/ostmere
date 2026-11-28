@@ -9,7 +9,7 @@ import yaml
 
 from tools import saves_plan
 
-CI = Path(__file__).resolve().parents[2] / ".github" / "workflows" / "ci.yml"
+CI = Path(__file__).resolve().parents[3] / ".github" / "workflows" / "ci.yml"
 BUDGET_MIN = 10
 PULL_REQUEST = {"changes", "docs", "slice", "playthrough-slice", "playthrough-whole-game", "playthrough-smoke", "tests", "shards-cover", "mutant-plants",
                 "engine-bench", "pyright", "client", "app-image", "ci-ok"}
@@ -49,7 +49,7 @@ def critical_path(all_jobs: Jobs, within: set[str]) -> Chain:
 def test_every_job_is_in_a_set_and_the_pull_request_path_fits_its_budget():
     found = jobs()
     assert set(found) == PULL_REQUEST | FULL_RUN | MAIN_ONLY, \
-        f"classify the job in tests/test_ci_budget.py: {sorted(set(found) ^ (PULL_REQUEST | FULL_RUN | MAIN_ONLY))}"
+        f"classify the job in tests/tools/test_ci_budget.py: {sorted(set(found) ^ (PULL_REQUEST | FULL_RUN | MAIN_ONLY))}"
     assert not (PULL_REQUEST & FULL_RUN or PULL_REQUEST & MAIN_ONLY or FULL_RUN & MAIN_ONLY)
     minutes, chain = critical_path(found, PULL_REQUEST)
     assert minutes <= BUDGET_MIN, f"a pull request waits {minutes} min on {' -> '.join(chain)}; the budget is {BUDGET_MIN}"

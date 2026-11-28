@@ -33,7 +33,7 @@ PYTEST_GATES=(
   app/tests/scene/test_scene_sites.py
   app/tests/scene/test_scene_day.py
   app/tests/scene/test_scene_lodging.py
-  app/tests/test_ci_budget.py
+  app/tests/tools/test_ci_budget.py
 )
 CLIENT_GATES=(
   app/client/gates/function-size.mjs
