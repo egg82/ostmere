@@ -1,0 +1,16 @@
+chapter thirtythree: 12 visits on typical
+  V142 gap   4.2 h  spend 29  decide  1  [wait, 6 lines]
+  V143 gap   3.2 h  spend 31  decide  1  [wait, 5 lines]
+  V144 gap   9.2 h  spend 30  decide  0
+  V145 gap   4.2 h  spend 29  decide  1
+  V146 gap   3.2 h  spend 30  decide  0  [wait, 3 lines]
+  V147 gap   9.2 h  spend 75  decide  0
+  V148 gap   4.2 h  spend 29  decide  0
+  V149 gap   3.2 h  spend 47  decide  0  [wait, 0 lines]
+  V150 gap   9.2 h  spend 46  decide  0  [wait, 7 lines]
+  V151 gap   4.2 h  spend 47  decide  0  [wait, 4 lines]
+  V152 gap   3.2 h  spend 47  decide  0  [wait, 0 lines]
+  V153 gap   9.2 h  spend 47  decide  1  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 8 returns, spend 289, decide 3; 8h+: 4 returns, spend 198, decide 1
+  cap loss at the end, away 8 h: ashed_ground 100%, charwood 100%, cleared 100%, post_stores 58%, roots 85%, stakes 100%, stones 18%, windbreak 100%, wraps_sewn 100%
+  cap loss at the end, away 24 h: ashed_ground 100%, charwood 100%, cleared 100%, post_stores 61%, roots 84%, stakes 100%, stones 20%, windbreak 100%, wraps_sewn 100%
