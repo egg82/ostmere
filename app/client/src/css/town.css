@@ -62,6 +62,7 @@
 .town-doing.stuck, .town-doing.wasted { color: var(--ember-hot); }
 .card-need.wasted { color: var(--ember-hot); }   /* a running card's work thrown away: its stores are full (game/cards/wasted.ts) */
 .town-ident { display: flex; align-items: baseline; gap: .6rem; margin-right: auto; }
+.town-detail { font-size: var(--t-meta); color: var(--ink); }   /* a cast person's own name, beside their role */
 .town-count { font-size: var(--t-meta); color: var(--ink); }   /* a group's head count, beside its label */
 .town-face.stack .ask-face + .ask-face { margin-left: -.45rem; }   /* a group's members' faces overlap into one stack */
 .town-face.stack .ask-face { outline: 2px solid var(--bg); }

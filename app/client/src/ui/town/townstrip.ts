@@ -125,7 +125,10 @@ export class TownStrip implements Part {
     const row = this.rows.get(lane);
     if (!row) return;
     const solo = soloOf(catalog, view, lane);
-    drawWho(this.ctx, row, solo ?? lane, catalog.laneLabel(solo ?? lane, view), this.runningOf(view, lane));
+    const role = solo === null ? null : catalog.castTitle(solo, view);
+    const own = solo === null ? undefined : catalog.lanes.get(solo)?.name_key;
+    const named = role !== null && own ? catalog.text.get(own) : "";
+    drawWho(this.ctx, row, solo ?? lane, role !== null && named ? role : catalog.laneLabel(solo ?? lane, view), this.runningOf(view, lane), role !== null ? named : "");
     row.faceSlot.classList.toggle("stack", solo === null);
     if (solo === null) this.drawCrowd(row, view, lane);
     const tap = solo === null ? null : laneOneOff(view, solo);

@@ -25,5 +25,5 @@ def cast_infos(o: Opening) -> list[cm.CastInfo]:
     """Each role, once, with each candidate lane and the feature its cast unlocks (the loader's picks)."""
     found: dict[str, cm.CastInfo] = {}
     for _, c in casts(o):
-        found.setdefault(c.role, cm.CastInfo(role=c.role, lanes=[cm.CastLane(lane=p.lane, feature=p.feature) for p in c.picks]))
+        found.setdefault(c.role, cm.CastInfo(role=c.role, label_key=c.label_key, lanes=[cm.CastLane(lane=p.lane, feature=p.feature) for p in c.picks]))
     return list(found.values())

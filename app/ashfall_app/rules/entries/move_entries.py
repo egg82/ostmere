@@ -50,6 +50,8 @@ class CastEntry(Entry):
     the earliest declared. `patterns` are town-card id patterns, written with their {lane}, in priority order."""
 
     role: str
+    label_key: str
+    """The text key of the role's display name: the title of the cast person's row in the town list."""
     patterns: list[str] = Field(min_length=1)
     picks: list[CastPickEntry] = []
     """Filled by the loader (casts.py), never authored."""

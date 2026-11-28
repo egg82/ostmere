@@ -25,7 +25,7 @@ from ashfall_app.saves.ruleset import ruleset
 PEOPLE = ("t_a", "t_b", "t_c", "t_m")
 CAST_AT = 205
 TOWN = MixId("town:main")
-LEAD = "{ role = \"lead\", patterns = [\"{lane}_chop\"] }"
+LEAD = "{ role = \"lead\", label_key = \"t_role\", patterns = [\"{lane}_chop\"] }"
 
 
 def kills(*rows: int) -> pytest.MarkDecorator:
@@ -100,7 +100,7 @@ def chapter(joins: Mapping[str, int] | None = None, casts: str | None = LEAD, le
     names = "".join(f't_n_{p} = "{p[2:].upper()}name"\nt_l_{p} = "{p}"\n' for p in PEOPLE)
     out.append(PEOPLE_TOML)
     out.append(f'{extra}\n[line_kinds]\n{kinds}{extra_kinds}\n[text]\nt_up = "what it is for"\nt_s_heap = "Heap"\nt_s_load = "Load"\nt_l_t_p = "Crew"\n'
-               f't_l_t_pot = "Pot"\nt_c_chop = "Chop"\nt_c_haul = "Haul"\n{names}{WORDS}{extra_text}\n')
+               f't_l_t_pot = "Pot"\nt_c_chop = "Chop"\nt_c_haul = "Haul"\nt_role = "Role"\n{names}{WORDS}{extra_text}\n')
     return "".join(out)
 
 

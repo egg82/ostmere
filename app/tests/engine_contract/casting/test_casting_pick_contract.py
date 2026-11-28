@@ -5,7 +5,7 @@ from pathlib import Path
 
 from casting_world import LEAD, counts, kills, lead_of
 
-BOTH = '{ role = "lead", patterns = ["{lane}_chop", "{lane}_haul"] }'
+BOTH = '{ role = "lead", label_key = "t_role", patterns = ["{lane}_chop", "{lane}_haul"] }'
 
 
 @kills(3)

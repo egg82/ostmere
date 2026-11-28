@@ -2595,6 +2595,10 @@
             "type": "string",
             "title": "Role"
           },
+          "label_key": {
+            "type": "string",
+            "title": "Label Key"
+          },
           "lanes": {
             "items": {
               "$ref": "#/components/schemas/CastLane"
@@ -2606,6 +2610,7 @@
         "type": "object",
         "required": [
           "role",
+          "label_key",
           "lanes"
         ],
         "title": "CastInfo",

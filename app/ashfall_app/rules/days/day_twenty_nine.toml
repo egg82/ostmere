@@ -204,7 +204,7 @@ when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", 
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "drift_two", value = 1 }]
 [triggers.outcome]
 line_keys = ["l_b22_4"]
-casts = [{ role = "tracker", patterns = ["{lane}_walk_ashwood", "{lane}_forage"] }]
+casts = [{ role = "tracker", label_key = "role_tracker", patterns = ["{lane}_walk_ashwood", "{lane}_forage"] }]
 unlocks = [
   { unlock_kind = "feature", id = "outpost" },
   { unlock_kind = "store", id = "post_stores" },
@@ -419,6 +419,7 @@ l_b22_1o = "under the trees in the brown noon the cart is pulled backward out of
 l_b22_2o = "the tail-pins are drawn and dropped one by one in the ash. the load goes off into the dark in pieces."
 l_b22_3o = "they come back to the post with nothing."
 l_b22_4 = "next morning {tracker} kneels over the tracks: cats, that know how a pin comes out. they have the road now."
+role_tracker = "Tracker"
 c_run_cart = "Run a cart to the post"
 up_run_cart = "smoked out to the post's store"
 c_walk_hill = "Walk to the far hill"
