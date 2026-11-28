@@ -115,11 +115,11 @@ inputs = [
   { store = "post_stores", items = 2 },
 ]
 
-# "When the post's store reaches 8, work on the house".
+# "When the post's store reaches 4, work on the house": two stages' worth, so the walks keep a share of the line.
 [[order_cards]]
 store = "post_stores"
 tap_card = "waystation"
-when = { test = "at_least", subject_kind = "store", id = "post_stores", value = 8, release = 8 }
+when = { test = "at_least", subject_kind = "store", id = "post_stores", value = 4, release = 4 }
 offered_after = { unlock_kind = "card", id = "waystation" }
 
 [[triggers]]
@@ -205,6 +205,13 @@ modifiers = [
   { target = "work", id = "g_road_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_burners_build" },
   { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_burners_build" },
 ]
+
+# Either way they keep the post's fire and bring its crew what they trap in the wood, so the crew out there eats half
+# what it did from the post's store: the line's surplus is what moves P5 and the hill's walks.
+[[triggers]]
+id = "t_burners_fire"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_burners", value = 1 }
+outcome = { line_keys = ["l_burners_fire"], modifiers = [{ target = "rate", id = "post_upkeep", flow = "cost", store = "post_stores", kind = "mul_bp", amount_bp = 5000, source = "t_burners_fire" }] }
 
 # The outpost's first people of its own (D-215): they keep the post's fire and sleep there.
 [[lanes]]
@@ -554,6 +561,7 @@ l_burners_1 = "story"
 l_burners_2 = "story"
 l_burners_food = "story"
 l_burners_build = "story"
+l_burners_fire = "story"
 l_scrape = "story"
 l_bear_sign_2 = "story"
 l_y11 = "story"
@@ -620,6 +628,7 @@ a_burners_food_cost = "{pct} smoked from the rack, {pct_b} smoked at the table"
 a_burners_build_cost = "{pct} all road clearing, {pct_b} smoked at the table"
 l_burners_food = "{n24} and {n25} take the carts. {n2} sets them with the road crew."
 l_burners_build = "{n24} and {n25} take the stakes and the road. {n2} sets them with the road crew."
+l_burners_fire = "{n24} feeds the post's crew from her own snares. they eat less of what the carts bring."
 lane_n24 = "The burner's hands"
 lane_n24_named = "{n24}'s hands"
 name_n24 = "Marian"
