@@ -114,14 +114,19 @@ def test_a_day_thirty_one_route_readout_is_reported(week_days: Days, name: str):
     rs.check(f"weektwo-thirtyone-{name}", report.route_text("thirtyone", name, *week_days))
 
 
-@pytest.mark.parametrize("week_days, name", [(("thirtythree", r), r) for r in report.ROUTES], indirect=["week_days"],
-                         ids=report.ROUTES)
+THIRTY_THREE_B = {"typical": "thirtythree-typical-b", "whenever": "thirtythree-whenever-b"}
+THIRTY_THREE_ROUTES = [pytest.param(("thirtythree", r), r, id=r, marks=[pytest.mark.weektwo_shard(THIRTY_THREE_B[r])] if r in THIRTY_THREE_B else [])
+                       for r in report.ROUTES]
+"""Day thirty-three's readout plays, the typical and whenever readers in a shard each of their own beside the shard that plays
+the route's checks: a shard's wall time is its one play's builds and readings in series (tools/weektwo_shards.py NIGHTLY_ONLY)."""
+
+
+@pytest.mark.parametrize("week_days, name", THIRTY_THREE_ROUTES, indirect=["week_days"])
 def test_a_day_thirty_three_route_readout_is_reported(week_days: Days, name: str):
     rs.check(f"weektwo-thirtythree-{name}", report.route_text("thirtythree", name, *week_days))
 
 
-@pytest.mark.parametrize("week_days, name", [(("thirtythree", r), r) for r in report.ROUTES], indirect=["week_days"],
-                         ids=report.ROUTES)
+@pytest.mark.parametrize("week_days, name", THIRTY_THREE_ROUTES, indirect=["week_days"])
 def test_the_whole_games_pacing_readout_is_reported(week_days: Days, name: str):
     p, later = week_days
     rs.check(f"weektwo-pacing-{name}", pacing.text(name, p, later))
@@ -209,6 +214,7 @@ def test_day_thirty_ones_visit_readout_is_reported(thirtyone_counts: Counts, thi
                                                cap_lines(thirtyone_counts[0], verdicts.CHAPTERS["thirtyone"])))
 
 
+@pytest.mark.weektwo_shard("thirtythree-typical-b")
 def test_day_thirty_threes_visit_readout_is_reported(thirtythree_counts: Counts, thirtythree_marks: dict[str, str]):
     assert len(thirtythree_counts[1]) >= 3, "the chapter's visits were counted"
     rs.check("weektwo-thirtythree", chapter_text("thirtythree", thirtythree_counts[1], thirtythree_marks,
