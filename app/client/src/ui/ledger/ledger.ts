@@ -178,9 +178,7 @@ export class Ledger implements Part {
   private drain(line: LedgerLine): string {
     const { catalog } = this.ctx;
     const runner = this.view ? largestDrain(line, this.view) : null;
-    if (runner === null) return "";
-    if (catalog.cards.has(runner)) return catalog.cardLabel(runner);
-    return catalog.label(catalog.content.standing_infos.find((a) => a.action === runner)?.label_key);
+    return runner === null ? "" : catalog.runnerLabel(runner, this.view ?? undefined);
   }
 
   private eta(line: LedgerLine, t: number): string {

@@ -170,7 +170,7 @@ export class Story implements Part {
     const { text } = catalog;
     const save = this.ctx.saveId();
     const standing = (runner: string) => catalog.content.standing_infos.find((a) => a.action === runner);
-    const name = (runner: string): string => catalog.cards.has(runner) ? catalog.cardLabel(runner) : catalog.label(standing(runner)?.label_key);
+    const name = (runner: string): string => catalog.runnerLabel(runner, view);
     const fight = (runner: string) => catalog.cards.get(runner)?.fight ?? standing(runner)?.fight ?? null;
     const causes: Array<string | null> = [];   // each entry's cause, in the order entries() words them: a pool's line
     const one = (runner: string, kind: "won" | "lost", k: number): string => {   // names no runner, ui.fight.* does

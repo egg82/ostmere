@@ -127,6 +127,7 @@ def _unlocks(o: "Opening") -> Iterator[tuple[str, "UnlockEntry"]]:
     yield from ((f"aim {a.id}", a.after) for a in o.aims if a.after is not None)
     yield from ((f"lane {x.id}", lb.after) for x in o.lanes for lb in x.later_labels)
     yield from (("town title", lb.after) for lb in o.town_later_labels)
+    yield from ((f"action {a.id}", lb.after) for a in o.standing for lb in a.later_labels)
 
 
 def _unlock_ids(ids: dict[str, list[str]], unlock_kind: str) -> list[str]:

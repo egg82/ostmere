@@ -124,17 +124,29 @@ export class Catalog {
     return this.label(this.skills.get(skill)?.label_key);
   }
 
-  /** A card's or a standing action's label: they share one namespace (contract/). */
-  runnerLabel(runner: string): string {
-    return this.cards.has(runner) ? this.cardLabel(runner) : this.label(this.content.standing_infos.find((a) => a.action === runner)?.label_key);
+  /** A card's or a standing action's label: they share one namespace (contract/). A standing action's is the one `view`
+   * has, as a lane's (laneLabel). */
+  runnerLabel(runner: string, view?: View): string {
+    return this.cards.has(runner) ? this.cardLabel(runner) : this.laterLabel(this.content.standing_infos.find((a) => a.action === runner), view);
   }
 
   /** A lane's label: the last of its later labels whose unlock `view` holds, else its own (contract/a-lane-run-by-rules.txt, "A lane run
    * by rules"). */
   laneLabel(lane: string, view?: View): string {
-    const info = this.lanes.get(lane);
+    return this.laterLabel(this.lanes.get(lane), view);
+  }
+
+  /** The label of a thing with later labels: the last whose unlock `view` holds, else its own; its own without a view. */
+  private laterLabel(info: { label_key: string; later_labels: LaneInfo["later_labels"] } | undefined, view?: View): string {
     const later = view ? info?.later_labels.filter((l) => this.unlocked(view, l.after.category, l.after.id)).at(-1) : undefined;
     return this.label(later?.label_key ?? info?.label_key);
+  }
+
+  /** A person as a sentence names them: their lane's name text, else the lane's label as `view` has it. A lane's label
+   * titles a row ("…'s hands"); it is no name to put in a sentence. */
+  personName(lane: string, view?: View): string {
+    const key = this.lanes.get(lane)?.name_key;
+    return key ? this.text.get(key) : this.laneLabel(lane, view);
   }
 
   /** The display name of the role `lane`'s person holds in `view`, null when they hold none (Content.cast_infos: the role

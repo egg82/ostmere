@@ -26,6 +26,7 @@ PACKAGES = {
     "tracks": "tests.rules.play.tracks_readout",
     "town": "tests.rules.play.town_readout",
     "closecalls": "tests.rules.play.close_calls_readout",
+    "pronouns": "tests.rules.play.pronouns_readout",
     "dayone": "tests.dayone.pacing.report",
     "daytwo": "tests.daytwo.report",
     "daythree": "tests.daythree.report",
@@ -35,7 +36,7 @@ PACKAGES = {
     "makers": "tests.makers.readout",
     "worth": "tests.worth.readout",
 }
-GROUPS = {"opening": "rules", "tracks": "rules", "town": "rules", "closecalls": "rules"}
+GROUPS = {"opening": "rules", "tracks": "rules", "town": "rules", "closecalls": "rules", "pronouns": "rules"}
 """The subdirectory of readouts/ a package's files live in: its own name unless listed here."""
 OUT_ENV = "READOUTS_OUT"
 """Where a changed readout's new text is written for the CI job to keep as an artifact."""

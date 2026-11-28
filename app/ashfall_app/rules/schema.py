@@ -181,6 +181,8 @@ class Chapter(Entry):
     card an earlier one shipped (the card pays more)."""
     lane_labels: dict[str, list[LaneLabelEntry]] = {}
     """Later labels for a lane an earlier file declares, by lane id, after any it has: a joined person named later."""
+    standing_labels: dict[str, list[LaneLabelEntry]] = {}
+    """The same for a standing action an earlier file declares, by its id."""
     text: dict[str, str] = {}
     line_kinds: dict[str, LineKind] = {}
     line_doings: dict[str, LineDoingsEntry] = {}

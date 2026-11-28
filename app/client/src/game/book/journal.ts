@@ -156,17 +156,12 @@ export interface NumbersRow {
   tally: string | null;
 }
 
-function runnerLabel(catalog: Catalog, runner: string): string {
-  if (catalog.cards.has(runner)) return catalog.cardLabel(runner);
-  return catalog.label(catalog.content.standing_infos.find((a) => a.action === runner)?.label_key);
-}
-
 function rowOf(catalog: Catalog, fight: Fight): NumbersRow {
   const { text, content } = catalog;
   const known = fight.fought > 0;
   const threat = known ? String(fight.threat_strength.value) : text.get(UI.fightThreatUnknown);
   return {
-    runner: fight.runner, label: runnerLabel(catalog, fight.runner), odds: oddsWords(text, fight, content.scales.bp),
+    runner: fight.runner, label: catalog.runnerLabel(fight.runner), odds: oddsWords(text, fight, content.scales.bp),
     vs: text.fill(UI.fightVs, { side_name: catalog.sideLabel(fight.side), power: String(fight.power.value), threat_name: catalog.threatLabel(fight.threat), threat }),
     tally: known ? text.fill(UI.fightTally, { fought: String(fight.fought), lost: String(fight.lost) }) : null,
   };

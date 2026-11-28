@@ -773,7 +773,7 @@ modifiers = [
 pot_stew = [{ lane = "n3", amount_bp = 1500 }, { lane = "n4", amount_bp = 1500 }]
 
 [text]
-l_kept_o_pair_room = "you built the second bay, and she kept near you at it, learning where things go. she works the quicker for it."
+l_kept_o_pair_room = "you built the second bay, and the woman kept near you at it, learning where things go. she works the quicker for it."
 l_kept_o_pair_hers = "the second bay is theirs, put up by their own hands, and the camp rests a little easier for it."
 # ---------- lines: [day two: line to write] ----------
 # Every key below is a placeholder until the simulator's day-five routes give each line its states and the writers'
@@ -805,13 +805,13 @@ l_ridge_1 = "grey shapes sit along the ridge, facing camp."
 l_ridge_2 = "lucy looks up. nothing sits there."
 o_pair = "Who builds them a sleeping bay?"
 l_pair_1 = "a woman, sack slung, an old man at her elbow."
-l_pair_2 = "his leg stays straight. she asks to share your fire."
+l_pair_2 = "the old man's leg stays straight. the woman asks to share your fire."
 a_pair_room = "You build it"
 a_pair_room_cost = "{d} of your time"
 a_pair_hers = "She builds it"
 a_pair_hers_cost = "{d} of her time"
 l_bay2_go = "you raise poles for a second bay, then stones."
-l_bay2_hers = "she raises the poles. the old man passes stones."
+l_bay2_hers = "the woman raises the poles. the old man passes stones."
 store_bay2_mid = "clock"
 action_bay2_mid = "Bay"
 o_pair_pot = "The poles for her bay, or the pot?"
@@ -822,7 +822,7 @@ a_pair_pot_bay_cost = "{pct} stew"
 a_pair_pot_pot = "You go to the pot"
 a_pair_pot_pot_cost = "{pct} work from her"
 l_pair_pot_bay = "the pot scorches. the poles go up straight, and the woman stays at your elbow."
-l_pair_pot_pot = "you put the poles down. she takes them up where you left them, and says nothing."
+l_pair_pot_pot = "you put the poles down. the woman takes them up where you left them, and says nothing."
 c_make_bay2 = "Build a second sleeping bay"
 lane_n3 = "The woman's hands"
 lane_n3_named = "{n3}'s hands"

@@ -25,8 +25,7 @@ export function endedLine(catalog: Catalog, view: View, run: RuleRun): string {
   const rule = words ? `${words.when} → ${words.action}` : "";
   if (run.ended !== "left") return text.fill(UI.ruleEndedSeason, { rule });
   const lane = run.order.then.kind === "tap_card" ? catalog.laneOf(run.order.then.card) : "";
-  const name = catalog.lanes.get(lane)?.name_key;
-  return text.fill(UI.ruleEndedLeft, { rule, person: name ? text.get(name) : catalog.laneLabel(lane) });
+  return text.fill(UI.ruleEndedLeft, { rule, person: catalog.personName(lane) });
 }
 
 /** The quiet line under an entry, at time `t`. */

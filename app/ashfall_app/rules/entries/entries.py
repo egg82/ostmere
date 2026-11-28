@@ -79,19 +79,6 @@ class FightEntry(Entry):
     loss_after: str | None = None
 
 
-class StandingEntry(Entry):
-    """A standing action: runs by itself while unlocked (a fire burning, a body getting hungry)."""
-
-    id: str
-    label_key: str
-    skill: str | None = None
-    xp_per_hour: int = Field(default=0, ge=0)
-    makes: list[FlowEntry] = []
-    costs: list[FlowEntry] = []
-    fight: FightEntry | None = None
-    while_running: list[WhileRunningEntry] = []
-
-
 class UnlockEntry(Entry):
     """offer: the offer is shown; answered: it has been answered, by either answer (its id the offer's); answer: this
     answer was given. Only an answer adds those two, only a join adds joined and only a leave adds left (their ids a
@@ -103,6 +90,28 @@ class UnlockEntry(Entry):
     replaced_by: str | None = None
     """On a `retired` unlock only: the card that takes the retired one's place, which the same outcome unlocks. The page
     teaches a mix still holding the retired card to swap it for this one."""
+
+
+class LaneLabelEntry(Entry):
+    """A label once `after` is unlocked (the last one held wins, as aims do): a lane row's, the town's, a standing
+    action's."""
+
+    after: UnlockEntry
+    label_key: str
+
+
+class StandingEntry(Entry):
+    """A standing action: runs by itself while unlocked (a fire burning, a body getting hungry)."""
+
+    id: str
+    label_key: str
+    later_labels: list[LaneLabelEntry] = []
+    skill: str | None = None
+    xp_per_hour: int = Field(default=0, ge=0)
+    makes: list[FlowEntry] = []
+    costs: list[FlowEntry] = []
+    fight: FightEntry | None = None
+    while_running: list[WhileRunningEntry] = []
 
 
 class ConditionEntry(Entry):

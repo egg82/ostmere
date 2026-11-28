@@ -46,7 +46,13 @@ check them.
    some route (stores and actions are gated by `unlock_order_checks`; text is not). A `{<role>}` slot is gated:
    `cast_checks.py` refuses it in any text that is not the casting outcome's own lines, a later label, or an owner gated
    on a feature of that role.
-10. **Spoilers.** Commit messages, PR text, test names and readout text name beats, lines and offers by id, never by
+10. **Every line reads alone.** A line, aim, upside or action label can show with nothing written before or after it,
+    so a he, she, him or her in it points at someone that same text names: their `{<lane>}` slot, their name, or the
+    word the content uses for them before they are named ("the man"). Swap the pronoun for the name; don't add a clause
+    of context. A label or card shown beside a person uses no pronoun that points at someone else. Not gated: the
+    `pronouns` readout (`app/tests/readouts/rules/pronouns.txt`) lists each such text with a pronoun and no one in it.
+    It cannot see a pronoun that points at the wrong one of the people a text names, so read for that yourself.
+11. **Spoilers.** Commit messages, PR text, test names and readout text name beats, lines and offers by id, never by
     what happens. A squash merge keeps the branch's commit messages, so they count as PR text. Nothing checks this.
 
 ## Mechanical steps

@@ -17,6 +17,7 @@ def key_fields(o: "Opening") -> Iterator[tuple[str, str]]:
         yield from ((f"skill {k.id}", lv.pays_key) for lv in k.levels)
     for a in o.standing:
         yield f"action {a.id}", a.label_key
+        yield from ((f"action {a.id}", lb.label_key) for lb in a.later_labels)
     yield from ((f"side {s.id}", s.label_key) for s in o.sides)
     yield from ((f"threat {t.id}", t.label_key) for t in o.threats)
     yield from ((f"node {n.id}", n.label_key) for n in o.nodes)

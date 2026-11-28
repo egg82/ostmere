@@ -166,6 +166,8 @@ class StandingInfo(BaseModel):
 
     action: str
     label_key: str
+    later_labels: list[LaneLabel]
+    """Its label is the label_key of the last of these whose `after` view.unlocked holds, else label_key, as a lane's."""
     skill: str | None
     fight: FightInfo | None
     """Set on a threat that runs on its own (contract/fights.txt, "FIGHTS")."""

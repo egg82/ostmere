@@ -41,7 +41,7 @@ export function jobLine(catalog: Catalog, view: View, jobs: NewJob[]): string | 
   const [first, ...rest] = jobs;
   if (!first) return null;
   const lanes = [...new Set(jobs.flatMap((j) => j.lanes))];
-  const only = lanes.length === 1 ? catalog.laneLabel(lanes[0]!, view) : null;
+  const only = lanes.length === 1 ? catalog.personName(lanes[0]!, view) : null;
   if (rest.length === 0) return only !== null ? text.fill(UI.jobNew, { person: only, card: catalog.cardLabel(first.card) }) : text.fill(UI.jobNewTown, { card: catalog.cardLabel(first.card) });
   return only !== null ? text.fill(UI.jobNewMany, { person: only }) : text.get(UI.jobNewAll);
 }
