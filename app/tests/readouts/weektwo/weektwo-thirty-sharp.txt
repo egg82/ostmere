@@ -1,0 +1,38 @@
+beats sharp (pace_scale 1): B23 day 30.01, target_day 31
+  away V251->V252: 1 ['trigger note_n_mourner_1']
+  away V252->V253: 0 []
+  away V253->V254: 1 ['trigger t_track_drifted']
+  away V254->V255: 2 ['trigger t_moths', 'trigger note_n_moth_1']
+  away V255->V256: 0 []
+  away V256->V257: 0 []
+  away V257->V258: 1 ['trigger t_pack_yard']
+  away V258->V259: 1 ['trigger t_hair_warm']
+  away V259->V260: 0 []
+  away V260->V261: 0 []
+  away V261->V262: 1 ['trigger t_b23']
+days after week one's 6 with no arrival but lines: []
+day    line feature    chip   store   skill    card   level  total
+  1       9       7       0       4       0      18       3     41
+  2      30       5       2       2       0      12       2     53
+  3      33       4       0       0       0      76       2    115
+  4      19       5       0       0       0       4       3     31
+  5       0       2       1       2       0       1       1      7
+  6       3       1       0       0       0      10       1     15
+  7       2       0       0       0       0       0       2      4
+  8       9       4       0       2       0      10       0     25
+  9      14       1       0       3       0      31       3     52
+ 10      20       3       2       2       0      25       1     53
+ 11      26       2       1       0       0     118       2    149
+ 12      11       2       0       0       0       2       2     17
+ 13      11       2       0       0       0       2       3     18
+ 14       2       0       0       0       0       0       2      4
+ 15       8       2       0       1       0       1       3     15
+ 16      12       1       1       2       1      36       1     54
+ 17      19       6       2       0       0      24       3     54
+ 18      11       1       0       0       0       3       2     17
+ 19      15       2       0       0       0       2       1     20
+ 20       6       1       0       0       0       2       1     10
+ 21       1       0       0       0       0       0       4      5
+ 22      13       3       0       0       0       6       1     23
+ 23      21       6       1       2       0      50       1     81
+ 24       9       1       0       2       0      69       1     82

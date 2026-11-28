@@ -218,16 +218,16 @@ runners = ["raid_line"]
 [[notes]]
 id = "n_mourner_1"
 entry = "e_mourner"
-gate = { test = "at_least", subject_kind = "store", id = "line_fought", value = 1 }
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "line_raided", value = 1 }
 
 # ---------- Y4 and SL38 ----------
 
-# Y4 at the line's first lost fight (the shuffle bag's draw: the same watched or not).
+# Y4 at the line's first lost fight (the shuffle bag's draw: the same watched or not); the mourners' page is written with it.
 [[triggers]]
 id = "t_y4"
 when = { test = "at_least", subject_kind = "store", id = "line_lost", value = 1 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "outpost", value = 1 }]
-outcome = { line_keys = ["l_y4_1", "l_y4_2"] }
+outcome = { line_keys = ["l_y4_1", "l_y4_2"], unlocks = [{ unlock_kind = "feature", id = "line_raided" }] }
 
 # SL38: the tracker's first walk ahead of the carts.
 [[triggers]]
@@ -546,6 +546,9 @@ catchup = { keys = ["j_b23_catchup"] }
 late = { keys = ["j_b23_late"] }
 
 # ---------- features ----------
+
+[[features]]
+id = "line_raided"
 
 [[features]]
 id = "pack_yard"
