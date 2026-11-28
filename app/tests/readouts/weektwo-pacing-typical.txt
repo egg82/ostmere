@@ -11,10 +11,10 @@ pacing typical: 26 whole days played
  B14 day 15.38 week 2.20
  B15 day 17.43 week 2.49
  B16 day 18.46 week 2.64
- B17 day 19.13 week 2.73
- B18 day 21.12 week 3.02
+ B17 day 19.12 week 2.73
+ B18 day 21.17 week 3.02
  B19 day 22.25 week 3.18
- B20 day 24.13 week 3.45
+ B20 day 24.08 week 3.44
  B21 day 26.45 week 3.78
  B22 not reached
  B23 not reached
@@ -49,7 +49,7 @@ pacing typical: 26 whole days played
  B52 not reached
  B53 not reached
 week days     line feature    chip   store   skill    card   level  things
-   1   1-7     190      57       3      23       6     121      19     229
-   2  8-14      95      22       3       6       0     113      13     157
-   3 15-21      90      11       2       6       0     180      11     210
-   4 22-26      60       9       2       2       1      69      10      93
+   1   1-7     194      57       3      23       6     121      19     229
+   2  8-14      97      22       3       6       0     113      13     157
+   3 15-21      92      12       2       6       0     180      11     211
+   4 22-26      63       9       3       2       1      69      10      94

@@ -21,6 +21,7 @@
     L20   6.76 d  gap   1.98 d
     L21  12.46 d  gap   5.70 d
     top L22: not by the edge
+    max L148: not by the edge (reached L21)
   woodcutting: level 35 of 43 (3.89% of the phase)
     L2    0.00 d  gap   0.00 d
     L3    0.01 d  gap   0.00 d
@@ -57,6 +58,7 @@
     L34  13.79 d  gap   0.17 d
     L35  14.05 d  gap   0.26 d
     top L43: not by the edge
+    max L169: not by the edge (reached L35)
   foraging: level 8 of 22 (0.33% of the phase)
     L2    0.05 d  gap   0.05 d
     L3    0.10 d  gap   0.05 d
@@ -66,6 +68,7 @@
     L7    4.03 d  gap   1.89 d
     L8    9.75 d  gap   5.72 d
     top L22: not by the edge
+    max L64: not by the edge (reached L8)
   cooking: level 8 of 22 (0.31% of the phase)
     L2    1.19 d  gap   1.19 d
     L3    1.74 d  gap   0.56 d
@@ -75,6 +78,7 @@
     L7   11.38 d  gap   3.02 d
     L8   13.73 d  gap   2.35 d
     top L22: not by the edge
+    max L64: not by the edge (reached L8)
   arcana: level 12 of 22 (2.47% of the phase)
     L2    5.41 d  gap   5.41 d
     L3    5.42 d  gap   0.01 d
@@ -88,6 +92,7 @@
     L11   9.49 d  gap   1.06 d
     L12  11.11 d  gap   1.62 d
     top L22: not by the edge
+    max L64: not by the edge (reached L12)
   melee: level 19 of 22 (33.99% of the phase)
     L2    6.41 d  gap   6.41 d
     L3    6.41 d  gap   0.00 d
@@ -108,10 +113,13 @@
     L18  11.74 d  gap   1.84 d
     L19  12.93 d  gap   1.20 d
     top L22: not by the edge
+    max L64: not by the edge (reached L19)
   spellcraft: level 1 of 22 (0.00% of the phase)
     top L22: not by the edge
+    max L22: not by the edge (reached L1)
   wayfinding: level 1 of 22 (0.00% of the phase)
     top L22: not by the edge
+    max L22: not by the edge (reached L1)
   card share of the running mixes by day, percent (. none, ~ under 0.5)
     day:   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
     build_shelter            .  17   .   .   .   .   .   .   .   .   .   .   .   .   .
