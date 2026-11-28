@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Flag the flat-story shapes (docs/research/writing/flat-story.md) in content/beats.yaml.
 
-Usage: flatcheck.py [beats.yaml] [--route route.json] [--decisions decisions.jsonl] [--days day_one,...]
+Usage: flatcheck.py [beats.yaml] [--route route.json] [--decisions decisions/] [--days day_one,...]
   --days: check only these day lists (default: every day_*: list). A promise only a left-out list opens may be
     advanced or paid by a spine beat unflagged.
   --route: JSON {"B1": day, ...} giving one simulated route's landing days; default is each beat's target_day.
     Optional keys for the in-day check: "hours" {"H1": h, ...} (game hours after the opening's end) and
     "visits" {"H1": "V1", ...}; defaults are each day entry's target_hour and visit.
 Prints one line per flag, by beat id (week flags name the week and its beats), then accepted exceptions.
-Exit status 1 if any flag is not accepted in decisions.jsonl ({"status": "accepted", "accepts": [{"beat", "flag"}]}).
+Exit status 1 if any flag is not accepted in a decisions/*.jsonl row ({"status": "accepted", "accepts": [{"beat", "flag"}]}).
 The side_layer: list is checked on every run (kind, chapter, thread, offers; no turn; no spine or chapter gate names a side id).
 Stdlib only: parses the flow-mapping subset of YAML that beats.yaml uses.
 
@@ -17,6 +17,7 @@ before the beat that closes the day (its last ref), so every spine check sees th
 by the hour (gates land before what they gate, shape runs, the near promise touched on every visit).
 """
 import argparse
+import glob
 import json
 import os
 import re
@@ -410,7 +411,7 @@ def main():
     ap.add_argument("beats", nargs="?", default=os.path.join(here, "..", "beats.yaml"))
     ap.add_argument("--route")
     ap.add_argument("--days", help="comma-separated day lists to check; default every day_*: list")
-    ap.add_argument("--decisions", default=os.path.join(here, "..", "decisions.jsonl"))
+    ap.add_argument("--decisions", default=os.path.join(here, "..", "decisions"))
     a = ap.parse_args()
     lines = open(a.beats).read().splitlines()
     beats, regions = read_block(lines, "beats"), read_block(lines, "regions")
@@ -420,8 +421,8 @@ def main():
     days = {n: read_block(lines, n) for n in day_names if n in only}
     route = json.load(open(a.route)) if a.route else {}
     accepted = set()
-    if os.path.exists(a.decisions):
-        for line in open(a.decisions):
+    for path in sorted(glob.glob(os.path.join(a.decisions, "*.jsonl"))):
+        for line in open(path):
             if line.strip():
                 d = json.loads(line)
                 if d.get("status") == "accepted":
