@@ -146,17 +146,22 @@ newcomer the story does not single out is handed to a group at the moment they j
 their arrival's answer that clears the mark and writes the line that says why, so a save already past the join gets the
 same change at its next load.
 
-**Groups follow what people can do** (#337, #569). A group holds the work its members can do and nothing more
-(`check_group_abilities` in `app/ashfall_app/rules/groups.py`). There are two crews from the first family's day,
-split by kind of work so two different jobs run at once, each under its own split: the field crew and the hearth crew,
-which share the staples. The early companions join the crew whose work suits them; where a person already has a
-hand-written card for a job the crew's list names, a town card's `own` lanes say so rather than expand a second one. A
-newcomer goes to the smallest crew they can join: a lane lists `crews`, and the loader sets its group to the smallest
-of them by arrival order, a tie to the first listed; a person only one crew can take lists that one, and a person the
-story places in a crew names `group`. Never by names.
+**Groups follow the kind of work** (#337, #569; owner, 2026-11-27). A crew does one kind of work and holds every job of that kind. There are
+two crews from the first family's day, split by kind so two different jobs run at once, each under its own split: the
+field crew and the hearth crew, which share the staples; the road crew keeps its own kind. A job says its kinds once, in
+its town card's `kinds` (`[]` when it is not crew work), and each crew declares its `kind` on its lane: the loader fans
+the card out to every crew whose kind it names. A crew is never listed in a town card's `lanes`, and a card any crew
+member can do must say its kinds, or `kinds = []` (`check_crew_work` in `app/ashfall_app/rules/groups.py`), so a new job
+cannot silently miss its crew. A person's own limits shape their own list and never their crew's: a member who cannot do
+a job leaves it on the crew all the same. The early companions join the crew whose work suits them; where a person already
+has a hand-written card for a job the crew's list names, a town card's `own` lanes say so rather than expand a second one.
+A newcomer goes to the smallest crew they can join: a lane lists `crews`, and the loader sets its group to the smallest of
+them by arrival order, a tie to the first listed; a person only one crew can take lists that one, and a person the story
+places in a crew names `group`. Never by names.
 
-**A crew's size is its multiplier.** A group card runs at its share times the crew's free members, linear and uncapped
-(engine `crewed`), so the spread between crews is a balance readout, kept even by the smallest-crew rule.
+**A crew's size is its multiplier.** A crew card runs at its share times the crew's free members, linear and uncapped
+(engine `crewed`), whoever of them could do the job alone, so the spread between crews is a balance readout, kept even by
+the smallest-crew rule.
 
 **Who can do which job.** Everyday work (cooking a stew, digging clay, weaving wattle) goes to most people by default,
 withheld only where the story gives a reason someone could not (a child, an injury, a role that rules it out); skilled
