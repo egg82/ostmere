@@ -73,15 +73,31 @@ def test_a_check_failure_names_the_chapter_that_broke_it_though_a_later_chapter_
     assert str(shipped_order.value).endswith(f" (in {DAY_ONE.name})")
 
 
+def _chapters_past_a_partial_world() -> int:
+    """How many shipped chapters make the first prefix that loads again after one that fails as a partial world."""
+    failed = False
+    for n in range(1, len(CHAPTERS) + 1):
+        try:
+            load_opening(OPENING, CHAPTERS[:n])
+        except ValueError:
+            failed = True
+        else:
+            if failed:
+                return n
+    raise AssertionError("no shipped prefix fails as a partial world and then loads: the test would not prove the skip")
+
+
 def test_a_content_error_in_a_late_chapter_names_it_with_the_real_message(tmp_path: Path):
     """Early prefixes of the shipped chapters fail the content check as partial worlds; the error named is still the
-    full state's own, against the chapter that brought it."""
-    last = CHAPTERS[-3]
+    full state's own, against the chapter that brought it. The plant goes in the first chapter after the last partial
+    world, with nothing shipped later loaded, so the cost stays flat as chapters ship."""
+    kept = _chapters_past_a_partial_world()
+    last = CHAPTERS[kept]
     text = last.read_text()
     assert text.count("\n[text]\n") == 1, f"anchor is not unique in {last.name}"
     plant = tmp_path / last.name
     plant.write_text(text.replace("\n[text]\n", '\n[text]\nt_digit_probe = "Day 9"\n'))
-    chapters = tuple(plant if c == last else c for c in CHAPTERS)
+    chapters = (*CHAPTERS[:kept], plant)
     with pytest.raises(ValueError) as e:
         load_opening(OPENING, chapters)
     assert "t_digit_probe" in str(e.value) and "holds a digit" in str(e.value)

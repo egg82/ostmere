@@ -13,10 +13,13 @@ Run from app/: python -m tools.weektwo_shards --check   exits 1 unless each week
                                                         exactly one shard, so a chapter added to routes.CHAPTERS fails
                                                         CI until a shard names it; then prints `matrix=<json>`, the
                                                         shard names, which CI's `shards-cover` hands the week-two job.
+                                                        Each shard is a separate pytest collection, so they run in
+                                                        parallel: serially their sum grows with every shard.
 """
 import json
 import os
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
@@ -138,8 +141,10 @@ def in_week_two(item: pytest.Item) -> bool:
 
 def check() -> int:
     env = {k: v for k, v in os.environ.items() if k != ENV}
-    whole = collected(ARGS, SELECT, env)
-    picked = {name: collected(ARGS, SELECT, {**env, ENV: name}) for name in SHARDS}
+    with ThreadPoolExecutor(4) as pool:
+        whole_job = pool.submit(collected, ARGS, SELECT, env)
+        jobs = {name: pool.submit(collected, ARGS, SELECT, {**env, ENV: name}) for name in SHARDS}
+        whole, picked = whole_job.result(), {name: job.result() for name, job in jobs.items()}
     print(f"week two: {len(whole)} tests; " + ", ".join(f"{name} {len(ids)}" for name, ids in picked.items()))
     seen: dict[str, list[str]] = {}
     for name, ids in picked.items():

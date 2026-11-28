@@ -19,7 +19,8 @@ class CampLevel(BaseModel):
     `lifted_by` lifts it."""
     lifted_by: list[str]
     """The cards any one of whose finish lifts this held level (its cap raise lets the bar fill on and the level
-    land); empty for a level nothing lifts."""
+    land); empty for a level nothing lifts. While the bar is held at the level, the marker names the first of these that is
+    in View.unlocked; none unlocked, it is unchanged."""
     names: list[Unlock]
     """What the level's pays words name (its modifiers' cards, standing actions and stores); none for a held level,
     whose marker is "?". The marker words its pays only once all are in View.unlocked."""
