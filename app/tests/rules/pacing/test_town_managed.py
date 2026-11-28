@@ -1,6 +1,6 @@
 """What the Town view asks the player to tune, reported per chapter end (tests/rules/play/town_readout.py) and never refused:
-how many is a feel (docs/decisions/people.md, "The mark: who keeps their own split"). What is refused is structure: a group
-holding work a member cannot do (rules/groups.py, check_group_abilities). On the shipped chapters, with planted changes."""
+how many is a feel (docs/decisions/people.md, "The mark: who keeps their own split"). What is refused is structure: a card a
+crew member does with no kinds (rules/groups.py, check_crew_work). On the shipped chapters, with planted changes."""
 import pytest
 
 from ashfall_app.rules.groups import check_groups, with_crews
@@ -54,18 +54,17 @@ def test_a_newcomer_left_with_a_bar_is_reported_as_a_person_and_nothing_fails(sh
     assert all(lane in own and all(lane not in m for m in groups.values()) for lane in named)
 
 
-def test_a_group_holds_only_work_each_member_with_a_list_can_do(shipped_opening: Opening):
+def test_a_town_card_a_crew_member_does_must_say_its_kinds(shipped_opening: Opening):
     check_groups(shipped_opening)
-    with pytest.raises(ValueError, match=r"town card \{lane\}_fog_fish: is on group g_hearth, and its members n11 cannot do it"):
+    unsaid = shipped_opening.model_copy(update={"town_cards": [tc.model_copy(update={"kinds": None}) if tc.id == "{lane}_fog_fish" else tc
+                                                               for tc in shipped_opening.town_cards]})
+    with pytest.raises(ValueError, match=r"town card \{lane\}_fog_fish: is done by a crew member and has no `kinds`"):
+        check_groups(unsaid)
+
+
+def test_a_crew_is_never_listed_by_hand(shipped_opening: Opening):
+    with pytest.raises(ValueError, match=r"town card \{lane\}_fog_fish: lists crews g_hearth in lanes"):
         check_groups(on_lanes(shipped_opening, "{lane}_fog_fish", "g_hearth"))
-
-
-def test_a_member_with_no_list_of_their_own_takes_the_groups(shipped_opening: Opening):
-    listless = {x.id for x in shipped_opening.lanes if x.group == "g_road"} - {ln for tc in shipped_opening.town_cards
-                                                                              for ln in tc.lanes}
-    assert listless
-    check_groups(on_lanes(shipped_opening, "{lane}_clear_roofs", "g_road", *sorted(
-        {x.id for x in shipped_opening.lanes if x.group == "g_road"} - listless)))
 
 
 PEOPLE = {f"n{i}" for i in range(2, 13)}

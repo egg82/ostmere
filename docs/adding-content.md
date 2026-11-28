@@ -36,8 +36,9 @@ check them.
 6. **The next step is on screen with how far along it is.** Whatever holds the next beat, including a hidden store a
    trigger feeding the beat waits on, shows as the goal with its value (`app/tests/rules/content/test_goal_defs.py`). An aim
    whose step is done gives way.
-7. **Groups and twins.** A town card on a group is on every member with their own list; a trip's town twin adds the
-   same to a shared tally (`check_group_abilities`, `check_player_only`). Town view rows and crew sizes are a readout
+7. **Groups and twins.** A town card says its `kinds` (`[]` when it is not crew work): each crew of one of those kinds takes it, and a crew is never
+   listed in `lanes` (`check_crew_work`). A new job of a kind needs no edit to the crews. A trip's town twin adds the
+   same to a shared tally (`check_player_only`). Town view rows and crew sizes are a readout
    (`app/tests/readouts/rules/town.txt`): read it. Moving people: rebase a copy of the owner's save under the branch and
    check the hand-over fires once and nothing goes negative (`app/tests/rules/content/test_hand_over_rebase.py`).
 8. **Every tapped card has its own upside text.** A missing `upside_key` is gated; two cards sharing one is not.

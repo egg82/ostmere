@@ -82,7 +82,8 @@ outcome = { stores = [{ store = "stakes", items = 1 }] }
 id = "{lane}_stakes"
 site = { layer = "stakes_1" }
 twin_of = "cut_stakes"
-lanes = ["n1", "n2", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n14", "n15", "g_field", "n23", "g_road"]
+lanes = ["n1", "n2", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n14", "n15", "n23"]
+kinds = ["field", "road"]
 presentation = "action"
 label_key = "c_lane_stakes"
 upside_key = "up_cut_stakes"
@@ -119,7 +120,8 @@ outcome = { stores = [{ store = "cord", items = 1 }] }
 id = "{lane}_cord"
 site = { no_site = "cord is twisted seated, by the fire in the scene, from wood anywhere in the camp; no layer of its own" }
 twin_of = "twist_cord"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+kinds = ["field"]
 presentation = "action"
 label_key = "c_twist_cord"
 upside_key = "up_twist_cord"
@@ -254,7 +256,8 @@ outcome = { stores = [{ store = "fungus", items = 2 }] }
 id = "{lane}_pick"
 site = { layer = "birch_log" }
 twin_of = "pick_fungus"
-lanes = ["n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+kinds = ["field"]
 presentation = "action"
 label_key = "c_lane_pick"
 upside_key = "up_pick_fungus"
@@ -317,7 +320,8 @@ modifiers = [
 id = "{lane}_fungus_stew"
 twin_of = "fungus_stew"
 site = { layer = "fire_lit" }
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n14", "n15", "g_hearth", "n23", "g_road"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n14", "n15", "n23"]
+kinds = ["hearth", "road"]
 presentation = "action"
 label_key = "c_fungus_stew"
 upside_key = "up_fungus_stew"
@@ -417,7 +421,8 @@ outcome = { stores = [{ store = "ash", items = 4 }] }
 id = "{lane}_clear_roofs"
 site = { no_site = "the roofs of the camp carry the ash, every build's own; no one place in the scene" }
 twin_of = "clear_roofs"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+kinds = ["field"]
 own = ["n2"]
 presentation = "action"
 label_key = "c_clear_roofs"

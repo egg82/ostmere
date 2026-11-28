@@ -43,8 +43,8 @@ def shares(**by_card: int) -> dict[str, int]:
 
 
 def _card(pattern: str, label: str, store: str) -> str:
-    lanes = ", ".join(f'"{x}"' for x in (*PEOPLE, "t_p"))
-    return (f'[[town_cards]]\nid = "{pattern}"\nlanes = [{lanes}]\npresentation = "action"\nlabel_key = "{label}"\n'
+    lanes = ", ".join(f'"{x}"' for x in PEOPLE)
+    return (f'[[town_cards]]\nid = "{pattern}"\nlanes = [{lanes}]\nkinds = ["t_work"]\npresentation = "action"\nlabel_key = "{label}"\n'
             f'upside_key = "t_up"\nwork_s = 10\nmakes = [{{ store = "{store}", items_per_hour = 1 }}]\n\n')
 
 
@@ -80,7 +80,7 @@ def chapter(joins: Mapping[str, int] | None = None, casts: str | None = LEAD, le
     own); with `crew` t_m joins the crew of t_p (its group's cards, no split of its own)."""
     at = {**{p: 0 for p in PEOPLE}, **(joins or {})}
     out = ['version = 1\n\n[[stores]]\nid = "t_heap"\nlabel_key = "t_s_heap"\ncap_items = 20\n\n[[stores]]\nid = "t_load"\nlabel_key = "t_s_load"\ncap_items = 20\n\n']
-    out.append(_lane("t_p", "pooled = true\n"))
+    out.append(_lane("t_p", 'pooled = true\nkind = "t_work"\n'))
     out.append(_lane("t_pot", "station = true\n"))
     for p in PEOPLE:
         out.append(_person(p, ('group = "t_p"\n' if p == "t_m" else "") + (f"later_labels = [{later}]\n" if p == "t_a" and later else "")))
