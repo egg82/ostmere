@@ -24,6 +24,7 @@ spoil the owner").
     python -m tests.weektwo.report typical --twentynine  # through day twenty-nine to B22, the same
     python -m tests.weektwo.report typical --thirty  # through day thirty to B23, the same
     python -m tests.weektwo.report typical --thirtyone  # through day thirty-one to B24, the same
+    python -m tests.weektwo.report typical --thirtythree  # through day thirty-three to Y15, the same
 """
 import sys
 import time
@@ -45,7 +46,7 @@ from tests.weekone import verdicts as v1
 from tests.weekone.report import chapter_text, fought
 from tests.weektwo import pacing, verdicts
 from tests.weektwo.routes import (
-    NINE_PUSH_ROUTES, eighteen, eleven, fifteen, nine, nineteen, sixteen, thirty, thirtyone, twelve, twentyfive, twentynine, twentyseven, twentythree, twentytwo, week2,
+    NINE_PUSH_ROUTES, eighteen, eleven, fifteen, nine, nineteen, sixteen, thirty, thirtyone, thirtythree, twelve, twentyfive, twentynine, twentyseven, twentythree, twentytwo, week2,
 )
 
 HOURS = ("G2", "B8", "U1", "U2", "SL15", "SL16", "U3", "B9")
@@ -63,6 +64,7 @@ TWENTYSEVEN_HOURS = ("B21", "I11", "SL36", "I12", "A40", "I13")
 TWENTYNINE_HOURS = ("I13", "Y1", "SL37", "Y2", "Y3", "O-first-run", "A41", "B22")
 THIRTY_HOURS = ("B22", "Y4", "SL38", "Y5", "Y6", "SL39", "Y7", "A42", "B23")
 THIRTY_ONE_HOURS = ("B23", "Y8", "Y9", "O-burners", "SL40", "Y10", "SL41", "Y11", "A43", "B24")
+THIRTY_THREE_HOURS = ("B24", "Y12", "Y13", "A44", "B25", "Y14", "Y15")
 ROUTES = NINE_PUSH_ROUTES
 """The routes each chapter's readout lists."""
 PACING = tuple(f"weektwo-pacing-{r}" for r in ROUTES)
@@ -103,7 +105,7 @@ def readouts() -> dict[str, str]:
         texts[f"weektwo-{chapter}"] = chapter_text(chapter, found, checks2.marks(p, first=1),
                                                    v1.cap_lines(p, verdicts.CHAPTERS[chapter]))
     for name in ROUTES:
-        p = thirtyone(name)
+        p = thirtythree(name)
         texts[f"weektwo-pacing-{name}"] = pacing.text(name, p, verdicts.calendar_days(p))
     return texts
 
@@ -119,7 +121,8 @@ def route_report(name: str, seed: int, p: DayTwoPlayer, chapter: Later = verdict
              verdicts.TWENTYSEVEN.start: TWENTYSEVEN_HOURS,
              verdicts.TWENTYNINE.start: TWENTYNINE_HOURS,
              verdicts.THIRTY.start: THIRTY_HOURS,
-             verdicts.THIRTY_ONE.start: THIRTY_ONE_HOURS}.get(chapter.start, TWELVE_HOURS)
+             verdicts.THIRTY_ONE.start: THIRTY_ONE_HOURS,
+             verdicts.THIRTY_THREE.start: THIRTY_THREE_HOURS}.get(chapter.start, TWELVE_HOURS)
     print(f"\n{name} seed {seed}: hours " + ", ".join(f"{b} {v1.hour(p, b)}" for b in hours))
     print(f"  fights: {fought(p)}")
     print(f"  {abs_band.summary(name, verdicts.days(p, chapter), abs_band.load_pace())}")
@@ -145,11 +148,13 @@ def main(argv: list[str]) -> int:
     to_sixteen, to_eighteen, to_nineteen = "--sixteen" in argv, "--eighteen" in argv, "--nineteen" in argv
     to_twentytwo, to_twentythree, to_twentyfive = "--twentytwo" in argv, "--twentythree" in argv, "--twentyfive" in argv
     to_twentyseven, to_twentynine, to_thirty = "--twentyseven" in argv, "--twentynine" in argv, "--thirty" in argv
-    to_thirtyone = "--thirtyone" in argv
+    to_thirtyone, to_thirtythree = "--thirtyone" in argv, "--thirtythree" in argv
     for seed in range(seeds):
         for name in names:
             t0 = time.process_time()
-            if to_thirtyone:
+            if to_thirtythree:
+                route_report(name, seed, thirtythree(name, seed), verdicts.THIRTY_THREE)
+            elif to_thirtyone:
                 route_report(name, seed, thirtyone(name, seed), verdicts.THIRTY_ONE)
             elif to_thirty:
                 route_report(name, seed, thirty(name, seed), verdicts.THIRTY)

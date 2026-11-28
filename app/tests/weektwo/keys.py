@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any
 
 ORDER = ("week1", "eight", "nine", "eleven", "twelve", "fifteen", "sixteen", "eighteen", "nineteen", "twentytwo",
-         "twentythree", "twentyfive", "twentyseven", "twentynine", "thirty", "thirtyone")
+         "twentythree", "twentyfive", "twentyseven", "twentynine", "thirty", "thirtyone", "thirtythree")
 """Every chapter with a saved end, in the order their plays build on each other ("week1" is week one's)."""
 APP = Path(__file__).resolve().parents[2]
 OPENING = "ashfall_app/rules"
@@ -40,7 +40,7 @@ DAY_FILES = {"week1": ("day_one", "day_two", "day_three", "day_four", "day_five"
              "nineteen": ("day_nineteen",), "twentytwo": ("day_twenty_two",), "twentythree": ("day_twenty_three",),
              "twentyfive": ("day_twenty_five",), "twentyseven": ("day_twenty_seven",),
              "twentynine": ("day_twenty_nine",), "thirty": ("day_thirty",),
-             "thirtyone": ("day_thirty_one",)}
+             "thirtyone": ("day_thirty_one",), "thirtythree": ("day_thirty_three",)}
 """Each chapter's toml files in the opening (schema.CHAPTERS)."""
 
 

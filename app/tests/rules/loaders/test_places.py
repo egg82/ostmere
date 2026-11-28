@@ -123,7 +123,12 @@ def test_the_shipped_content_serves_its_places_in_content_order(shipped_ruleset:
     assert [(p.place, p.stamp, p.reveal.id, p.label_key) for p in places] == [
         ("p_ridge", Stamp.MOUNTAIN, "r2_open", "place_ridge"), ("p_far_hills", Stamp.RANGE, "r2_open", None),
         ("p_ashwood", Stamp.FOREST, "ashwood", "place_ashwood"), ("p_square_hill", Stamp.HILL_VILLAGE, "square_hill_seen", None),
-        ("p_warm_patch", Stamp.FORT, "post_shown", "place_warm_patch")]
+        ("p_warm_patch", Stamp.FORT, "post_shown", "place_warm_patch"), ("p_house", Stamp.FORT, "hill_walked", "place_house"),
+        *((p, Stamp.VILLAGE, "house_woken", None) for p in ("p_mark_ridge", "p_mark_west", "p_ring_north", "p_ring_east",
+                                                             "p_ring_south", "p_ring_west")),
+        ("p_marker_hill", Stamp.CROSSING, "marker_found", "place_marker_hill")]
+    over = {p.place: (p.over, p.labelled_after.id if p.labelled_after else None) for p in places if p.over or p.labelled_after}
+    assert over == {"p_house": ("p_square_hill", "house_found"), "p_mark_ridge": ("p_ridge", None)}
 
 
 def test_the_spec_names_the_maps_components():

@@ -25,7 +25,7 @@ from tests.weektwo import content as w2
 from tests.weektwo import counters, ends
 from tests.weektwo import weekfive as w5
 from tests.weektwo import weekfour as w4
-from tests.weektwo.routes import eighteen, eleven, fifteen, nine, nineteen, sixteen, thirty, thirtyone, twelve, twentyfive, twentynine, twentyseven, twentythree, twentytwo, week2
+from tests.weektwo.routes import eighteen, eleven, fifteen, nine, nineteen, sixteen, thirty, thirtyone, thirtythree, twelve, twentyfive, twentynine, twentyseven, twentythree, twentytwo, week2
 
 EIGHT = w2.day_eight("typical")
 """The chapter's span: its start and stop beats are the same on every route."""
@@ -43,11 +43,13 @@ TWENTYSEVEN = w4.day_twenty_seven("typical")
 TWENTYNINE = w5.day_twenty_nine("typical")
 THIRTY = w5.day_thirty("typical")
 THIRTY_ONE = w5.day_thirty_one("typical")
+THIRTY_THREE = w5.day_thirty_three("typical")
 BEATS = {EIGHT.start: ("B8", "B9"), NINE.start: ("B10",), ELEVEN.start: ("B11",), TWELVE.start: ("B12",),
          FIFTEEN.start: ("B14",), SIXTEEN.start: ("B15",), EIGHTEEN.start: ("B16",),
          NINETEEN.start: ("B17",), TWENTYTWO.start: ("B18", "B19"),
          TWENTYTHREE.start: ("B20",), TWENTYFIVE.start: ("B21",), TWENTYSEVEN.start: (),
-         TWENTYNINE.start: ("B22",), THIRTY.start: ("B23",), THIRTY_ONE.start: ("B24",)}
+         TWENTYNINE.start: ("B22",), THIRTY.start: ("B23",), THIRTY_ONE.start: ("B24",),
+         THIRTY_THREE.start: ("B25",)}
 """The spine beats each chapter lands, by the beat it starts at, each held to its band."""
 BOOSTS = (*v1.BOOSTS, str(w2.HIDE_FLAPS))
 """What the babysitter taps the second it can: week one's and the chapter's comfort. The build is its order's in both."""
@@ -63,11 +65,13 @@ def days(p: DayTwoPlayer, chapter: Later = EIGHT) -> dict[str, float]:
 CHAPTERS = {"eight": EIGHT, "nine": NINE, "eleven": ELEVEN, "twelve": TWELVE, "fifteen": FIFTEEN, "sixteen": SIXTEEN,
             "eighteen": EIGHTEEN, "nineteen": NINETEEN, "twentytwo": TWENTYTWO,
             "twentythree": TWENTYTHREE, "twentyfive": TWENTYFIVE, "twentyseven": TWENTYSEVEN,
-            "twentynine": TWENTYNINE, "thirty": THIRTY, "thirtyone": THIRTY_ONE}
+            "twentynine": TWENTYNINE, "thirty": THIRTY, "thirtyone": THIRTY_ONE,
+            "thirtythree": THIRTY_THREE}
 PLAYS = {"eight": week2, "nine": nine, "eleven": eleven, "twelve": twelve, "fifteen": fifteen, "sixteen": sixteen,
          "eighteen": eighteen, "nineteen": nineteen, "twentytwo": twentytwo,
          "twentythree": twentythree, "twentyfive": twentyfive, "twentyseven": twentyseven,
-         "twentynine": twentynine, "thirty": thirty, "thirtyone": thirtyone}
+         "twentynine": twentynine, "thirty": thirty, "thirtyone": thirtyone,
+         "thirtythree": thirtythree}
 """Each chapter's typical play is the one its counting reads."""
 PART_STEPS = 1
 ALL = -1
