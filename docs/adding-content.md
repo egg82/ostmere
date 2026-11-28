@@ -38,7 +38,7 @@ check them.
    whose step is done gives way.
 7. **Groups and twins.** A town card on a group is on every member with their own list; a trip's town twin adds the
    same to a shared tally (`check_group_abilities`, `check_player_only`). Town view rows and crew sizes are a readout
-   (`app/tests/readouts/town.txt`): read it. Moving people: rebase a copy of the owner's save under the branch and
+   (`app/tests/readouts/rules/town.txt`): read it. Moving people: rebase a copy of the owner's save under the branch and
    check the hand-over fires once and nothing goes negative (`app/tests/rules/content/test_hand_over_rebase.py`).
 8. **Every tapped card has its own upside text.** A missing `upside_key` is gated; two cards sharing one is not.
 9. **Nothing is named before it exists.** A line, chip or offer must not mention a thing the player can't have yet on

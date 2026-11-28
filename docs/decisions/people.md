@@ -139,7 +139,7 @@ content has one.
 
 How many things the Town view asks the player to tune (a person keeping their own split, or a group with a joined member
 who does not; a station such as the pot is neither) is a feel, "five-ish" by the owner's reckoning (2026-11-25), with six already "a bit much" (2026-11-26), so it is
-a readout and never a check: `app/tests/readouts/town.txt` lists, at each chapter's end, who keeps their own split and
+a readout and never a check: `app/tests/readouts/rules/town.txt` lists, at each chapter's end, who keeps their own split and
 each group with its members, by id, and beside each crew its size, its multiplier and the spread between the
 largest and the smallest, a readout like the rows, never a check. Notables keep their own split: the story is written around them as individuals. A
 newcomer the story does not single out is handed to a group at the moment they join, by the join or by a trigger of

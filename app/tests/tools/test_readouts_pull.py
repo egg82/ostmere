@@ -18,8 +18,11 @@ def test_copy_in_across_artifact_folders(tmp_path: Path):
     (src / "readouts-new-a-0" / "dayone-typical.txt").write_text("new\n")
     (src / "readouts-new-b" / "ANCHOR").write_text("x")
     (src / "readouts-new-b" / "other.txt").write_text("x")
-    (dst / "dayone-typical.txt").write_text("old\n")
+    (src / "readouts-new-a-0" / "opening.txt").write_text("new\n")
+    (dst / "dayone").mkdir()
+    (dst / "dayone" / "dayone-typical.txt").write_text("old\n")
     written, refused = copy_in(src, dst)
-    assert written == [dst / "dayone-typical.txt"] and (dst / "dayone-typical.txt").read_text() == "new\n"
+    assert written == [dst / "dayone" / "dayone-typical.txt", dst / "rules" / "opening.txt"]
+    assert all(f.read_text() == "new\n" for f in written)
     assert refused == ["readouts-new-b/ANCHOR", "readouts-new-b/other.txt"]
-    assert sorted(p.name for p in dst.iterdir()) == ["dayone-typical.txt"]
+    assert sorted(str(p.relative_to(dst)) for p in dst.rglob("*.txt")) == ["dayone/dayone-typical.txt", "rules/opening.txt"]
