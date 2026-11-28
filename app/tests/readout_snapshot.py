@@ -1,8 +1,9 @@
 """The pacing simulator's readouts, reported against their committed text (docs/design/sim-invariants.md). A readout
 prints the rhythm of play, which is taste: what it says is never judged against a threshold. Its text is committed under
-readouts/; when today's text differs, `check` reports the diff as a ReadoutChanged warning (pytest's warnings summary,
-so the job's log shows it) and writes the new text under READOUTS_OUT, which the job uploads and then fails on: a
-committed text that differs from what the code renders is stale. A readout that rendered nothing fails too. Refresh with
+readouts/<group> (`group`); when today's text differs, `check` reports the diff as a ReadoutChanged warning (pytest's
+warnings summary, so the job's log shows it) and writes the new text under READOUTS_OUT, which the job uploads and then
+fails on: a committed text that differs from what the code renders is stale. A readout that rendered nothing fails too.
+Refresh with
 `python -m tools.readouts_pull <run-id>` from app/, or write the text again locally to commit the new rhythm.
 
     python -m tests.readout_snapshot --write              # from app/: every package's readouts
@@ -34,6 +35,8 @@ PACKAGES = {
     "makers": "tests.makers.readout",
     "worth": "tests.worth.readout",
 }
+GROUPS = {"opening": "rules", "tracks": "rules", "town": "rules", "closecalls": "rules"}
+"""The subdirectory of readouts/ a package's files live in: its own name unless listed here."""
 OUT_ENV = "READOUTS_OUT"
 """Where a changed readout's new text is written for the CI job to keep as an artifact."""
 SHOWN = 60
@@ -44,8 +47,14 @@ class ReadoutChanged(UserWarning):
     """Today's readout differs from the committed text: the test warns; the job fails after uploading it."""
 
 
+def group(name: str) -> str:
+    """The subdirectory of readouts/ holding readout `name` (a package's name, or its name then `-` and more)."""
+    package = name.split("-")[0]
+    return GROUPS.get(package, package)
+
+
 def path(name: str, root: Path = DIR) -> Path:
-    return root / f"{name}.txt"
+    return root / group(name) / f"{name}.txt"
 
 
 def differences(name: str, text: str, root: Path = DIR) -> list[str]:
@@ -73,15 +82,15 @@ def check(name: str, text: str, root: Path = DIR) -> list[str]:
 
 
 def write(name: str, text: str, root: Path = DIR) -> Path:
-    root.mkdir(parents=True, exist_ok=True)
     f = path(name, root)
+    f.parent.mkdir(parents=True, exist_ok=True)
     f.write_text(text if text.endswith("\n") else text + "\n")
     return f
 
 
 def stray(package: str, names: tuple[str, ...], root: Path = DIR) -> tuple[list[str], list[str]]:
     """(committed files of `package` no readout writes, readouts of `package` with no committed file)."""
-    have = {f.stem for f in root.glob("*.txt") if f.stem == package or f.stem.startswith(package + "-")}
+    have = {f.stem for f in (root / group(package)).glob("*.txt") if f.stem == package or f.stem.startswith(package + "-")}
     return sorted(have - set(names)), sorted(set(names) - have)
 
 

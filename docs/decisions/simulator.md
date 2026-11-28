@@ -145,7 +145,7 @@ It fails only on an invariant (softlock, spiral, a tool user forced to babysit, 
 (`app/tests/dayone/player/routes.py`, `TOOL_USERS`), drawn times coming true, and players who skip the
 tools landing behind (`app/tests/dayone/human/human_flags.py`, `lands_behind`). The rhythm (per-visit and per-absence
 counters, beats beside their target days, calendar days, the human-paced model, each skill's ladder, what a re-mix is
-worth) is printed by each package's `report.py` and committed under `app/tests/readouts/`;
+worth) is printed by each package's `report.py` and committed under `app/tests/readouts/<group>/`;
 `app/tests/readout_snapshot.py` reports a readout whose text changed, and
 `python -m tests.readout_snapshot --write` commits every package's at once. Week two plays on from week one's plays at
 G2 (`app/tests/weektwo/routes.py`), its decide counter refusing a queued stage (`app/tests/weektwo/counters.py`).
