@@ -5,7 +5,7 @@ stayed there ("Each new layer reworks the old ones", docs/decisions.md), then ea
 days (sources.py) and whether one saved mix shape always wins (dominance.py: at each sampled instant every saved hands
 mix is scored alone as the running mix, by the levels it gains per game hour, and the shape of the best one wins; the
 shapes and the definition are in dominance.py). Times in game days, shares in percent. It reports and fails nothing; its text per push route (NAMES) is committed under tests/readouts/ and compared by
-tests/weektwo/test_ladder_readouts.py, whose job has week two's plays. Ids, levels and times only (CLAUDE.md, "Never
+tests/weektwo/readouts/test_ladder_readouts.py, whose job has week two's plays. Ids, levels and times only (CLAUDE.md, "Never
 spoil the owner").
 
     python -m tests.ladder.readout                    # from app/: the push routes through day twelve, seed 0

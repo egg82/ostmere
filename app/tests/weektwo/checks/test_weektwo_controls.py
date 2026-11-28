@@ -75,7 +75,7 @@ def read(rules: Rules, step: Step) -> Read:
                 counters.decides(step, rules))
 
 
-PACK_SAVE = Path(__file__).resolve().parent / "captured" / "eight-typical-pack.json"
+PACK_SAVE = Path(__file__).resolve().parents[1] / "captured" / "eight-typical-pack.json"
 """A real save the reads start from, so day eight's pacing does not move them: {commit, route, visit, next_return,
 save}, `save` being encode()'s envelope as JSON (canonical() gives back its text)."""
 

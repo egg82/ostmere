@@ -4,7 +4,7 @@ tests/worth/probe.py). Per day: keeper's worth at its visits, tuner's moments an
 by decile (the two controls among them), fresh's worth with and without a cause (what the threshold is read from), how
 far the kept rates came true, the opening's moments per visit beside each week's, the longest stretch with none, and
 every visit. It reports and fails nothing; its text is committed under tests/readouts/ and compared by
-tests/weektwo/test_worth_readouts.py, whose job has day fifteen's plays, with the route with its own rules (stints.py, its own
+tests/weektwo/readouts/test_worth_readouts.py, whose job has day fifteen's plays, with the route with its own rules (stints.py, its own
 text). Goals are skill ids and levels, causes are kinds (CLAUDE.md, "Never spoil the owner").
 
     python -m tests.worth.readout            # from app/: print the readout and its CPU cost

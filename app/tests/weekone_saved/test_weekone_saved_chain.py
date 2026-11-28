@@ -1,7 +1,7 @@
 """Week one's saved ends (tests/weektwo/ends.py), which day eight plays on from in week two's job, are today's play: each
 saved route's week one, as week one's job played and exported it (tests/weekone/test_weekone_export.py), ends where its
 saved end says. This is the first link of the saved chain; week two's job checks the rest
-(tests/weektwo/test_weektwo_saved.py). Where no export is present the play is made here from the start; under
+(tests/weektwo/saves/test_weektwo_saved.py). Where no export is present the play is made here from the start; under
 ASHFALL_REQUIRE_SAVED, which CI sets, a missing export is a failure."""
 import os
 

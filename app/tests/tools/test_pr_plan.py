@@ -36,14 +36,14 @@ def test_a_chapter_with_two_routes_plays_one_job_per_shard_and_a_long_shard_is_l
     got = plan(changed(thirtyone="x"), False, [])
     assert (got["shards"], got["left"]) == (["thirtyone-whenever"], ["thirtyone-sharp", "thirtyone"])
     got = plan(changed(thirtythree="x"), False, [])
-    assert (got["shards"], got["left"]) == (["thirtythree-whenever"], ["thirtythree-sharp", "thirtythree"])
+    assert (got["shards"], got["left"]) == (["thirtythree-whenever"], ["thirtythree-sharp", "thirtythree", "thirtythree-typical-b", "thirtythree-whenever-b"])
     assert plan(changed(eighteen="x"), False, [])["shards"] == ["eighteen"]
     assert plan(changed(fifteen="x"), False, [])["shards"] == ["fifteen"]
 
 
 def test_a_changed_week_two_test_file_is_sliced_with_no_chapter_touched():
-    got = plan(BASE, False, ["app/tests/weektwo/test_weektwo_twelve.py", "app/tests/weektwo/ends.py", "docs/x.md"])
-    assert (got["mode"], got["chapters"], got["files"]) == ("slice", [], ["app/tests/weektwo/test_weektwo_twelve.py"])
+    got = plan(BASE, False, ["app/tests/weektwo/chapters/test_weektwo_twelve.py", "app/tests/weektwo/ends.py", "docs/x.md"])
+    assert (got["mode"], got["chapters"], got["files"]) == ("slice", [], ["app/tests/weektwo/chapters/test_weektwo_twelve.py"])
     assert got["shards"] == [n for n in SHARDS if n not in NIGHTLY_ONLY]
 
 
