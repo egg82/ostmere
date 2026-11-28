@@ -1177,6 +1177,16 @@
       "wounds": []
     },
     {
+      "card": "g_field_fog_fish",
+      "makes": [
+        "catch"
+      ],
+      "takes": [
+        "fish_rising"
+      ],
+      "wounds": []
+    },
+    {
       "card": "g_field_clear_road",
       "makes": [
         "cleared"
@@ -1847,6 +1857,14 @@
       "wounds": []
     },
     {
+      "card": "g_hearth_wash_meat",
+      "makes": [],
+      "takes": [
+        "film"
+      ],
+      "wounds": []
+    },
+    {
       "card": "g_hearth_clear_road",
       "makes": [
         "cleared"
@@ -1912,6 +1930,16 @@
         "wind_torn",
         "pelt",
         "stones"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_hearth_cord",
+      "makes": [
+        "cord"
+      ],
+      "takes": [
+        "damp_wood"
       ],
       "wounds": []
     },
@@ -6239,6 +6267,7 @@
       "made_by": [
         "n1_fog_fish",
         "n2_fog_fish",
+        "g_field_fog_fish",
         "n3_fog_fish",
         "n4_fog_fish",
         "hunt_wolf",
@@ -6642,6 +6671,7 @@
         "n2_cord",
         "g_field_cord",
         "n3_cord",
+        "g_hearth_cord",
         "twist_cord",
         "n4_cord",
         "n5_cord",

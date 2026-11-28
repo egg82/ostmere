@@ -98,7 +98,8 @@ outcome = { stores = [{ store = "windbreak", items = 6 }] }
 id = "{lane}_build_windbreak"
 site = { no_site = "the stones are stacked into a windbreak that no layer shows: the scene draws nothing for what they make" }
 twin_of = "build_windbreak"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+kinds = ["field"]
 presentation = "action"
 label_key = "c_build_windbreak"
 upside_key = "up_build_windbreak"
@@ -434,6 +435,7 @@ id = "g_hearth"
 label_key = "lane_g_hearth"
 ruled = true
 pooled = true
+kind = "hearth"
 tied = "n4"
 
 [[lanes]]

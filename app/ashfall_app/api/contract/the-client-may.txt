@@ -95,7 +95,8 @@ THE CLIENT MAY
     pays_key (its {from} and {to} slots filled from pays_from and pays_to, {pct} from change_bp) in ui.camp.pays, shown only once
     every one of its `names` is in view.unlocked. A `held` level is not counted as reached while none of its
     lifted_by cards (a list of card ids, any one of which lifts it; empty, nothing does) is in view.completed: the
-    bar fills to it and holds, its marker still showing.
+    bar fills to it and holds, its marker still showing. While the bar is held there and one of its lifted_by cards is
+    in view.unlocked, the marker reads ui.camp.lifted instead ({card} that card's label); with none unlocked it is as above.
     It shows once view.unlocked holds that store and its first level is reached, and is not tappable.
   - fill a text entry's slots, and only that, and format numbers by the one rule below (Text and numbers).
   - offer to add to a mix any card in view.cards whose CardInfo.lane is "hands"; show a mix by its id (its name).

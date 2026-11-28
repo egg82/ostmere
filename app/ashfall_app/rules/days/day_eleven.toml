@@ -132,7 +132,8 @@ cap_items = 1
 [[town_cards]]
 id = "{lane}_watch"
 site = { layer = "watch_lit" }
-lanes = ["n2", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field", "g_hearth"]
+lanes = ["n2", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+kinds = ["field", "hearth"]
 own = ["n2", "n4"]
 presentation = "action"
 label_key = "c_lane_watch"

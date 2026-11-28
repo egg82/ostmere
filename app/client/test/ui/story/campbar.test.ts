@@ -105,6 +105,21 @@ check("a marker naming a locked store shows no words, only that there is a next"
   expect("unlocked: its words", next.textContent === naming.text.get(UI.nextUnnamed), false);
 }
 
+// A held level the bar is filled to names the card that lifts it, once the player has unlocked that card; until then the
+// marker is as it was, so a card not yet met is never named. A level nothing lifts is unchanged either way.
+const withCard = (v: View, card: string): View => ({ ...v, unlocked: [...v.unlocked.filter((u) => !(u.category === "card" && u.id === card)), { category: "card" as const, id: card }] });
+const withoutCard = (v: View, card: string): View => ({ ...v, unlocked: v.unlocked.filter((u) => !(u.category === "card" && u.id === card)) });
+check("a held level's marker names its lifting card once unlocked and the bar is held", () => {
+  const c = lifted(["gather"]);
+  const words = c.text.fill(UI.campLifted, { level: c.format.count(2), card: c.cardLabel("gather") });
+  expect("unlocked, bar held", bar(c, withCard(at(200, []), "gather")).next, words);
+  const locked = withoutCard(at(200, []), "gather");
+  expect("locked: as before", bar(c, locked).next, bar(lifted([]), locked).next);
+  expect("locked: still the marker's own words", bar(c, locked).next !== words, true);
+  expect("unlocked, bar not yet at it", bar(c, withCard(at(60, []), "gather")).next, "level 2: something new");
+  expect("no lifted_by: unchanged", bar(lifted([]), withCard(at(200, []), "gather")).next, bar(lifted([]), at(200, [])).next);
+});
+
 // The bar arrives at its first level: hidden while no level is reached, drawn from the first one on, already pointing
 // at the next. Reached live, it arrives (its turn in the queue) with its level burst; a page opened past it just draws it.
 {

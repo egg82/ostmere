@@ -228,7 +228,8 @@ inputs = [{ store = "wind_torn", items = 12 }, { store = "pelt", items = 3 }, { 
 id = "{lane}_peg_flaps"
 site = { layer = "hide_flaps_2" }
 twin_of = "peg_flaps"
-lanes = ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
+lanes = ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+kinds = ["hearth"]
 presentation = "action"
 label_key = "c_peg_flaps"
 upside_key = "up_peg_flaps"

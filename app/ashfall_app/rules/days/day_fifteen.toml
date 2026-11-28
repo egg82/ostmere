@@ -53,7 +53,8 @@ outcome = { stores = [{ store = "beams", items = 1 }] }
 id = "{lane}_pull_beams"
 site = { no_site = "beams are pulled out of the ruin's fallen roof under the far wall stub, which is backdrop and not a layer of its own" }
 twin_of = "pull_beams"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+kinds = ["field"]
 presentation = "action"
 label_key = "c_pull_beams"
 upside_key = "up_beams"
@@ -277,7 +278,8 @@ outcome = { stores = [{ store = "barley", items = 2 }] }
 id = "{lane}_reap"
 twin_of = "reap"
 site = { layer = "beds_3" }
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field", "g_hearth"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+kinds = ["field", "hearth"]
 presentation = "action"
 label_key = "c_lane_reap"
 upside_key = "up_reap"
@@ -354,7 +356,8 @@ outcome = { modifiers = [{ target = "rate", id = "pot_barley_stew", flow = "cost
 id = "{lane}_barley_stew"
 site = { layer = "fire_lit" }
 twin_of = "barley_stew"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+kinds = ["hearth"]
 presentation = "action"
 label_key = "c_barley_stew"
 upside_key = "up_barley_stew"
@@ -454,7 +457,8 @@ tally = true
 id = "{lane}_cover_beds"
 site = { layer = "beds_3" }
 twin_of = "cover_beds"
-lanes = ["n1", "n2", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
+lanes = ["n1", "n2", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+kinds = ["hearth"]
 presentation = "action"
 label_key = "c_cover_beds"
 upside_key = "up_cover_beds"
@@ -713,7 +717,8 @@ outcome = { stores = [{ store = "cordwood", items = 1 }] }
 id = "{lane}_stack_cordwood"
 site = { layer = "wood_stack_3" }
 twin_of = "stack_cordwood"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+kinds = ["field"]
 presentation = "action"
 label_key = "c_stack_cordwood"
 upside_key = "up_stack_cordwood"

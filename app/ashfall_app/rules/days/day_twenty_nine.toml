@@ -276,7 +276,8 @@ outcome = { stores = [{ store = "post_stores", items = 4 }] }
 id = "{lane}_run_cart"
 site = { no_site = "the cart goes out the track to the post, past the wall, off the scene" }
 twin_of = "run_cart"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field", "g_road"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23"]
+kinds = ["field", "road"]
 presentation = "action"
 label_key = "c_run_cart"
 upside_key = "up_run_cart"
@@ -308,7 +309,8 @@ outcome = { stores = [{ store = "stones", items = 2 }, { store = "hill_trips", i
 id = "{lane}_walk_hill"
 site = { no_site = "a walk from the post to the far hill, off the scene" }
 twin_of = "walk_hill"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field", "g_road"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23"]
+kinds = ["field", "road"]
 presentation = "action"
 label_key = "c_walk_hill"
 upside_key = "up_walk_hill"

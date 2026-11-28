@@ -644,13 +644,14 @@ id = "t_bay_mid"
 when = { test = "at_least", subject_kind = "store", id = "bay_clock", value = 40 }
 outcome = { line_keys = ["l_bay_mid"] }
 
-# The crews (decisions/people.md, "Groups follow what people can do"): a crew holds the jobs its people do and not the
-# ones they cannot, and is tied to the hand who looks after it. The field crew's first member is the hand who leads it.
+# The crews (decisions/people.md, "Groups follow what people can do"): a crew takes every job of its kind, and is tied to
+# the hand who looks after it. The field crew's first member is the hand who leads it.
 [[lanes]]
 id = "g_field"
 label_key = "lane_g_field"
 ruled = true
 pooled = true
+kind = "field"
 tied = "n2"
 
 # His lane: a townsperson the player's rules set, as hers.
@@ -690,7 +691,8 @@ cap_items = 1
 id = "{lane}_forage"
 site = { no_site = "foraged out in the ruin and past its walls, no one place in the scene" }
 twin_of = "forage"
-lanes = ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n13", "g_field", "g_hearth"]
+lanes = ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n13"]
+kinds = ["field", "hearth"]
 presentation = "action"
 label_key = "c_forage"
 work_s = 120
@@ -701,6 +703,7 @@ id = "{lane}_gather"
 site = { no_site = "dead wood is picked up all over the ruin and beyond the wall, no one place in the scene" }
 twin_of = "gather_wood"
 lanes = ["n2", "n3", "n5", "n6", "n7"]
+kinds = []
 presentation = "action"
 label_key = "c_gather_wood"
 work_s = 30
@@ -710,7 +713,8 @@ outcome = { stores = [{ store = "damp_wood", items = 6 }] }
 id = "{lane}_cut"
 site = { layer = "birch_log" }
 twin_of = "woodcutting"
-lanes = ["n2", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n2", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+kinds = ["field"]
 presentation = "action"
 label_key = "c_woodcutting"
 work_s = 12
@@ -720,7 +724,8 @@ outcome = { stores = [{ store = "damp_wood", items = 6 }] }
 id = "{lane}_scavenge"
 site = { no_site = "stones are picked from the rubble under the far wall stub, part of the ruin's backdrop and not a layer of its own" }
 twin_of = "scavenge"
-lanes = ["n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+kinds = ["field"]
 presentation = "action"
 label_key = "c_scavenge"
 work_s = 48
@@ -785,7 +790,8 @@ outcome = { joins = [{ lane = "n1", mix = "town:camp", counted = true, own_split
 id = "{lane}_dig_clay"
 site = { no_site = "worked at the warm stream, which lies on the low ground behind the wall stub, off the scene; the scene poses its work at the gap's mouth, the way down to it" }
 twin_of = "dig_clay"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+kinds = ["field"]
 presentation = "action"
 label_key = "c_dig_clay"
 upside_key = "up_dig_clay"
@@ -796,7 +802,8 @@ outcome = { stores = [{ store = "clay", items = 1 }] }
 id = "{lane}_stew"
 site = { layer = "fire_lit" }
 twin_of = "stew"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+kinds = ["hearth"]
 presentation = "action"
 label_key = "c_stew"
 upside_key = "up_stew"
@@ -812,7 +819,8 @@ outcome = { stores = [{ store = "stew", items = 2 }] }
 id = "{lane}_field_track"
 site = { layer = "track" }
 twin_of = "field_track"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+kinds = ["field"]
 presentation = "action"
 label_key = "c_field_track"
 upside_key = "up_field_track"

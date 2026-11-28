@@ -311,6 +311,7 @@ const text: Record<string, string> = {
   "ui.card.retired": "retired",
   "ui.ledger.full": "full",
   "ui.camp.pays": "level {level}: {pays}",
+  "ui.camp.lifted": "level {level}: finish {card}",
   "ui.goal.in": "in {d}", "ui.goal.while": "pauses if out of {store}", "ui.goal.paused": "paused, out of {store}", "ui.goal.lost": "{card}: {n} lost", "ui.goal.count": "{store}: {n}",
   "ui.ledger.starved": "ran dry",
   "ui.ledger.unfed": "ran dry · {pct} work speed off",

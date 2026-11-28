@@ -13,10 +13,13 @@ Run from app/: python -m tools.weektwo_shards --check   exits 1 unless each week
                                                         exactly one shard, so a chapter added to routes.CHAPTERS fails
                                                         CI until a shard names it; then prints `matrix=<json>`, the
                                                         shard names, which CI's `shards-cover` hands the week-two job.
+                                                        Each shard is a separate pytest collection, so they run in
+                                                        parallel: serially their sum grows with every shard.
 """
 import json
 import os
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
@@ -61,7 +64,7 @@ setup. Day twenty-seven's typical and sharp shards are here unmeasured, split as
 on from the chapter before's end with the same tests; the first nightly to play them gives their wall time. Day
 twenty-nine's and day thirty's are the same, unmeasured, and their goals and inputs walks read the whole game's history. The nightly
 plays these. A shard leaves the set by being split or sped up, never by a longer timeout; the 6 minutes
-is what tests/test_ci_budget.py's 10 leaves after `changes`, `slice` and `ci-ok`."""
+is what tests/tools/test_ci_budget.py's 10 leaves after `changes`, `slice` and `ci-ok`."""
 WHOLE_GAME = frozenset({"makers"})
 """The shards whose readouts read the whole game, not one chapter: a pull request's smoke plan plays them from the start where
 the change is one every chapter reads (tools/pr_plan.py `whole_game`, CI's `playthrough-whole-game`), since no chapter's
@@ -134,8 +137,10 @@ def in_week_two(item: pytest.Item) -> bool:
 
 def check() -> int:
     env = {k: v for k, v in os.environ.items() if k != ENV}
-    whole = collected(ARGS, SELECT, env)
-    picked = {name: collected(ARGS, SELECT, {**env, ENV: name}) for name in SHARDS}
+    with ThreadPoolExecutor(4) as pool:
+        whole_job = pool.submit(collected, ARGS, SELECT, env)
+        jobs = {name: pool.submit(collected, ARGS, SELECT, {**env, ENV: name}) for name in SHARDS}
+        whole, picked = whole_job.result(), {name: job.result() for name, job in jobs.items()}
     print(f"week two: {len(whole)} tests; " + ", ".join(f"{name} {len(ids)}" for name, ids in picked.items()))
     seen: dict[str, list[str]] = {}
     for name, ids in picked.items():

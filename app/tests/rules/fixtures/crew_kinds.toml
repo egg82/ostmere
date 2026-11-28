@@ -1,0 +1,96 @@
+# A test chapter, merged onto the opening alone (tests/rules/loaders/test_crew_kinds.py): a crew t_crew of kind t_k with
+# one member t_m1, a person t_m2 outside it, and town cards that reach the crew by their kinds. t_a is done by t_m2 only: the
+# member t_m1 cannot do it, and the crew still takes it. Not story: the ids and words are the tests' own.
+version = 1
+
+[[stores]]
+id = "t_heap"
+label_key = "t_s_heap"
+cap_items = 20
+
+[[stores]]
+id = "t_pile"
+label_key = "t_s_pile"
+cap_items = 20
+
+[[stores]]
+id = "t_hill"
+label_key = "t_s_hill"
+cap_items = 20
+
+[[stores]]
+id = "t_bank"
+label_key = "t_s_bank"
+cap_items = 20
+
+[[lanes]]
+id = "t_crew"
+label_key = "t_l_crew"
+ruled = true
+pooled = true
+kind = "t_k"
+tied = "t_m1"
+
+[[lanes]]
+id = "t_m1"
+label_key = "t_l_m1"
+ruled = true
+told = "line"
+group = "t_crew"
+
+[[lanes]]
+id = "t_m2"
+label_key = "t_l_m2"
+ruled = true
+told = "line"
+
+[[town_cards]]
+id = "{lane}_a"
+lanes = ["t_m2"]
+kinds = ["t_k"]
+presentation = "action"
+label_key = "t_c_work"
+upside_key = "t_up"
+work_s = 60
+makes = [{ store = "t_heap", items_per_hour = 30 }]
+
+[[town_cards]]
+id = "{lane}_b"
+lanes = ["t_m1", "t_m2"]
+kinds = ["t_k", "t_other"]
+presentation = "action"
+label_key = "t_c_work"
+upside_key = "t_up"
+work_s = 90
+makes = [{ store = "t_pile", items_per_hour = 20 }]
+
+[[town_cards]]
+id = "{lane}_c"
+lanes = ["t_m1", "t_m2"]
+kinds = ["t_other"]
+presentation = "action"
+label_key = "t_c_work"
+upside_key = "t_up"
+work_s = 120
+makes = [{ store = "t_hill", items_per_hour = 10 }]
+
+[[town_cards]]
+id = "{lane}_d"
+lanes = ["t_m1", "t_m2"]
+kinds = []
+presentation = "action"
+label_key = "t_c_work"
+upside_key = "t_up"
+work_s = 150
+makes = [{ store = "t_bank", items_per_hour = 5 }]
+
+[text]
+t_up = "what it is for"
+t_s_heap = "Heap"
+t_s_bank = "bank"
+t_s_hill = "hill"
+t_s_pile = "Pile"
+t_l_crew = "Crew"
+t_l_m1 = "First"
+t_l_m2 = "Second"
+t_c_work = "Work"

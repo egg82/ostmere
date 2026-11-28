@@ -76,8 +76,21 @@ def test_every_lane_a_town_card_names_is_declared(everything: Opening):
     o = everything
     assert o.town_cards
     assert undeclared_lanes(o.town_cards, {x.id for x in o.lanes}) == []
-    assert undeclared_lanes(o.town_cards, set()) == ["g_field", "g_hearth", "g_road", "n1", "n10", "n11", "n12", "n13", "n14", "n15", "n2", "n23", "n3", "n4", "n5", "n6", "n7",
+    assert undeclared_lanes(o.town_cards, set()) == ["n1", "n10", "n11", "n12", "n13", "n14", "n15", "n2", "n23", "n3", "n4", "n5", "n6", "n7",
                                                                  "n8", "n9"]
+
+
+def test_every_crew_has_a_kind_and_every_kind_a_card_names_is_a_crews(everything: Opening):
+    """A crew takes cards by its kind, so a crew without one takes none and a mistyped kind reaches no crew."""
+    crews = {x.id: x.kind for x in everything.lanes if x.pooled}
+    assert crews and None not in crews.values()
+    named = {k for tc in everything.town_cards for k in tc.kinds or ()}
+    assert named == set(crews.values())
+
+
+def test_a_crew_declared_after_a_card_takes_it(everything: Opening):
+    """The hearth crew arrives three chapters after day two's weaving card, and holds it."""
+    assert {"g_hearth_weave_wattle", "g_road_stakes"} <= {c.id for c in everything.cards}
 
 
 def test_a_lane_gets_its_cards_together_in_the_entries_order():

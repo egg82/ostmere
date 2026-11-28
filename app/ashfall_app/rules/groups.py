@@ -35,8 +35,8 @@ def with_crews(lanes: "list[LaneEntry]") -> "list[LaneEntry]":
 
 
 def check_groups(o: "Opening") -> None:
-    """A pooled lane is ruled, has no name, group or `told`; a group names a pooled lane; `tied` is on a pooled lane only and
-    names a ruled person; marks only in a trigger's or an
+    """A pooled lane is ruled, has no name, group or `told`; `kind` is on a pooled lane only; a group names a pooled lane;
+    `tied` is on a pooled lane only and names a ruled person; marks only in a trigger's or an
     answer's outcome, each of a ruled person's lane; an unmarked join or an unmarking needs a group on the lane."""
     pooled = {x.id for x in o.lanes if x.pooled}
     people = {x.id: x for x in o.lanes if x.ruled and not x.pooled and not x.station}
@@ -44,6 +44,8 @@ def check_groups(o: "Opening") -> None:
     for x in o.lanes:
         if x.pooled and (not x.ruled or x.name_key is not None or x.group is not None or x.told is not None):
             fail(f"lane {x.id}", "a pooled lane is ruled and has no name_key, group or told")
+        if x.kind is not None and not x.pooled:
+            fail(f"lane {x.id}", "kind is only on a pooled lane")
         if x.group is not None and x.group not in pooled:
             fail(f"lane {x.id}", f"group {x.group} is not a pooled lane")
         if x.tied is not None and not x.pooled:
@@ -65,7 +67,7 @@ def check_groups(o: "Opening") -> None:
             need(where, "person's lane", m.lane, list(people))
             if not m.own_split and people[m.lane].group is None:
                 fail(where, f"unmarks {m.lane}, which has no group")
-    check_group_abilities(o)
+    check_crew_work(o)
     check_own_town_cards(o)
 
 
@@ -81,20 +83,17 @@ def check_own_town_cards(o: "Opening") -> None:
                 fail(f"town card {tc.id}", f"own lane {lane} has no hand-written card {card} on it")
 
 
-def check_group_abilities(o: "Opening") -> None:
-    """A group holds only work its members can do (docs/decisions/people.md, "The mark: who keeps their own split"): a
-    town card fanned out to a group is fanned out to each member whose lane any town card names. A member no town card
-    names has no list of their own, so the group's list is theirs."""
-    able = {lane for tc in o.town_cards for lane in tc.lanes}
-    members: dict[str, list[str]] = {}
-    for x in o.lanes:
-        if x.group is not None and x.id in able:
-            members.setdefault(x.group, []).append(x.id)
+def check_crew_work(o: "Opening") -> None:
+    """A crew takes a town card by its `kinds`, never by being listed in `lanes`; and a town card some crew member can do says
+    its kinds (`[]` for "not crew work"), so a new job cannot silently miss the crew it belongs to."""
+    pooled = {x.id for x in o.lanes if x.pooled}
+    members = {x.id for x in o.lanes if x.group is not None}
     for tc in o.town_cards:
-        for g in tc.lanes:
-            missing = [m for m in members.get(g, []) if m not in tc.lanes]
-            if missing:
-                fail(f"town card {tc.id}", f"is on group {g}, and its members {', '.join(missing)} cannot do it")
+        listed = sorted(pooled & set(tc.lanes))
+        if listed:
+            fail(f"town card {tc.id}", f"lists crews {', '.join(listed)} in lanes: a crew takes a card by its `kinds`")
+        if tc.kinds is None and members & set(tc.lanes):
+            fail(f"town card {tc.id}", "is done by a crew member and has no `kinds`: name its kinds, or `kinds = []` if it is not crew work")
 
 
 def with_group_unlocks(o: "Opening") -> "Opening":
