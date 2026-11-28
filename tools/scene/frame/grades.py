@@ -63,6 +63,19 @@ GRADES["dusk_14"] = {**GRADES["dusk"], "when": "action:night_14"}
 GRADES["night_14"] = {**GRADES["night"], "when": "store:night_14@20"}
 """Morning 13 returns the Drift's light; night 14 comes as night 12 did (day_twelve.toml, `morning_13`, `night_14`).
 Night 14 has no morning in week 2: week 3's first morning ends it."""
+GRADES["drift_2"] = {**GRADES["drift"], "when": "feature:drift_two"}
+GRADES["dusk_30"] = {"when": "action:night_30", "filter": "brightness(0.62) saturate(0.66) contrast(1.18)",
+                        "overlay": "rgba(64,38,16,0.36)", "ease_s": 40, "dark": True}
+GRADES["night_30"] = {"when": "store:night_30@20", "filter": "brightness(0.56) saturate(0.62) contrast(1.12)",
+                         "overlay": "rgba(46,28,12,0.34)", "dark": True}
+GRADES["day_31"] = {**GRADES["drift"], "when": "store:dawn_31@12"}
+GRADES["dusk_35"] = {**GRADES["dusk_30"], "when": "action:night_35"}
+GRADES["night_35"] = {**GRADES["night_30"], "when": "store:night_35@20"}
+"""Week five's Drift (content/team/week-five.md, Art): week two's brown light from Y1 (`drift_two`) to week six's turn,
+later in the list than every earlier night so it wins over them. Nights 30 and 35 are the Drift's own dusk and night,
+warm dark rather than week one's blue, so the hall's light and the fire are the only warm points: dusk at each night's
+standing action, night once its hidden clock has run its hour (day_thirty.toml `night_30`, day_thirty_three.toml
+`night_35`), and night 30 ends at dawn 31's twelfth hour. Night 35 has no morning in week 5."""
 
 
 def pick(holds: Callable[[str], bool]) -> str:

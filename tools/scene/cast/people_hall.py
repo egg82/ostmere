@@ -12,7 +12,7 @@ from day_eight.dayeight_poses import HUSBAND, WOMAN
 from day_two.daytwo_poses import Who, person
 from audits.builds import ROOFED
 from frame.output import Layer
-from frame.stages import in_dark
+from frame.conditions import in_dark
 
 INDOORS = in_dark(ROOFED)
 

@@ -17,7 +17,7 @@ from day_one import dayone
 from day_one.dayone_poses import build_at
 from draw.kit import T
 from frame.output import Layer
-from frame.stages import in_dark
+from frame.conditions import in_dark
 from draw.parts import FLICKER, firelight
 from draw.place import FIRE, WATCH
 

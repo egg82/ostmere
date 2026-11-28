@@ -28,7 +28,7 @@ FLAT = frozenset({
     "raised_bed_2", "raised_bed_3", "turned_1", "turned_2", "turned_3", "turned_pelt", "ashed_1", "ashed_2",
     "ashed_3", "pelt_pegged_1", "pelt_pegged_2", "gap_ring", "gap_ring_ghost", "watch_ring", "watch_ring_ghost",
     "cellar_1", "cellar_2", "cellar_3", "cellar_4", "road_1", "road_2", "road_3", "road_4", "road_over_1", "road_over_2",
-    "road_cloths",
+    "road_cloths", "yard_tracks",
 })
 """Lie on the ground or are the backdrop: drawn first, in manifest order, under everything that stands."""
 
@@ -37,12 +37,13 @@ OVERLAY = frozenset({"fog_dense", "fog_haze", "ash_drift", "smoke_plume", "wood_
 
 BASE_OVERRIDE: Mapping[str, int] = {
     "figure_lying_apart": 204, "vigil_body": 204, "rim_haze": int(LIP), "wolf_gap": int(LIP) + 1,
+    "figure_n2_shovels_the_hall_roof": 223, "cat_ridge": 223,
     **{f"valley_fog_{i + 1}": fog_ground(band) for i, band in enumerate(FOG_BANDS)},
     **{f"stream_steam_{i + 1}": steam_ground(spot) for i, spot in enumerate(STEAM)},
 }
 """Layers whose depth is not their lowest pixel: a body lying by the larder stays in front of it (the larder's base);
 the haze rising at the rim lies at the camp floor's lip, in front of everything out on the low ground, and the wolves in
-the gap stand on the rim in front of it; each band of fog
+the gap stand on the rim in front of it; a man and a cat up on the hall's roof are in front of the hall (its base 222); each band of fog
 and column of steam lies where it touches the low ground, not where its blur ends, so a figure on the track is behind
 the haze nearer than its feet and in front of the haze beyond them."""
 
@@ -58,7 +59,7 @@ PART_OF: Mapping[str, str] = {
     "fungus_torn": "birch_log", "claw_marks": "birch_log", "birch_stump": "birch_log", "pyre_flames": "pyre",
     "lamp_1": "palisade_9", "lamp_2": "palisade_9", "lamps_lit": "palisade_9", "gap_laid": "gap_ring", "gap_lit": "gap_ring",
     "watch_laid": "watch_ring", "watch_lit": "watch_ring", "clay_hearth_2_front": "clay_hearth_1_front",
-    "clay_hearth_3_front": "clay_hearth_2_front", "hide_flaps_1": "bay", "hide_flaps_2": "bay2", "hall_hearth": "hall_4",
+    "clay_hearth_3_front": "clay_hearth_2_front", "hide_flaps_1": "bay", "hide_flaps_2": "bay2", "hall_hearth": "hall_4", "roof_ash_hall": "hall_4", "larder_bar": "hall_4", "larder_latch": "hall_4",
     "hall_smoke": "hall_hearth", "watch_banked": "watch_ring", "gap_banked": "gap_ring",
 }
 """Layers drawn as part of another layer's art, to the layer they belong to."""

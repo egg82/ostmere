@@ -11,7 +11,7 @@ from tests.daytwo.player import DayTwoPlayer
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "tools" / "scene"))
 from day_three import daythree_layers as d3   # tools/scene, on the path from the line above
-from frame.stages import State, holds
+from frame.conditions import State, holds
 
 pytestmark = pytest.mark.playthrough
 

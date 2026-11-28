@@ -451,7 +451,7 @@ outcome = { line_keys = ["l_hair_1", "l_hair_2"], unlocks = [{ unlock_kind = "ca
 # so it binds no route that kept Arcana in a mix.
 [[cards]]
 id = "call_pack"
-site = { no_site = "the player stands in the hall door; the scene's art adds the pose, until then the line tells it" }
+site = { layer = "figure_door_call" }
 only_player = "magic"
 presentation = "action"
 label_key = "c_call_pack"
@@ -510,7 +510,7 @@ makes = [{ store = "call_clock", items_per_hour = 1 }]
 # Like into like along a piece of the target: the cheapest workings (working_rules.toml).
 [[workings]]
 id = "ward_gate"
-site = { no_site = "the ward is worked at the gate stone; the week's art adds the pose, until then the card tells it" }
+site = { layer = "figure_warding_the_gate" }
 label_key = "c_ward_gate"
 upside_key = "up_ward_gate"
 work_s = 1200
