@@ -192,7 +192,7 @@ Taste readouts print every route a package plays on a push.
 
 ## The readout report
 
-- **Stored** one file per readout under `app/tests/readouts/`, named for its package (`dayone-typical.txt`,
+- **Stored** one file per readout under `app/tests/readouts/<group>/` (the package, or `rules/` for the rules' own), named for its package (`dayone-typical.txt`,
   `weektwo-twelve.txt`, `ladder-sharp.txt`). Generated, so in a directory of its own (`engineering.md`, "Structural
   gates"); one file per readout, so a diff names the rhythm that moved.
 - **Rendered** by each package's `report.py` (`ladder/readout.py` for the ladder, `worth/readout.py` for the worth readout, `makers/readout.py` for who made each store by band): `NAMES` and `readouts()`, from the

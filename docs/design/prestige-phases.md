@@ -132,7 +132,7 @@ phase's length at Q's mix.
 - A node is data: what it changes (a rate or cap on a card or store **outside** the prestiging skill), its rank count,
   and its per-rank amount. Every rank is equal, and ranks within a node add. A multi-rank node can let the others fill first and leave a
   click with nothing to choose; that is a matter of feel, so the loader allows it and the `tracks` readout
-  (`tests/readouts/tracks.txt`) reports each track's multi-rank and repeating nodes.
+  (`tests/readouts/rules/tracks.txt`) reports each track's multi-rank and repeating nodes.
 - **The bound:** a full node gives *R* × *a*. Nodes of different kinds compound with each other, so a skill's whole
   track tops out at the product of (1 + *R*·*a*) over its nodes: a fixed number known when the content is written.
   Five nodes of five ranks at a modest per-rank amount land between about 3x and 8x on the rates they touch.
