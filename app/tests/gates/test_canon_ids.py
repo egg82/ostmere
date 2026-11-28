@@ -1,5 +1,5 @@
 """Every canon id (`C-<area>-<n>`) and decision id (`D-<n>`) cited anywhere in the repo's text is a row of
-`content/canon/` (one file per area) or `content/decisions.jsonl`, and both keep their row shape, so a new lead can take the
+`content/canon/` (one file per area) or `content/decisions/` (one file per hundred ids), and both keep their row shape, so a new lead can take the
 seat from them alone (docs/research/writing/studio-team.md, "What it means here").
 
 A canon row's source is `file#heading`: the file is under `content/`, or under the repo root when it starts with
@@ -49,6 +49,11 @@ def canon_rows(content: Path) -> list[dict[str, object]]:
     return [row for path in sorted((content / "canon").glob("*.jsonl")) for row in rows(path)]
 
 
+def decision_rows(content: Path) -> list[dict[str, object]]:
+    """Every decision row, file by file (name order: one file per hundred ids), each file's rows in file order."""
+    return [row for path in sorted((content / "decisions").glob("*.jsonl")) for row in rows(path)]
+
+
 def misfiled(content: Path) -> list[str]:
     """Canon rows sitting in a file that is not their area's."""
     return [f"{path.name}: {r.get('id')} is area {r.get('area')!r}"
@@ -93,7 +98,7 @@ def duplicates(table: Sequence[Mapping[str, object]]) -> list[str]:
 
 
 def known_ids() -> set[str]:
-    return {str(r["id"]) for r in [*canon_rows(CONTENT), *rows(CONTENT / "decisions.jsonl")]}
+    return {str(r["id"]) for r in [*canon_rows(CONTENT), *decision_rows(CONTENT)]}
 
 
 def test_every_cited_id_has_a_row() -> None:
@@ -110,7 +115,7 @@ def test_canon_rows_keep_their_shape_and_sources() -> None:
 
 
 def test_decision_rows_keep_their_shape() -> None:
-    log = rows(CONTENT / "decisions.jsonl")
+    log = decision_rows(CONTENT)
     assert len(log) >= 100, f"read {len(log)} decision rows: too few"
     assert not decision_problems(log), "\n".join(decision_problems(log))
 
@@ -138,3 +143,7 @@ def test_the_gate_fails_on_planted_faults(tmp_path: Path) -> None:
     (tmp_path / "canon" / "beat.jsonl").write_text(json.dumps(good) + "\n" + json.dumps({**good, "id": "C-world-1", "area": "world"}) + "\n")
     assert canon_rows(tmp_path) == [good, {**good, "id": "C-world-1", "area": "world"}]
     assert misfiled(tmp_path) == ["beat.jsonl: C-world-1 is area 'world'"]
+    (tmp_path / "decisions").mkdir()
+    (tmp_path / "decisions" / "d-100.jsonl").write_text(json.dumps({**row, "id": "D-101"}) + "\n")
+    (tmp_path / "decisions" / "d-000.jsonl").write_text(json.dumps(row) + "\n")
+    assert [r["id"] for r in decision_rows(tmp_path)] == ["D-7", "D-101"]
